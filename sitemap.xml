@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nesl42.github.io/posts/firstpost/</loc>
+    <lastmod>2025-03-16T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nesl42.github.io/categories/</loc>
+    <lastmod>2025-03-16T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://nesl42.github.io/posts/</loc>
     <lastmod>2025-03-16T00:00:00+00:00</lastmod>
   </url>
@@ -9,16 +17,26 @@
     <lastmod>2025-03-16T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://nesl42.github.io/posts/firstpost/</loc>
+    <loc>https://nesl42.github.io/tags/</loc>
+    <lastmod>2025-03-16T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nesl42.github.io/tags/web%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2025-03-16T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nesl42.github.io/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2025-03-16T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nesl42.github.io/categories/%E6%97%A5%E5%B8%B8/</loc>
+    <lastmod>2025-03-16T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nesl42.github.io/tags/%E6%97%A5%E5%B8%B8/</loc>
     <lastmod>2025-03-16T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://nesl42.github.io/about/</loc>
-  </url>
-  <url>
-    <loc>https://nesl42.github.io/categories/</loc>
-  </url>
-  <url>
-    <loc>https://nesl42.github.io/tags/</loc>
   </url>
 </urlset>

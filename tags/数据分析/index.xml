@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>All Posts - SmallT40&#39;s Blog</title>
-    <link>https://nesl42.github.io/posts/</link>
+    <title>数据分析 - Tag - SmallT40&#39;s Blog</title>
+    <link>https://nesl42.github.io/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</link>
     <description>SmallT40&#39;s Blog</description>
     <generator>Hugo 0.145.0 &amp; FixIt v0.3.17-8212d6fd</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sun, 16 Mar 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://nesl42.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>久别博客再启新程</title>
       <link>https://nesl42.github.io/posts/firstpost/</link>
