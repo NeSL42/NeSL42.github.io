@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>置顶 - Tag - SmallT40&#39;s Blog</title>
+    <link>https://nesl42.github.io/tags/%E7%BD%AE%E9%A1%B6/</link>
+    <description>SmallT40&#39;s Blog</description>
+    <generator>Hugo 0.145.0 &amp; FixIt v0.3.17-8212d6fd</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 16 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nesl42.github.io/tags/%E7%BD%AE%E9%A1%B6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>久别博客再启新程</title>
+      <link>https://nesl42.github.io/posts/firstpost/</link>
+      <pubDate>Sun, 16 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/posts/firstpost/</guid>
+      <category domain="https://nesl42.github.io/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/">人间世</category>
+      <description>久别博客再启新程</description>
+    </item>
+  </channel>
+</rss>

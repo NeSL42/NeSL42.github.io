@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Test - Category - SmallT40&#39;s Blog</title>
+    <link>http://localhost:1313/categories/test/</link>
+    <description>SmallT40&#39;s Blog</description>
+    <generator>Hugo 0.145.0 &amp; FixIt v0.3.17-8212d6fd</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 19 Mar 2025 22:18:57 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/test/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LLM MCP详解</title>
+      <link>http://localhost:1313/posts/504f883/</link>
+      <pubDate>Wed, 19 Mar 2025 22:18:57 +0800</pubDate>
+      <guid>http://localhost:1313/posts/504f883/</guid>
+      <category domain="http://localhost:1313/categories/test/">Test</category>
+      <description>&lt;p&gt;阿斯顿发撒地方&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

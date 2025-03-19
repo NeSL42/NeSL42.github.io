@@ -6,28 +6,140 @@
     <description>SmallT40&#39;s Blog</description>
     <generator>Hugo 0.145.0 &amp; FixIt v0.3.17-8212d6fd</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 16 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 19 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nesl42.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Web开发</title>
-      <link>https://nesl42.github.io/tags/web%E5%BC%80%E5%8F%91/</link>
-      <pubDate>Sun, 16 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://nesl42.github.io/tags/web%E5%BC%80%E5%8F%91/</guid>
-      <description>Web开发</description>
+      <title>LLM</title>
+      <link>https://nesl42.github.io/tags/llm/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/llm/</guid>
+      <description>LLM</description>
     </item>
     <item>
-      <title>数据分析</title>
-      <link>https://nesl42.github.io/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</link>
-      <pubDate>Sun, 16 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://nesl42.github.io/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</guid>
-      <description>数据分析</description>
+      <title>MCP</title>
+      <link>https://nesl42.github.io/tags/mcp/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/mcp/</guid>
+      <description>MCP</description>
     </item>
     <item>
-      <title>日常</title>
-      <link>https://nesl42.github.io/tags/%E6%97%A5%E5%B8%B8/</link>
+      <title>置顶</title>
+      <link>https://nesl42.github.io/tags/%E7%BD%AE%E9%A1%B6/</link>
       <pubDate>Sun, 16 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://nesl42.github.io/tags/%E6%97%A5%E5%B8%B8/</guid>
-      <description>日常</description>
+      <guid>https://nesl42.github.io/tags/%E7%BD%AE%E9%A1%B6/</guid>
+      <description>置顶</description>
+    </item>
+    <item>
+      <title>Deep Learn</title>
+      <link>https://nesl42.github.io/tags/deep-learn/</link>
+      <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/deep-learn/</guid>
+      <description>Deep Learn</description>
+    </item>
+    <item>
+      <title>Life</title>
+      <link>https://nesl42.github.io/tags/life/</link>
+      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/life/</guid>
+      <description>Life</description>
+    </item>
+    <item>
+      <title>AFL</title>
+      <link>https://nesl42.github.io/tags/afl/</link>
+      <pubDate>Fri, 15 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/afl/</guid>
+      <description>AFL</description>
+    </item>
+    <item>
+      <title>PaperRead</title>
+      <link>https://nesl42.github.io/tags/paperread/</link>
+      <pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/paperread/</guid>
+      <description>PaperRead</description>
+    </item>
+    <item>
+      <title>Windows</title>
+      <link>https://nesl42.github.io/tags/windows/</link>
+      <pubDate>Tue, 12 Sep 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/windows/</guid>
+      <description>Windows</description>
+    </item>
+    <item>
+      <title>RE</title>
+      <link>https://nesl42.github.io/tags/re/</link>
+      <pubDate>Mon, 04 Sep 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/re/</guid>
+      <description>RE</description>
+    </item>
+    <item>
+      <title>PWN</title>
+      <link>https://nesl42.github.io/tags/pwn/</link>
+      <pubDate>Sun, 16 Jul 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/pwn/</guid>
+      <description>PWN</description>
+    </item>
+    <item>
+      <title>Linux</title>
+      <link>https://nesl42.github.io/tags/linux/</link>
+      <pubDate>Mon, 10 Jul 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/linux/</guid>
+      <description>Linux</description>
+    </item>
+    <item>
+      <title>Other</title>
+      <link>https://nesl42.github.io/tags/other/</link>
+      <pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/other/</guid>
+      <description>Other</description>
+    </item>
+    <item>
+      <title>Win32</title>
+      <link>https://nesl42.github.io/tags/win32/</link>
+      <pubDate>Sun, 12 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/win32/</guid>
+      <description>Win32</description>
+    </item>
+    <item>
+      <title>WEB</title>
+      <link>https://nesl42.github.io/tags/web/</link>
+      <pubDate>Wed, 08 Feb 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/web/</guid>
+      <description>WEB</description>
+    </item>
+    <item>
+      <title>Book</title>
+      <link>https://nesl42.github.io/tags/book/</link>
+      <pubDate>Wed, 25 Jan 2023 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/book/</guid>
+      <description>Book</description>
+    </item>
+    <item>
+      <title>OS</title>
+      <link>https://nesl42.github.io/tags/os/</link>
+      <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/os/</guid>
+      <description>OS</description>
+    </item>
+    <item>
+      <title>免杀</title>
+      <link>https://nesl42.github.io/tags/%E5%85%8D%E6%9D%80/</link>
+      <pubDate>Sat, 02 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/%E5%85%8D%E6%9D%80/</guid>
+      <description>免杀</description>
+    </item>
+    <item>
+      <title>内网</title>
+      <link>https://nesl42.github.io/tags/%E5%86%85%E7%BD%91/</link>
+      <pubDate>Mon, 23 May 2022 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/%E5%86%85%E7%BD%91/</guid>
+      <description>内网</description>
+    </item>
+    <item>
+      <title>内核</title>
+      <link>https://nesl42.github.io/tags/%E5%86%85%E6%A0%B8/</link>
+      <pubDate>Sat, 09 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/%E5%86%85%E6%A0%B8/</guid>
+      <description>内核</description>
     </item>
   </channel>
 </rss>
