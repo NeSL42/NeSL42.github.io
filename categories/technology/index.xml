@@ -6,8 +6,16 @@
     <description>SmallT40&#39;s Blog</description>
     <generator>Hugo 0.145.0 &amp; FixIt v0.3.17-8212d6fd</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 19 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nesl42.github.io/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Socks5原理详解</title>
+      <link>https://nesl42.github.io/posts/2025-socks5/</link>
+      <pubDate>Sat, 22 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/posts/2025-socks5/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
+      <description>Socks5原理详解</description>
+    </item>
     <item>
       <title>LLM MCP记录</title>
       <link>https://nesl42.github.io/posts/202503-mcp/</link>
