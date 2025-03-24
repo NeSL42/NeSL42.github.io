@@ -5,15 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
-    <title>Socks5原理详解 - SmallT40&#39;s Blog</title><meta name="author" content="">
+    <title>Socks5原理 - SmallT40&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content=""><meta name="keywords" content='网络'>
-  <meta itemprop="name" content="Socks5原理详解">
+  <meta itemprop="name" content="Socks5原理">
   <meta itemprop="datePublished" content="2025-03-22T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-03-22T00:00:00+00:00">
   <meta itemprop="wordCount" content="1939">
   <meta itemprop="keywords" content="网络"><meta property="og:url" content="https://nesl42.github.io/posts/2025-socks5/">
   <meta property="og:site_name" content="SmallT40&#39;s Blog">
-  <meta property="og:title" content="Socks5原理详解">
+  <meta property="og:title" content="Socks5原理">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -22,17 +22,17 @@
     <meta property="article:tag" content="网络">
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Socks5原理详解">
+  <meta name="twitter:title" content="Socks5原理">
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/2025-socks5/" title="Socks5原理详解 - SmallT40&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202503-mcp/" title="LLM MCP记录" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/2025-socks5/" title="Socks5原理 - SmallT40&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202503-mcp/" title="LLM MCP记录" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202503-shadowsocks/" title="shadowsocks实现原理" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
     "@context": "http://schema.org",
     "@type": "BlogPosting",
-    "headline": "Socks5原理详解",
+    "headline": "Socks5原理",
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -78,7 +78,7 @@
 </header><main class="container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
 
   <article class="page single">
-    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Socks5原理详解</span>
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Socks5原理</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2025-03-22 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2025-03-22">2025-03-22</time></span>&nbsp;<span title="1939 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 2000 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
@@ -670,9 +670,9 @@
           </div></div><div class="post-info-line">
         <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/2025-socks5/" data-title="Socks5原理详解" data-hashtags="网络"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/2025-socks5/" data-title="Socks5原理" data-hashtags="网络"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
   <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/2025-socks5/" data-hashtag="网络"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/2025-socks5/" data-title="Socks5原理详解"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/2025-socks5/" data-title="Socks5原理"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -682,7 +682,7 @@
     <section>
       <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
     </section>
-  </div><div class="post-nav"><a href="/posts/202503-mcp/" class="post-nav-item" rel="prev" title="LLM MCP记录"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>LLM MCP记录</a><a href="/posts/top%E8%AE%B0%E5%BD%95/" class="post-nav-item" rel="next" title="碎碎存">碎碎存<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+  </div><div class="post-nav"><a href="/posts/202503-mcp/" class="post-nav-item" rel="prev" title="LLM MCP记录"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>LLM MCP记录</a><a href="/posts/202503-shadowsocks/" class="post-nav-item" rel="next" title="Shadowsocks实现原理">Shadowsocks实现原理<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article>
 
