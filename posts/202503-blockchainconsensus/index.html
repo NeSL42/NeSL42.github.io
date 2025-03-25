@@ -26,7 +26,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202503-blockchainconsensus/" title="论文阅读：《区块链共识算法的发展现状与展望》 - SmallT40&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202503-shadowsocks/" title="shadowsocks实现原理" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202503-blockchainconsensus/" title="论文阅读：《区块链共识算法的发展现状与展望》 - SmallT40&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202503-shadowsocks/" title="shadowsocks实现原理" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202503-pytorchlearn/" title="Pytorch 学习" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -142,7 +142,7 @@
 <p>2008 年末, 比特币等公有链诞生后, 拜占庭容错类共识算法才逐渐获得实际应用. 需要说明的是, 拜占庭将军问题是区块链技术核心思想的根源, 直接影响着区块链系统共识算法的设计和实现, 因而在区块链技术体系中具有重要意义.</p>
 </li>
 <li>
-<p>1985 年，论文 “Impossibility of distributed consensus with one faulty process”. 这篇文章证明: 在含有多个确定性进程的异步系统中, 只要有一个进程可能发生故障, 那么就不存在协议能保证有限时间内使所有进程达成一致.按照作者姓氏的首字母, 该定理被命名为 <code>FLP 不可能定理</code>, 是分布式系统领域的经典结论之一,</p>
+<p>1985 年，论文 “Impossibility of distributed consensus with one faulty process”. 这篇文章证明: 在含有多个确定性进程的异步系统中, 只要有一个进程可能发生故障, 那么就不存在协议能保证有限时间内使所有进程达成一致.按照作者姓氏的首字母, 该定理被命名为 <code>FLP 不可能定理</code>, 是分布式系统领域的经典结论之一。</p>
 <p><code>FLP 不可能定理</code>同样指出了存在故障进程的异步系统的共识问题不存在有限时间的理论解, 因而必须寻找其可行的 “工程解”。只能通过调整问题模型来规避 FLP 不可能定理, 例如牺牲确定性、增加时间等; 加密货币则是通过设定网络同步性 (或弱同步性) 和时间假设来规避 FLP 不可能性, 例如网络节点可以快速同步,且矿工在最优链上投入有限时间和资源等.</p>
 <p>早期的共识算法一般也称为分布式一致性算法.与目前主流的区块链共识算法相比, 分布式一致性算法主要面向分布式数据库操作、且大多不考虑拜占庭容错问题，即只考虑非人为问题，不考虑恶意节点篡改数据等问题.</p>
 </li>
@@ -627,7 +627,7 @@
     <section>
       <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
     </section>
-  </div><div class="post-nav"><a href="/posts/202503-shadowsocks/" class="post-nav-item" rel="prev" title="Shadowsocks实现原理"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>Shadowsocks实现原理</a><a href="/posts/top%E8%AE%B0%E5%BD%95/" class="post-nav-item" rel="next" title="碎碎存">碎碎存<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+  </div><div class="post-nav"><a href="/posts/202503-shadowsocks/" class="post-nav-item" rel="prev" title="Shadowsocks实现原理"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>Shadowsocks实现原理</a><a href="/posts/202503-pytorchlearn/" class="post-nav-item" rel="next" title="Pytorch 学习">Pytorch 学习<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article>
 

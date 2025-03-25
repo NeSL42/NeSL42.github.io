@@ -6,8 +6,15 @@
     <description>SmallT40&#39;s Blog</description>
     <generator>Hugo 0.145.0 &amp; FixIt v0.3.17-8212d6fd</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 23 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 25 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nesl42.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python</title>
+      <link>https://nesl42.github.io/tags/python/</link>
+      <pubDate>Tue, 25 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/python/</guid>
+      <description>Python</description>
+    </item>
     <item>
       <title>论文</title>
       <link>https://nesl42.github.io/tags/%E8%AE%BA%E6%96%87/</link>
@@ -114,18 +121,18 @@
       <description>Win32</description>
     </item>
     <item>
-      <title>WEB</title>
-      <link>https://nesl42.github.io/tags/web/</link>
-      <pubDate>Wed, 08 Feb 2023 00:00:00 +0000</pubDate>
-      <guid>https://nesl42.github.io/tags/web/</guid>
-      <description>WEB</description>
-    </item>
-    <item>
       <title>Book</title>
       <link>https://nesl42.github.io/tags/book/</link>
       <pubDate>Wed, 25 Jan 2023 00:00:00 +0000</pubDate>
       <guid>https://nesl42.github.io/tags/book/</guid>
       <description>Book</description>
+    </item>
+    <item>
+      <title>WEB</title>
+      <link>https://nesl42.github.io/tags/web/</link>
+      <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/web/</guid>
+      <description>WEB</description>
     </item>
     <item>
       <title>OS</title>
