@@ -6,7 +6,7 @@
     <description>SmallT40&#39;s Blog</description>
     <generator>Hugo 0.145.0 &amp; FixIt v0.3.17-8212d6fd</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 25 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 29 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nesl42.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>久别博客再启新程</title>
@@ -15,6 +15,14 @@
       <guid>https://nesl42.github.io/posts/firstpost/</guid>
       <category domain="https://nesl42.github.io/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/">人间世</category>
       <description>久别博客再启新程</description>
+    </item>
+    <item>
+      <title>LLVM 学习</title>
+      <link>https://nesl42.github.io/posts/202503-llvm/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/posts/202503-llvm/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
+      <description>LLVM 学习</description>
     </item>
     <item>
       <title>Pytorch 学习</title>
