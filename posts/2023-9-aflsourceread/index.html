@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
-    <title>AFL源码阅读 - SmallT40&#39;s Blog</title><meta name="author" content="">
+    <title>AFL源码阅读 - 敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="阅读源码的主要目标应该是：
 理清静态插桩过程（gcc、clang、llvm mode） 理清 fuzz 过程：如何变异、如何将 input 传递给程序、如何收集覆盖度信息 理清 qemu mode 的插桩和执行过程 因此，我们决定阅读顺序：
 "><meta name="keywords" content='AFL'>
@@ -15,8 +15,8 @@
   <meta itemprop="datePublished" content="2023-09-16T00:00:00+00:00">
   <meta itemprop="dateModified" content="2023-09-16T00:00:00+00:00">
   <meta itemprop="wordCount" content="16475">
-  <meta itemprop="keywords" content="AFL"><meta property="og:url" content="https://nesl42.github.io/posts/2023-9-aflsourceread/">
-  <meta property="og:site_name" content="SmallT40&#39;s Blog">
+  <meta itemprop="keywords" content="AFL"><meta property="og:url" content="http://localhost:1313/posts/2023-9-aflsourceread/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="AFL源码阅读">
   <meta property="og:description" content="阅读源码的主要目标应该是：
 理清静态插桩过程（gcc、clang、llvm mode） 理清 fuzz 过程：如何变异、如何将 input 传递给程序、如何收集覆盖度信息 理清 qemu mode 的插桩和执行过程 因此，我们决定阅读顺序：">
@@ -34,7 +34,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/2023-9-aflsourceread/" title="AFL源码阅读 - SmallT40&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/2023-9-wrkmem/" title="浅析WRK内存管理" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/2023-11-%E7%A7%8B%E6%8B%9B/" title="秋招 | 终" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/2023-9-aflsourceread/" title="AFL源码阅读 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/2023-9-wrkmem/" title="浅析WRK内存管理" /><link rel="next" type="text/html" href="http://localhost:1313/posts/2023-11-%E7%A7%8B%E6%8B%9B/" title="秋招 | 终" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -44,9 +44,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/nesl42.github.io\/posts\/2023-9-aflsourceread\/"
+      "@id": "http:\/\/localhost:1313\/posts\/2023-9-aflsourceread\/"
     },"genre": "posts","keywords": "AFL","wordcount":  16475 ,
-    "url": "https:\/\/nesl42.github.io\/posts\/2023-9-aflsourceread\/","datePublished": "2023-09-16T00:00:00+00:00","dateModified": "2023-09-16T00:00:00+00:00","publisher": {
+    "url": "http:\/\/localhost:1313\/posts\/2023-9-aflsourceread\/","datePublished": "2023-09-16T00:00:00+00:00","dateModified": "2023-09-16T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -57,7 +57,7 @@
   <body data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
   <div class="header-wrapper">
     <div class="header-title">
-      <a href="/" title="SmallT40&#39;s Blog"><span class="header-title-text">SmallT40&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
     <nav>
       <ul class="menu"><li class="menu-item">
               <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
@@ -72,7 +72,7 @@
   <div class="header-container">
     <div class="header-wrapper">
       <div class="header-title">
-        <a href="/" title="SmallT40&#39;s Blog"><span class="header-title-text">SmallT40&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
       <div class="menu-toggle" id="menu-toggle-mobile">
         <span></span><span></span><span></span>
       </div>
@@ -1388,9 +1388,9 @@
           </div></div><div class="post-info-line">
         <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/2023-9-aflsourceread/" data-title="AFL源码阅读" data-hashtags="AFL"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/2023-9-aflsourceread/" data-hashtag="AFL"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/2023-9-aflsourceread/" data-title="AFL源码阅读"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/posts/2023-9-aflsourceread/" data-title="AFL源码阅读" data-hashtags="AFL"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/2023-9-aflsourceread/" data-hashtag="AFL"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/2023-9-aflsourceread/" data-title="AFL源码阅读"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -1415,5 +1415,5 @@
     <div class="noscript-warning">This website works best with JavaScript enabled.</div>
   </noscript>
 </div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"version":"v0.3.17-8212d6fd"};</script><script src="/js/theme.min.js" defer></script></body>
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"version":"v0.3.17-8212d6fd"};console.log('Page config:', window.config);</script><script src="/js/theme.min.js" defer></script></body>
 </html>
