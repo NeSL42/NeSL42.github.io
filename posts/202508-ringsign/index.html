@@ -34,7 +34,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202508-ringsign/" title="环签论文阅读《How to Leak a Secret》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202508-gitclonedir/" title="使用GIT clone指定仓库的制定文件夹" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202508-ringsign/" title="环签论文阅读《How to Leak a Secret》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202508-gitclonedir/" title="使用GIT clone指定仓库的制定文件夹" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202508-functincallmcp/" title="Function Calling 与 MCP 协议" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -112,11 +112,15 @@
         <li><a href="#24-环签名生成过程-generating-a-ring-signature">2.4 环签名生成过程 (Generating a ring signature)</a></li>
         <li><a href="#25-环签名验证过程-verifying-a-ring-signature">2.5 环签名验证过程 (Verifying a ring signature)</a></li>
         <li><a href="#26-关键算法与数学公式"><strong>2.6 关键算法与数学公式：</strong></a></li>
-        <li><a href="#27-主要创新点总结"><strong>2.7 主要创新点总结：</strong></a>
+        <li><a href="#27-主要创新点总结"><strong>2.7 主要创新点总结：</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#3-研究实验结果与发现-results--findings"><strong>3. 研究、实验结果与发现 (Results &amp; Findings)</strong></a></li>
+    <li><a href="#4-讨论-discussion"><strong>4. 讨论 (Discussion)</strong></a></li>
+    <li><a href="#5-结论-conclusion"><strong>5. 结论 (Conclusion)</strong></a>
+      <ul>
+        <li>
           <ul>
-            <li><a href="#3-研究实验结果与发现-results--findings"><strong>3. 研究、实验结果与发现 (Results &amp; Findings)</strong></a></li>
-            <li><a href="#4-讨论-discussion"><strong>4. 讨论 (Discussion)</strong></a></li>
-            <li><a href="#5-结论-conclusion"><strong>5. 结论 (Conclusion)</strong></a></li>
             <li><a href="#6-核心参考文献-core-references"><strong>6. 核心参考文献 (Core References)</strong></a></li>
           </ul>
         </li>
@@ -487,11 +491,11 @@ $$g_i(m) = \begin{cases} q_i n_i + f_i(r_i) &amp; \text{if } (q_i+1)n_i \le 2^b 
 <p><strong>高效且无需设置的方案构造：</strong> 提出的方案在效率上远超现有群签名方案，且无需任何预先的群组设置、群管理器或成员间的协调，极大地降低了部署和使用的复杂性。</p>
 </li>
 </ol>
-<h3 id="3-研究实验结果与发现-results--findings" class="heading-element"><span><strong>3. 研究、实验结果与发现 (Results &amp; Findings)</strong></span>
+<h2 id="3-研究实验结果与发现-results--findings" class="heading-element"><span><strong>3. 研究、实验结果与发现 (Results &amp; Findings)</strong></span>
   <a href="#3-%e7%a0%94%e7%a9%b6%e5%ae%9e%e9%aa%8c%e7%bb%93%e6%9e%9c%e4%b8%8e%e5%8f%91%e7%8e%b0-results--findings" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><p>本文主要通过理论分析和与现有方案的对比来展示其“结果与发现”，而非传统的实验数据表格。</p>
+</h2><p>本文主要通过理论分析和与现有方案的对比来展示其“结果与发现”，而非传统的实验数据表格。</p>
 <ul>
 <li>
 <p><strong>核心结果：</strong></p>
@@ -534,11 +538,11 @@ $$g_i(m) = \begin{cases} q_i n_i + f_i(r_i) &amp; \text{if } (q_i+1)n_i \le 2^b 
 </ul>
 </li>
 </ul>
-<h3 id="4-讨论-discussion" class="heading-element"><span><strong>4. 讨论 (Discussion)</strong></span>
+<h2 id="4-讨论-discussion" class="heading-element"><span><strong>4. 讨论 (Discussion)</strong></span>
   <a href="#4-%e8%ae%a8%e8%ae%ba-discussion" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><ul>
+</h2><ul>
 <li>
 <p><strong>4.1. 结果的深度解读：</strong>
 这些发现表明，环签名成功地在匿名性和可信性之间找到了一个创新的平衡点。通过无需预先设置的环结构和巧妙设计的环方程，它使得一个群体中的任何成员都可以在不暴露自己身份的情况下，向外部证明消息确实来自该群体。这解决了传统数字签名暴露身份、匿名器缺乏可信度以及群签名效率低下且存在群管理器风险的问题。例如，在“深喉”场景中，记者可以确信消息来自内阁成员，但无法知道具体是哪一位，这为举报者提供了完美的保护。在指定验证者签名中，公司A可以向公司B发送可认证的草稿，但B无法将此草稿的来源向第三方证明，从而避免了法律上的不可否认性，这对于商业谈判中的非正式文档交换非常有用。</p>
@@ -593,11 +597,11 @@ $$g_i(m) = \begin{cases} q_i n_i + f_i(r_i) &amp; \text{if } (q_i+1)n_i \le 2^b 
 </ul>
 </li>
 </ul>
-<h3 id="5-结论-conclusion" class="heading-element"><span><strong>5. 结论 (Conclusion)</strong></span>
+<h2 id="5-结论-conclusion" class="heading-element"><span><strong>5. 结论 (Conclusion)</strong></span>
   <a href="#5-%e7%bb%93%e8%ae%ba-conclusion" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><p>本文成功引入并形式化了“环签名”这一创新密码学原语，它允许消息在确保来自一组可信来源的同时，完全保护实际签名者的匿名性。该方案在 RSA 或 Rabin 基础上构建，具有极高的效率和无条件的签名者匿名性（在主构造中），且无需任何预先设置。环签名不仅解决了长期存在的匿名认证难题，还为“深喉”式信息泄露和指定验证者签名等多种实际应用提供了强大而实用的解决方案，对数字签名和隐私保护领域具有深远影响。</p>
+</h2><p>本文成功引入并形式化了“环签名”这一创新密码学原语，它允许消息在确保来自一组可信来源的同时，完全保护实际签名者的匿名性。该方案在 RSA 或 Rabin 基础上构建，具有极高的效率和无条件的签名者匿名性（在主构造中），且无需任何预先设置。环签名不仅解决了长期存在的匿名认证难题，还为“深喉”式信息泄露和指定验证者签名等多种实际应用提供了强大而实用的解决方案，对数字签名和隐私保护领域具有深远影响。</p>
 <h3 id="6-核心参考文献-core-references" class="heading-element"><span><strong>6. 核心参考文献 (Core References)</strong></span>
   <a href="#6-%e6%a0%b8%e5%bf%83%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae-core-references" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
@@ -656,7 +660,7 @@ $$g_i(m) = \begin{cases} q_i n_i + f_i(r_i) &amp; \text{if } (q_i+1)n_i \le 2^b 
     <section>
       <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
     </section>
-  </div><div class="post-nav"><a href="/posts/202508-gitclonedir/" class="post-nav-item" rel="prev" title="使用GIT Clone指定仓库的制定文件夹"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>使用GIT Clone指定仓库的制定文件夹</a><a href="/posts/top%E8%AE%B0%E5%BD%95/" class="post-nav-item" rel="next" title="碎碎存">碎碎存<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+  </div><div class="post-nav"><a href="/posts/202508-gitclonedir/" class="post-nav-item" rel="prev" title="使用GIT Clone指定仓库的制定文件夹"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>使用GIT Clone指定仓库的制定文件夹</a><a href="/posts/202508-functincallmcp/" class="post-nav-item" rel="next" title="Function Calling 与 MCP 协议">Function Calling 与 MCP 协议<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article>
 

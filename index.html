@@ -78,6 +78,23 @@
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='0001-01-01 00:00:00'>published on <time datetime="0001-01-01">0001-01-01</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/" class="post-category" title="Category - 人间世"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> 人间世</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
     <a href="/posts/top%E8%AE%B0%E5%BD%95/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/life/' class="post-tag">Life</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-functincallmcp/">Function Calling 与 MCP 协议</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-23 00:00:00'>published on <time datetime="2025-08-23">2025-08-23</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>以下是根据您提供的图片内容生成的 Markdown 格式文本：</p>
+<h3 id="function-calling-与-mcp-协议--深究-mcp-协议的设计" class="heading-element"><span>Function Calling 与 MCP 协议 | 深究 MCP 协议的设计</span>
+  <a href="#function-calling-%e4%b8%8e-mcp-%e5%8d%8f%e8%ae%ae--%e6%b7%b1%e7%a9%b6-mcp-%e5%8d%8f%e8%ae%ae%e7%9a%84%e8%ae%be%e8%ae%a1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 id="一function-calling" class="heading-element"><span>一、Function Calling</span>
+  <a href="#%e4%b8%80function-calling" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 id="21-要解决的问题" class="heading-element"><span>2.1 要解决的问题</span>
+  <a href="#21-%e8%a6%81%e8%a7%a3%e5%86%b3%e7%9a%84%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>传统聊天大模型只会说话,没有工具调用能力,这使得大模型:</p></div><div class="post-footer">
+    <a href="/posts/202508-functincallmcp/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/tips/' class="post-tag">Tips</a></div></div>
 </article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-ringsign/">环签论文阅读《How to Leak a Secret》</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-23 00:00:00'>published on <time datetime="2025-08-23">2025-08-23</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p><strong>论文标题：</strong> How to Leak a Secret
@@ -92,11 +109,6 @@
   </a>
 </h3><p>在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，<strong>群签名 (Group Signatures)</strong> 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。</p></div><div class="post-footer">
     <a href="/posts/202508-ringsign/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/tips/' class="post-tag">Tips</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-gitclonedir/">使用GIT Clone指定仓库的制定文件夹</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-18 00:00:00'>published on <time datetime="2025-08-18">2025-08-18</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。</p>
-<p>以下是具体的命令步骤：</p></div><div class="post-footer">
-    <a href="/posts/202508-gitclonedir/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/tips/' class="post-tag">Tips</a></div></div>
 </article><ul class="pagination"><li class="page-item active">
           <span class="page-link">
             <a href="/">1</a>
