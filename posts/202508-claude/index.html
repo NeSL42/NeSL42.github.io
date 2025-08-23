@@ -329,7 +329,7 @@
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h5><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">$ claude</span></span></code></pre></div><p>当在 Claude Code CLI 中选择账号登录后，Claude Code 会生成一个 OAuth 授权链接并尝试在浏览器中打开。如果浏览器无法自动打开，CLI 会显示完整的授权 URL 供用户手动访问。</p>
-<p><img loading="lazy" src='https://linux.do/uploads/default/original/4X/2/0/d/20d87768fe23768bd6854def9fcfacbf526989ac.png' alt="claude-code-oauth-url"></p>
+<p><img loading="lazy" src='/posts/202508-claude/image.png' alt="claude-code-oauth-url" height="416" width="690"></p>
 <p><strong>OAuth URL 参数解析：</strong></p>
 <table>
   <thead>
@@ -389,7 +389,7 @@
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h5><p>在浏览器中打开授权链接后，会跳转到 Anthropic 的 OAuth 授权页面：</p>
-<p><img loading="lazy" src='https://linux.do/uploads/default/original/4X/0/7/d/07d33f05d5b1c5a8ba4e57cd6f58c8599f2317d8.png' alt="oauth-authorization-page"></p>
+<p><img loading="lazy" src='/posts/202508-claude/image-1.png' alt="oauth-authorization-page" height="500" width="513"></p>
 <p>在这个页面上，Anthropic 会明确展示 Claude Code 请求的权限范围（即上一步中的 scope 参数）。只有在你确认并点击&quot;Authorize&quot;后，Anthropic 才会颁发授权码。这确保了用户对授权过程的完全知情和控制。</p>
 <h4 id="32-授权响应阶段" class="heading-element"><span>3.2 授权响应阶段</span>
   <a href="#32-%e6%8e%88%e6%9d%83%e5%93%8d%e5%ba%94%e9%98%b6%e6%ae%b5" class="heading-mark">
@@ -399,8 +399,8 @@
   <a href="#321-%e6%ad%a5%e9%aa%a4%e4%b8%89%e5%9b%9e%e8%b0%83%e9%a1%b5%e9%9d%a2%e4%b8%8e%e6%8e%88%e6%9d%83%e7%a0%81%e8%8e%b7%e5%8f%96" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h5><p>当用户在授权页面点击 “Authorize” 按钮后，浏览器会重定向到回调页面：</p>
-<p><img loading="lazy" src='https://linux.do/uploads/default/original/4X/1/6/6/166801a906a2eac72d1bce3866f972201d58ca41.png' alt="oauth-callback-page"></p>
+</h5><p>当用户在授权页面点击 “Authorize” 按钮后，浏览器会重定向到回调页面：
+<img loading="lazy" src='/posts/202508-claude/image-2.png' alt="oauth-callback-page" height="259" width="690"></p>
 <p><strong>关键流程解析：</strong></p>
 <ol>
 <li><strong>浏览器重定向</strong>：用户确认授权后，Anthropic 将浏览器重定向到回调地址：
@@ -420,8 +420,8 @@
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h5><p>回到 CLI 界面，将授权码粘贴到命令行中，叮…登录成功!!!：</p>
-<p><img loading="lazy" src='https://linux.do/uploads/default/original/4X/f/3/4/f344f7cfcf3939212e9959bf8a9dd063c8e093fd.png' alt="cli-paste-code"></p>
-<p>这一步中，实际上 CLI 收到授权码后，立即发起 Token 交换请求：</p>
+<p><img loading="lazy" src='/posts/202508-claude/image-3.png' alt="cli-paste-code" height="462" width="690">
+这一步中，实际上 CLI 收到授权码后，立即发起 Token 交换请求：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="err">POST</span> <span class="err">https:</span><span class="c1">//api.anthropic.com/oauth/token
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&#34;grant_type&#34;</span><span class="p">:</span> <span class="s2">&#34;authorization_code&#34;</span><span class="p">,</span>
