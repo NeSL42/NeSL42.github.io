@@ -11,8 +11,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2025-08-23T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-08-23T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2025-08-24T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-24T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -61,7 +61,24 @@
       </ul>
     </nav>
   </div>
-</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-ringsign/">环签论文阅读《How to Leak a Secret》</a>
+</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-functincallmcp/">Function Calling 与 MCP 协议</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-23 00:00:00'>published on <time datetime="2025-08-23">2025-08-23</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>以下是根据您提供的图片内容生成的 Markdown 格式文本：</p>
+<h3 id="function-calling-与-mcp-协议--深究-mcp-协议的设计" class="heading-element"><span>Function Calling 与 MCP 协议 | 深究 MCP 协议的设计</span>
+  <a href="#function-calling-%e4%b8%8e-mcp-%e5%8d%8f%e8%ae%ae--%e6%b7%b1%e7%a9%b6-mcp-%e5%8d%8f%e8%ae%ae%e7%9a%84%e8%ae%be%e8%ae%a1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 id="一function-calling" class="heading-element"><span>一、Function Calling</span>
+  <a href="#%e4%b8%80function-calling" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 id="21-要解决的问题" class="heading-element"><span>2.1 要解决的问题</span>
+  <a href="#21-%e8%a6%81%e8%a7%a3%e5%86%b3%e7%9a%84%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>传统聊天大模型只会说话,没有工具调用能力,这使得大模型:</p></div><div class="post-footer">
+    <a href="/posts/202508-functincallmcp/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/tips/' class="post-tag">Tips</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-ringsign/">环签论文阅读《How to Leak a Secret》</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-23 00:00:00'>published on <time datetime="2025-08-23">2025-08-23</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p><strong>论文标题：</strong> How to Leak a Secret
 <strong>作者：</strong> Ronald L. Rivest, Adi Shamir, and Yael Tauman</p>
@@ -110,16 +127,6 @@
 <li>
 <p><strong>公司状态：</strong> 创始人脑中的一个火花、一份PPT，或一个仅能满足最核心功能的简陋产品（MVP）。团队可能就在咖啡馆或自家车库办公。</p></div><div class="post-footer">
     <a href="/posts/202508-com/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/%E9%87%91%E8%9E%8D/' class="post-tag">金融</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-solidity101/">Solidity 101</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-01 00:00:00'>published on <time datetime="2025-08-01">2025-08-01</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>学习<a href="https://www.wtf.academy/zh/course/solidity101/HelloWeb3"target="_blank" rel="external nofollow noopener noreferrer">Solidity 101</a> 记录</p>
-<p><code>Solidity</code> 是一种用于编写以太坊虚拟机（EVM）智能合约的编程语言。</p>
-<h3 id="开发工具" class="heading-element"><span>开发工具</span>
-  <a href="#%e5%bc%80%e5%8f%91%e5%b7%a5%e5%85%b7" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>本教程中，我们将使用 Remix 运行 Solidity 合约。Remix 是以太坊官方推荐的智能合约集成开发环境（IDE），适合新手，可以在浏览器中快速开发和部署合约，无需在本地安装任何程序。网址：https://remix.ethereum.org</p></div><div class="post-footer">
-    <a href="/posts/202508-solidity101/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
