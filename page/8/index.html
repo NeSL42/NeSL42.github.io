@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
   <head>
-	<meta name="generator" content="Hugo 0.148.2">
+	<meta name="generator" content="Hugo 0.149.0">
     
       <meta name="theme" content='FixIt v0.3.17-8212d6fd'>
     
@@ -11,8 +11,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2025-08-24T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-08-24T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2025-09-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -61,7 +61,19 @@
       </ul>
     </nav>
   </div>
-</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-angr/">Angr学习</a>
+</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkmem/">浅析WRK内存管理</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-12 00:00:00'>published on <time datetime="2023-09-12">2023-09-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023-9-wrkmem/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkload/">浅析WRK引导过程</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-12 00:00:00'>published on <time datetime="2023-09-12">2023-09-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023-9-wrkload/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkprocessthread/">浅析WRK进程与线程</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-12 00:00:00'>published on <time datetime="2023-09-12">2023-09-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023-9-wrkprocessthread/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-angr/">Angr学习</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-04 00:00:00'>published on <time datetime="2023-09-04">2023-09-04</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
     <a href="/posts/2023-9-angr/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/re/' class="post-tag">RE</a></div></div>
@@ -82,21 +94,6 @@
 <a href="https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf"target="_blank" rel="external nofollow noopener noreferrer">https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf</a></p></blockquote>
 <p><strong>摘要</strong>：在Windows 7中，微软引入了safe unlinking技术来解决影响Windows内核的安全公告日益增多的问题。在从双向链表中删除条目之前，safe unlinking旨在通过验证相邻列表条目的指针来检测内存损坏。因此，攻击者不能轻易地利用通用技术来利用泄漏池溢出或其他泄漏池损坏漏洞。本文中，我们展示了尽管引入了安全措施，Windows 7仍然容易受到通用内核池(kernel pool)攻击的影响。特别是，我们展示了在某些条件下，池分配器可能无法安全地unlink空闲列表条目，从而允许攻击者破坏任意内存。为了防止这些攻击，我们提出了进一步加固和增强内核池安全性的方法。</p></div><div class="post-footer">
     <a href="/posts/2023-8-kernelpoolexploitationonwin7/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-hevd/">HEVD-Windows7x86 SP1 记录</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-12 00:00:00'>published on <time datetime="2023-08-12">2023-08-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>本文记录自己学习HEVD的全过程。</p>
-<blockquote>
-<p>差不多全部完成了，还有一些小的问题需要完善，然后还有几篇文没有好好看，挑个时间好好看下</p>
-<p>就这样吧，待完善的东西以后再说</p></div><div class="post-footer">
-    <a href="/posts/2023-8-hevd/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-linuxkernelpwn/">Linux Kernel Pwn</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-16 00:00:00'>published on <time datetime="2023-07-16">2023-07-16</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-7-linuxkernelpwn/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/pwn/' class="post-tag">PWN</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-linuxsourceread/">Linux0.11 源码阅读</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-10 00:00:00'>published on <time datetime="2023-07-10">2023-07-10</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-7-linuxsourceread/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/linux/' class="post-tag">Linux</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
@@ -130,7 +127,7 @@
             <a href="/page/15/">15</a>
           </span>
         </li></ul></div></main><footer class="footer">
-    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.148.2"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.3.17-8212d6fd"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.149.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.3.17-8212d6fd"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
         </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
             <span itemprop="copyrightYear">2025</span><span class="author" itemprop="copyrightHolder">
               <a href="/"></a></span></div></div>
