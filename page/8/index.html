@@ -11,8 +11,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2025-09-01T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-09-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -61,39 +61,55 @@
       </ul>
     </nav>
   </div>
-</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkmem/">浅析WRK内存管理</a>
+</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202507-blockchain_privacy_and_regulatory_compliance/">论文阅读：《Blockchain Privacy and Regulatory Compliance:Towards a Practical Equilibrium》</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-12 00:00:00'>published on <time datetime="2023-09-12">2023-09-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-9-wrkmem/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkload/">浅析WRK引导过程</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-07-13 00:00:00'>published on <time datetime="2025-07-13">2025-07-13</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 id="论文阅读blockchain-privacy-and-regulatory-compliance-towards-a-practical-equilibrium" class="heading-element"><span>论文阅读：《Blockchain privacy and regulatory compliance: Towards a practical equilibrium》</span>
+  <a href="#%e8%ae%ba%e6%96%87%e9%98%85%e8%af%bbblockchain-privacy-and-regulatory-compliance-towards-a-practical-equilibrium" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 id="0-摘要" class="heading-element"><span>0. 摘要</span>
+  <a href="#0-%e6%91%98%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>我们研究了一种名为“隐私池”（Privacy Pools）的新型智能合约隐私增强协议。该协议引入了一种机制，允许用户在不公开完整交易记录的前提下，选择性披露交易的某些属性。其核心在于让用户发布零知识证明，以验证其资金（未）来源于已知的（非法）合法渠道，这通过证明资金属于特定关联集合来实现——这些集合专为展示符合监管框架或社会共识而设计。我们阐述了该机制如何在合规与非合规提款间建立分离均衡，并详细分析了其技术原理、激励机制及更广泛的影响，揭示此类协议如何实现既保护隐私又符合监管要求的区块链交易。</p></div><div class="post-footer">
+    <a href="/posts/202507-blockchain_privacy_and_regulatory_compliance/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202506-kfk/">回看kfk预言，选了一些我感兴趣的</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-12 00:00:00'>published on <time datetime="2023-09-12">2023-09-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-9-wrkload/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkprocessthread/">浅析WRK进程与线程</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-06-17 00:00:00'>published on <time datetime="2025-06-17">2025-06-17</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/" class="post-category" title="Category - 人间世"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> 人间世</a></span></div><div class="content"></div><div class="post-footer">
+    <a href="/posts/202506-kfk/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/life/' class="post-tag">Life</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2025-6-%E6%A2%A6/">梦</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-12 00:00:00'>published on <time datetime="2023-09-12">2023-09-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-9-wrkprocessthread/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-angr/">Angr学习</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-06-08 00:00:00'>published on <time datetime="2025-06-08">2025-06-08</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/" class="post-category" title="Category - 人间世"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> 人间世</a></span></div><div class="content"><p>意识像是从冻得发硬的深海底猛地挣脱，撞破了那层包裹着梦境的、粘稠而昏暗的水面。眼皮被突如其来的光线刺得生疼。</p>
+<p>窗棂之外，是一望无际的、冰凉如铁的黎明前的青灰，是巨大的苍穹向人间倾泻的、无情的凉薄。</p></div><div class="post-footer">
+    <a href="/posts/2025-6-%E6%A2%A6/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/life/' class="post-tag">Life</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2025-6-hookchain/">论文阅读：HookChain</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-04 00:00:00'>published on <time datetime="2023-09-04">2023-09-04</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-9-angr/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/re/' class="post-tag">RE</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-scoopthewindows10pool/">【译】Scoop the Windows 10 Pool</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-06-02 00:00:00'>published on <time datetime="2025-06-02">2025-06-02</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 id="todo" class="heading-element"><span>TODO</span>
+  <a href="#todo" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>行文风格需要改</li>
+<li>标题序号需要改</li>
+</ol>
+<h3 id="0摘要" class="heading-element"><span>0.摘要</span>
+  <a href="#0%e6%91%98%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>通过精确结合 IAT Hooking 技术、动态 SSN 解析和间接系统调用，HookChain 以一种仅作用于 Ntdll.dll 的 EDR 的警惕之眼不可见的方式重定向 Windows</p></div><div class="post-footer">
+    <a href="/posts/2025-6-hookchain/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87/' class="post-tag">论文</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2025-6-vm/">VMware的配置</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-24 00:00:00'>published on <time datetime="2023-08-24">2023-08-24</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
-<p>SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf
-<a href="https://github.com/synacktiv/Windows-kernel-SegmentHeap-Aligned-Chunk-Confusion"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/synacktiv/Windows-kernel-SegmentHeap-Aligned-Chunk-Confusion</a>
-<a href="https://paper.seebug.org/1743/"target="_blank" rel="external nofollow noopener noreferrer">https://paper.seebug.org/1743/</a></p>
-<p><a href="https://github.com/cbayet/Exploit-CVE-2017-6008/blob/master/Windows10PoolParty.pdf"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/cbayet/Exploit-CVE-2017-6008/blob/master/Windows10PoolParty.pdf</a></p></blockquote>
-<p><strong>摘要</strong>：堆溢出是应用程序中相当常见的漏洞。利用这类漏洞通常依赖于对用于管理堆的基础机制的深入理解。Windows 10 最近改变了其在内核空间中管理堆的方式。本文旨在介绍Windows NT内核中堆机制的最新演变，并介绍针对内核池的新的利用技术。</p></div><div class="post-footer">
-    <a href="/posts/2023-8-scoopthewindows10pool/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-kernelpoolexploitationonwin7/">【译】Kernel Pool Exploitation on Windows 7</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-05-27 00:00:00'>published on <time datetime="2025-05-27">2025-05-27</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 id="将vmware-中的虚拟机设定为一个固定值" class="heading-element"><span>将VMware 中的虚拟机设定为一个固定值</span>
+  <a href="#%e5%b0%86vmware-%e4%b8%ad%e7%9a%84%e8%99%9a%e6%8b%9f%e6%9c%ba%e8%ae%be%e5%ae%9a%e4%b8%ba%e4%b8%80%e4%b8%aa%e5%9b%ba%e5%ae%9a%e5%80%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>打开虚拟机的 <code>.vmx</code> 文件，添加</p></div><div class="post-footer">
+    <a href="/posts/2025-6-vm/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/config/' class="post-tag">Config</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202503-llvm/">LLVM 学习</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-16 00:00:00'>published on <time datetime="2023-08-16">2023-08-16</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
-<p><a href="https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf"target="_blank" rel="external nofollow noopener noreferrer">https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf</a>
-<a href="https://media.blackhat.com/bh-dc-11/Mandt/BlackHat_DC_2011_Mandt_kernelpool-wp.pdf?source=post_page"target="_blank" rel="external nofollow noopener noreferrer">https://media.blackhat.com/bh-dc-11/Mandt/BlackHat_DC_2011_Mandt_kernelpool-wp.pdf?source=post_page</a>
-<a href="https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf"target="_blank" rel="external nofollow noopener noreferrer">https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf</a></p></blockquote>
-<p><strong>摘要</strong>：在Windows 7中，微软引入了safe unlinking技术来解决影响Windows内核的安全公告日益增多的问题。在从双向链表中删除条目之前，safe unlinking旨在通过验证相邻列表条目的指针来检测内存损坏。因此，攻击者不能轻易地利用通用技术来利用泄漏池溢出或其他泄漏池损坏漏洞。本文中，我们展示了尽管引入了安全措施，Windows 7仍然容易受到通用内核池(kernel pool)攻击的影响。特别是，我们展示了在某些条件下，池分配器可能无法安全地unlink空闲列表条目，从而允许攻击者破坏任意内存。为了防止这些攻击，我们提出了进一步加固和增强内核池安全性的方法。</p></div><div class="post-footer">
-    <a href="/posts/2023-8-kernelpoolexploitationonwin7/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-03-29 00:00:00'>published on <time datetime="2025-03-29">2025-03-29</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"></div><div class="post-footer">
+    <a href="/posts/202503-llvm/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/python/' class="post-tag">Python</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
@@ -124,7 +140,7 @@
           <span class="page-link" aria-hidden="true">&hellip;</span>
         </li><li class="page-item">
           <span class="page-link">
-            <a href="/page/15/">15</a>
+            <a href="/page/18/">18</a>
           </span>
         </li></ul></div></main><footer class="footer">
     <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.149.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.3.17-8212d6fd"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
