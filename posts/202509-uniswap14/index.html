@@ -305,7 +305,7 @@ $$</p>
 <li><strong>时序图 (Sequence Diagram)</strong> 更侧重于不同对象/角色之间的消息传递和交互顺序，不适合展现内部计算逻辑。</li>
 <li><strong>甘特图 (Gantt Chart)</strong> 用于项目管理和时间规划，与此场景完全无关。</li>
 </ul>
-<pre class="mermaid">graph TD
+<pre class="mermaid">graph LR
     A[开始: 更新Tick的活跃状态] --> B{输入 Tick 值};
     B --> C[1:计算坐标<br>wordPosition = tick / 256<br>bitPosition = tick % 256];
     C --> D[2:根据 wordPosition<br>从 tickBitmaps 中读取原始的 uint256 值];
@@ -320,7 +320,7 @@ $$</p>
     G --> J[5: 将新值写回 tickBitmaps];
     I --> J;
     J --> K[结束];</pre>
-<template>graph TD
+<template>graph LR
     A[开始: 更新Tick的活跃状态] --> B{输入 Tick 值};
     B --> C[1:计算坐标<br>wordPosition = tick / 256<br>bitPosition = tick % 256];
     C --> D[2:根据 wordPosition<br>从 tickBitmaps 中读取原始的 uint256 值];

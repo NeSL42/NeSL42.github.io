@@ -12,7 +12,7 @@
   <meta itemprop="description" content="Uniswap V3：单价格区间内 Swap 机制与数学实现 核心摘要 (Key Takeaways) 两步核心算法：在 Uniswap V3 的单个价格区间内执行 swap 的核心逻辑分为两步：首先，根据输入的代币数量和当前流动性，计算出交易完成后的新价格；然后，利用新旧两个价格点和流动性，计算出可以兑换出的输出代币数量。 基石数学关系：所有计算都基于 流动性 (L)、代币 X 数量、代币 Y 数量 和 价格 (P) 之间的恒定关系。具体来说，$X = L / \sqrt{P}$ 和 $Y = L \cdot \sqrt{P}$ 是推导所有 swap 公式的基石。 价格方向决定公式形态：无论是用 Y 买 X（价格上升）还是用 X 卖 Y（价格下降），其底层的数学原理是统一的。公式的具体形态（谁减谁）取决于价格的高低（$P_{upper}$ vs $P_{lower}$），最终可以抽象为统一的表达式。 1. 基础回顾：价格、Tick 与流动性 在深入 swap 逻辑之前，我们首先要回顾 Uniswap V3 的基本概念。协议通过 Tick 来离散化价格，并将 Tick 转换为实际计算中使用的 $\sqrt{P}$ (square root price)。在一个给定的价格点 P，流动性 L 与两种代币（X 和 Y）的数量关系如下：">
   <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1673">
+  <meta itemprop="wordCount" content="1666">
   <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-uniswap13/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="13.Uniswap V3 单价格区间内 Swap 机制">
@@ -41,7 +41,7 @@
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": "https:\/\/nesl42.github.io\/posts\/202509-uniswap13\/"
-    },"genre": "posts","keywords": "Web3","wordcount":  1673 ,
+    },"genre": "posts","keywords": "Web3","wordcount":  1666 ,
     "url": "https:\/\/nesl42.github.io\/posts\/202509-uniswap13\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
@@ -85,7 +85,7 @@
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>13.Uniswap V3 单价格区间内 Swap 机制</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="1673 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 1700 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="1666 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 1700 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>Contents</span>
@@ -226,7 +226,7 @@ $$</li>
   </a>
 </h4><ul>
 <li>
-<p><strong>初始条件 (来自视频上下文)</strong>:</p>
+<p>**初始条件:</p>
 <ul>
 <li>交易对：ETH/USDC</li>
 <li>当前价格 $P_0 = 5000$</li>
@@ -305,7 +305,7 @@ $$</li>
   <a href="#%e7%bb%9f%e4%b8%80%e5%85%ac%e5%bc%8f" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h4><p>无论价格是上升还是下降，<code>swap</code> 的数学本质是相通的。我们可以将公式抽象成一个统一的形式，用 <code>P_upper</code> (较高的价格) 和 <code>P_lower</code> (较低的价格) 来表示：</p>
+</h4><p>无论价格是上升还是下降，<code>swap</code> 的数学本质是相通的。我们可以将公式抽象成一个统一的形式，用 $P_{upper}$ (较高的价格) 和 $P_{lower}$ (较低的价格) 来表示：</p>
 <ul>
 <li><strong>$\Delta X$ (总是正数)</strong>:
 $$

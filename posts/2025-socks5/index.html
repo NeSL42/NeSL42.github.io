@@ -10,7 +10,7 @@
   <meta itemprop="name" content="Socks5原理">
   <meta itemprop="datePublished" content="2025-03-22T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-03-22T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1939">
+  <meta itemprop="wordCount" content="1925">
   <meta itemprop="keywords" content="网络"><meta property="og:url" content="https://nesl42.github.io/posts/2025-socks5/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="Socks5原理">
@@ -37,7 +37,7 @@
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": "https:\/\/nesl42.github.io\/posts\/2025-socks5\/"
-    },"genre": "posts","keywords": "网络","wordcount":  1939 ,
+    },"genre": "posts","keywords": "网络","wordcount":  1925 ,
     "url": "https:\/\/nesl42.github.io\/posts\/2025-socks5\/","datePublished": "2025-03-22T00:00:00+00:00","dateModified": "2025-03-22T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
@@ -81,7 +81,7 @@
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Socks5原理</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2025-03-22 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2025-03-22">2025-03-22</time></span>&nbsp;<span title="1939 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 2000 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2025-03-22 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2025-03-22">2025-03-22</time></span>&nbsp;<span title="1925 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 2000 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>Contents</span>
@@ -215,7 +215,7 @@
           <td>服务端选择的可用方法</td>
           <td>unsigned char</td>
           <td>1</td>
-          <td>0x00 不需要身份验证<!-- raw HTML omitted -->0x02 用户名密码验证<!-- raw HTML omitted -->0xFF 无可接受的方法</td>
+          <td>0x00 不需要身份验证<br>0x02 用户名密码验证<br>0xFF 无可接受的方法</td>
       </tr>
   </tbody>
 </table>
@@ -242,7 +242,7 @@
           <td>服务端选择的可用方法</td>
           <td>unsigned char</td>
           <td>1</td>
-          <td>0x00 不需要身份验证<!-- raw HTML omitted -->0x02 用户名密码验证<!-- raw HTML omitted -->0xFF 无可接受的方法</td>
+          <td>0x00 不需要身份验证<br>0x02 用户名密码验证<br>0xFF 无可接受的方法</td>
       </tr>
   </tbody>
 </table>
@@ -381,7 +381,7 @@
           <td>命令类型</td>
           <td>unsigned char</td>
           <td>1</td>
-          <td>0x01 CONNECT<!-- raw HTML omitted -->0x02 BIND<!-- raw HTML omitted -->0x03 UDP ASSOCIATE</td>
+          <td>0x01 CONNECT<br>0x02 BIND<br>0x03 UDP ASSOCIATE</td>
       </tr>
       <tr>
           <td>RSV</td>
@@ -395,13 +395,13 @@
           <td>目标地址类型</td>
           <td>unsigned char</td>
           <td>1</td>
-          <td>0x01 IPv4<!-- raw HTML omitted -->0x03 域名<!-- raw HTML omitted -->0x04 IPv6</td>
+          <td>0x01 IPv4<br>0x03 域名<br>0x04 IPv6</td>
       </tr>
       <tr>
           <td>DST.ADDR</td>
           <td>目标地址</td>
           <td>unsigned char []</td>
-          <td>可变长度<!-- raw HTML omitted -->4 (IPv4)<!-- raw HTML omitted -->16 (IPv6)<!-- raw HTML omitted -->域名另见下表</td>
+          <td>可变长度<br>4 (IPv4)<br>16 (IPv6)<br>域名另见下表</td>
           <td></td>
       </tr>
       <tr>
@@ -515,13 +515,13 @@
           <td>目标地址类型</td>
           <td>unsigned char</td>
           <td>1</td>
-          <td>0x01 IPv4<!-- raw HTML omitted -->0x04 IPv6</td>
+          <td>0x01 IPv4<br>0x04 IPv6</td>
       </tr>
       <tr>
           <td>BND.ADDR</td>
           <td>绑定地址</td>
           <td>unsigned char []</td>
-          <td>可变长度<!-- raw HTML omitted -->4 (IPv4)<!-- raw HTML omitted -->16 (IPv6)</td>
+          <td>可变长度<br>4 (IPv4)<br>16 (IPv6)</td>
           <td></td>
       </tr>
       <tr>

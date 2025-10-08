@@ -11,8 +11,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2025-10-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-10-07T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -61,48 +61,30 @@
       </ul>
     </nav>
   </div>
-</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-kernelpoolexploitationonwin7/">【译】Kernel Pool Exploitation on Windows 7</a>
+</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/">2024年终总结</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-16 00:00:00'>published on <time datetime="2023-08-16">2023-08-16</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
-<p><a href="https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf"target="_blank" rel="external nofollow noopener noreferrer">https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf</a>
-<a href="https://media.blackhat.com/bh-dc-11/Mandt/BlackHat_DC_2011_Mandt_kernelpool-wp.pdf?source=post_page"target="_blank" rel="external nofollow noopener noreferrer">https://media.blackhat.com/bh-dc-11/Mandt/BlackHat_DC_2011_Mandt_kernelpool-wp.pdf?source=post_page</a>
-<a href="https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf"target="_blank" rel="external nofollow noopener noreferrer">https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf</a></p></blockquote>
-<p><strong>摘要</strong>：在Windows 7中，微软引入了safe unlinking技术来解决影响Windows内核的安全公告日益增多的问题。在从双向链表中删除条目之前，safe unlinking旨在通过验证相邻列表条目的指针来检测内存损坏。因此，攻击者不能轻易地利用通用技术来利用泄漏池溢出或其他泄漏池损坏漏洞。本文中，我们展示了尽管引入了安全措施，Windows 7仍然容易受到通用内核池(kernel pool)攻击的影响。特别是，我们展示了在某些条件下，池分配器可能无法安全地unlink空闲列表条目，从而允许攻击者破坏任意内存。为了防止这些攻击，我们提出了进一步加固和增强内核池安全性的方法。</p></div><div class="post-footer">
-    <a href="/posts/2023-8-kernelpoolexploitationonwin7/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-hevd/">HEVD-Windows7x86 SP1 记录</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2024-12-31 00:00:00'>published on <time datetime="2024-12-31">2024-12-31</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/" class="post-category" title="Category - 人间世"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> 人间世</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/life/' class="post-tag">Life</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2024-dl/">Deep Learning</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-12 00:00:00'>published on <time datetime="2023-08-12">2023-08-12</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>本文记录自己学习HEVD的全过程。</p>
-<blockquote>
-<p>差不多全部完成了，还有一些小的问题需要完善，然后还有几篇文没有好好看，挑个时间好好看下</p>
-<p>就这样吧，待完善的东西以后再说</p></div><div class="post-footer">
-    <a href="/posts/2023-8-hevd/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-linuxkernelpwn/">Linux Kernel Pwn</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2024-05-29 00:00:00'>published on <time datetime="2024-05-29">2024-05-29</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2024-dl/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/deep-learn/' class="post-tag">Deep Learn</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/">2023年终总结</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-16 00:00:00'>published on <time datetime="2023-07-16">2023-07-16</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-7-linuxkernelpwn/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/pwn/' class="post-tag">PWN</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-linuxsourceread/">Linux0.11 源码阅读</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2024-01-02 00:00:00'>published on <time datetime="2024-01-02">2024-01-02</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/" class="post-category" title="Category - 人间世"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> 人间世</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/life/' class="post-tag">Life</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-12-afldebug/">AFL调试与记录</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-10 00:00:00'>published on <time datetime="2023-07-10">2023-07-10</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
-    <a href="/posts/2023-7-linuxsourceread/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/linux/' class="post-tag">Linux</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-sdqrcode/">Stable Diffusion QR Code</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-12-15 00:00:00'>published on <time datetime="2023-12-15">2023-12-15</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023-12-afldebug/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/afl/' class="post-tag">AFL</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-12-fuzzing-a-survey/">论文阅读：Fuzzing：a Survey</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-09 00:00:00'>published on <time datetime="2023-07-09">2023-07-09</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 id="起源" class="heading-element"><span>起源</span>
-  <a href="#%e8%b5%b7%e6%ba%90" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>上个月就有看到用AI生成可扫描的二维码的文章（<a href="https://mp.weixin.qq.com/s/i4WR5ULH1ZZYl8Watf3EPw"target="_blank" rel="external nofollow noopener noreferrer">AI 生成可扫码图像 — 新 ControlNet 模型展示</a>），但是没有说具体的制作细节，当时还在reddit上搜了半天，但是制作出来的效果都差强人意。</p></div><div class="post-footer">
-    <a href="/posts/2023-7-sdqrcode/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/other/' class="post-tag">Other</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-win-syscalljourney/">Syscall Journey</a>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-12-14 00:00:00'>published on <time datetime="2023-12-14">2023-12-14</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023-12-fuzzing-a-survey/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/paperread/' class="post-tag">PaperRead</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-12-a-systematic-review-of-fuzzing-techniques/">论文阅读：A Systematic Review of Fuzzing Techniques</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-03 00:00:00'>published on <time datetime="2023-07-03">2023-07-03</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>本文记录一下syscall的“旅程”。</p>
-<p>这里使用的是<code>win10x64  22H2 19045.3086</code></p>
-<ul>
-<li>
-<p>与其他进程、内存、驱动器或文件系统交互时，使用 <code>Kernel32.dll</code> 中的函数</p>
-</li>
-<li>
-<p>与 Windows GUI 交互，使用的是 <code>user32.dll</code> 和 <code>gdi32.dll</code> 中的函数</p></div><div class="post-footer">
-    <a href="/posts/2023-7-win-syscalljourney/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-12-13 00:00:00'>published on <time datetime="2023-12-13">2023-12-13</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023-12-a-systematic-review-of-fuzzing-techniques/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/paperread/' class="post-tag">PaperRead</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
@@ -133,7 +115,7 @@
           <span class="page-link" aria-hidden="true">&hellip;</span>
         </li><li class="page-item">
           <span class="page-link">
-            <a href="/page/18/">18</a>
+            <a href="/page/20/">20</a>
           </span>
         </li></ul></div></main><footer class="footer">
     <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.149.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.3.17-8212d6fd"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
