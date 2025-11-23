@@ -11,8 +11,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2025-10-07T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-10-07T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2025-11-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-11-23T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -61,7 +61,117 @@
       </ul>
     </nav>
   </div>
-</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap15/">15.Uniswap V3 Tick Bitmap 寻找下一个 Tick</a>
+</header><main class="container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap13/">13.Uniswap V3 单价格区间内 Swap 机制</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>published on <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 id="uniswap-v3单价格区间内-swap-机制与数学实现" class="heading-element"><span><strong>Uniswap V3：单价格区间内 Swap 机制与数学实现</strong></span>
+  <a href="#uniswap-v3%e5%8d%95%e4%bb%b7%e6%a0%bc%e5%8c%ba%e9%97%b4%e5%86%85-swap-%e6%9c%ba%e5%88%b6%e4%b8%8e%e6%95%b0%e5%ad%a6%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 id="核心摘要-key-takeaways" class="heading-element"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><ul>
+<li><strong>两步核心算法</strong>：在 Uniswap V3 的单个价格区间内执行 <strong>swap</strong> 的核心逻辑分为两步：首先，根据输入的代币数量和当前流动性，计算出交易完成后的<strong>新价格</strong>；然后，利用新旧两个价格点和流动性，计算出可以兑换出的输出代币数量。</li>
+<li><strong>基石数学关系</strong>：所有计算都基于 <strong>流动性 (L)</strong>、<strong>代币 X 数量</strong>、<strong>代币 Y 数量</strong> 和 <strong>价格 (P)</strong> 之间的恒定关系。具体来说，$X = L / \sqrt{P}$ 和 $Y = L \cdot \sqrt{P}$ 是推导所有 <code>swap</code> 公式的基石。</li>
+<li><strong>价格方向决定公式形态</strong>：无论是用 Y 买 X（价格上升）还是用 X 卖 Y（价格下降），其底层的数学原理是统一的。公式的具体形态（谁减谁）取决于价格的高低（$P_{upper}$ vs $P_{lower}$），最终可以抽象为统一的表达式。</li>
+</ul>
+<hr>
+<h4 id="1-基础回顾价格tick-与流动性" class="heading-element"><span><strong>1. 基础回顾：价格、Tick 与流动性</strong></span>
+  <a href="#1-%e5%9f%ba%e7%a1%80%e5%9b%9e%e9%a1%be%e4%bb%b7%e6%a0%bctick-%e4%b8%8e%e6%b5%81%e5%8a%a8%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在深入 <code>swap</code> 逻辑之前，我们首先要回顾 Uniswap V3 的基本概念。协议通过 <strong>Tick</strong> 来离散化价格，并将 Tick 转换为实际计算中使用的 $\sqrt{P}$ (square root price)。在一个给定的价格点 <code>P</code>，流动性 <code>L</code> 与两种代币（X 和 Y）的数量关系如下：</p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap13/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap14/">14.Uniswap V3 Tick Bitmap</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>published on <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 id="核心摘要-key-takeaways" class="heading-element"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>Tick BitMap 的核心目的</strong>: 为了高效、低成本地跟踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界，从而知道哪些价格范围是活跃的。</li>
+<li><strong>精巧的数据压缩</strong>: <code>Tick BitMap</code> 抛弃了为每个 Tick 单独存储状态的朴素方案（成本过高），而是通过位运算将 256 个连续的 Tick 状态压缩存储在一个 <code>uint256</code> 变量中，极大地节省了 Gas 费和存储空间。</li>
+<li><strong>关键转换公式</strong>: 任何一个 <code>tick</code> (类型为 <code>int24</code>) 都可以通过数学运算定位到它在 BitMap 中的具体位置。其核心是两个坐标：<code>wordPosition</code> (确定在哪一个 <code>uint256</code> 组里) 和 <code>bitPosition</code> (确定在该组的第几位)。
+<ul>
+<li><code>wordPosition = tick / 256</code></li>
+<li><code>bitPosition = tick % 256</code></li>
+</ul>
+</li>
+<li><strong>数据结构</strong>: <code>Tick BitMap</code> 在合约中实现为一个 <code>mapping(int16 =&gt; uint256)</code>。其中 <code>key (int16)</code> 是 <code>wordPosition</code>，<code>value (uint256)</code> 是一个 256 位的位图，每一位代表一个 <code>tick</code> 的活跃状态（1 表示活跃，0 表示不活跃）。</li>
+<li><strong>状态更新机制</strong>: 添加或移除流动性时，通过生成一个特定的<strong>掩码 (Mask)</strong>，并与 BitMap 中对应的 <code>uint256</code> 值进行<strong>按位或 (OR)</strong> 或<strong>按位与 (AND)</strong> 运算，来精确地将某一位从 0 改为 1 或从 1 改为 0，而不影响其他位。</li>
+</ul>
+<hr>
+<h4 id="1-tick-的回顾与作用" class="heading-element"><span><strong>1. Tick 的回顾与作用</strong></span>
+  <a href="#1-tick-%e7%9a%84%e5%9b%9e%e9%a1%be%e4%b8%8e%e4%bd%9c%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>定义</strong>: <strong>Tick</strong> (也称 <strong>Tick Index</strong>) 是 Uniswap V3 中用来标记离散化价格点的单位。</li>
+<li><strong>价格公式</strong>: 价格 <code>P</code> 与 <code>tick</code> <code>T</code> 的关系通过以下公式定义：
+$$
+P = 1.0001^T
+$$
+其中 <code>T</code> 就是 <code>tick</code> 的索引。当 <code>T</code> 增大时，价格 <code>P</code> 上升；当 <code>T</code> 减小时，价格 <code>P</code> 下降。</li>
+<li><strong>Tick 范围</strong>:
+<ul>
+<li>合约中 <code>tick</code> 的类型为 <code>int24</code>，其理论范围是从 <code>-887272</code> 到 <code>+887272</code>。</li>
+<li><strong>案例</strong>: 这个范围足以表示极其宽广的价格区间。
+<ul>
+<li>当 <code>tick</code> 为 <code>-887272</code> 时，价格约为 $2.938 \times 10^{-39}$。</li>
+<li>当 <code>tick</code> 为 <code>+887272</code> 时，价格约为 $3.4 \times 10^{38}$。</li>
+<li>这个范围远超比特币等主流资产的价格波动范围，因此在设计上是足够用的。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-核心问题如何跟踪活跃的流动性区间" class="heading-element"><span><strong>2. 核心问题：如何跟踪活跃的流动性区间？</strong></span>
+  <a href="#2-%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e5%a6%82%e4%bd%95%e8%b7%9f%e8%b8%aa%e6%b4%bb%e8%b7%83%e7%9a%84%e6%b5%81%e5%8a%a8%e6%80%a7%e5%8c%ba%e9%97%b4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>背景</strong>: 在 Uniswap V3 中，用户在自定义的价格区间 <code>[PA, PB]</code> (对应 <code>[Tick_A, Tick_B]</code>) 内添加流动性。</li>
+<li><strong>挑战</strong>: 一个活跃的交易对（如 BTC/USDT）可能有成千上万的用户在各种不同的、甚至重叠的价格区间添加流动性。合约需要一种高效的方式来跟踪哪些 <code>tick</code> 成为了这些流动性区间的边界（即被激活）。
+<ul>
+<li><strong>案例</strong>: 假设一个用户在 <code>tick</code> 范围 <code>[-10, -5]</code> 添加了流动性，而另一个用户在 <code>[-4, 1]</code> 添加了流动性。此外，还可能存在重叠区间，例如用户 A 在 <code>[6, 10]</code> 添加流动性，用户 B 在 <code>[7, 12]</code> 添加流动性，那么在 <code>[7, 10]</code> 区间内流动性是重叠的。合约必须有效管理这一切。</li>
+</ul>
+</li>
+<li><strong>从 ERC20 到 ERC721</strong>:
+<ul>
+<li><strong>V2</strong>: 所有流动性提供者的 LP 凭证是同质化的 <strong>ERC20</strong> 代币。</li>
+<li><strong>V3</strong>: 由于每个人的流动性价格区间和数量都可能不同，LP 凭证变成了非同质化的 <strong>ERC721</strong> 代币（NFT）。</li>
+<li><strong>案例</strong>: 一个 V3 LP NFT (通过 <code>NonfungiblePositionManager</code> 合约管理) 记录了如 <code>tickLower</code>、<code>tickUpper</code> 和 <code>liquidity (uint128)</code> 等唯一信息，代表一个独一无二的流动性仓位。</li>
+</ul>
+</li>
+<li><strong>根本问题</strong>: 尽管 NFT 记录了每个仓位的具体信息，但 <code>Pool</code> 合约本身如何宏观地、低成本地知道在任意一个 <code>tick</code> 上，是否有流动性边界存在？</li>
+</ul>
+<h4 id="3-一种被否决的朴素方案" class="heading-element"><span><strong>3. 一种被否决的朴素方案</strong></span>
+  <a href="#3-%e4%b8%80%e7%a7%8d%e8%a2%ab%e5%90%a6%e5%86%b3%e7%9a%84%e6%9c%b4%e7%b4%a0%e6%96%b9%e6%a1%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>思路</strong>: 设计一个简单的键值对（Key-Value）结构来记录每个 <code>tick</code> 的状态。
+<ul>
+<li><code>mapping(int24 =&gt; bool)</code></li>
+<li><code>Key</code>: <code>tick</code> 索引 (例如: -10000, 20000)</li>
+<li><code>Value</code>: <code>true</code> (被用作边界) 或 <code>false</code> (未被用作边界)</li>
+</ul>
+</li>
+<li><strong>致命缺陷</strong>:
+<ol>
+<li><strong>存储量巨大</strong>: <code>tick</code> 的总数约有 177 万个。为每一个 <code>tick</code> 都创建一个存储槽位在区块链上是无法承受的，成本极高。</li>
+<li><strong>计算量巨大 (高 Gas 费)</strong>: 当一笔交易（swap）需要跨越成千上万个 <code>tick</code> 时，如果需要逐一查询这些 <code>tick</code> 的状态，将会导致交易的 Gas 费极高，用户无法接受。</li>
+</ol>
+</li>
+</ul>
+<h4 id="4-uniswap-v3-的精巧解决方案tick-bitmap" class="heading-element"><span><strong>4. Uniswap V3 的精巧解决方案：Tick BitMap</strong></span>
+  <a href="#4-uniswap-v3-%e7%9a%84%e7%b2%be%e5%b7%a7%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88tick-bitmap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><img loading="lazy" src='/posts/202509-uniswap14/tick_bitmap.png' alt="Tick indexes in tick bitmap" height="432" width="1058"></p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap14/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap15/">15.Uniswap V3 Tick Bitmap 寻找下一个 Tick</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>published on <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 id="核心摘要-key-takeaways" class="heading-element"><span><strong>核心摘要 (Key Takeaways)</strong></span>
   <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
@@ -287,71 +397,6 @@ $$</li>
   </a>
 </h4><p>为了高效计算任意区间的$F_{B(i_l)}$和$F_{A(i_u)}$，V3合约并不直接记录它们，而是采用了一个更巧妙的机制：在<strong>每个被激活的<code>tick</code>上</strong>记录一个状态变量 <code>**feeGrowthOutside**</code> (视频中简称为$F_{O(i)}$)。</p></div><div class="post-footer">
     <a href="/posts/202509-uniswap18/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap19/">19.Uniswap V3 手续费计算（二）</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>published on <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 id="uniswap-v3-手续费计算深度解析-二" class="heading-element"><span><strong>Uniswap V3 手续费计算深度解析 (二)</strong></span>
-  <a href="#uniswap-v3-%e6%89%8b%e7%bb%ad%e8%b4%b9%e8%ae%a1%e7%ae%97%e6%b7%b1%e5%ba%a6%e8%a7%a3%e6%9e%90-%e4%ba%8c" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><h5 id="核心摘要-key-takeaways" class="heading-element"><span><strong>核心摘要 (Key Takeaways)</strong></span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h5><ul>
-<li><strong>核心公式</strong>: 为特定价格区间 $(i_l, i_u)$ 计算手续费的核心思想是：用全局累计手续费 $f_g$ 减去该区间下方的累计手续费 $f_b$ 和上方的累计手续费 $f_a$。公式为：$f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)$。</li>
-<li><strong>关键变量 $f_{o,i}$</strong>: Uniswap V3 引入了一个名为 <strong><code>feeOutside</code></strong> (笔记中记为 $f_{o,i}$) 的关键变量。每个 tick <code>i</code> 都会记录这个值，它巧妙地追踪了当价格在 tick <code>i</code> 的“外部”时所累积的单位流动性手续费。</li>
-<li><strong>$f_{o,i}$ 的更新机制</strong>: 当价格穿越一个 tick <code>i</code> 时，该 tick 对应的 $f_{o,i}$ 会进行一次“翻转”更新。更新规则为：$f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}$。这个机制是整个计算逻辑的精髓。</li>
-<li><strong>推导关系</strong>: 通过 $f_{o,i}$ 和当前全局手续费 $f_g$，可以精确推导出任意时刻的 $f_b$ 和 $f_a$。它们的值取决于当前价格 $i_c$ 相对于目标 tick <code>i</code> 的位置。</li>
-</ul>
-<hr>
-<h4 id="1-背景v3-手续费计算的复杂性" class="heading-element"><span><strong>1. 背景：V3 手续费计算的复杂性</strong></span>
-  <a href="#1-%e8%83%8c%e6%99%afv3-%e6%89%8b%e7%bb%ad%e8%b4%b9%e8%ae%a1%e7%ae%97%e7%9a%84%e5%a4%8d%e6%9d%82%e6%80%a7" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li>
-<p><strong>根本原因</strong>: <strong>集中流动性 (Concentrated Liquidity)</strong>。与 V2 不同，V3 的流动性提供者 (LP) 将资金集中在特定的价格区间内。</p></div><div class="post-footer">
-    <a href="/posts/202509-uniswap19/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap20/">20.Uniswap V4 简介</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>published on <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 id="uniswap-v4-简介" class="heading-element"><span>Uniswap V4 简介</span>
-  <a href="#uniswap-v4-%e7%ae%80%e4%bb%8b" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><h5 id="核心摘要-key-takeaways" class="heading-element"><span><strong>核心摘要 (Key Takeaways)</strong></span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h5><ul>
-<li><strong>架构性革新</strong>: Uniswap V4 的核心升级在于<strong>代码架构</strong>而非底层的 AMM 数学原理。它从 V2/V3 的“工厂模式”转变为“单例模式”，旨在大幅降低 Gas 费并提升效率。</li>
-<li><strong>高度可定制化 (Hooks)</strong>: V4 引入了**“钩子 (Hooks)”**机制，允许开发者在交易生命周期的关键节点（如交易前/后、添加流动性前/后）插入自定义逻辑，极大地增强了协议的灵活性和可扩展性。</li>
-<li><strong>显著降低 Gas 费</strong>: 通过<strong>单例模式</strong>、<strong>闪电记账 (Flash Accounting)</strong> 和支持<strong>原生 ETH</strong> 交易，V4 从多个维度解决了 V3 及之前版本中 Gas 费用高昂的问题，尤其是在多路径交易和涉及 ETH 的交易中。</li>
-<li><strong>战略定位转变</strong>: V4 的发布标志着 Uniswap 从一个单纯的去中心化交易所 (DEX) 向一个<strong>DeFi 基础设施平台</strong>的战略转型，旨在搭建一个舞台，让更多开发者在其之上构建多样化的应用。</li>
-</ul>
-<hr>
-<h4 id="一-uniswap-v4-发展历程" class="heading-element"><span><strong>一、 Uniswap V4 发展历程</strong></span>
-  <a href="#%e4%b8%80-uniswap-v4-%e5%8f%91%e5%b1%95%e5%8e%86%e7%a8%8b" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>发布形式</strong>: 以一种创新的 <strong>“社区共建”</strong> 模式发布。
-<ul>
-<li><strong>2023年6月13日</strong>: Uniswap 官方发布了 V4 的<strong>代码草案 (Code Draft)</strong>，当时代码完成度约 60-70%。</li>
-<li><strong>社区参与</strong>: 官方并未像传统项目那样先完成内部开发和审计，而是提前将代码开源，并设立了 <strong>1550 万美元</strong>的悬赏基金，鼓励全球社区共同寻找 Bug 和安全漏洞。</li>
-</ul>
-</li>
-<li><strong>正式上线</strong>:
-<ul>
-<li>经过约一年半的社区共建和测试，Uniswap V4 于<strong>2024年1月</strong>正式发布到生产环境。</li>
-</ul>
-</li>
-</ul>
-<h4 id="二-uniswap-版本演进与-v3-的痛点" class="heading-element"><span><strong>二、 Uniswap 版本演进与 V3 的痛点</strong></span>
-  <a href="#%e4%ba%8c-uniswap-%e7%89%88%e6%9c%ac%e6%bc%94%e8%bf%9b%e4%b8%8e-v3-%e7%9a%84%e7%97%9b%e7%82%b9" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><p>每个新版本的发布都是为了解决前一版本的问题。</p></div><div class="post-footer">
-    <a href="/posts/202509-uniswap20/">Read More</a><div class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
@@ -382,7 +427,7 @@ $$</li>
           <span class="page-link" aria-hidden="true">&hellip;</span>
         </li><li class="page-item">
           <span class="page-link">
-            <a href="/page/20/">20</a>
+            <a href="/page/21/">21</a>
           </span>
         </li></ul></div></main><footer class="footer">
     <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.149.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.3.17-8212d6fd"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>

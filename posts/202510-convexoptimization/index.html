@@ -14,7 +14,7 @@
 第一课：引言（一） 核心摘要 (Key Takeaways) 凸优化是“简单的优化问题”：课程聚焦于凸优化，因其结构良好、可高效求解，而一般优化问题（非凸）通常难以处理。 优化问题的三要素：可行解集合、最优性准则（目标函数）、求解方法；缺一不可。 标准优化问题的数学形式：最小化目标函数 $f_0(x)$，满足不等式约束 $f_i(x) \leq b_i$（$i = 1,\dots,M$）。 优化无处不在：从日常生活决策、物流调度、通信功率控制到图像去噪、电路设计，均涉及优化建模。 课程考核结构：20% 平时成绩（课堂小测验）、80% 期末考试，另设最高10分的可选课程论文（极难获得高分）。 1. 课程介绍与安排 1.1 课程基本信息 课程名称：凸优化（原名“最优化理论”，因非凸优化太难，故聚焦于凸优化——即简单的优化问题）。 授课时间：第2周至第16周，共60学时；第17周期末考试。 助教：王浩、侍卫。 联系方式：可通过邮件联系教师或助教。 1.2 考核方式 平时成绩（20%）：通过2–3次课堂小测验完成（非课后作业），提前一节课通知。 期末考试（80%）。 课程论文（额外0–10分，非强制）： 面向研究生，需将自身研究与凸优化结合。 要求使用凸优化方法取得实质性成果。 极难拿高分：去年最高仅3分。 1.3 参考教材 主教材：Convex Optimization by Stephen Boyd（免费电子版可在作者主页下载）。 补充教材（算法方向）：两本由 Bertsekas（巴萨卡斯）所著的优化算法书籍（电子版较难获取）。 建议：无需购买 Boyd 的书，重点掌握基本内容即可。">
   <meta itemprop="datePublished" content="2025-10-07T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-10-07T00:00:00+00:00">
-  <meta itemprop="wordCount" content="18890">
+  <meta itemprop="wordCount" content="18841">
   <meta itemprop="keywords" content="Math"><meta property="og:url" content="https://nesl42.github.io/posts/202510-convexoptimization/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="凸优化课程学习笔记">
@@ -34,7 +34,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202510-convexoptimization/" title="凸优化课程学习笔记 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202510-aeaortcfmms/" title="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202510-convexoptimization/" title="凸优化课程学习笔记 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202510-linearalgebra/" title="线性代数课程学习笔记" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202511-polymarket/" title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -45,7 +45,7 @@
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": "https:\/\/nesl42.github.io\/posts\/202510-convexoptimization\/"
-    },"genre": "posts","keywords": "Math","wordcount":  18890 ,
+    },"genre": "posts","keywords": "Math","wordcount":  18841 ,
     "url": "https:\/\/nesl42.github.io\/posts\/202510-convexoptimization\/","datePublished": "2025-10-07T00:00:00+00:00","dateModified": "2025-10-07T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
@@ -89,7 +89,7 @@
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>凸优化课程学习笔记</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2025-10-07 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2025-10-07">2025-10-07</time></span>&nbsp;<span title="18890 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 18900 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>38 minutes</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/technology/" class="post-category" title="Category - Technology"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="published on 2025-10-07 00:00:00"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden="true"></i><time datetime="2025-10-07">2025-10-07</time></span>&nbsp;<span title="18841 words"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>About 18900 words</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>38 minutes</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>Contents</span>
@@ -2801,9 +2801,6 @@ $$
 </table>
 <blockquote>
 <p><strong>实践建议</strong>：在建模优化问题时，若目标或约束可表示为上述保凸运算的组合，则问题很可能属于<strong>凸优化</strong>范畴，可高效求解。</p></blockquote>
-<hr>
-<blockquote>
-<p>本课未涉及 Mermaid 图表，因字幕中未明确描述流程、时序或角色交互结构。所有逻辑均可通过代数与几何直观理解。</p></blockquote>
 </div><div class="post-footer" id="post-footer">
   <div class="post-info">
     <div class="post-info-line">
@@ -2826,7 +2823,7 @@ $$
     <section>
       <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
     </section>
-  </div><div class="post-nav"><a href="/posts/202510-aeaortcfmms/" class="post-nav-item" rel="prev" title="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》</a><a href="/posts/top%E8%AE%B0%E5%BD%95/" class="post-nav-item" rel="next" title="碎碎存">碎碎存<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+  </div><div class="post-nav"><a href="/posts/202510-linearalgebra/" class="post-nav-item" rel="prev" title="线性代数课程学习笔记"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>线性代数课程学习笔记</a><a href="/posts/202511-polymarket/" class="post-nav-item" rel="next" title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》">论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article>
 
