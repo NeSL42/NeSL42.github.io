@@ -13,7 +13,7 @@
   <meta itemprop="datePublished" content="2025-11-23T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-11-23T00:00:00+00:00">
   <meta itemprop="wordCount" content="21772">
-  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="https://nesl42.github.io/posts/202511-polymarket/">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="https://nesl42.github.io/posts/202511-polymarket_new/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》">
   <meta property="og:description" content="揭开概率森林的面纱：预测市场中的套利 摘要 Polymarket 是一个预测市场平台，用户可以通过交易与特定结果（称为条件）挂钩的份额来对未来事件进行预测。Polymarket 上的每个市场都关联着一组一个或多个此类条件。为确保市场正确结算，条件集必须是完备的——即 collectively 涵盖所有可能结果——同时必须是互斥的——即仅有一个条件最终可判定为真。因此，所有相关结果（无论在一个条件还是市场中）的价格之和（即概率）应为 $1 ，代表任一结果发生的总概率为 1。">
@@ -30,7 +30,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202511-polymarket/" title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202510-convexoptimization/" title="凸优化课程学习笔记" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202511-polymarket_new/" title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202510-convexoptimization/" title="凸优化课程学习笔记" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -40,9 +40,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/nesl42.github.io\/posts\/202511-polymarket\/"
+      "@id": "https:\/\/nesl42.github.io\/posts\/202511-polymarket_new\/"
     },"genre": "posts","keywords": "论文阅读","wordcount":  21772 ,
-    "url": "https:\/\/nesl42.github.io\/posts\/202511-polymarket\/","datePublished": "2025-11-23T00:00:00+00:00","dateModified": "2025-11-23T00:00:00+00:00","publisher": {
+    "url": "https:\/\/nesl42.github.io\/posts\/202511-polymarket_new\/","datePublished": "2025-11-23T00:00:00+00:00","dateModified": "2025-11-23T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -386,7 +386,7 @@ $$</p>
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h4><p>对于上述定义的任意两个依赖市场，我们可精确描述允许套利的条件及相应套利策略。当可构建跨两市场条件的投资组合且其中至少一个投注 guaranteed 获胜时，<strong>组合套利</strong>机会出现。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image.png' alt="图 1" height="151" width="567"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image.png' alt="图 1" height="151" width="567"></p>
 <p><strong>图 1</strong> 市场和状态关系。该图说明两个依赖的预测市场：$M_1$ 宣布州选举获胜者；$M_2$ 指定获胜幅度。对每个市场，我们定义两个互斥且完备的状态 $S_1$ 和 $S_2$。一个市场中状态的分配可蕴含另一市场的相应结果。在关系图中，标记为 $d$ 的边表示连接状态相互依赖；标记为 $c$ 的边表示状态互补（一个中的 YES 对应另一个中的 NO），必须同真或同假。</p>
 <p>▶ <strong>定义 4（组合套利）</strong>。设 $M_1$ 和 $M_2$ 为依赖市场，具有依赖子集 $S \subset M_1$ 和 $S&rsquo; \subset M_2$。若以下任一条件成立，则在时间 $t$ 存在<strong>组合套利</strong>机会：</p>
 <blockquote>
@@ -434,7 +434,7 @@ $$</p>
 <p>数据显示，<strong>政治</strong>（Politics）和<strong>体育</strong>（Sports）是主导类别，美国大选落在我们的测量期间内，清晰展现了 Polymarket 活动的激增。</p>
 <blockquote>
 <p>⁸ 访问此数据的教程可见于[37]。</p></blockquote>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-1.png' alt="图 2" height="623" width="818"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-1.png' alt="图 2" height="623" width="818"></p>
 <p><strong>图 2</strong>：顶部为按主题和结束日期划分的市场总数，区分单条件市场和 NegRisk 市场；底部为 NegRisk 市场中各主题的条件总数。总体而言，政治和体育在受欢迎程度上占主导地位。</p>
 <p>为验证分类性能，我们从数据集中随机抽样 100 个实例进行手动标注，准确率达 92%。在多个案例中，以&quot;若政客 X 说 Y&quot;形式构建的市场被归类为政治，这与我们对市场背景的解释一致。然而，某些市场揭示了标注方案的局限性；例如，&ldquo;若天气为 X&quot;等市场有时被归类为 Twitter，尽管缺乏明确合适的标签。由于此标注的主要目标是缩小搜索空间，我们将其类别与 Polymarkarket 使用的类别对齐。第 6 节分析市场对间依赖关系时，我们仅考虑同一主题和结束日期内的市场对，以将搜索空间限制在更可能涉及同一事件的市场（例如，关于团队 A 与团队 B 比赛的市场应在结果已知的比赛当日结算，这得益于市场创建受控/中心化的特性）。</p>
 <h3 id="42-历史出价数据" class="heading-element"><span>4.2 历史出价数据</span>
@@ -442,7 +442,7 @@ $$</p>
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h3><p>为获取 Polymarket 的 Polygon 链上数据，我们使用 Alchemy 公共节点 API[3]。虽然用户直接向 Polymarket 提交出价，但匹配成功的出价由 Polymarket 运营商在链上记录。所有条件代币（每个市场条件的&quot;YES&quot;或&quot;NO&quot;代币）均为 ERC-1155 条件代币实例，由 Polymarket 条件代币合约在地址 <code>0x4D97DCd97eC945f40cF65F87097ACe5EA0476045</code> 管理。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-2.png' alt="图 3*" height="609" width="759"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-2.png' alt="图 3*" height="609" width="759"></p>
 <p><strong>图 3</strong>：（顶部）按结束日期和主题划分的各市场总流动性；（底部）按市场类型划分的随时间推移的已执行出价总量。美国大选市场是当时 Polymarket 活动的主要驱动力。</p>
 <p>尽管多个合约共同构成 Polymarket 的逻辑，所有交易和流动性操作最终均由该合约记录为事件。我们特别关注 <strong>OrderFilled</strong>、<strong>PositionSplit</strong> 和 <strong>PositionsMerge</strong> 事件。第 2 节描述了发生的各类出价，可能是买卖订单的简单匹配，也可能是匹配条件两侧的两笔买入操作从而创建新代币。最终，OrderFilled 事件记录任何代币与 USDC 的交易时间及买方/卖方（若铸造新代币，卖方可为 Polymarket 交易所合约）。每当新代币被铸造（或销毁），PositionSplit 事件记录被锁定（或被提取）的 USDC 及操作方（同样，这可能是 Polymarket 交易所）。我们查询 Polymarket 条件代币合约从 2024 年 1 月 1 日至 2025 年 4 月 1 日的交易跟踪，筛选上述三类事件，且仅针对测量期间市场的条件代币。</p>
 <p>图 3 显示了按结束月份划分的各市场总锁定量，美国大选市场远超其他所有市场，同时显示了随时间推移按市值划分的交易总量。</p>
@@ -452,7 +452,7 @@ $$</p>
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h2><p>我们首先开发一种利用 LLMs 自动检测市场间语义依赖的方法，如第 3.1 节所定义并在图 4 中展示。虽然目标是确定两个独立市场中的条件是否依赖，但我们从单个市场案例开始（已知所有条件均依赖），以验证 LLM 的推理能力。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-3.png' alt="图 4" height="365" width="737"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-3.png' alt="图 4" height="365" width="737"></p>
 <p><strong>图 4</strong>：我们检测市场依赖的方法概览。</p>
 <h4 id="51-单个市场推理" class="heading-element"><span>5.1 单个市场推理</span>
   <a href="#51-%e5%8d%95%e4%b8%aa%e5%b8%82%e5%9c%ba%e6%8e%a8%e7%90%86" class="heading-mark">
@@ -493,7 +493,7 @@ $$</p>
 <p>⁹ 我们观察到未通过此检查的市场对中存在一种模式，LLM 推理出现循环，最终返回大小为 $2^{n+m}$ 的向量的&quot;True&quot;/&ldquo;False&quot;赋值穷尽集。</p></blockquote>
 <blockquote>
 <p>¹⁰ 此检查涉及计算市场对的所有可能子集，为指数级任务，但对 5 个条件尚可处理。</p></blockquote>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-4.png' alt="图 5" height="298" width="804"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-4.png' alt="图 5" height="298" width="804"></p>
 <p><strong>图 5</strong>：&ldquo;阿萨德会在 2024 年底前继续担任叙利亚总统吗？&ldquo;条件的市场行为视图。我们绘制每个头寸的 VWAP 价格，标注检测到的套利机会时刻（$|1 - \text{VWAP 总和}| &gt; 0.02$），以及套利者从机会中获利的事件（第 7 节计算）。由于我们从已执行出价的平均值计算代币价格，因此低估了套利者实际可实现的利润幅度。</p>
 <hr>
 <h2 id="6-市场分析检测套利机会" class="heading-element"><span>6 市场分析：检测套利机会</span>
@@ -511,9 +511,9 @@ $$</p>
   </a>
 </h4><p>我们首先探索单个条件内的套利，即单结果的&quot;YES&quot;和&quot;NO&quot;头寸。我们的数据集共包含 17.2K 个条件（NegRisk 占 8.56K，单条件市场占 8.66K），其中 7,051 个条件在设定参数内至少出现一次套利机会（NegRisk 占 2,628，单条件占 4,423），大多数条件仅有少数几次机会（见图 6）。观察到的所有套利机会均为多头（&ldquo;YES&quot;与&quot;NO&quot;价格总和小于 1）。跨所有市场主题，条件价格总和的中位数约为 $0.60，显示出显著的市场低效。</p>
 <p>由于利用一次套利机会可能影响后续价格，我们通过考虑每个条件最有利可图的套利机会来界定可能利润。我们将机会的最大利润定义为两方向代币价格乘以存在的代币总量（即当时可从市场购买的最大数量）。图 7（上）显示了跨所有条件的该值总和，区分了 NegRisk 和单条件市场。可见大部分潜在利润来自与政治相关的市场，尤其是 2024 年美国总统选举相关市场。即便假设仅能利用 1% 的可用代币套利，潜在利润仍可达数百万美元。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-5.png' alt="图 6" height="430" width="1004"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-5.png' alt="图 6" height="430" width="1004"></p>
 <p><strong>图 6</strong>：单条件内检测到的套利机会。附录 H.1 分别展示 NegRisk 与单条件市场。可见单条件市场通常条件级套利机会更多，但 NegRisk 市场的套利更有利可图。跨所有市场类型，每美元利润中位数远高于我们设定的 $0.02 阈值，凸显市场严重低效。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-6.png' alt="图 7*" height="837" width="980"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-6.png' alt="图 7*" height="837" width="980"></p>
 <p><strong>图 7</strong>：我们探索套利者利用每个条件中单个最有利可图机会在最大流动性下（上）以及最多仅 $100 流动性（下）可能获得的总套利利润。后者显示套利机会在市场间分布广泛，体育市场中机会更多。不限制利润时（上），利润丰厚的机会主要集中在政治领域，每条件利润更高（主要在 NegRisk 市场中）。附录 H.1 比较了 100 区块均价结果，发现通常捕获的套利更少，尤其在 11 月政治市场和 7 月体育市场——两者均被大量利用（参见图 10）。</p>
 <h4 id="62-市场内的套利" class="heading-element"><span>6.2 市场内的套利</span>
   <a href="#62-%e5%b8%82%e5%9c%ba%e5%86%85%e7%9a%84%e5%a5%97%e5%88%a9" class="heading-mark">
@@ -521,14 +521,14 @@ $$</p>
   </a>
 </h4><p>接下来，我们考察 NegRisk 市场各条件间可能的套利。在 1578 个 NegRisk 市场中，662 个至少出现一次套利机会。附录 H.2 展示了这些机会若干特征的分布。一般而言，每个市场机会更多，平均约 100 次，存在极高异常值，尤其在体育领域。市场内同时存在<strong>空头</strong>（&ldquo;YES&quot;总和大于 $1）和<strong>多头</strong>（小于 $1）套利，尽管每美元平均最大利润对多头更高，但空头存在显著异常值。</p>
 <p>我们再次考察每市场从单次机会获得的最大可能利润。由于市场内每个条件交易量可能不同，我们取所有概率大于 2% 的条件中的最小交易量（套利时忽略低概率事件风险较低）。图 8 分别显示了多头和空头头寸的这些机会总和。虽然跨主题的空头和多头套利平均最大机会大致相同（每美元约 $0.40），但从累积机会看，除美国选举期间外，体育在所有月份占主导。附录 H.2 再次考虑了预算为 $100 的适度套利者；多头套利利润是空头两倍，体育在两者中均占主导，表明体育市场内的套利机会通常很普遍。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-7.png' alt="图 8" height="441" width="1139"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-7.png' alt="图 8" height="441" width="1139"></p>
 <p><strong>图 8</strong>：我们探索套利者利用每个市场中单个最有利可图机会可能获得的总套利利润。总体而言，除政治领域少数异常值外，体育始终贡献更多利润，尤其在多头机会中，表明体育市场频繁被高估。</p>
 <h4 id="63-跨市场套利" class="heading-element"><span>6.3 跨市场套利</span>
   <a href="#63-%e8%b7%a8%e5%b8%82%e5%9c%ba%e5%a5%97%e5%88%a9" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h4><p>最后，本节考察 2024 年美国总统选举期间 13 个依赖市场对中的套利机会。对市场对，我们再次关注所有条件的&quot;YES&quot;代币价格。图 9 显示了每对机会的每 USDC 利润分布及给定流动性下的最大利润。这些对按机会数量排序，Pair 8 无机会，其余中位数为 8 次（Pairs 2、1 和 4 分别有 72、176 和 6630 次机会）。Pair 4 的市场涉及谁将赢得普选票，以及普选票获胜者是否将赢得总统职位（各对描述见附录 F）。值得注意的是，尽管我们观察到套利机会，但它们主要出现在流动性较低的时刻，且利润低于前几节（平均最大利润约 $$100$，表明市场总代币量不足 $2K）。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-8.png' alt="图 9" height="317" width="1097"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-8.png' alt="图 9" height="317" width="1097"></p>
 <p><strong>图 9</strong>：2024 年美国选举中 11 个依赖市场对的每美元利润分布（左）及假设最大流动性下的利润（右），按套利机会数量排序。</p>
 <hr>
 <h2 id="7-市场分析发现套利者" class="heading-element"><span>7 市场分析：发现套利者</span>
@@ -541,9 +541,9 @@ $$</p>
   </a>
 </h3><p>在探索套利机会空间后，我们检测是否有参与者利用了这些机会。对每个用户（单个 Polygon 地址），我们取其所有出价历史——买入、卖出、伴随卖出的 split（后者可用于计算用户持有对立头寸的价格，例如，创建 1 份&quot;YES&rdquo;/&ldquo;NO&quot;头寸后以 $$0.70$ 卖出&quot;YES&quot;的用户实际上持有价格为 $$0.30$ 的&quot;NO&rdquo;）。</p>
 <p>附录 I.1 总结了 8600 万出价的数据集。为使数据更易管理同时捕获大部分套利价值，我们剔除低于 $$2.00$ 的出价。然后我们将每个用户的所有已执行出价分组，并将时间窗口 $T$ 内的出价视为同一机会。设 $T$ 为 950 个区块（约 1 小时）以捕获出价匹配的延迟（75% 出价在此窗口内，分布见 App. I.1）。然后计算买入头寸的滚动窗口及其价格。利润按所有头寸中持有的最小代币数量减去获取头寸的成本计算。需澄清的是，我们未考虑费用，因 Polymarket 目前不对已执行交易收费。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-9.png' alt="图 10" height="396" width="986"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-9.png' alt="图 10" height="396" width="986"></p>
 <p><strong>图 11</strong>：所有用户在单条件套利中获得的总利润。我们估计的美国选举机会中仅约 1% 被用户利用。有趣的是，体育单条件市场在已利用机会中占主导，超过了选举利润。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-10.png' alt="alt text" height="481" width="1057"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-10.png' alt="alt text" height="481" width="1057"></p>
 <p><strong>图 11</strong>：（左）通过 NegRisk 市场再平衡套利获得的总利润。可见大部分利润来自政治相关市场。体育令人惊讶地未出现，可能因利润规模较小。（右）按潜在收益率划分的机会分布。大多数机会收益率低，而少数异常值——主要在 Crypto、Politics 和 Twitter 市场中——提供显著更高收益。</p>
 <h3 id="72-单条件内的套利" class="heading-element"><span>7.2 单条件内的套利</span>
   <a href="#72-%e5%8d%95%e6%9d%a1%e4%bb%b6%e5%86%85%e7%9a%84%e5%a5%97%e5%88%a9" class="heading-mark">
@@ -560,7 +560,7 @@ $$</p>
 <p>有趣的是，买入&quot;NO&quot;的表现优于其他策略。事实上，Polymarket 曾宣布某些账户仅通过买入&quot;NO&quot;头寸便获利颇丰（参见相关 Polymarket 推文[26, 25]）。</p>
 <p>图 11 绘制了单市场套利的总利润及每美元利润分布。令人惊讶的是，体育基本未出现——可能是套利者较少探索的领域。此外，政治在已提取套利中占主导，尤其是 11 月美国选举及 8 月与拜登退出选举相关的民主党候选人和副总统选择的两个主要市场。</p>
 <p>我们还调查了第 5 节识别的 13 个依赖美国对中的套利机会。在 2 个 NegRisk-单条件对中未检测到已执行套利。在剩余 11 对中，5 对存在价值提取证据。回忆我们的检测聚焦依赖子集上 YES 结果的总和。各市场对提取的总套利如下：Pair 2 为 $60,236.71，Pair 4 为 $18,472.31，Pair 1 为 $15,818.53，Pair 3 为 $629.16（各对描述见附录 F）。有趣的是，关于 GOP 总统获胜幅度的市场出现在 Pairs 1 和 2 中，关于总统、众议院和参议院权力平衡的市场出现在 Pairs 2 和 4 中。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-11.png' alt="图 12" height="511" width="988"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-11.png' alt="图 12" height="511" width="988"></p>
 <p><strong>图 12</strong>：账户的总出价数量与美元总利润并列绘制。两 y 轴均为对数刻度。</p>
 <h3 id="74-套利者策略" class="heading-element"><span>7.4 套利者策略</span>
   <a href="#74-%e5%a5%97%e5%88%a9%e8%80%85%e7%ad%96%e7%95%a5" class="heading-mark">
@@ -962,7 +962,7 @@ $$</p>
   <a href="#c-%e5%a4%9a%e6%9d%a1%e4%bb%b6%e5%b8%82%e5%9c%ba%e7%9a%84%e6%b5%81%e5%8a%a8%e6%80%a7%e5%88%86%e5%b8%83" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h2><p><img loading="lazy" src='/posts/202511-polymarket/image-12.png' alt="图 13" height="409" width="639"></p>
+</h2><p><img loading="lazy" src='/posts/202511-polymarket_new/image-12.png' alt="图 13" height="409" width="639"></p>
 <p><strong>图 13</strong>：所有市场按条件排名的平均累积流动性分布。蓝线表示按条件排名的平均累积流动性百分比，阴影区域为 ±1 标准差。排名靠前的条件占据大部分流动性，曲线在前几个排名内即接近 100%。</p>
 <hr>
 <h2 id="d-弱依赖市场示例" class="heading-element"><span>D 弱依赖市场示例</span>
@@ -1202,19 +1202,19 @@ $$</p>
   <a href="#h1-%e5%8d%95%e6%9d%a1%e4%bb%b6%e5%86%85%e7%9a%84%e5%a5%97%e5%88%a9" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><p><img loading="lazy" src='/posts/202511-polymarket/image-13.png' alt="图 14" height="479" width="829"></p>
+</h3><p><img loading="lazy" src='/posts/202511-polymarket_new/image-13.png' alt="图 14" height="479" width="829"></p>
 <p><strong>图 14</strong>：单条件内检测到的套利机会。上图为 NegRisk（多条件）市场的条件中发现的套利，下图为单条件市场的套利。可见单条件市场通常每条件有更多套利机会，但 NegRisk 市场的套利更有利可图。跨所有市场类型，每美元利润中位数远高于 $0.02 阈值。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-14.png' alt="图 15" height="604" width="727"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-14.png' alt="图 15" height="604" width="727"></p>
 <p><strong>图 15</strong>：我们探索套利者利用每个条件中单个最有利可图机会在最大流动性下（上）以及最多仅 $100 流动性（下）可能获得的总套利利润，其中每个条件代币价格在 100 个区块上平均。与图 7 相比，较长时期的价格平均消除了一些可获得显著利润的波动（此处理润总和通常较低）。然而，下图显示更高利润，表明较长平均导致发现更多小价值套利可能的市场。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-15.png' alt="图 16" height="285" width="797"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-15.png' alt="图 16" height="285" width="797"></p>
 <p><strong>图 16</strong>：我们探索套利者利用每个市场中单个最有利可图机会最多 $100 可能获得的总套利利润。可见总体上空头有更多利润。</p>
 <h3 id="h2-市场内的套利" class="heading-element"><span>H.2 市场内的套利</span>
   <a href="#h2-%e5%b8%82%e5%9c%ba%e5%86%85%e7%9a%84%e5%a5%97%e5%88%a9" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><p><img loading="lazy" src='/posts/202511-polymarket/image-16.png' alt="图 17" height="545" width="952"></p>
+</h3><p><img loading="lazy" src='/posts/202511-polymarket_new/image-16.png' alt="图 17" height="545" width="952"></p>
 <p><strong>图 17</strong>：NegRisk 市场中检测到的套利机会的特征。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-17.png' alt="图 18" height="330" width="949"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-17.png' alt="图 18" height="330" width="949"></p>
 <p><strong>图 18</strong>：我们探索套利者利用每个市场中单个最有利可图机会最多 $100 可能获得的总套利利润。</p>
 <hr>
 <h2 id="i-补充分析发现套利者" class="heading-element"><span>I 补充分析：发现套利者</span>
@@ -1225,15 +1225,15 @@ $$</p>
   <a href="#i1-%e5%87%ba%e4%bb%b7%e7%bb%9f%e8%ae%a1%e5%92%8c-delta-%e6%b5%8b%e9%87%8f" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><p><img loading="lazy" src='/posts/202511-polymarket/image-18.png' alt="图 19" height="345" width="928"></p>
+</h3><p><img loading="lazy" src='/posts/202511-polymarket_new/image-18.png' alt="图 19" height="345" width="928"></p>
 <p><strong>图 19</strong>：所有出价的汇总统计（左）和 delta 分布（右）。Delta 定义为给定用户 $u$ 和条件 $c$ 在市场中下单和执行之间的区块数，即 $t$ 和 $t&rsquo;$ 之间的间隔。跨用户和市场的所有 delta 被聚合以计算平均值和中位数，显示在箱线图中。</p>
 <h3 id="i2-不同策略的每美元利润" class="heading-element"><span>I.2 不同策略的每美元利润</span>
   <a href="#i2-%e4%b8%8d%e5%90%8c%e7%ad%96%e7%95%a5%e7%9a%84%e6%af%8f%e7%be%8e%e5%85%83%e5%88%a9%e6%b6%a6" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><p><img loading="lazy" src='/posts/202511-polymarket/image-19.png' alt="图 20" height="411" width="970"></p>
+</h3><p><img loading="lazy" src='/posts/202511-polymarket_new/image-19.png' alt="图 20" height="411" width="970"></p>
 <p><strong>图 20</strong>：在单条件场景下应用多头或空头策略时每笔交易的美元利润比较。图表区分了总利润和小于 1 与大于 1 的情况。</p>
-<p><img loading="lazy" src='/posts/202511-polymarket/image-20.png' alt="图 21" height="409" width="943"></p>
+<p><img loading="lazy" src='/posts/202511-polymarket_new/image-20.png' alt="图 21" height="409" width="943"></p>
 <p><strong>图 21</strong>：在多条件市场应用多头和空头策略时每笔交易的美元利润比较。图表区分了 YES 再平衡总利润小于 1 或 NO 再平衡小于 $n-1$ 与超过这些阈值的情景。</p>
 </div><div class="post-footer" id="post-footer">
   <div class="post-info">
@@ -1245,9 +1245,9 @@ $$</p>
           </div></div><div class="post-info-line">
         <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202511-polymarket/" data-title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202511-polymarket/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202511-polymarket/" data-title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202511-polymarket_new/" data-title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202511-polymarket_new/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202511-polymarket_new/" data-title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
