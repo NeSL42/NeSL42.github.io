@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -13,7 +13,7 @@
   <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="wordCount" content="4366">
-  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-uniswap03/">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap03/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="03.Uniswap V2 手续费机制">
   <meta property="og:description" content="核心摘要 (Key Takeaways) 流动性增长：Uniswap V2 的千三（0.3%）交易手续费会直接重新注入到流动性池中，导致池子中的资产（X和Y）缓慢增长，进而使总流动性 K 值不断增大。 LP 收益机制：流动性提供者（LP）通过持有 LP Token (Share) 来证明其在池中的份额。当池子总流动性 K 增长时，LP Token 的总份额不变，因此每个 LP Token 所代表的实际资产价值会提升，LP 在撤出流动性时能获得更多资产。 协议手续费 (PROTOCOL_FEE)：Uniswap V2 设计了一种机制，允许协议开发者收取一部分手续费（例如千三的 1/6，即万分之五）。这通过增发新的 LP Token (Share) 给协议方来实现，从而让协议方在不提供流动性的前提下，分享流动性增长带来的收益。 链上状态：尽管 Uniswap V2 设计了协议手续费机制，但目前该功能并未在主网上开启。通过检查 UniswapV2Factory 合约的 feeTo 地址是否为零，可以验证其开启状态。 1. Uniswap V2 手续费机制概览 1.1 基础概念：流动性与 LP Token 恒定乘积做市商 (CPMM)：Uniswap V2 基于 X * Y = K 的公式进行资产交换，其中 X 和 Y 分别代表池中两种资产的数量，K 是一个常数（在无手续费和无流动性增减的情况下）。 流动性 (L)：在 Uniswap V2 中，流动性 L 通常指 sqrt(K)。 公式：$L = \sqrt{K}$ LP Token (Share / LPT)：当用户向 Uniswap 池中提供流动性时，会获得相应数量的 LP Token 作为凭证。这些 Token 代表了用户在池中的份额。 S1：在 T1 时刻，LP Token 的总数量。 1.2 千三手续费 (0.3%) 收取方式：每笔交易都会收取 0.3% 的手续费。这笔费用并不是直接从交易对的另一方扣除，而是从进入池子的 Token 中扣除。 例如，用户用 DX 数量的 X 资产购买 Y 资产，池子实际上只收到 (1 - 0.003) * DX = 0.997 * DX。 归属：这 0.3% 的手续费直接重新注入到流动性池中，而非直接分配给某个用户或地址。 2. 流动性增长的逻辑 2.1 为什么流动性会增长 (K2 &gt; K1)？ 手续费的积累：由于 0.3% 的手续费被重新注入到池子中，池子里的 X 和 Y 资产总量会随着交易量的增加而缓慢增长。 如果用 DX 购买 Y，池子收到 0.997 * DX。这 0.997 * DX 增加了池子里的 X 资产。 如果用 DY 购买 X，池子收到 0.997 * DY。这 0.997 * DY 增加了池子里的 Y 资产。 结果：只要有交易发生，池子中的 X 和 Y 资产总量就会增加，从而导致 K 值（即 X * Y）不断增大。 $K_2 &gt; K_1$ (在不考虑流动性增减的情况下)。 2.2 案例分析：DAI/USDT 池子 为了更好地理解流动性增长和套利机制，我们以 DAI/USDT 稳定币交易对为例：">
@@ -30,7 +30,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap03/" title="03.Uniswap V2 手续费机制 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap04/" title="04.Uniswap V2 添加移除流动性" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap02/" title="02.Uniswap V2 swap 操作" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap03/" title="03.Uniswap V2 手续费机制 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap04/" title="04.Uniswap V2 添加移除流动性" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap02/" title="02.Uniswap V2 swap 操作" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -40,9 +40,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/nesl42.github.io\/posts\/202509-uniswap03\/"
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap03\/"
     },"genre": "posts","keywords": "Web3","wordcount":  4366 ,
-    "url": "https:\/\/nesl42.github.io\/posts\/202509-uniswap03\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap03\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -508,9 +508,9 @@ $$
           </div></div><div class="post-info-line">
         <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202509-uniswap03/" data-title="03.Uniswap V2 手续费机制" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202509-uniswap03/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202509-uniswap03/" data-title="03.Uniswap V2 手续费机制"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap03/" data-title="03.Uniswap V2 手续费机制" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap03/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap03/" data-title="03.Uniswap V2 手续费机制"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -541,5 +541,5 @@ $$
     
     window.mermaid = mermaid;
   </script><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};</script><script src="/js/theme.min.js" defer></script></body>
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};console.log('Page config:', window.config);</script><script src="/js/theme.min.js" defer></script></body>
 </html>
