@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -13,7 +13,7 @@
   <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="wordCount" content="2631">
-  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap06/">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-uniswap06/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="06.Uniswap V2 闪电贷">
   <meta property="og:description" content="核心摘要 (Key Takeaways) Flash Swaps (闪电交换) 是一种无需任何抵押即可借出资产的机制，但前提是必须在同一笔区块链交易内归还借款本金及相应的手续费。 该机制的核心是原子性 (Atomicity)，即整笔复杂操作（借款、执行自定义逻辑、还款）要么全部成功，要么全部失败回滚，从而保证资金池的安全。 Flash Swaps 是 DeFi 可组合性 (Composability) 的强大体现，允许开发者像搭乐高一样，在单笔交易中调用多个协议（如 Uniswap, Compound, Aave）来执行复杂的套利或其它金融策略。 为了确保协议盈利，用户需要支付一笔手续费。这笔费用的最低标准是借出资产数量的 3/997，这个数值是通过数学计算确保资金池资产不会减少而得出的。 实现 Flash Swap 需要用户编写并部署一个智能合约，该合约必须实现一个特定的回调接口（uniswapV2Call），Uniswap 的交易对（Pair）合约会通过调用这个接口来执行用户的自定义逻辑。 1. Flash Swaps 核心概念 Flash Swaps，也常被称为闪电贷 (Flash Loan)，是 Uniswap V2 引入的一项创新功能。它与普通交易（Swap）的根本区别在于资金的获取和使用方式。">
@@ -30,7 +30,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap06/" title="06.Uniswap V2 闪电贷 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap07/" title="07.Uniswap V2 TWAP" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap05/" title="05.Uniswap V2 无常损失" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap06/" title="06.Uniswap V2 闪电贷 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap07/" title="07.Uniswap V2 TWAP" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap05/" title="05.Uniswap V2 无常损失" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -40,9 +40,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap06\/"
+      "@id": "https:\/\/nesl42.github.io\/posts\/202509-uniswap06\/"
     },"genre": "posts","keywords": "Web3","wordcount":  2631 ,
-    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap06\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+    "url": "https:\/\/nesl42.github.io\/posts\/202509-uniswap06\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -329,9 +329,9 @@ $$
           </div></div><div class="post-info-line">
         <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap06/" data-title="06.Uniswap V2 闪电贷" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap06/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap06/" data-title="06.Uniswap V2 闪电贷"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202509-uniswap06/" data-title="06.Uniswap V2 闪电贷" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202509-uniswap06/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202509-uniswap06/" data-title="06.Uniswap V2 闪电贷"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -362,5 +362,5 @@ $$
     
     window.mermaid = mermaid;
   </script><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};console.log('Page config:', window.config);</script><script src="/js/theme.min.js" defer></script></body>
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};</script><script src="/js/theme.min.js" defer></script></body>
 </html>

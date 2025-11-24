@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -13,7 +13,7 @@
   <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="wordCount" content="3186">
-  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap19/">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-uniswap19/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="19.Uniswap V3 手续费计算（二）">
   <meta property="og:description" content="Uniswap V3 手续费计算深度解析 (二) 核心摘要 (Key Takeaways) 核心公式: 为特定价格区间 $(i_l, i_u)$ 计算手续费的核心思想是：用全局累计手续费 $f_g$ 减去该区间下方的累计手续费 $f_b$ 和上方的累计手续费 $f_a$。公式为：$f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)$。 关键变量 $f_{o,i}$: Uniswap V3 引入了一个名为 feeOutside (笔记中记为 $f_{o,i}$) 的关键变量。每个 tick i 都会记录这个值，它巧妙地追踪了当价格在 tick i 的“外部”时所累积的单位流动性手续费。 $f_{o,i}$ 的更新机制: 当价格穿越一个 tick i 时，该 tick 对应的 $f_{o,i}$ 会进行一次“翻转”更新。更新规则为：$f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}$。这个机制是整个计算逻辑的精髓。 推导关系: 通过 $f_{o,i}$ 和当前全局手续费 $f_g$，可以精确推导出任意时刻的 $f_b$ 和 $f_a$。它们的值取决于当前价格 $i_c$ 相对于目标 tick i 的位置。 1. 背景：V3 手续费计算的复杂性 根本原因: 集中流动性 (Concentrated Liquidity)。与 V2 不同，V3 的流动性提供者 (LP) 将资金集中在特定的价格区间内。">
@@ -30,7 +30,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap19/" title="19.Uniswap V3 手续费计算（二） - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap20/" title="20.Uniswap V4 简介" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap18/" title="18.Uniswap V3 手续费计算（一）" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap19/" title="19.Uniswap V3 手续费计算（二） - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap20/" title="20.Uniswap V4 简介" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap18/" title="18.Uniswap V3 手续费计算（一）" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -40,9 +40,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap19\/"
+      "@id": "https:\/\/nesl42.github.io\/posts\/202509-uniswap19\/"
     },"genre": "posts","keywords": "Web3","wordcount":  3186 ,
-    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap19\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+    "url": "https:\/\/nesl42.github.io\/posts\/202509-uniswap19\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -408,9 +408,9 @@ $$</p>
           </div></div><div class="post-info-line">
         <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap19/" data-title="19.Uniswap V3 手续费计算（二）" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap19/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap19/" data-title="19.Uniswap V3 手续费计算（二）"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202509-uniswap19/" data-title="19.Uniswap V3 手续费计算（二）" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202509-uniswap19/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202509-uniswap19/" data-title="19.Uniswap V3 手续费计算（二）"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -441,5 +441,5 @@ $$</p>
     
     window.mermaid = mermaid;
   </script><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};console.log('Page config:', window.config);</script><script src="/js/theme.min.js" defer></script></body>
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};</script><script src="/js/theme.min.js" defer></script></body>
 </html>

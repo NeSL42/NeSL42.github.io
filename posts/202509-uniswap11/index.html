@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -12,7 +12,7 @@
   <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="wordCount" content="3419">
-  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap11/">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-uniswap11/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="11.Uniswap V3 tick 与价格表示">
   <meta property="og:description" content="核心摘要 (Key Takeaways) tick 引入目的与作用: Uniswap V3 引入了 tick 机制，将连续的价格范围离散化，以解决集中流动性中用户随意设置价格区间导致的高 Gas 消耗问题，从而大幅节省 Gas 费用。 价格与 tick 的数学关系: Uniswap V3 中的价格 $P$ 与 tick 索引 $T$ 之间通过公式 $P = 1.0001^T$ 建立精确的指数关系。 合约价格存储: Uniswap V3 合约的 slot0 结构中，价格信息并非直接存储为 $P$，而是以 $\sqrt{P} \times 2^{96}$ 的形式（即 sqrtPriceX96）存储，并采用 Q64.96 定点数格式，以适应 Solidity 对浮点数处理的限制并优化 Gas 消耗。 实际价格计算的复杂性: 从合约中读取的价格需要考虑 Token 精度差异 和 token0/token1 顺序（可能导致价格倒数）进行修正，才能得到真实的市场价格。 tick 范围的由来: tick 的范围被限制在 -887272 到 &#43;887272，这一范围是根据 Q64.96 定点数格式所能表示的 $\sqrt{P}$ 的上下限，通过价格与 tick 的数学关系推导而来，并硬编码在合约中。 1. tick 的引入与作用 1.1 问题背景：集中流动性的 Gas 消耗 Uniswap V3 的核心创新: 引入了集中流动性 (Concentrated Liquidity)，允许用户在任意价格区间 $P_a$ 和 $P_b$ 内提供流动性。 潜在问题: 如果用户可以随意设置 $P_a$ 和 $P_b$ (例如 $1795.0234$ 到 $1800.00012$)，会带来以下问题： 每个用户设置的价格范围都是独一无二且随意的。 维护和记录每个用户添加的 $P_a$ 和 $P_b$ 范围会消耗巨量的 Gas 费用，因为合约状态需要存储大量不规则的数据。 1.2 解决方案：引入 tick 进行离散化">
@@ -29,7 +29,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap11/" title="11.Uniswap V3 tick 与价格表示 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap12/" title="12.Uniswap V3 添加流动性案例" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap10/" title="10.Uniswap V3 流动性计算" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap11/" title="11.Uniswap V3 tick 与价格表示 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap12/" title="12.Uniswap V3 添加流动性案例" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap10/" title="10.Uniswap V3 流动性计算" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -39,9 +39,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap11\/"
+      "@id": "https:\/\/nesl42.github.io\/posts\/202509-uniswap11\/"
     },"genre": "posts","keywords": "Web3","wordcount":  3419 ,
-    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap11\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+    "url": "https:\/\/nesl42.github.io\/posts\/202509-uniswap11\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -462,9 +462,9 @@ $$
           </div></div><div class="post-info-line">
         <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap11/" data-title="11.Uniswap V3 Tick 与价格表示" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap11/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap11/" data-title="11.Uniswap V3 Tick 与价格表示"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202509-uniswap11/" data-title="11.Uniswap V3 Tick 与价格表示" data-hashtags="Web3"><i class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202509-uniswap11/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202509-uniswap11/" data-title="11.Uniswap V3 Tick 与价格表示"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -495,5 +495,5 @@ $$
     
     window.mermaid = mermaid;
   </script><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};console.log('Page config:', window.config);</script><script src="/js/theme.min.js" defer></script></body>
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script>window.config={"code":{"copyTitle":"Copy to clipboard","editLockTitle":"Lock editable code block","editUnLockTitle":"Unlock editable code block","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"mermaid":{"themes":["default","dark"]},"version":"v0.3.17-8212d6fd"};</script><script src="/js/theme.min.js" defer></script></body>
 </html>
