@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -15,8 +15,8 @@ Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以�
 Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以太币 Ether [ETH]）价格波动过于剧烈，难以作为日常交易货币使用。比特币的价值经常出现大幅波动，单日涨跌幅度可达 25%，有时甚至一个月内涨幅超过 300%。">
   <meta itemprop="datePublished" content="2025-07-19T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-07-19T00:00:00+00:00">
-  <meta itemprop="wordCount" content="11096">
-  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="http://localhost:1313/posts/202507-dai/">
+  <meta itemprop="wordCount" content="11224">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="https://nesl42.github.io/posts/202507-dai/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="DAI 白皮书翻译">
   <meta property="og:description" content="DAI白皮书
@@ -37,7 +37,7 @@ Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以�
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202507-dai/" title="DAI 白皮书翻译 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202507-eth_white_paper/" title="ETH 白皮书阅读" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202507-lol/" title="十大英雄联盟悲情语录" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202507-dai/" title="DAI 白皮书翻译 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202507-eth_white_paper/" title="ETH 白皮书阅读" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202507-lol/" title="十大英雄联盟悲情语录" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -47,9 +47,9 @@ Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以�
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202507-dai\/"
-    },"genre": "posts","keywords": "论文阅读","wordcount":  11096 ,
-    "url": "http:\/\/localhost:1313\/posts\/202507-dai\/","datePublished": "2025-07-19T00:00:00+00:00","dateModified": "2025-07-19T00:00:00+00:00","publisher": {
+      "@id": "https:\/\/nesl42.github.io\/posts\/202507-dai\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  11224 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202507-dai\/","datePublished": "2025-07-19T00:00:00+00:00","dateModified": "2025-07-19T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -90,7 +90,7 @@ Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以�
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>DAI 白皮书翻译</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-07-19 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-07-19">2025-07-19</time></span>&nbsp;<span title="11096 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 11100 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 23 分钟</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-07-19 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-07-19">2025-07-19</time></span>&nbsp;<span title="11224 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 11300 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 23 分钟</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>目录</span>
@@ -787,14 +787,14 @@ Maker平台通过去中心化预言机网络获取抵押品内部报价及Dai市
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h3><p><strong>公式</strong>：</p>
-<p>$\text{抵押率} = \frac{\text{抵押品价值}}{\text{债务}} \times 100%$</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>抵押率</mtext><mo>=</mo><mfrac><mtext>抵押品价值</mtext><mtext>债务</mtext></mfrac><mo>×</mo><mn>100</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\text{抵押率} = \frac{\text{抵押品价值}}{\text{债务}} \times 100\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">抵押率</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2173em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8723em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord cjk_fallback mtight">债务</span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord cjk_fallback mtight">抵押品价值</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">100%</span></span></span></span></p>
 <p><strong>举例</strong>：</p>
 <ul>
 <li>
 <p>你存入 <strong>1 ETH（价值 $3,000）</strong>，借出 <strong>2,000 Dai</strong>。</p>
 </li>
 <li>
-<p>当前抵押率：$\frac{3000}{2000} \times 100% = 150%$</p>
+<p>当前抵押率：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>3000</mn><mn>2000</mn></mfrac><mo>×</mo><mn>100</mn><mi mathvariant="normal">%</mi><mo>=</mo><mn>150</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\frac{3000}{2000} \times 100\% = 150\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2000</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3000</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">100%</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">150%</span></span></span></span></p>
 <p>（刚好达到最低要求，暂时安全）</p>
 </li>
 </ul>
@@ -807,7 +807,7 @@ Maker平台通过去中心化预言机网络获取抵押品内部报价及Dai市
 <p>新抵押率：</p>
 </li>
 </ul>
-<p>$\frac{2500}{2000} \times 100% = 125% $</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>2500</mn><mn>2000</mn></mfrac><mo>×</mo><mn>100</mn><mi mathvariant="normal">%</mi><mo>=</mo><mn>125</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\frac{2500}{2000} \times 100\% = 125\% </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2000</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2500</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">100%</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">125%</span></span></span></span></p>
 <p>（低于 150%，触发清算！）</p>
 <hr>
 <h3 class="heading-element" id="4-清算会发生什么"><span>4. 清算会发生什么？</span>
@@ -873,11 +873,11 @@ Maker平台通过去中心化预言机网络获取抵押品内部报价及Dai市
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202507-DAI/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202507-dai/" data-title="DAI 白皮书翻译" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202507-dai/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202507-dai/" data-title="DAI 白皮书翻译"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202507-dai/" data-title="DAI 白皮书翻译" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202507-dai/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202507-dai/" data-title="DAI 白皮书翻译"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -1021,5 +1021,6 @@ Maker平台通过去中心化预言机网络获取抵押品内部报价及Dai市
   </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
     <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
   </noscript>
-</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/32f94f70af92f0c4ba8aba8dcb50f39b.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/32f94f70af92f0c4ba8aba8dcb50f39b.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

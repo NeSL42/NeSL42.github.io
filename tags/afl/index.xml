@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>AFL - 标签 - 敬渊&#39;s Blog</title>
-    <link>http://localhost:1313/tags/afl/</link>
+    <link>https://nesl42.github.io/tags/afl/</link>
     <description>敬渊&#39;s Blog</description>
     <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sat, 16 Sep 2023 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/afl/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/tags/afl/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AFL源码阅读</title>
-      <link>http://localhost:1313/posts/2023-9-aflsourceread/</link>
+      <link>https://nesl42.github.io/posts/2023-9-aflsourceread/</link>
       <pubDate>Sat, 16 Sep 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2023-9-aflsourceread/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/2023-9-aflsourceread/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;阅读源码的主要目标应该是：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;理清静态插桩过程（gcc、clang、llvm mode）&lt;/li&gt;&#xA;&lt;li&gt;理清 fuzz 过程：如何变异、如何将 input 传递给程序、如何收集覆盖度信息&lt;/li&gt;&#xA;&lt;li&gt;理清 qemu mode 的插桩和执行过程&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;因此，我们决定阅读顺序：&lt;/p&gt;</description>
     </item>
   </channel>

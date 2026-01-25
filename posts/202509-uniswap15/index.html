@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -11,8 +11,8 @@
   <meta itemprop="description" content="核心摘要 (Key Takeaways) Tick Bitmap 的核心作用：它是一个 uint256 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。1 代表该 Tick 活跃（有流动性），0 代表不活跃。 寻找下一个 Tick 的目的：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。 通过位运算实现高效查找：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）和按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。 交易方向决定搜索方向： 当交易导致价格上涨时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向左搜索（寻找更大的 Tick）。 当交易导致价格下跌时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向右搜索（寻找更小的 Tick）。 Bitmap 内部方向与全局 Tick 轴方向的区别：在 Bitmap（一个 uint256）内部，索引位（bit position）从右到左增大，因此向左查找意味着寻找更大的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。 I. Tick Bitmap 核心概念回顾 本节内容对应 TickBitmap.sol 库合约中的核心逻辑。">
   <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
-  <meta itemprop="wordCount" content="4297">
-  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap15/">
+  <meta itemprop="wordCount" content="4591">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-uniswap15/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="15.Uniswap V3 Tick Bitmap 寻找下一个 tick">
   <meta property="og:description" content="核心摘要 (Key Takeaways) Tick Bitmap 的核心作用：它是一个 uint256 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。1 代表该 Tick 活跃（有流动性），0 代表不活跃。 寻找下一个 Tick 的目的：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。 通过位运算实现高效查找：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）和按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。 交易方向决定搜索方向： 当交易导致价格上涨时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向左搜索（寻找更大的 Tick）。 当交易导致价格下跌时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向右搜索（寻找更小的 Tick）。 Bitmap 内部方向与全局 Tick 轴方向的区别：在 Bitmap（一个 uint256）内部，索引位（bit position）从右到左增大，因此向左查找意味着寻找更大的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。 I. Tick Bitmap 核心概念回顾 本节内容对应 TickBitmap.sol 库合约中的核心逻辑。">
@@ -29,7 +29,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap15/" title="15.Uniswap V3 Tick Bitmap 寻找下一个 tick - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap17/" title="16.Uniswap V3 cross tick swap" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap14/" title="14.Uniswap V3 Tick Bitmap" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap15/" title="15.Uniswap V3 Tick Bitmap 寻找下一个 tick - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap17/" title="16.Uniswap V3 cross tick swap" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap14/" title="14.Uniswap V3 Tick Bitmap" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -39,9 +39,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap15\/"
-    },"genre": "posts","keywords": "Web3","wordcount":  4297 ,
-    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap15\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@id": "https:\/\/nesl42.github.io\/posts\/202509-uniswap15\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  4591 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202509-uniswap15\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -82,7 +82,7 @@
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>15.Uniswap V3 Tick Bitmap 寻找下一个 Tick</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="4297 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 4300 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 9 分钟</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="4591 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 4600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 10 分钟</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>目录</span>
@@ -360,13 +360,13 @@
 <li><strong>计算 Next Tick 值</strong>：
 <ul>
 <li><strong>公式</strong>:
-$$
-\text{NextTick} = \text{CurrentTick} - \text{BitPosition}<em>{\text{current}} + \text{BitPosition}</em>{\text{next}}
-$$</li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>NextTick</mtext><mo>=</mo><mtext>CurrentTick</mtext><mo>−</mo><msub><mtext>BitPosition</mtext><mtext>current</mtext></msub><mo>+</mo><msub><mtext>BitPosition</mtext><mtext>next</mtext></msub></mrow><annotation encoding="application/x-tex">
+        \text{NextTick} = \text{CurrentTick} - \text{BitPosition}_{\text{current}} + \text{BitPosition}_{\text{next}}
+        </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">NextTick</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">CurrentTick</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">BitPosition</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">current</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">BitPosition</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">next</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
 <li><strong>案例计算</strong>:
-$$
--200697 - 7 + 2 = -200702
-$$</li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>200697</mn><mo>−</mo><mn>7</mn><mo>+</mo><mn>2</mn><mo>=</mo><mo>−</mo><mn>200702</mn></mrow><annotation encoding="application/x-tex">
+        -200697 - 7 + 2 = -200702
+        </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">200697</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">7</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">200702</span></span></span></span></li>
 <li>新的价格区间边界为 <code>-200702</code> 到 <code>-200697</code>。</li>
 </ul>
 </li>
@@ -397,13 +397,13 @@ $$</li>
 <li><strong>计算 Next Tick 值</strong>：
 <ul>
 <li><strong>公式</strong>: (同上)
-$$
-\text{NextTick} = \text{CurrentTick} - \text{BitPosition}<em>{\text{current}} + \text{BitPosition}</em>{\text{next}}
-$$</li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>NextTick</mtext><mo>=</mo><mtext>CurrentTick</mtext><mo>−</mo><msub><mtext>BitPosition</mtext><mtext>current</mtext></msub><mo>+</mo><msub><mtext>BitPosition</mtext><mtext>next</mtext></msub></mrow><annotation encoding="application/x-tex">
+        \text{NextTick} = \text{CurrentTick} - \text{BitPosition}_{\text{current}} + \text{BitPosition}_{\text{next}}
+        </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">NextTick</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">CurrentTick</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">BitPosition</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">current</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">BitPosition</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">next</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
 <li><strong>案例计算</strong>:
-$$
--200697 - 7 + 10 = -200694
-$$</li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>200697</mn><mo>−</mo><mn>7</mn><mo>+</mo><mn>10</mn><mo>=</mo><mo>−</mo><mn>200694</mn></mrow><annotation encoding="application/x-tex">
+        -200697 - 7 + 10 = -200694
+        </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">200697</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">7</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">10</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">200694</span></span></span></span></li>
 <li>新的价格区间边界为 <code>-200697</code> 到 <code>-200694</code>。</li>
 </ul>
 </li>
@@ -500,11 +500,11 @@ $$</li>
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap15/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap15/" data-title="15.Uniswap V3 Tick Bitmap 寻找下一个 Tick" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap15/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap15/" data-title="15.Uniswap V3 Tick Bitmap 寻找下一个 Tick"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202509-uniswap15/" data-title="15.Uniswap V3 Tick Bitmap 寻找下一个 Tick" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202509-uniswap15/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202509-uniswap15/" data-title="15.Uniswap V3 Tick Bitmap 寻找下一个 Tick"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -557,5 +557,6 @@ $$</li>
   </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
     <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
   </noscript>
-</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/5db7b2f074a396a410b1749e108ea67f.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/5db7b2f074a396a410b1749e108ea67f.js" defer></script><script src="/js/lib/mermaid.min.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
 </html>

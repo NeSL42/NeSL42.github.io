@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>网络 - 标签 - 敬渊&#39;s Blog</title>
-    <link>http://localhost:1313/tags/%E7%BD%91%E7%BB%9C/</link>
+    <link>https://nesl42.github.io/tags/%E7%BD%91%E7%BB%9C/</link>
     <description>敬渊&#39;s Blog</description>
     <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sat, 22 Mar 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/tags/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>shadowsocks实现原理</title>
-      <link>http://localhost:1313/posts/202503-shadowsocks/</link>
+      <link>https://nesl42.github.io/posts/202503-shadowsocks/</link>
       <pubDate>Sat, 22 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202503-shadowsocks/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202503-shadowsocks/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>shadowsocks实现原理</description>
     </item>
     <item>
       <title>Socks5原理</title>
-      <link>http://localhost:1313/posts/2025-socks5/</link>
+      <link>https://nesl42.github.io/posts/2025-socks5/</link>
       <pubDate>Sat, 22 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2025-socks5/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/2025-socks5/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>Socks5原理</description>
     </item>
   </channel>

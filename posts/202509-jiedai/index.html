@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -11,8 +11,8 @@
   <meta itemprop="description" content="核心摘要 (Key Takeaways) 核心机制：去中心化借贷协议本质上是一个资金池，存款人 (Lender) 提供闲置资产赚取利息，借款人 (Borrower) 通过超额抵押资产来借出其他资产，整个过程由智能合约自动执行。 动态利率模型：借贷利率并非固定不变，而是由资金使用率 (Utilization Rate) 动态调节。当资金池中大量资产被借出时（使用率高），利率会自动升高以抑制借款、鼓励存款；反之则降低利率。 安全基石：超额抵押与清算：为应对加密资产的价格波动，所有借款都必须超额抵押。协议通过健康因子 (Health Factor) 监控每笔贷款的风险。一旦抵押物价值跌破清算阈值，监控者 (Keeper) 会触发清算程序（如拍卖或市场售出）以保护存款人的资金。 关键外部依赖：预言机 (Oracle)：协议需要预言机来获取抵押物和借出资产的实时价格，以准确计算健康因子。因此，预言机的稳定性和安全性至关重要，是协议最主要的攻击点之一，对于黑客来说，预言机就是提款机。 记账方式的演进：协议通过向存款人发放凭证Token（如Compound的cToken）来代表其在资金池中的份额。这种方式相比传统的复式记账法，极大地简化了利息计算和用户资产追踪。 1. 去中心化借贷的核心价值与传统对比 1.1. 为什么需要借贷？ 借贷是源远流长的金融活动，核心在于提高资金利用效率和满足流动性需求，而非简单地“没钱才借”。">
   <meta itemprop="datePublished" content="2025-08-30T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-08-30T00:00:00+00:00">
-  <meta itemprop="wordCount" content="5435">
-  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-jiedai/">
+  <meta itemprop="wordCount" content="5572">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-jiedai/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="去中心化借贷">
   <meta property="og:description" content="核心摘要 (Key Takeaways) 核心机制：去中心化借贷协议本质上是一个资金池，存款人 (Lender) 提供闲置资产赚取利息，借款人 (Borrower) 通过超额抵押资产来借出其他资产，整个过程由智能合约自动执行。 动态利率模型：借贷利率并非固定不变，而是由资金使用率 (Utilization Rate) 动态调节。当资金池中大量资产被借出时（使用率高），利率会自动升高以抑制借款、鼓励存款；反之则降低利率。 安全基石：超额抵押与清算：为应对加密资产的价格波动，所有借款都必须超额抵押。协议通过健康因子 (Health Factor) 监控每笔贷款的风险。一旦抵押物价值跌破清算阈值，监控者 (Keeper) 会触发清算程序（如拍卖或市场售出）以保护存款人的资金。 关键外部依赖：预言机 (Oracle)：协议需要预言机来获取抵押物和借出资产的实时价格，以准确计算健康因子。因此，预言机的稳定性和安全性至关重要，是协议最主要的攻击点之一，对于黑客来说，预言机就是提款机。 记账方式的演进：协议通过向存款人发放凭证Token（如Compound的cToken）来代表其在资金池中的份额。这种方式相比传统的复式记账法，极大地简化了利息计算和用户资产追踪。 1. 去中心化借贷的核心价值与传统对比 1.1. 为什么需要借贷？ 借贷是源远流长的金融活动，核心在于提高资金利用效率和满足流动性需求，而非简单地“没钱才借”。">
@@ -29,7 +29,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-jiedai/" title="去中心化借贷 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-amm/" title="恒定乘积自动做市商 (CPAMM) 学习笔记" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap01/" title="01.Uniswap 简介" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202509-jiedai/" title="去中心化借贷 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202509-amm/" title="恒定乘积自动做市商 (CPAMM) 学习笔记" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap01/" title="01.Uniswap 简介" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -39,9 +39,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202509-jiedai\/"
-    },"genre": "posts","keywords": "Web3","wordcount":  5435 ,
-    "url": "http:\/\/localhost:1313\/posts\/202509-jiedai\/","datePublished": "2025-08-30T00:00:00+00:00","dateModified": "2025-08-30T00:00:00+00:00","publisher": {
+      "@id": "https:\/\/nesl42.github.io\/posts\/202509-jiedai\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  5572 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202509-jiedai\/","datePublished": "2025-08-30T00:00:00+00:00","dateModified": "2025-08-30T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -82,7 +82,7 @@
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>去中心化借贷</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-30 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-30">2025-08-30</time></span>&nbsp;<span title="5435 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 5500 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 11 分钟</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-30 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-30">2025-08-30</time></span>&nbsp;<span title="5572 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 5600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 12 分钟</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>目录</span>
@@ -342,10 +342,10 @@
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h4><p>协议的收支平衡可以用一个简化公式来表示，它确保了支付给存款人的利息来源于借款人支付的利息。</p>
-<p>$$
+<span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;存&quot; used in math mode [unicodeTextInMathMode] at position 2: 
+存̲款 \times 存款利率 +…" style="color:#ff4949">
 存款 \times 存款利率 + 平台费 = 借款 \times 借款利率
-$$</p>
-<ul>
+</span><ul>
 <li>这个公式解释了为什么<strong>存款利率总是低于借款利率</strong>。即使平台费为零，因为总存款额总是大于或等于总借款额（为了保留流动性），所以存款利率必然小于或等于借款利率。</li>
 </ul>
 <h3 class="heading-element" id="3-借贷协议设计的核心问题"><span><strong>3. 借贷协议设计的核心问题</strong></span>
@@ -388,9 +388,10 @@ $$</p>
 </h4><p>贷款利率是动态的，其核心目标是在保证健康流动性的前提下，尽可能多地将资金借出。</p>
 <ul>
 <li><strong>核心指标</strong>：<strong>存款使用率 (Utilization Rate)</strong>
-$$
-存款使用率 = \frac{未还的借款数量}{未还的借款数量 + 剩余存款数量}
-$$</li>
+<span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;存&quot; used in math mode [unicodeTextInMathMode] at position 6: 
+    存̲款使用率 = \frac{未还…" style="color:#ff4949">
+    存款使用率 = \frac{未还的借款数量}{未还的借款数量 + 剩余存款数量}
+    </span></li>
 <li><strong>利率调整机制</strong>：利率是资金使用率的函数。
 <ul>
 <li><strong>低使用率</strong>：当池子里大量资金闲置时，协议会提供较低的借款利率，以吸引用户来借款。</li>
@@ -436,8 +437,8 @@ $$</li>
 <li><strong>T2时刻</strong>：池子又产生了20 DAI利息，这20 DAI需要按T1时刻的资金占比分配。</li>
 <li><strong>取款计算</strong>：
 <ul>
-<li>A的总资产 ≈ 100 (本金) + 20 (第一阶段利息) + $20 \times \frac{120}{220}$ (第二阶段利息) = <strong>130.91 DAI</strong>。</li>
-<li>B的总资产 ≈ 100 (本金) + $20 \times \frac{100}{220}$ (第二阶段利息) = <strong>109.09 DAI</strong>。</li>
+<li>A的总资产 ≈ 100 (本金) + 20 (第一阶段利息) + <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>20</mn><mo>×</mo><mfrac><mn>120</mn><mn>220</mn></mfrac></mrow><annotation encoding="application/x-tex">20 \times \frac{120}{220}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">20</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">220</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">120</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> (第二阶段利息) = <strong>130.91 DAI</strong>。</li>
+<li>B的总资产 ≈ 100 (本金) + <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>20</mn><mo>×</mo><mfrac><mn>100</mn><mn>220</mn></mfrac></mrow><annotation encoding="application/x-tex">20 \times \frac{100}{220}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">20</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">220</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">100</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> (第二阶段利息) = <strong>109.09 DAI</strong>。</li>
 </ul>
 </li>
 </ol>
@@ -451,12 +452,12 @@ $$</li>
 <li><strong>案例：Token凭证计算</strong>
 <ol>
 <li><strong>T0时刻</strong>：用户A存入100 DAI，获得100 cDAI (汇率 1:1)。</li>
-<li><strong>T1时刻</strong>：池子总资产变为120 DAI。汇率变为 1 cDAI = 1.2 DAI。用户B存入100 DAI，获得 $100 / 1.2 \approx 83.33$ cDAI。</li>
-<li><strong>T2时刻</strong>：池子总资产变为240 DAI。池中总凭证为 183.33 cDAI。最新汇率为 $240 / 183.33 \approx 1.309$。</li>
+<li><strong>T1时刻</strong>：池子总资产变为120 DAI。汇率变为 1 cDAI = 1.2 DAI。用户B存入100 DAI，获得 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mi mathvariant="normal">/</mi><mn>1.2</mn><mo>≈</mo><mn>83.33</mn></mrow><annotation encoding="application/x-tex">100 / 1.2 \approx 83.33</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">100/1.2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">83.33</span></span></span></span> cDAI。</li>
+<li><strong>T2时刻</strong>：池子总资产变为240 DAI。池中总凭证为 183.33 cDAI。最新汇率为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>240</mn><mi mathvariant="normal">/</mi><mn>183.33</mn><mo>≈</mo><mn>1.309</mn></mrow><annotation encoding="application/x-tex">240 / 183.33 \approx 1.309</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">240/183.33</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.309</span></span></span></span>。</li>
 <li><strong>取款计算</strong>：
 <ul>
-<li>A取款 = 100 cDAI $\times$ 1.309 ≈ <strong>130.9 DAI</strong>。</li>
-<li>B取款 = 83.33 cDAI $\times$ 1.309 ≈ <strong>109.08 DAI</strong>。</li>
+<li>A取款 = 100 cDAI <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo></mrow><annotation encoding="application/x-tex">\times</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">×</span></span></span></span> 1.309 ≈ <strong>130.9 DAI</strong>。</li>
+<li>B取款 = 83.33 cDAI <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo></mrow><annotation encoding="application/x-tex">\times</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">×</span></span></span></span> 1.309 ≈ <strong>109.08 DAI</strong>。</li>
 </ul>
 </li>
 </ol>
@@ -489,10 +490,11 @@ $$</li>
 </li>
 <li>
 <p><strong>健康因子 (Health Factor)</strong>：衡量一笔贷款安全性的关键指标。
-$$
-健康因子 = \frac{抵押物总价值 \times 清算阈值}{总借款价值}
-$$</p>
-<ul>
+</p>
+<span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;健&quot; used in math mode [unicodeTextInMathMode] at position 6: 
+    健̲康因子 = \frac{抵押物…" style="color:#ff4949">
+    健康因子 = \frac{抵押物总价值 \times 清算阈值}{总借款价值}
+    </span><ul>
 <li>当<strong>健康因子 &gt; 1</strong>时，贷款是安全的。</li>
 <li>当<strong>健康因子 &lt; 1</strong>时，贷款即可被清算。</li>
 <li><strong>清算阈值 (Liquidation Threshold)</strong>：一个百分比参数（如75%），代表抵押物价值相对于债务的最低安全线。<strong>注意</strong>：这个词念作 <strong>yù zhí</strong>，而非“fá zhí”。</li>
@@ -503,15 +505,17 @@ $$</p>
 <ul>
 <li><strong>初始状态</strong>：假设ETH价格为2000 DAI，清算阈值为75%。用户抵押1 ETH，借出1250 DAI。</li>
 <li><strong>健康因子计算</strong>：
-$$
-健康因子 = \frac{2000 \times 0.75}{1250} = \frac{1500}{1250} = 1.2
-$$
+<span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;健&quot; used in math mode [unicodeTextInMathMode] at position 10: 
+        健̲康因子 = \frac{200…" style="color:#ff4949">
+        健康因子 = \frac{2000 \times 0.75}{1250} = \frac{1500}{1250} = 1.2
+        </span>
 此时健康因子 &gt; 1，贷款安全。</li>
 <li><strong>价格下跌</strong>：ETH价格跌至1600 DAI。</li>
 <li><strong>新的健康因子计算</strong>：
-$$
-健康因子 = \frac{1600 \times 0.75}{1250} = \frac{1200}{1250} = 0.96
-$$
+<span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;健&quot; used in math mode [unicodeTextInMathMode] at position 10: 
+        健̲康因子 = \frac{160…" style="color:#ff4949">
+        健康因子 = \frac{1600 \times 0.75}{1250} = \frac{1200}{1250} = 0.96
+        </span>
 此时健康因子 &lt; 1，这笔贷款可以被任何一个Keeper触发清算。</li>
 </ul>
 </li>
@@ -573,11 +577,11 @@ $$
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-JieDai/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-jiedai/" data-title="去中心化借贷" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-jiedai/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-jiedai/" data-title="去中心化借贷"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202509-jiedai/" data-title="去中心化借贷" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202509-jiedai/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202509-jiedai/" data-title="去中心化借贷"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -638,5 +642,6 @@ $$
   </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
     <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
   </noscript>
-</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/050f97d26c337fdeb6a09a50b896c381.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/050f97d26c337fdeb6a09a50b896c381.js" defer></script><script src="/js/lib/mermaid.min.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
 </html>

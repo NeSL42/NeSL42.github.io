@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Linux - 标签 - 敬渊&#39;s Blog</title>
-    <link>http://localhost:1313/tags/linux/</link>
+    <link>https://nesl42.github.io/tags/linux/</link>
     <description>敬渊&#39;s Blog</description>
     <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
     <language>zh-CN</language>
     <lastBuildDate></lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

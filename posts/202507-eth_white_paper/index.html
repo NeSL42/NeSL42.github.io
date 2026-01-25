@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -15,8 +15,8 @@ Page last updated:2025年2月12日
 这篇介绍性论文最初由 以太坊 创始人 Vitalik Buterin 在 2014 年发表，前于 2015 年的项目正式发布时间。 值得一提的是，和其他社区驱动的开源软件项目一样，以太坊自发布以来一直不断发展。">
   <meta itemprop="datePublished" content="2025-07-19T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-07-19T00:00:00+00:00">
-  <meta itemprop="wordCount" content="23920">
-  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="http://localhost:1313/posts/202507-eth_white_paper/">
+  <meta itemprop="wordCount" content="23918">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="https://nesl42.github.io/posts/202507-eth_white_paper/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="ETH 白皮书阅读">
   <meta property="og:description" content="[toc]
@@ -37,7 +37,7 @@ Page last updated:2025年2月12日
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202507-eth_white_paper/" title="ETH 白皮书阅读 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/" title="论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202507-dai/" title="DAI 白皮书翻译" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202507-eth_white_paper/" title="ETH 白皮书阅读 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202507-blockchain_privacy_and_regulatory_compliance/" title="论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202507-dai/" title="DAI 白皮书翻译" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -47,9 +47,9 @@ Page last updated:2025年2月12日
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202507-eth_white_paper\/"
-    },"genre": "posts","keywords": "论文阅读","wordcount":  23920 ,
-    "url": "http:\/\/localhost:1313\/posts\/202507-eth_white_paper\/","datePublished": "2025-07-19T00:00:00+00:00","dateModified": "2025-07-19T00:00:00+00:00","publisher": {
+      "@id": "https:\/\/nesl42.github.io\/posts\/202507-eth_white_paper\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  23918 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202507-eth_white_paper\/","datePublished": "2025-07-19T00:00:00+00:00","dateModified": "2025-07-19T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -90,7 +90,7 @@ Page last updated:2025年2月12日
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>ETH 白皮书阅读</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-07-19 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-07-19">2025-07-19</time></span>&nbsp;<span title="23920 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 24000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 48 分钟</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-07-19 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-07-19">2025-07-19</time></span>&nbsp;<span title="23918 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 24000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 48 分钟</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>目录</span>
@@ -154,7 +154,7 @@ Page last updated:2025年2月12日
 <blockquote>
 <p>这篇介绍性论文最初由 <a href="https://ethereum.org/zh/what-is-ethereum/" target="_blank" rel="external nofollow noopener noreferrer">以太坊</a> 创始人 Vitalik Buterin 在 2014 年发表，前于 2015 年的项目正式发布时间。 值得一提的是，和其他社区驱动的开源软件项目一样，以太坊自发布以来一直不断发展。</p>
 <p>虽然已经过数年，但由于本文仍然可提供有用的参考并能够准确表述以太坊及其愿景，我们仍然在维护它。 若想了解以太坊的最新进展，以及以太坊协议的更新情况，我们推荐你阅读 <a href="https://ethereum.org/zh/learn/" target="_blank" rel="external nofollow noopener noreferrer">本指南</a> 。*</p>
-<p><a href="https://ethereum.org/content/whitepaper/whitepaper-pdf/Ethereum_Whitepaper_-_Buterin_2014.pdf" target="_blank" rel="external nofollow noopener noreferrer">寻求此白皮书早期版本或规范版本 [自 2014 年 12 月起] 的研究人员和学者应使用此 PDF。</a></p>
+<p><a href="https://ethereum.org/content/whitepaper/whitepaper-pdf/Ethereum_Whitepaper_-_Buterin_2014.pdf" target="_blank" rel="external nofollow noopener noreferrer">寻求此白皮书早期版本或规范版本 <span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;自&quot; used in math mode [unicodeTextInMathMode] at position 1: 自̲ 2014 年 12 月起" style="color:#ff4949"><span class="cjk_fallback">自 2014 年 12 月起</span></span> 的研究人员和学者应使用此 PDF。</a></p>
 </blockquote>
 <p>中本聪 2009 年开发的比特币常被誉为资金和货币的一次革命性变革，作为数字资产的首个实例，它同时具有以下特点：没有实物或 <a href="http://bitcoinmagazine.com/8640/an-exploration-of-intrinsic-value-what-it-is-why-bitcoin-doesnt-have-it-and-why-bitcoin-does-have-it/" target="_blank" rel="external nofollow noopener noreferrer">内在价值</a> 支撑，也没有一个中心化的发行机构或控制者。 然而，比特币实验有另一个可以说是更重要的部分，即作为分布式共识工具的底层区块链技术，并且人们的注意力正迅速地开始转移到比特币的这个方面。 经常被提到的其他区块链技术应用包括：使用链上数字资产表示自定义货币和金融工具（“ <a href="https://docs.google.com/a/buterin.com/document/d/1AnkP_cVZTCMLIzw4DvsW6M8Q2JC0lIzrTLuoWu2z1BE/edit" target="_blank" rel="external nofollow noopener noreferrer">彩色币</a> ”）、底层物理设备的所有权（“ <a href="https://en.bitcoin.it/wiki/Smart_Property" target="_blank" rel="external nofollow noopener noreferrer">智能资产</a> ”）、非同质化资产例如域名（“ <a href="http://namecoin.org/" target="_blank" rel="external nofollow noopener noreferrer">域名币</a> ”），以及一些更复杂的应用，例如让数字资产由一段实现任意规则的代码（“ <a href="http://www.fon.hum.uva.nl/rob/Courses/InformationInSpeech/CDROM/Literature/LOTwinterschool2006/szabo.best.vwh.net/idea.html" target="_blank" rel="external nofollow noopener noreferrer">智能合约</a> ”）甚至由基于区块链的“ <a href="http://bitcoinmagazine.com/7050/bootstrapping-a-decentralized-autonomous-corporation-part-i/" target="_blank" rel="external nofollow noopener noreferrer">去中心化自治组织</a> ”(DAO) 直接控制。 以太坊打算提供一种内置完全成熟的图灵完备编程语言的区块链，这种语言可用来创建“合约”，而合约可用于编码任意状态转换函数，让用户可以创建上述任何系统以及我们尚未想象到的许多其他内容，只需用几行代码编写出想实现的逻辑即可。</p>
 <h2 class="heading-element" id="比特币及现有概念简介"><span>比特币及现有概念简介</span>
@@ -626,11 +626,11 @@ Page last updated:2025年2月12日
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202507-ETH_white_paper/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202507-eth_white_paper/" data-title="ETH 白皮书阅读" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202507-eth_white_paper/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202507-eth_white_paper/" data-title="ETH 白皮书阅读"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202507-eth_white_paper/" data-title="ETH 白皮书阅读" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202507-eth_white_paper/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202507-eth_white_paper/" data-title="ETH 白皮书阅读"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -709,5 +709,6 @@ Page last updated:2025年2月12日
   </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
     <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
   </noscript>
-</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/126d6cf05f0be2916812adfefc3740f5.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/126d6cf05f0be2916812adfefc3740f5.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>内网 - 标签 - 敬渊&#39;s Blog</title>
-    <link>http://localhost:1313/tags/%E5%86%85%E7%BD%91/</link>
+    <link>https://nesl42.github.io/tags/%E5%86%85%E7%BD%91/</link>
     <description>敬渊&#39;s Blog</description>
     <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
     <language>zh-CN</language>
     <lastBuildDate>Mon, 23 May 2022 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E5%86%85%E7%BD%91/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/tags/%E5%86%85%E7%BD%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>NTLM认证</title>
-      <link>http://localhost:1313/posts/ntml/</link>
+      <link>https://nesl42.github.io/posts/ntml/</link>
       <pubDate>Mon, 23 May 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/ntml/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/ntml/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;[toc]&lt;/p&gt;&#xA;&lt;p&gt;NTLM的东西在github之前写过，但是不够详细，这里重新再过一遍。&lt;/p&gt;&#xA;&lt;p&gt;NTLM使用在Windows的工作组环境中，而kerberos则使用在域的情况下。&lt;/p&gt;</description>
     </item>
     <item>
       <title>kerberos认证&amp;PAC</title>
-      <link>http://localhost:1313/posts/%E5%9F%9F%E5%A7%94%E6%B4%BE/</link>
+      <link>https://nesl42.github.io/posts/%E5%9F%9F%E5%A7%94%E6%B4%BE/</link>
       <pubDate>Sun, 15 May 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/%E5%9F%9F%E5%A7%94%E6%B4%BE/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/%E5%9F%9F%E5%A7%94%E6%B4%BE/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;[toc]&lt;/p&gt;&#xA;&lt;p&gt;这个是鸽了好久好久的，一直没写，今天补一下。还有域委派的想写一直没写&amp;hellip;&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;关于详细的可以RFC文档：https://datatracker.ietf.org/doc/html/rfc4120.html&lt;/p&gt;</description>
     </item>
   </channel>

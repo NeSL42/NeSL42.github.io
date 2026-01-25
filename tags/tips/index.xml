@@ -2,58 +2,58 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tips - 标签 - 敬渊&#39;s Blog</title>
-    <link>http://localhost:1313/tags/tips/</link>
+    <link>https://nesl42.github.io/tags/tips/</link>
     <description>敬渊&#39;s Blog</description>
     <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sun, 24 Aug 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/tags/tips/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Lex Fridman播客:陶哲轩：数学、物理学中最难的问题以及人工智能的未来</title>
-      <link>http://localhost:1313/posts/202508-tao/</link>
+      <link>https://nesl42.github.io/posts/202508-tao/</link>
       <pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202508-tao/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202508-tao/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;这是Lex Fridman播客第472期与陶哲轩（Terence Tao）的访谈文字记录。文字记录中的时间戳是可点击链接，可直接带你跳转到主视频中的相应时间点。请注意，文字记录由人工生成，可能存在错误。以下是一些有用的链接：&lt;/p&gt;</description>
     </item>
     <item>
       <title>大型LLM架构对比</title>
-      <link>http://localhost:1313/posts/202508-llmarch/</link>
+      <link>https://nesl42.github.io/posts/202508-llmarch/</link>
       <pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202508-llmarch/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202508-llmarch/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;h1 class=&#34;heading-element&#34;&gt;&lt;span&gt;&lt;/span&gt;&#xA;  &lt;a href=&#34;#&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h2 class=&#34;heading-element&#34; id=&#34;从deepseek-v3到kimi-k2现代llm架构设计一览&#34;&gt;&lt;span&gt;从DeepSeek-V3到Kimi K2：现代LLM架构设计一览&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e4%bb%8edeepseek-v3%e5%88%b0kimi-k2%e7%8e%b0%e4%bb%a3llm%e6%9e%b6%e6%9e%84%e8%ae%be%e8%ae%a1%e4%b8%80%e8%a7%88&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;塞巴斯蒂安·拉斯卡博士&lt;/strong&gt; | 2025年7月19日&lt;/p&gt;</description>
     </item>
     <item>
       <title>Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析</title>
-      <link>http://localhost:1313/posts/202508-claude/</link>
+      <link>https://nesl42.github.io/posts/202508-claude/</link>
       <pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202508-claude/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202508-claude/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;claude-code-cli-认证流程解析&#34;&gt;&lt;span&gt;Claude Code CLI 认证流程解析&lt;/span&gt;&#xA;  &lt;a href=&#34;#claude-code-cli-%e8%ae%a4%e8%af%81%e6%b5%81%e7%a8%8b%e8%a7%a3%e6%9e%90&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h2 class=&#34;heading-element&#34; id=&#34;claude-code一认证篇&#34;&gt;&lt;span&gt;Claude Code（一）：认证篇&lt;/span&gt;&#xA;  &lt;a href=&#34;#claude-code%e4%b8%80%e8%ae%a4%e8%af%81%e7%af%87&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;h3 class=&#34;heading-element&#34; id=&#34;1-引言一个关于拼车的想法&#34;&gt;&lt;span&gt;1. 引言：一个关于&amp;quot;拼车&amp;quot;的想法&lt;/span&gt;&#xA;  &lt;a href=&#34;#1-%e5%bc%95%e8%a8%80%e4%b8%80%e4%b8%aa%e5%85%b3%e4%ba%8e%e6%8b%bc%e8%bd%a6%e7%9a%84%e6%83%b3%e6%b3%95&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h3&gt;&lt;p&gt;项目源于一个朴素的想法：与小伙伴&amp;quot;拼车&amp;quot;使用 Claude Code。&lt;/p&gt;</description>
     </item>
     <item>
       <title>Function Calling 与 MCP 协议</title>
-      <link>http://localhost:1313/posts/202508-functincallmcp/</link>
+      <link>https://nesl42.github.io/posts/202508-functincallmcp/</link>
       <pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202508-functincallmcp/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202508-functincallmcp/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;以下是根据您提供的图片内容生成的 Markdown 格式文本：&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;function-calling-与-mcp-协议--深究-mcp-协议的设计&#34;&gt;&lt;span&gt;Function Calling 与 MCP 协议 | 深究 MCP 协议的设计&lt;/span&gt;&#xA;  &lt;a href=&#34;#function-calling-%e4%b8%8e-mcp-%e5%8d%8f%e8%ae%ae--%e6%b7%b1%e7%a9%b6-mcp-%e5%8d%8f%e8%ae%ae%e7%9a%84%e8%ae%be%e8%ae%a1&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h2 class=&#34;heading-element&#34; id=&#34;一function-calling&#34;&gt;&lt;span&gt;一、Function Calling&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e4%b8%80function-calling&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;h3 class=&#34;heading-element&#34; id=&#34;21-要解决的问题&#34;&gt;&lt;span&gt;2.1 要解决的问题&lt;/span&gt;&#xA;  &lt;a href=&#34;#21-%e8%a6%81%e8%a7%a3%e5%86%b3%e7%9a%84%e9%97%ae%e9%a2%98&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h3&gt;&lt;p&gt;传统聊天大模型只会说话,没有工具调用能力,这使得大模型:&lt;/p&gt;</description>
     </item>
     <item>
       <title>环签论文阅读《How to Leak a Secret》</title>
-      <link>http://localhost:1313/posts/202508-ringsign/</link>
+      <link>https://nesl42.github.io/posts/202508-ringsign/</link>
       <pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202508-ringsign/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202508-ringsign/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;&lt;strong&gt;论文标题：&lt;/strong&gt; How to Leak a Secret&#xA;&lt;strong&gt;作者：&lt;/strong&gt; Ronald L. Rivest, Adi Shamir, and Yael Tauman&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;1-引言-introduction&#34;&gt;&lt;span&gt;&lt;strong&gt;1. 引言 (Introduction)&lt;/strong&gt;&lt;/span&gt;&#xA;  &lt;a href=&#34;#1-%e5%bc%95%e8%a8%80-introduction&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h2 class=&#34;heading-element&#34; id=&#34;11-研究背景&#34;&gt;&lt;span&gt;&lt;strong&gt;1.1 研究背景：&lt;/strong&gt;&lt;/span&gt;&#xA;  &lt;a href=&#34;#11-%e7%a0%94%e7%a9%b6%e8%83%8c%e6%99%af&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，&lt;strong&gt;群签名 (Group Signatures)&lt;/strong&gt; 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。&lt;/p&gt;</description>
     </item>
     <item>
       <title>使用GIT clone指定仓库的制定文件夹</title>
-      <link>http://localhost:1313/posts/202508-gitclonedir/</link>
+      <link>https://nesl42.github.io/posts/202508-gitclonedir/</link>
       <pubDate>Mon, 18 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202508-gitclonedir/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202508-gitclonedir/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。&lt;/p&gt;&#xA;&lt;p&gt;以下是具体的命令步骤：&lt;/p&gt;</description>
     </item>
   </channel>

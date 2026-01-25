@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 敬渊&#39;s Blog</title>
-    <link>http://localhost:1313/categories/</link>
+    <link>https://nesl42.github.io/categories/</link>
     <description>Recent content in Categories on 敬渊&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
     <lastBuildDate>Tue, 20 Jan 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Technology</title>
-      <link>http://localhost:1313/categories/technology/</link>
+      <link>https://nesl42.github.io/categories/technology/</link>
       <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/technology/</guid>
+      <guid>https://nesl42.github.io/categories/technology/</guid>
       <description></description>
     </item>
     <item>
       <title>人间世</title>
-      <link>http://localhost:1313/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/</link>
+      <link>https://nesl42.github.io/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/</link>
       <pubDate>Sun, 20 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/</guid>
+      <guid>https://nesl42.github.io/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/</guid>
       <description></description>
     </item>
   </channel>

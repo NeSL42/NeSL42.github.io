@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -11,8 +11,8 @@
   <meta itemprop="description" content="Uniswap V4 简介 核心摘要 (Key Takeaways) 架构性革新: Uniswap V4 的核心升级在于代码架构而非底层的 AMM 数学原理。它从 V2/V3 的“工厂模式”转变为“单例模式”，旨在大幅降低 Gas 费并提升效率。 高度可定制化 (Hooks): V4 引入了**“钩子 (Hooks)”**机制，允许开发者在交易生命周期的关键节点（如交易前/后、添加流动性前/后）插入自定义逻辑，极大地增强了协议的灵活性和可扩展性。 显著降低 Gas 费: 通过单例模式、闪电记账 (Flash Accounting) 和支持原生 ETH 交易，V4 从多个维度解决了 V3 及之前版本中 Gas 费用高昂的问题，尤其是在多路径交易和涉及 ETH 的交易中。 战略定位转变: V4 的发布标志着 Uniswap 从一个单纯的去中心化交易所 (DEX) 向一个DeFi 基础设施平台的战略转型，旨在搭建一个舞台，让更多开发者在其之上构建多样化的应用。 一、 Uniswap V4 发展历程 发布形式: 以一种创新的 “社区共建” 模式发布。 2023年6月13日: Uniswap 官方发布了 V4 的代码草案 (Code Draft)，当时代码完成度约 60-70%。 社区参与: 官方并未像传统项目那样先完成内部开发和审计，而是提前将代码开源，并设立了 1550 万美元的悬赏基金，鼓励全球社区共同寻找 Bug 和安全漏洞。 正式上线: 经过约一年半的社区共建和测试，Uniswap V4 于2024年1月正式发布到生产环境。 二、 Uniswap 版本演进与 V3 的痛点 每个新版本的发布都是为了解决前一版本的问题。">
   <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
-  <meta itemprop="wordCount" content="2934">
-  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap20/">
+  <meta itemprop="wordCount" content="2941">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="https://nesl42.github.io/posts/202509-uniswap20/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="20.Uniswap V4 简介">
   <meta property="og:description" content="Uniswap V4 简介 核心摘要 (Key Takeaways) 架构性革新: Uniswap V4 的核心升级在于代码架构而非底层的 AMM 数学原理。它从 V2/V3 的“工厂模式”转变为“单例模式”，旨在大幅降低 Gas 费并提升效率。 高度可定制化 (Hooks): V4 引入了**“钩子 (Hooks)”**机制，允许开发者在交易生命周期的关键节点（如交易前/后、添加流动性前/后）插入自定义逻辑，极大地增强了协议的灵活性和可扩展性。 显著降低 Gas 费: 通过单例模式、闪电记账 (Flash Accounting) 和支持原生 ETH 交易，V4 从多个维度解决了 V3 及之前版本中 Gas 费用高昂的问题，尤其是在多路径交易和涉及 ETH 的交易中。 战略定位转变: V4 的发布标志着 Uniswap 从一个单纯的去中心化交易所 (DEX) 向一个DeFi 基础设施平台的战略转型，旨在搭建一个舞台，让更多开发者在其之上构建多样化的应用。 一、 Uniswap V4 发展历程 发布形式: 以一种创新的 “社区共建” 模式发布。 2023年6月13日: Uniswap 官方发布了 V4 的代码草案 (Code Draft)，当时代码完成度约 60-70%。 社区参与: 官方并未像传统项目那样先完成内部开发和审计，而是提前将代码开源，并设立了 1550 万美元的悬赏基金，鼓励全球社区共同寻找 Bug 和安全漏洞。 正式上线: 经过约一年半的社区共建和测试，Uniswap V4 于2024年1月正式发布到生产环境。 二、 Uniswap 版本演进与 V3 的痛点 每个新版本的发布都是为了解决前一版本的问题。">
@@ -29,7 +29,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap20/" title="20.Uniswap V4 简介 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap01/" title="01.Uniswap 简介" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap19/" title="19.Uniswap V3 手续费计算（二）" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap20/" title="20.Uniswap V4 简介 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap01/" title="01.Uniswap 简介" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202509-uniswap19/" title="19.Uniswap V3 手续费计算（二）" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -39,9 +39,9 @@
     "inLanguage": "zh-CN",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap20\/"
-    },"genre": "posts","keywords": "Web3","wordcount":  2934 ,
-    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap20\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@id": "https:\/\/nesl42.github.io\/posts\/202509-uniswap20\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  2941 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202509-uniswap20\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -82,7 +82,7 @@
     <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>20.Uniswap V4 简介</span>
       </h1></div><div class="post-meta">
       <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="2934 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 6 分钟</span>&nbsp;</div>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="2941 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 6 分钟</span>&nbsp;</div>
     </div><div class="details toc" id="toc-static" data-kept="false">
         <div class="details-summary toc-title">
           <span>目录</span>
@@ -164,7 +164,7 @@
 <li>引入了更灵活的手续费机制，允许将 1/6 的手续费（0.3% 中的 0.05%）分配给协议方。</li>
 </ol>
 </li>
-<li><strong>问题</strong>: <strong>资金利用率极低</strong>，因为流动性分布在 $0$ 到 $\infty$ 的整个价格区间。</li>
+<li><strong>问题</strong>: <strong>资金利用率极低</strong>，因为流动性分布在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> 到 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord">∞</span></span></span></span> 的整个价格区间。</li>
 </ul>
 </li>
 <li><strong>Uniswap V3</strong>
@@ -332,11 +332,11 @@ end</pre></template>
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap20/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-md"></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap20/" data-title="20.Uniswap V4 简介" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap20/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap20/" data-title="20.Uniswap V4 简介"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202509-uniswap20/" data-title="20.Uniswap V4 简介" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202509-uniswap20/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202509-uniswap20/" data-title="20.Uniswap V4 简介"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
@@ -386,5 +386,6 @@ end</pre></template>
   </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
     <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
   </noscript>
-</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/744dc7b8516571d0e2a6c343555f12b0.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/744dc7b8516571d0e2a6c343555f12b0.js" defer></script><script src="/js/lib/mermaid.min.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
 </html>

@@ -2,66 +2,66 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>量化 - 标签 - 敬渊&#39;s Blog</title>
-    <link>http://localhost:1313/tags/%E9%87%8F%E5%8C%96/</link>
+    <link>https://nesl42.github.io/tags/%E9%87%8F%E5%8C%96/</link>
     <description>敬渊&#39;s Blog</description>
     <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sat, 04 Oct 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E9%87%8F%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nesl42.github.io/tags/%E9%87%8F%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》</title>
-      <link>http://localhost:1313/posts/202510-aeaortcfmms/</link>
+      <link>https://nesl42.github.io/posts/202510-aeaortcfmms/</link>
       <pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202510-aeaortcfmms/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202510-aeaortcfmms/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;摘要&#34;&gt;&lt;span&gt;摘要&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e6%91%98%e8%a6%81&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;该论文针对去中心化金融中多个恒定函数做市商（CFMM，如Uniswap等）组成的交易网络，提出了一种基于分解法的高效算法，用于解决最优交易路由问题（即找到能最大化用户效用的交易路径），该算法可并行处理各交易所计算、兼容复杂CFMM类型（如Uniswap v3），且通过数值实验证明其比商业求解器速度更快、能带来更高用户收益。&lt;/p&gt;</description>
     </item>
     <item>
       <title>论文阅读《The Geometry of Constant Function Market Makers》</title>
-      <link>http://localhost:1313/posts/2025100-tgcfmm/</link>
+      <link>https://nesl42.github.io/posts/2025100-tgcfmm/</link>
       <pubDate>Sat, 04 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2025100-tgcfmm/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/2025100-tgcfmm/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;论文标题：恒定函数做市商的几何原理&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;0摘要&#34;&gt;&lt;span&gt;0.摘要&lt;/span&gt;&#xA;  &lt;a href=&#34;#0%e6%91%98%e8%a6%81&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;恒定函数做市商（CFMMs）是目前加密货币代币去中心化交易场所中最流行的类型。本文提出了一种极为通用的几何框架（或称“公理”），该框架涵盖并推广了文献中关于CFMMs的诸多已知结论，且无需依赖可微性或齐次性等严格条件。该框架的一个重要推论是：每个CFMM都具有（唯一的）典型交易函数，这种函数具有凹性、齐次性和非递减性，从而证明许多仅适用于齐次交易函数的结论实际上具有普适性。&lt;/p&gt;</description>
     </item>
     <item>
       <title>《高级投资组合优化》阅读笔记-第一二章</title>
-      <link>http://localhost:1313/posts/apo-01/</link>
+      <link>https://nesl42.github.io/posts/apo-01/</link>
       <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/apo-01/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/apo-01/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;h2 class=&#34;heading-element&#34; id=&#34;第一章引言&#34;&gt;&lt;span&gt;第一章：引言&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e7%ac%ac%e4%b8%80%e7%ab%a0%e5%bc%95%e8%a8%80&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;h3 class=&#34;heading-element&#34; id=&#34;核心思想&#34;&gt;&lt;span&gt;核心思想&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;投资组合优化 (Portfolio Optimization)&lt;/strong&gt;：核心目标是为投资者找到最适合其需求的 &lt;strong&gt;最佳资产配置&lt;/strong&gt; (best asset allocation)。&lt;/p&gt;</description>
     </item>
     <item>
       <title>《高级投资组合优化》阅读笔记-第三章 3.1 矩</title>
-      <link>http://localhost:1313/posts/apo-03/</link>
+      <link>https://nesl42.github.io/posts/apo-03/</link>
       <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/apo-03/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/apo-03/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;第三章-基于样本的方法&#34;&gt;&lt;span&gt;第三章 基于样本的方法&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e7%ac%ac%e4%b8%89%e7%ab%a0-%e5%9f%ba%e4%ba%8e%e6%a0%b7%e6%9c%ac%e7%9a%84%e6%96%b9%e6%b3%95&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;这章，主要介绍几种用于估算大多数投资组合优化模型所需输入参数的方法：&lt;strong&gt;预期收益向量&lt;/strong&gt;和&lt;strong&gt;协方差矩阵&lt;/strong&gt;。这些方法的主要缺点是：其估算的参数默认假设资产收益的未来表现会与用于估算的样本表现相似。&lt;/p&gt;</description>
     </item>
     <item>
       <title>《高级投资组合优化》阅读笔记-第四章</title>
-      <link>http://localhost:1313/posts/apo-04/</link>
+      <link>https://nesl42.github.io/posts/apo-04/</link>
       <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/apo-04/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/apo-04/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;第四章&#34;&gt;&lt;span&gt;第四章&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e7%ac%ac%e5%9b%9b%e7%ab%a0&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;在本章中，我们将解释如何构建风险因子模型，试图将资产收益表现作为风险因子表现的函数来解释。然后，基于这些模型，我们可以将资产收益的预期收益向量和协方差矩阵估计为风险因子的函数，这些风险因子可以是显性的（外生变量）或隐性的（外生变量的主成分）。与仅使用基于样本的参数估计作为投资组合优化模型的输入相比，这些新的估计方法往往能产生更多样化和稳健的投资组合。&lt;/p&gt;</description>
     </item>
     <item>
       <title>UniswapV2源码阅读</title>
-      <link>http://localhost:1313/posts/202509-uniswapv2source/</link>
+      <link>https://nesl42.github.io/posts/202509-uniswapv2source/</link>
       <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202509-uniswapv2source/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202509-uniswapv2source/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;这系列文章准备详细看看Uniswap的代码，使用的是 &lt;code&gt;Hardhat&lt;/code&gt;&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;零主要内容&#34;&gt;&lt;span&gt;零。主要内容&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e9%9b%b6%e4%b8%bb%e8%a6%81%e5%86%85%e5%ae%b9&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;当然！阅读 Uniswap V2 源码是一个非常棒的主题，可以写出一个非常深入和受欢迎的系列。基于第一篇《环境搭建》，后续文章可以按照从核心到外围、从基础到复杂的逻辑展开。&lt;/p&gt;</description>
     </item>
     <item>
       <title>Uniswap源码分析：（一）环境搭建</title>
-      <link>http://localhost:1313/posts/202509-clamm/</link>
+      <link>https://nesl42.github.io/posts/202509-clamm/</link>
       <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/202509-clamm/</guid>
-      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <guid>https://nesl42.github.io/posts/202509-clamm/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
       <description>&lt;p&gt;这系列文章准备详细看看Uniswap的代码，使用的是，Raydium v3 AMM (CLMM) ，Github：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/raydium-io/raydium-clmm&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;https://github.com/raydium-io/raydium-clmm&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这是第一篇，主要讲环境搭建和部署的部分。&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;环境搭建&#34;&gt;&lt;span&gt;环境搭建&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h2 class=&#34;heading-element&#34; id=&#34;rust&#34;&gt;&lt;span&gt;rust&lt;/span&gt;&#xA;  &lt;a href=&#34;#rust&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;安装rust&lt;/p&gt;</description>
     </item>
   </channel>
