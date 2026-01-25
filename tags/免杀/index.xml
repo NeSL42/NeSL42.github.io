@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>免杀 - 标签 - 敬渊&#39;s Blog</title>
+    <link>http://localhost:1313/tags/%E5%85%8D%E6%9D%80/</link>
+    <description>敬渊&#39;s Blog</description>
+    <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 02 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E5%85%8D%E6%9D%80/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BypassAVDynamics[译]</title>
+      <link>http://localhost:1313/posts/2022-6-29-bypassavdynamics/</link>
+      <pubDate>Sat, 02 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2022-6-29-bypassavdynamics/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;本文译的是《BypassAVDynamics》，也不能算译文，主要写自己读完之后学到的东西&lt;/p&gt;&#xA;&lt;p&gt;好久之前的文章了，vt应该查杀挺多的，没测试&lt;/p&gt;&#xA;&lt;p&gt;need read：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://blog.sevagas.com/?PE-injection-explained&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;PE注入&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

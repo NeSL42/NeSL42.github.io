@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>19.Uniswap V3 手续费计算（二） - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="Uniswap V3 手续费计算深度解析 (二) 核心摘要 (Key Takeaways) 核心公式: 为特定价格区间 $(i_l, i_u)$ 计算手续费的核心思想是：用全局累计手续费 $f_g$ 减去该区间下方的累计手续费 $f_b$ 和上方的累计手续费 $f_a$。公式为：$f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)$。 关键变量 $f_{o,i}$: Uniswap V3 引入了一个名为 feeOutside (笔记中记为 $f_{o,i}$) 的关键变量。每个 tick i 都会记录这个值，它巧妙地追踪了当价格在 tick i 的“外部”时所累积的单位流动性手续费。 $f_{o,i}$ 的更新机制: 当价格穿越一个 tick i 时，该 tick 对应的 $f_{o,i}$ 会进行一次“翻转”更新。更新规则为：$f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}$。这个机制是整个计算逻辑的精髓。 推导关系: 通过 $f_{o,i}$ 和当前全局手续费 $f_g$，可以精确推导出任意时刻的 $f_b$ 和 $f_a$。它们的值取决于当前价格 $i_c$ 相对于目标 tick i 的位置。 1. 背景：V3 手续费计算的复杂性 根本原因: 集中流动性 (Concentrated Liquidity)。与 V2 不同，V3 的流动性提供者 (LP) 将资金集中在特定的价格区间内。
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="19.Uniswap V3 手续费计算（二）">
+  <meta itemprop="description" content="Uniswap V3 手续费计算深度解析 (二) 核心摘要 (Key Takeaways) 核心公式: 为特定价格区间 $(i_l, i_u)$ 计算手续费的核心思想是：用全局累计手续费 $f_g$ 减去该区间下方的累计手续费 $f_b$ 和上方的累计手续费 $f_a$。公式为：$f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)$。 关键变量 $f_{o,i}$: Uniswap V3 引入了一个名为 feeOutside (笔记中记为 $f_{o,i}$) 的关键变量。每个 tick i 都会记录这个值，它巧妙地追踪了当价格在 tick i 的“外部”时所累积的单位流动性手续费。 $f_{o,i}$ 的更新机制: 当价格穿越一个 tick i 时，该 tick 对应的 $f_{o,i}$ 会进行一次“翻转”更新。更新规则为：$f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}$。这个机制是整个计算逻辑的精髓。 推导关系: 通过 $f_{o,i}$ 和当前全局手续费 $f_g$，可以精确推导出任意时刻的 $f_b$ 和 $f_a$。它们的值取决于当前价格 $i_c$ 相对于目标 tick i 的位置。 1. 背景：V3 手续费计算的复杂性 根本原因: 集中流动性 (Concentrated Liquidity)。与 V2 不同，V3 的流动性提供者 (LP) 将资金集中在特定的价格区间内。">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="3324">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap19/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="19.Uniswap V3 手续费计算（二）">
+  <meta property="og:description" content="Uniswap V3 手续费计算深度解析 (二) 核心摘要 (Key Takeaways) 核心公式: 为特定价格区间 $(i_l, i_u)$ 计算手续费的核心思想是：用全局累计手续费 $f_g$ 减去该区间下方的累计手续费 $f_b$ 和上方的累计手续费 $f_a$。公式为：$f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)$。 关键变量 $f_{o,i}$: Uniswap V3 引入了一个名为 feeOutside (笔记中记为 $f_{o,i}$) 的关键变量。每个 tick i 都会记录这个值，它巧妙地追踪了当价格在 tick i 的“外部”时所累积的单位流动性手续费。 $f_{o,i}$ 的更新机制: 当价格穿越一个 tick i 时，该 tick 对应的 $f_{o,i}$ 会进行一次“翻转”更新。更新规则为：$f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}$。这个机制是整个计算逻辑的精髓。 推导关系: 通过 $f_{o,i}$ 和当前全局手续费 $f_g$，可以精确推导出任意时刻的 $f_b$ 和 $f_a$。它们的值取决于当前价格 $i_c$ 相对于目标 tick i 的位置。 1. 背景：V3 手续费计算的复杂性 根本原因: 集中流动性 (Concentrated Liquidity)。与 V2 不同，V3 的流动性提供者 (LP) 将资金集中在特定的价格区间内。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="19.Uniswap V3 手续费计算（二）">
+  <meta name="twitter:description" content="Uniswap V3 手续费计算深度解析 (二) 核心摘要 (Key Takeaways) 核心公式: 为特定价格区间 $(i_l, i_u)$ 计算手续费的核心思想是：用全局累计手续费 $f_g$ 减去该区间下方的累计手续费 $f_b$ 和上方的累计手续费 $f_a$。公式为：$f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)$。 关键变量 $f_{o,i}$: Uniswap V3 引入了一个名为 feeOutside (笔记中记为 $f_{o,i}$) 的关键变量。每个 tick i 都会记录这个值，它巧妙地追踪了当价格在 tick i 的“外部”时所累积的单位流动性手续费。 $f_{o,i}$ 的更新机制: 当价格穿越一个 tick i 时，该 tick 对应的 $f_{o,i}$ 会进行一次“翻转”更新。更新规则为：$f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}$。这个机制是整个计算逻辑的精髓。 推导关系: 通过 $f_{o,i}$ 和当前全局手续费 $f_g$，可以精确推导出任意时刻的 $f_b$ 和 $f_a$。它们的值取决于当前价格 $i_c$ 相对于目标 tick i 的位置。 1. 背景：V3 手续费计算的复杂性 根本原因: 集中流动性 (Concentrated Liquidity)。与 V2 不同，V3 的流动性提供者 (LP) 将资金集中在特定的价格区间内。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap19/" title="19.Uniswap V3 手续费计算（二） - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap20/" title="20.Uniswap V4 简介" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap18/" title="18.Uniswap V3 手续费计算（一）" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "19.Uniswap V3 手续费计算（二）",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap19\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  3324 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap19\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>19.Uniswap V3 手续费计算（二）</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="3324 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3400 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 7 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#uniswap-v3-手续费计算深度解析-二"><strong>Uniswap V3 手续费计算深度解析 (二)</strong></a>
+          <ul>
+            <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#1-背景v3-手续费计算的复杂性"><strong>1. 背景：V3 手续费计算的复杂性</strong></a></li>
+        <li><a href="#2-核心计算框架"><strong>2. 核心计算框架</strong></a></li>
+        <li><a href="#3-解决方案"><strong>3. 解决方案：<code>feeOutside</code> 变量 ($f_{o,i}$)</strong></a>
+          <ul>
+            <li><a href="#31-f_"><strong>3.1. $f_{o,i}$ 的定义与规则</strong></a></li>
+            <li><a href="#32"><strong>3.2. <code>feeOutside</code> 的更新流程 (Mermaid 图)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#4-推导-f_"><strong>4. 推导 $f_b$ 和 $f_a$ 与 $f_{o,i}$ 的关系</strong></a>
+          <ul>
+            <li><a href="#41-推导-f_"><strong>4.1. 推导 $f_b(i_l)$ (手续费 below lower tick)</strong></a></li>
+            <li><a href="#42-推导-f_"><strong>4.2. 推导 $f_a(i_u)$ (手续费 above upper tick)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#5-综合案例演算"><strong>5. 综合案例演算</strong></a>
+          <ul>
+            <li><a href="#案例-1-价格始终在"><strong>案例 1: 价格始终在 <code>[i_l, i_u]</code> 区间内波动</strong></a></li>
+            <li><a href="#案例-2-价格向下跌破下边界-i_"><strong>案例 2: 价格向下跌破下边界 $i_l$</strong></a></li>
+            <li><a href="#案例-3-价格向上涨破上边界-i_"><strong>案例 3: 价格向上涨破上边界 $i_u$</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 class="heading-element" id="uniswap-v3-手续费计算深度解析-二"><span><strong>Uniswap V3 手续费计算深度解析 (二)</strong></span>
+  <a href="#uniswap-v3-%e6%89%8b%e7%bb%ad%e8%b4%b9%e8%ae%a1%e7%ae%97%e6%b7%b1%e5%ba%a6%e8%a7%a3%e6%9e%90-%e4%ba%8c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>核心公式</strong>: 为特定价格区间 $(i_l, i_u)$ 计算手续费的核心思想是：用全局累计手续费 $f_g$ 减去该区间下方的累计手续费 $f_b$ 和上方的累计手续费 $f_a$。公式为：$f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)$。</li>
+<li><strong>关键变量 $f_{o,i}$</strong>: Uniswap V3 引入了一个名为 <strong><code>feeOutside</code></strong> (笔记中记为 $f_{o,i}$) 的关键变量。每个 tick <code>i</code> 都会记录这个值，它巧妙地追踪了当价格在 tick <code>i</code> 的“外部”时所累积的单位流动性手续费。</li>
+<li><strong>$f_{o,i}$ 的更新机制</strong>: 当价格穿越一个 tick <code>i</code> 时，该 tick 对应的 $f_{o,i}$ 会进行一次“翻转”更新。更新规则为：$f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}$。这个机制是整个计算逻辑的精髓。</li>
+<li><strong>推导关系</strong>: 通过 $f_{o,i}$ 和当前全局手续费 $f_g$，可以精确推导出任意时刻的 $f_b$ 和 $f_a$。它们的值取决于当前价格 $i_c$ 相对于目标 tick <code>i</code> 的位置。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="1-背景v3-手续费计算的复杂性"><span><strong>1. 背景：V3 手续费计算的复杂性</strong></span>
+  <a href="#1-%e8%83%8c%e6%99%afv3-%e6%89%8b%e7%bb%ad%e8%b4%b9%e8%ae%a1%e7%ae%97%e7%9a%84%e5%a4%8d%e6%9d%82%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>根本原因</strong>: <strong>集中流动性 (Concentrated Liquidity)</strong>。与 V2 不同，V3 的流动性提供者 (LP) 将资金集中在特定的价格区间内。</p>
+</li>
+<li>
+<p><strong>带来的问题</strong>: 一个 LP 只能在当前市场价格处于其设定的流动性区间内时，才能赚取手续费。当交易导致价格移出该区间，LP 就停止赚取手续费，这部分手续费应归属于其他区间的 LP。</p>
+</li>
+<li>
+<p><strong>目标</strong>: 精确计算出在<strong>特定 LP 的价格区间内</strong>发生的交易对手续费的贡献。</p>
+</li>
+<li>
+<p><strong>案例：单一 LP 的手续费归属</strong></p>
+<ul>
+<li>一个用户在价格区间 <code>[-5, +5]</code> (以 tick 为单位) 内提供了流动性（下图中紫色部分）。</li>
+<li>全局手续费累积变量 <strong><code>feeGrowthGlobal</code></strong> ($f_g$) 会随着每一次符合方向的交易而持续增长（下图中绿色曲线）。当交易是反方向时，该值保持不变，手续费累积在另一个 token 的 <code>feeGrowthGlobal</code> 变量上。</li>
+<li>当交易价格在 <code>[-5, +5]</code> 区间内时，产生的手续费应归属于该用户。</li>
+<li>当交易价格超出 <code>[-5, +5]</code> 区间时（例如，价格移动到 <code>+6</code> 或 <code>-6</code>），这部分交易消耗的是其他 LP 的流动性，产生的手续费与该用户无关。</li>
+<li>因此，为了计算该用户的应得手续费，必须从全局累计手续费中，<strong>减去</strong>价格在其区间<strong>下方</strong>和<strong>上方</strong>时产生的手续费。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="2-核心计算框架"><span><strong>2. 核心计算框架</strong></span>
+  <a href="#2-%e6%a0%b8%e5%bf%83%e8%ae%a1%e7%ae%97%e6%a1%86%e6%9e%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>手续费计算的核心公式是：</p>
+<p>$$
+f_r(i_l, i_u) = f_g - f_b(i_l) - f_a(i_u)
+$$</p>
+<ul>
+<li>$f_r(i_l, i_u)$: 在价格区间 $[i_l, i_u]$ (lower tick, upper tick) 内累积的单位流动性手续费。这是我们要求解的目标。</li>
+<li>$f_g$: <strong><code>feeGrowthGlobal</code></strong>，一个全局变量，记录了自池子创建以来累积的总单位流动性手续费。</li>
+<li>$f_b(i_l)$: <strong><code>feeBelow</code></strong>，在价格低于下边界 $i_l$ 的区域内累积的单位流动性手续费。</li>
+<li>$f_a(i_u)$: <strong><code>feeAbove</code></strong>，在价格高于上边界 $i_u$ 的区域内累积的单位流动性手续费。</li>
+</ul>
+<p><strong>挑战</strong>: 如何高效、准确地计算出任意时刻的 $f_b(i_l)$ 和 $f_a(i_u)$？</p>
+<h3 class="heading-element" id="3-解决方案"><span><strong>3. 解决方案：<code>feeOutside</code> 变量 ($f_{o,i}$)</strong></span>
+  <a href="#3-%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了解决上述挑战，Uniswap V3 为<strong>每一个 tick <code>i</code></strong> 都引入并维护了一个状态变量：<strong><code>feeOutside</code></strong> (记为 $f_{o,i}$)。</p>
+<h4 class="heading-element" id="31-f_"><span><strong>3.1. $f_{o,i}$ 的定义与规则</strong></span>
+  <a href="#31-f_" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>$f_{o,i}$ 记录的是当价格在 tick <code>i</code> 的“外部”时，全局手续费 $f_g$ 的累积值。它的行为由两条核心规则定义：</p>
+<ol>
+<li>
+<p><strong>初始化规则</strong>: 当一个 tick <code>i</code> 首次被激活（即成为某个流动性区间的边界）时，其 $f_{o,i}$ 被初始化。</p>
+<blockquote>
+<ul>
+<li>如果当前价格 $i_c \ge i$ (价格在 tick <code>i</code> 之上)，则 $f_{o,i} = f_g$。</li>
+<li>如果当前价格 $i_c &lt; i$ (价格在 tick <code>i</code> 之下)，则 $f_{o,i} = 0$。</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p><strong>更新规则</strong>: 每当价格<strong>穿越 (cross)</strong> tick <code>i</code> 时，$f_{o,i}$ 会被更新。</p>
+<blockquote>
+<p>更新公式为：
+$$
+f_{o,i}^{\text{new}} = f_g^{\text{current}} - f_{o,i}^{\text{old}}
+$$
+这个“翻转”操作是整个机制的核心，它巧妙地在 $f_g$ 和 $0$ 之间切换记录基准，从而跟踪外部手续费的增长。</p>
+</blockquote>
+</li>
+</ol>
+<h4 class="heading-element" id="32"><span><strong>3.2. <code>feeOutside</code> 的更新流程 (Mermaid 图)</strong></span>
+  <a href="#32" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>图表类型选择说明</strong>: 此处选择<strong>流程图</strong>是因为它最能清晰地表达一个<strong>包含条件判断的逻辑流程</strong>。它直观地展示了系统是如何根据价格是否穿越 tick 这一条件来决定是否执行更新操作的。时序图或甘特图不适合描述这种算法逻辑。</p>
+<div class="diagram-container">
+  <pre class="mermaid">flowchart TD
+    A[开始] --> B{价格 i_c 发生变化}
+    B --> C{价格是否穿越了 Tick i ?}
+    C -- 否 --> B
+    C -- 是 --> D[记录当前全局手续费 f_g]
+    D --> E[执行更新 f_o,i = f_g - f_o,i_old]
+    E --> B</pre>
+  <pre class="mermaid-dark">flowchart TD
+    A[开始] --> B{价格 i_c 发生变化}
+    B --> C{价格是否穿越了 Tick i ?}
+    C -- 否 --> B
+    C -- 是 --> D[记录当前全局手续费 f_g]
+    D --> E[执行更新 f_o,i = f_g - f_o,i_old]
+    E --> B</pre>
+  <pre class="mermaid-neutral">flowchart TD
+    A[开始] --> B{价格 i_c 发生变化}
+    B --> C{价格是否穿越了 Tick i ?}
+    C -- 否 --> B
+    C -- 是 --> D[记录当前全局手续费 f_g]
+    D --> E[执行更新 f_o,i = f_g - f_o,i_old]
+    E --> B</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>flowchart TD
+    A[开始] --> B{价格 i_c 发生变化}
+    B --> C{价格是否穿越了 Tick i ?}
+    C -- 否 --> B
+    C -- 是 --> D[记录当前全局手续费 f_g]
+    D --> E[执行更新 f_o,i = f_g - f_o,i_old]
+    E --> B</pre></template>
+</div><p><strong>图表解释</strong>:
+这个流程描述了 $f_{o,i}$ 的动态更新机制。系统持续监控价格 $i_c$ 的变化。只有在价格<strong>恰好穿越</strong>某个 tick <code>i</code> 的瞬间，才会触发该 tick 的 $f_{o,i}$ 更新。更新操作利用穿越时的全局手续费 $f_g$ 和旧的 $f_{o,i}$ 值，计算出新的 $f_{o,i}$。如果价格没有穿越任何 tick，则所有 tick 的 $f_{o,i}$ 保持不变。</p>
+<h3 class="heading-element" id="4-推导-f_"><span><strong>4. 推导 $f_b$ 和 $f_a$ 与 $f_{o,i}$ 的关系</strong></span>
+  <a href="#4-%e6%8e%a8%e5%af%bc-f_" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>通过分析价格多次穿越 tick 的过程，我们可以找到 $f_b$ / $f_a$ 和 $f_{o,i}$ 之间的稳定关系。</p>
+<h4 class="heading-element" id="41-推导-f_"><span><strong>4.1. 推导 $f_b(i_l)$ (手续费 below lower tick)</strong></span>
+  <a href="#41-%e6%8e%a8%e5%af%bc-f_" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>
+<p><strong>场景分析</strong>: 假设我们关注下边界 tick $i_l$。我们通过一个详细的例子来观察当价格在 $i_l$ 上下来回穿越时，$f_b(i_l)$ 和 $f_{o, i_l}$ 的变化。</p>
+</li>
+<li>
+<p><strong>案例：价格多次穿越下边界 $i_l$</strong></p>
+<ul>
+<li>下图展示了 $f_g$ 随时间（交易）的变化。曲线的上升段表示手续费在累积，平坦段表示交易方向相反，不为我们关注的 token 累积手续费。</li>
+<li>$f_{g0}, f_{g1}, &hellip;, f_{g6}$ 表示在关键时间点（穿越 tick $i_l$ 的瞬间）的 $f_g$ 值。</li>
+<li><strong>$f_b$ (直观计算)</strong>: 阴影部分的面积总和，代表了所有价格低于 $i_l$ 时累积的手续费。</li>
+<li><strong>$f_{o,i_l}$ (按规则计算)</strong>: 根据上一节的初始化和更新规则计算出的值。</li>
+</ul>
+</li>
+<li>
+<p><strong>推导结论</strong>: 通过对比在不同时间段内 $f_b$ 和 $f_{o,i_l}$ 的值，可以总结出以下规律：</p>
+<ul>
+<li><strong>当 $i_c \ge i_l$ (当前价格在 tick 之上) 时</strong>:
+<ul>
+<li>此时，价格在 $i_l$ 的“内部”，所有低于 $i_l$ 的手续费累积都已成为历史。$f_{o,i_l}$ 经过翻转后，其值正好等于所有低于 $i_l$ 的历史手续费之和。</li>
+<li>因此，下方的费用 $f_b(i_l) = f_{o,i_l}$。</li>
+</ul>
+</li>
+<li><strong>当 $i_c &lt; i_l$ (当前价格在 tick 之下) 时</strong>:
+<ul>
+<li>此时，价格在 $i_l$ 的“外部”。$f_{o,i_l}$ 记录了上方所有累积费用的总和。</li>
+<li>因此，下方的费用 $f_b(i_l) = f_g - f_{o,i_l}$。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>最终公式 for $f_b$</strong>:
+$$
+f_b(i_l) =
+\begin{cases}
+f_{o,i_l} &amp; \text{if } i_c \ge i_l \
+f_g - f_{o,i_l} &amp; \text{if } i_c &lt; i_l
+\end{cases}
+$$</p>
+</li>
+</ul>
+<h4 class="heading-element" id="42-推导-f_"><span><strong>4.2. 推导 $f_a(i_u)$ (手续费 above upper tick)</strong></span>
+  <a href="#42-%e6%8e%a8%e5%af%bc-f_" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>
+<p><strong>场景分析</strong>: 使用完全相同的逻辑，我们分析上边界 tick $i_u$。</p>
+</li>
+<li>
+<p><strong>案例：价格多次穿越上边界 $i_u$</strong></p>
+<ul>
+<li>与 $f_b$ 的推导类似，我们观察 $f_g$ 变化以及价格穿越 $i_u$ 的过程。</li>
+<li><strong>$f_a$ (直观计算)</strong>: 阴影部分的面积总和，代表了所有价格高于 $i_u$ 时累积的手续费。</li>
+</ul>
+</li>
+<li>
+<p><strong>推导结论</strong>:</p>
+<ul>
+<li><strong>当 $i_c &lt; i_u$ (当前价格在 tick 之下) 时</strong>: 价格在 $i_u$ 的“内部”，$f_{o,i_u}$ 记录的就是高于 $i_u$ 的历史手续费之和，所以 $f_a(i_u) = f_{o,i_u}$。</li>
+<li><strong>当 $i_c \ge i_u$ (当前价格在 tick 之上) 时</strong>: 价格在 $i_u$ 的“外部”，$f_{o,i_u}$ 记录的是低于 $i_u$ 的手续费，所以高于 $i_u$ 的手续费 $f_a(i_u) = f_g - f_{o,i_u}$。</li>
+</ul>
+</li>
+<li>
+<p><strong>最终公式 for $f_a$</strong>:
+$$
+f_a(i_u) =
+\begin{cases}
+f_{o,i_u} &amp; \text{if } i_c &lt; i_u \
+f_g - f_{o,i_u} &amp; \text{if } i_c \ge i_u
+\end{cases}
+$$</p>
+</li>
+</ul>
+<h3 class="heading-element" id="5-综合案例演算"><span><strong>5. 综合案例演算</strong></span>
+  <a href="#5-%e7%bb%bc%e5%90%88%e6%a1%88%e4%be%8b%e6%bc%94%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>现在，我们将所有公式整合起来，通过三个典型案例来验证整个计算逻辑的正确性。</p>
+<p>假设一个 LP 在区间 <code>[i_l, i_u]</code> 提供流动性。初始时，价格 $i_c$ 在区间内，$f_g = f_{g0}$。</p>
+<ul>
+<li><strong>初始化</strong>:
+<ul>
+<li>$f_{o,i_l} = f_{g0}$ (因为 $i_c &gt; i_l$)</li>
+<li>$f_{o,i_u} = 0$ (因为 $i_c &lt; i_u$)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 class="heading-element" id="案例-1-价格始终在"><span><strong>案例 1: 价格始终在 <code>[i_l, i_u]</code> 区间内波动</strong></span>
+  <a href="#%e6%a1%88%e4%be%8b-1-%e4%bb%b7%e6%a0%bc%e5%a7%8b%e7%bb%88%e5%9c%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>过程</strong>: 价格从未穿越 $i_l$ 或 $i_u$。$f_g$ 从 $f_{g0}$ 增长到 $f_g^{\text{final}}$。</li>
+<li><strong>状态</strong>: $f_{o,i_l}$ 和 $f_{o,i_u}$ 始终保持初始值，未被更新。
+<ul>
+<li>$f_{o,i_l} = f_{g0}$</li>
+<li>$f_{o,i_u} = 0$</li>
+</ul>
+</li>
+<li><strong>计算</strong>:
+<ul>
+<li>$f_b(i_l) = f_{o,i_l} = f_{g0}$ (因为 $i_c \ge i_l$)</li>
+<li>$f_a(i_u) = f_{o,i_u} = 0$ (因为 $i_c &lt; i_u$)</li>
+<li>$f_r = f_g^{\text{final}} - f_b - f_a = f_g^{\text{final}} - f_{g0} - 0 = f_g^{\text{final}} - f_{g0}$</li>
+</ul>
+</li>
+<li><strong>结论</strong>: 结果符合直觉，LP 赚取了从 $f_{g0}$ 到 $f_g^{\text{final}}$ 的全部手续费增长。</li>
+</ul>
+<hr>
+<h4 class="heading-element" id="案例-2-价格向下跌破下边界-i_"><span><strong>案例 2: 价格向下跌破下边界 $i_l$</strong></span>
+  <a href="#%e6%a1%88%e4%be%8b-2-%e4%bb%b7%e6%a0%bc%e5%90%91%e4%b8%8b%e8%b7%8c%e7%a0%b4%e4%b8%8b%e8%be%b9%e7%95%8c-i_" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>过程</strong>: 价格下跌，在 $f_g = f_{g1}$ 时穿越 $i_l$。最终 $f_g$ 增长到 $f_g^{\text{final}}$，且 $i_c &lt; i_l$。</li>
+<li><strong>状态</strong>: $i_l$ 被穿越一次，$f_{o,i_l}$ 更新。$i_u$ 未被穿越。
+<ul>
+<li>$f_{o,i_l}^{\text{new}} = f_{g1} - f_{o,i_l}^{\text{old}} = f_{g1} - f_{g0}$</li>
+<li>$f_{o,i_u} = 0$</li>
+</ul>
+</li>
+<li><strong>计算</strong>:
+<ul>
+<li>$f_b(i_l) = f_g^{\text{final}} - f_{o,i_l}^{\text{new}} = f_g^{\text{final}} - (f_{g1} - f_{g0})$ (因为 $i_c &lt; i_l$)</li>
+<li>$f_a(i_u) = f_{o,i_u} = 0$ (因为 $i_c &lt; i_u$)</li>
+<li>$f_r = f_g^{\text{final}} - f_b - f_a = f_g^{\text{final}} - [f_g^{\text{final}} - (f_{g1} - f_{g0})] - 0$</li>
+<li>$f_r = f_{g1} - f_{g0}$</li>
+</ul>
+</li>
+<li><strong>结论</strong>: 结果符合直觉，LP 只赚取了价格在跌破 $i_l$ 之前（即从 $f_{g0}$ 到 $f_{g1}$）的手续费。</li>
+</ul>
+<hr>
+<h4 class="heading-element" id="案例-3-价格向上涨破上边界-i_"><span><strong>案例 3: 价格向上涨破上边界 $i_u$</strong></span>
+  <a href="#%e6%a1%88%e4%be%8b-3-%e4%bb%b7%e6%a0%bc%e5%90%91%e4%b8%8a%e6%b6%a8%e7%a0%b4%e4%b8%8a%e8%be%b9%e7%95%8c-i_" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>过程</strong>: 价格上涨，在 $f_g = f_{g1}$ 时穿越 $i_u$。最终 $f_g$ 增长到 $f_g^{\text{final}}$，且 $i_c &gt; i_u$。</li>
+<li><strong>状态</strong>: $i_u$ 被穿越一次，$f_{o,i_u}$ 更新。$i_l$ 未被穿越。
+<ul>
+<li>$f_{o,i_l} = f_{g0}$</li>
+<li>$f_{o,i_u}^{\text{new}} = f_{g1} - f_{o,i_u}^{\text{old}} = f_{g1} - 0 = f_{g1}$</li>
+</ul>
+</li>
+<li><strong>计算</strong>:
+<ul>
+<li>$f_b(i_l) = f_{o,i_l} = f_{g0}$ (因为 $i_c &gt; i_l$)</li>
+<li>$f_a(i_u) = f_g^{\text{final}} - f_{o,i_u}^{\text{new}} = f_g^{\text{final}} - f_{g1}$ (因为 $i_c &gt; i_u$)</li>
+<li>$f_r = f_g^{\text{final}} - f_b - f_a = f_g^{\text{final}} - f_{g0} - (f_g^{\text{final}} - f_{g1})$</li>
+<li>$f_r = f_{g1} - f_{g0}$</li>
+</ul>
+</li>
+<li><strong>结论</strong>: 结果符合直觉，LP 只赚取了价格在涨破 $i_u$ 之前（即从 $f_{g0}$ 到 $f_{g1}$）的手续费。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap19/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap19/" data-title="19.Uniswap V3 手续费计算（二）" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap19/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap19/" data-title="19.Uniswap V3 手续费计算（二）"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap20/" class="post-nav-item" rel="prev" title="20.Uniswap V4 简介"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>20.Uniswap V4 简介</a><a href="/posts/202509-uniswap18/" class="post-nav-item" rel="next" title="18.Uniswap V3 手续费计算（一）">18.Uniswap V3 手续费计算（一）<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#uniswap-v3-手续费计算深度解析-二"><strong>Uniswap V3 手续费计算深度解析 (二)</strong></a>
+          <ul>
+            <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#1-背景v3-手续费计算的复杂性"><strong>1. 背景：V3 手续费计算的复杂性</strong></a></li>
+        <li><a href="#2-核心计算框架"><strong>2. 核心计算框架</strong></a></li>
+        <li><a href="#3-解决方案"><strong>3. 解决方案：<code>feeOutside</code> 变量 ($f_{o,i}$)</strong></a>
+          <ul>
+            <li><a href="#31-f_"><strong>3.1. $f_{o,i}$ 的定义与规则</strong></a></li>
+            <li><a href="#32"><strong>3.2. <code>feeOutside</code> 的更新流程 (Mermaid 图)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#4-推导-f_"><strong>4. 推导 $f_b$ 和 $f_a$ 与 $f_{o,i}$ 的关系</strong></a>
+          <ul>
+            <li><a href="#41-推导-f_"><strong>4.1. 推导 $f_b(i_l)$ (手续费 below lower tick)</strong></a></li>
+            <li><a href="#42-推导-f_"><strong>4.2. 推导 $f_a(i_u)$ (手续费 above upper tick)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#5-综合案例演算"><strong>5. 综合案例演算</strong></a>
+          <ul>
+            <li><a href="#案例-1-价格始终在"><strong>案例 1: 价格始终在 <code>[i_l, i_u]</code> 区间内波动</strong></a></li>
+            <li><a href="#案例-2-价格向下跌破下边界-i_"><strong>案例 2: 价格向下跌破下边界 $i_l$</strong></a></li>
+            <li><a href="#案例-3-价格向上涨破上边界-i_"><strong>案例 3: 价格向上涨破上边界 $i_u$</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/809ad0c3550cf6d8d1f4a381738765ea.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

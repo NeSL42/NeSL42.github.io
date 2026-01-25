@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OS - 标签 - 敬渊&#39;s Blog</title>
+    <link>http://localhost:1313/tags/os/</link>
+    <description>敬渊&#39;s Blog</description>
+    <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 12 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/os/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>XV6阅读笔记</title>
+      <link>http://localhost:1313/posts/xv6/</link>
+      <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/xv6/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;[toc]&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;英文版：https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf&lt;/p&gt;&#xA;&lt;p&gt;中文版：http://xv6.dgs.zone/&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>MIT6S081lab</title>
+      <link>http://localhost:1313/posts/2022-7-10-oslab/</link>
+      <pubDate>Sun, 10 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2022-7-10-oslab/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;写oslab的一些代码，&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;xv6中文文档：https://th0ar.gitbooks.io/xv6-chinese/content/content/chapter2.html&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>MIT6.S081_Note</title>
+      <link>http://localhost:1313/posts/6.s081/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/6.s081/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;[toc]&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;6.s081看的是文档（比较快些），没看视频，：https://github.com/Ghostasky/MIT6.S081&lt;/p&gt;&#xA;&lt;p&gt;XV6:https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;有一说一，这课是真他娘好看，就按照章节顺序来做笔记吧。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>论文阅读 - 标签 - 敬渊&#39;s Blog</title>
+    <link>http://localhost:1313/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</link>
+    <description>敬渊&#39;s Blog</description>
+    <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 20 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AAVE v1 源码阅读</title>
+      <link>http://localhost:1313/posts/202601-aavev1source/</link>
+      <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202601-aavev1source/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#39;http://localhost:1313/posts/202601-aavev1source/file-20260121000438250.png&#39; alt=&#34;/posts/202601-aavev1source/file-20260121000438250.png&#34; height=&#34;1006&#34; width=&#34;1426&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 class=&#34;heading-element&#34; id=&#34;1-架构鸟瞰birds-eye-view&#34;&gt;&lt;span&gt;1 架构鸟瞰（Bird&amp;rsquo;s-eye View）&lt;/span&gt;&#xA;  &lt;a href=&#34;#1-%e6%9e%b6%e6%9e%84%e9%b8%9f%e7%9e%b0birds-eye-view&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;图 4 提供了 Aave V1 在执行层与状态层之间的完整流向：用户与外部协议主要通过 &lt;code&gt;LendingPool&lt;/code&gt; 交互，这个无状态的业务控制器只负责校验与流程调度；资金托管、计息、估值与状态存储都被剥离到 &lt;code&gt;LendingPoolCore&lt;/code&gt;。为将白皮书中的抽象模型映射到源码，本章按照“入口 → 状态 → 策略”的顺序梳理模块职责与依赖关系，后续章节将沿这些箭头展开函数与事件的细节。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>AAVE v1 白皮书阅读</title>
+      <link>http://localhost:1313/posts/202601-aavev1/</link>
+      <pubDate>Mon, 19 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202601-aavev1/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;h2 class=&#34;heading-element&#34; id=&#34;1-introduction&#34;&gt;&lt;span&gt;1 Introduction&lt;/span&gt;&#xA;  &lt;a href=&#34;#1-introduction&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;Aave Protocol V1 标志着从去中心化 P2P 借贷策略（lender 与 borrower 之间形成直接贷款关系，如早期 ETHLend）向 &lt;strong&gt;pool-based（资金池）&lt;/strong&gt; 模式的转变：&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>闪电网络白皮书阅读</title>
+      <link>http://localhost:1313/posts/202601-lightningnetwork/</link>
+      <pubDate>Sun, 18 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202601-lightningnetwork/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;h2 class=&#34;heading-element&#34; id=&#34;1-比特币区块链的扩展性难题-the-bitcoin-blockchain-scalability-problem&#34;&gt;&lt;span&gt;1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem)&lt;/span&gt;&#xA;  &lt;a href=&#34;#1-%e6%af%94%e7%89%b9%e5%b8%81%e5%8c%ba%e5%9d%97%e9%93%be%e7%9a%84%e6%89%a9%e5%b1%95%e6%80%a7%e9%9a%be%e9%a2%98-the-bitcoin-blockchain-scalability-problem&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;这一章为整个协议奠定了&lt;strong&gt;物理学和经济学基础&lt;/strong&gt;。论证了为什么“单纯增加区块大小（Block Size Increase）”是一条死路，以及为什么必须将交易移至链下（Off-chain）。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>论文整理来自OPENAI</title>
+      <link>http://localhost:1313/posts/202511-openaipaper/</link>
+      <pubDate>Wed, 26 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202511-openaipaper/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;先直接说结论：&#xA;我不可能&lt;strong&gt;数学意义上“全网穷举所有论文”&lt;/strong&gt;，但我已经围绕你提到的几个方向——&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;DEX/AMM 上的多池 / 多跳 / 三角套利与&lt;strong&gt;最优路径搜索&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;DeFi ↔ CEX 价差套利（含跨链）&lt;/li&gt;&#xA;&lt;li&gt;现货–期货 / 永续合约资金费率 / 基差套利&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;做了多轮英文关键词检索，把近几年&lt;strong&gt;和“在几十/几百个池子里快速找最优套利路径、高计算复杂度算法”最相关&lt;/strong&gt;的研究论文和接近论文风格的技术文全部整理出来（下面会把我“搜到的都列出来”，并注明不是严格意义上的论文时）。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>论文阅读《愿望还是现实？论加密货币市场中三角套利的可利用性》</title>
+      <link>http://localhost:1313/posts/202511-frl/</link>
+      <pubDate>Wed, 26 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202511-frl/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;愿望还是现实论加密货币市场中三角套利的可利用性&#34;&gt;&lt;span&gt;愿望还是现实？论加密货币市场中三角套利的可利用性&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e6%84%bf%e6%9c%9b%e8%bf%98%e6%98%af%e7%8e%b0%e5%ae%9e%e8%ae%ba%e5%8a%a0%e5%af%86%e8%b4%a7%e5%b8%81%e5%b8%82%e5%9c%ba%e4%b8%ad%e4%b8%89%e8%a7%92%e5%a5%97%e5%88%a9%e7%9a%84%e5%8f%af%e5%88%a9%e7%94%a8%e6%80%a7&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.sciencedirect.com/science/article/pii/S154461232401537X?ref=pdf_download&amp;amp;fr=RR-2&amp;amp;rr=9a4aac511b200540&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;https://www.sciencedirect.com/science/article/pii/S154461232401537X?ref=pdf_download&amp;fr=RR-2&amp;rr=9a4aac511b200540&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Anthropic论文</title>
+      <link>http://localhost:1313/posts/202511-anthopic/</link>
+      <pubDate>Mon, 24 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202511-anthopic/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://assets.anthropic.com/m/74342f2c96095771/original/Natural-emergent-misalignment-from-reward-hacking-paper.pdf&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;https://assets.anthropic.com/m/74342f2c96095771/original/Natural-emergent-misalignment-from-reward-hacking-paper.pdf&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 class=&#34;heading-element&#34; id=&#34;一这篇论文在研究什么&#34;&gt;&lt;span&gt;一、这篇论文在研究什么？&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e4%b8%80%e8%bf%99%e7%af%87%e8%ae%ba%e6%96%87%e5%9c%a8%e7%a0%94%e7%a9%b6%e4%bb%80%e4%b9%88&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;一句话概括：&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>一些想看的论文整理</title>
+      <link>http://localhost:1313/posts/202511-papercollect/</link>
+      <pubDate>Mon, 24 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202511-papercollect/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;下面是一个&lt;strong&gt;按主题整理的清单&lt;/strong&gt;，只包含我们前面聊到、而且我在网上能精确定位到的论文/长文。&#xA;每条都有：&lt;strong&gt;英文题目 + 大致做了什么 + 主要链接&lt;/strong&gt;。&#xA;（个别早先提到但我在公开数据库里找不到权威版本的，就没硬塞进来，以免给错链接。）&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>论文阅读《An Introduction to Arbitrage Trading Strategies》</title>
+      <link>http://localhost:1313/posts/202511-arbitrageintro/</link>
+      <pubDate>Sun, 23 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202511-arbitrageintro/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;套利交易策略导论&#34;&gt;&lt;span&gt;套利交易策略导论&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e5%a5%97%e5%88%a9%e4%ba%a4%e6%98%93%e7%ad%96%e7%95%a5%e5%af%bc%e8%ae%ba&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h2 class=&#34;heading-element&#34; id=&#34;引言&#34;&gt;&lt;span&gt;引言&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e5%bc%95%e8%a8%80&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;套利交易策略是一类通过买卖金融工具来利用价格差异的交易策略。套利交易的目标是从证券或市场之间的价格差异中获利，而不承担重大的方向性风险。套利交易策略通常依赖定量分析和数学模型来识别错误定价，并在市场调整前快速执行交易。本文将介绍五种流行的套利交易策略，并为每种策略提供简单的示例和参考资料。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》</title>
+      <link>http://localhost:1313/posts/202511-polymarket_new/</link>
+      <pubDate>Sun, 23 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202511-polymarket_new/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;揭开概率森林的面纱预测市场中的套利&#34;&gt;&lt;span&gt;揭开概率森林的面纱：预测市场中的套利&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e6%8f%ad%e5%bc%80%e6%a6%82%e7%8e%87%e6%a3%ae%e6%9e%97%e7%9a%84%e9%9d%a2%e7%ba%b1%e9%a2%84%e6%b5%8b%e5%b8%82%e5%9c%ba%e4%b8%ad%e7%9a%84%e5%a5%97%e5%88%a9&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;hr&gt;&#xA;&lt;h2 class=&#34;heading-element&#34; id=&#34;摘要&#34;&gt;&lt;span&gt;摘要&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e6%91%98%e8%a6%81&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;Polymarket 是一个预测市场平台，用户可以通过交易与特定结果（称为&lt;strong&gt;条件&lt;/strong&gt;）挂钩的份额来对未来事件进行预测。Polymarket 上的每个市场都关联着一组一个或多个此类条件。为确保市场正确结算，条件集必须是&lt;strong&gt;完备的&lt;/strong&gt;——即 collectively 涵盖所有可能结果——同时必须是&lt;strong&gt;互斥&lt;/strong&gt;的——即仅有一个条件最终可判定为真。因此，所有相关结果（无论在一个条件还是市场中）的价格之和（即概率）应为 $1 ，代表任一结果发生的总概率为 1。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>DAI 白皮书翻译</title>
+      <link>http://localhost:1313/posts/202507-dai/</link>
+      <pubDate>Sat, 19 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202507-dai/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;DAI白皮书&lt;/p&gt;&#xA;&lt;p&gt;[toc]&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;dai稳定币概述&#34;&gt;&lt;span&gt;Dai稳定币概述&lt;/span&gt;&#xA;  &lt;a href=&#34;#dai%e7%a8%b3%e5%ae%9a%e5%b8%81%e6%a6%82%e8%bf%b0&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;当前主流数字资产（如比特币 Bitcoin [BTC] 和以太币 Ether [ETH]）价格波动过于剧烈，难以作为日常交易货币使用。比特币的价值经常出现大幅波动，单日涨跌幅度可达 25%，有时甚至一个月内涨幅超过 300%。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>ETH 白皮书阅读</title>
+      <link>http://localhost:1313/posts/202507-eth_white_paper/</link>
+      <pubDate>Sat, 19 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202507-eth_white_paper/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;[toc]&lt;/p&gt;&#xA;&lt;p&gt;Page last updated:2025年2月12日&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;这篇介绍性论文最初由 &lt;a href=&#34;https://ethereum.org/zh/what-is-ethereum/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;以太坊&lt;/a&gt; 创始人 Vitalik Buterin 在 2014 年发表，前于 2015 年的项目正式发布时间。 值得一提的是，和其他社区驱动的开源软件项目一样，以太坊自发布以来一直不断发展。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》</title>
+      <link>http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/</link>
+      <pubDate>Sun, 13 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;h1 class=&#34;heading-element&#34; id=&#34;论文阅读blockchain-privacy-and-regulatory-compliance-towards-a-practical-equilibrium&#34;&gt;&lt;span&gt;论文阅读：《Blockchain privacy and regulatory compliance: Towards a practical equilibrium》&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e8%ae%ba%e6%96%87%e9%98%85%e8%af%bbblockchain-privacy-and-regulatory-compliance-towards-a-practical-equilibrium&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h1 class=&#34;heading-element&#34; id=&#34;0-摘要&#34;&gt;&lt;span&gt;0. 摘要&lt;/span&gt;&#xA;  &lt;a href=&#34;#0-%e6%91%98%e8%a6%81&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;我们研究了一种名为“隐私池”（Privacy Pools）的新型智能合约隐私增强协议。该协议引入了一种机制，允许用户在不公开完整交易记录的前提下，选择性披露交易的某些属性。其核心在于让用户发布零知识证明，以验证其资金（未）来源于已知的（非法）合法渠道，这通过证明资金属于特定关联集合来实现——这些集合专为展示符合监管框架或社会共识而设计。我们阐述了该机制如何在合规与非合规提款间建立分离均衡，并详细分析了其技术原理、激励机制及更广泛的影响，揭示此类协议如何实现既保护隐私又符合监管要求的区块链交易。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

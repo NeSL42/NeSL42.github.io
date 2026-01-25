@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="Claude Code CLI 认证流程解析 Claude Code（一）：认证篇 1. 引言：一个关于&quot;拼车&quot;的想法 项目源于一个朴素的想法：与小伙伴&quot;拼车&quot;使用 Claude Code。
+"><meta name="keywords" content='tips'>
+  <meta itemprop="name" content="Claude Code CLI 认证流程解析 & Claude Code API 深度解析">
+  <meta itemprop="description" content="Claude Code CLI 认证流程解析 Claude Code（一）：认证篇 1. 引言：一个关于&#34;拼车&#34;的想法 项目源于一个朴素的想法：与小伙伴&#34;拼车&#34;使用 Claude Code。">
+  <meta itemprop="datePublished" content="2025-08-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-23T00:00:00+00:00">
+  <meta itemprop="wordCount" content="4467">
+  <meta itemprop="keywords" content="Tips"><meta property="og:url" content="http://localhost:1313/posts/202508-claude/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="Claude Code CLI 认证流程解析 & Claude Code API 深度解析">
+  <meta property="og:description" content="Claude Code CLI 认证流程解析 Claude Code（一）：认证篇 1. 引言：一个关于&#34;拼车&#34;的想法 项目源于一个朴素的想法：与小伙伴&#34;拼车&#34;使用 Claude Code。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-23T00:00:00+00:00">
+    <meta property="article:tag" content="Tips">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Claude Code CLI 认证流程解析 & Claude Code API 深度解析">
+  <meta name="twitter:description" content="Claude Code CLI 认证流程解析 Claude Code（一）：认证篇 1. 引言：一个关于&#34;拼车&#34;的想法 项目源于一个朴素的想法：与小伙伴&#34;拼车&#34;使用 Claude Code。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202508-claude/" title="Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202508-functincallmcp/" title="Function Calling 与 MCP 协议" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202508-llmarch/" title="大型LLM架构对比" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Claude Code CLI 认证流程解析 \u0026 Claude Code API 深度解析",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202508-claude\/"
+    },"genre": "posts","keywords": "tips","wordcount":  4467 ,
+    "url": "http:\/\/localhost:1313\/posts\/202508-claude\/","datePublished": "2025-08-23T00:00:00+00:00","dateModified": "2025-08-23T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-23 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-23">2025-08-23</time></span>&nbsp;<span title="4467 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 4500 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 9 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#claude-code一认证篇">Claude Code（一）：认证篇</a>
+      <ul>
+        <li><a href="#1-引言一个关于拼车的想法">1. 引言：一个关于&quot;拼车&quot;的想法</a></li>
+        <li><a href="#2-oauth-20-流程预备知识">2. OAuth 2.0 流程预备知识</a>
+          <ul>
+            <li><a href="#21-三个关键角色">2.1 三个关键角色</a></li>
+            <li><a href="#22-两大安全机制">2.2 两大安全机制</a>
+              <ul>
+                <li><a href="#221-state-参数与-csrf-防护">2.2.1 State 参数与 CSRF 防护</a></li>
+                <li><a href="#222-pkce-安全机制">2.2.2 PKCE 安全机制</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#3-claude-code-cli-认证流程详解">3. Claude Code CLI 认证流程详解</a>
+          <ul>
+            <li><a href="#31-授权请求阶段">3.1 授权请求阶段</a>
+              <ul>
+                <li><a href="#311-步骤一启动认证流程">3.1.1 步骤一：启动认证流程</a></li>
+                <li><a href="#312-步骤二浏览器授权页面">3.1.2 步骤二：浏览器授权页面</a></li>
+              </ul>
+            </li>
+            <li><a href="#32-授权响应阶段">3.2 授权响应阶段</a>
+              <ul>
+                <li><a href="#321-步骤三回调页面与授权码获取">3.2.1 步骤三：回调页面与授权码获取</a></li>
+                <li><a href="#322-步骤四token-安全交换---pkce-的关键作用">3.2.2 步骤四：Token 安全交换 - PKCE 的关键作用</a></li>
+              </ul>
+            </li>
+            <li><a href="#33-token-管理阶段">3.3 Token 管理阶段</a>
+              <ul>
+                <li><a href="#331-步骤五获取访问令牌并本地存储">3.3.1 步骤五：获取访问令牌并本地存储</a></li>
+                <li><a href="#332-步骤六token-自动刷新机制">3.3.2 步骤六：Token 自动刷新机制</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#4-总结">4. 总结</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#claude-codeapi-篇claude-api-深度解析">Claude CodeAPI 篇：Claude API 深度解析</a>
+      <ul>
+        <li><a href="#1-引言">1. 引言</a></li>
+        <li><a href="#2-claude-api-请求剖析">2. Claude API 请求剖析</a>
+          <ul>
+            <li><a href="#21-请求与响应的本质">2.1 请求与响应的本质</a></li>
+            <li><a href="#22-核心角色系统">2.2 核心角色系统</a></li>
+            <li><a href="#23-内容类型体系">2.3 内容类型体系</a></li>
+            <li><a href="#24-渐进式请求讲解">2.4 渐进式请求讲解</a>
+              <ul>
+                <li><a href="#第一步设置系统提示词">第一步：设置系统提示词</a></li>
+                <li><a href="#第二步基础对话结构">第二步：基础对话结构</a></li>
+                <li><a href="#第三步多模态内容">第三步：多模态内容</a></li>
+                <li><a href="#第四步启用思考模式">第四步：启用思考模式</a></li>
+                <li><a href="#第五步工具调用">第五步：工具调用</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#3-工具调用机制详解">3. 工具调用机制详解</a>
+          <ul>
+            <li><a href="#31-为什么工具调用如此重要">3.1 为什么工具调用如此重要</a></li>
+            <li><a href="#32-工具调用的完整流程">3.2 工具调用的完整流程</a>
+              <ul>
+                <li><a href="#步骤-1工具定义">步骤 1：工具定义</a></li>
+                <li><a href="#步骤-2--3claude-的思考与决策">步骤 2 &amp; 3：Claude 的思考与决策</a></li>
+                <li><a href="#步骤-4客户端执行并返回结果">步骤 4：客户端执行并返回结果</a></li>
+                <li><a href="#步骤-5claude-生成最终响应">步骤 5：Claude 生成最终响应</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#4-响应内容深度剖析">4. 响应内容深度剖析</a>
+          <ul>
+            <li><a href="#41-响应内容概述">4.1 响应内容概述</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-流式响应实时交互的实现">5. 流式响应：实时交互的实现</a>
+          <ul>
+            <li><a href="#51-为什么需要流式响应">5.1 为什么需要流式响应</a></li>
+            <li><a href="#52-sseclaude-流式响应的基础">5.2 SSE：Claude 流式响应的基础</a></li>
+            <li><a href="#53-claude-sse-事件类型">5.3 Claude SSE 事件类型</a></li>
+          </ul>
+        </li>
+        <li><a href="#6-结语">6. 结语</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="claude-code-cli-认证流程解析"><span>Claude Code CLI 认证流程解析</span>
+  <a href="#claude-code-cli-%e8%ae%a4%e8%af%81%e6%b5%81%e7%a8%8b%e8%a7%a3%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="claude-code一认证篇"><span>Claude Code（一）：认证篇</span>
+  <a href="#claude-code%e4%b8%80%e8%ae%a4%e8%af%81%e7%af%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="1-引言一个关于拼车的想法"><span>1. 引言：一个关于&quot;拼车&quot;的想法</span>
+  <a href="#1-%e5%bc%95%e8%a8%80%e4%b8%80%e4%b8%aa%e5%85%b3%e4%ba%8e%e6%8b%bc%e8%bd%a6%e7%9a%84%e6%83%b3%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>项目源于一个朴素的想法：与小伙伴&quot;拼车&quot;使用 Claude Code。</p>
+<p>200刀的max订阅不便宜，拼车能合理的分摊成本，又能和好友一起使用、讨论这个目前（我认为）最强大的 AI 编程工具，岂不快哉。</p>
+<p>想要实现需求，最核心的两个问题：</p>
+<ul>
+<li><strong>Claude Code 客户端如何对用户账号进行认证？</strong></li>
+<li><strong>认证成功后，如何向 API 发起请求？</strong></li>
+</ul>
+<p>这篇文章将详细解析 Claude Code CLI 的原生认证流程，带你一步步了解 OAuth 2.0 + PKCE 的实现细节。</p>
+<blockquote>
+<p>实际上这与接入L站登录没什么区别。
+建议A社立刻开放L站用户登录，免费使用Opus!!!</p>
+</blockquote>
+<h3 class="heading-element" id="2-oauth-20-流程预备知识"><span>2. OAuth 2.0 流程预备知识</span>
+  <a href="#2-oauth-20-%e6%b5%81%e7%a8%8b%e9%a2%84%e5%a4%87%e7%9f%a5%e8%af%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="21-三个关键角色"><span>2.1 三个关键角色</span>
+  <a href="#21-%e4%b8%89%e4%b8%aa%e5%85%b3%e9%94%ae%e8%a7%92%e8%89%b2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在进入 Claude Code 的认证流程前，我们需要先明确 OAuth 2.0 中的三个关键角色：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">角色</th>
+            <th style="text-align: left">在 Claude Code 场景中</th>
+            <th style="text-align: left">职责</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left"><strong>资源所有者</strong> (Resource Owner)</td>
+            <td style="text-align: left">你（用户）</td>
+            <td style="text-align: left">• 拥有 Anthropic 账号 • 决定是否授权</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>客户端</strong> (Client)</td>
+            <td style="text-align: left">Claude Code CLI</td>
+            <td style="text-align: left">• 请求访问权限 • 使用获得的令牌调用 API</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>授权服务器</strong> (Authorization Server)</td>
+            <td style="text-align: left">Anthropic OAuth 服务</td>
+            <td style="text-align: left">• 验证用户身份 • 颁发访问令牌 • 管理权限范围</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>理解这三方的角色关系是理解整个 OAuth 流程的关键。接下来的每个步骤，都是这三方之间的交互。</p>
+<h4 class="heading-element" id="22-两大安全机制"><span>2.2 两大安全机制</span>
+  <a href="#22-%e4%b8%a4%e5%a4%a7%e5%ae%89%e5%85%a8%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 class="heading-element" id="221-state-参数与-csrf-防护"><span>2.2.1 State 参数与 CSRF 防护</span>
+  <a href="#221-state-%e5%8f%82%e6%95%b0%e4%b8%8e-csrf-%e9%98%b2%e6%8a%a4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><blockquote>
+<p>💡 <strong>State 参数</strong>：防止恶意网站偷偷让你授权给攻击者。</p>
+</blockquote>
+<p><code>state</code> 参数是 OAuth 2.0 中防止跨站请求伪造（CSRF）攻击的重要机制。</p>
+<p><strong>CSRF 攻击原理</strong>： 攻击者可能构造一个恶意的授权请求，诱导你点击，让你在不知情的情况下授权攻击者的应用访问你的账号。</p>
+<p><strong>State 参数如何防护</strong>：</p>
+<ul>
+<li>客户端生成一个随机的 <code>state</code> 值（<a href="#311-%e6%ad%a5%e9%aa%a4%e4%b8%80%e5%90%af%e5%8a%a8%e8%ae%a4%e8%af%81%e6%b5%81%e7%a8%8b">步骤一</a>）</li>
+<li>在授权请求中发送这个 <code>state</code> 值</li>
+<li>授权服务器在回调时原样返回 <code>state</code> 值（<a href="#321-%e6%ad%a5%e9%aa%a4%e4%b8%89%e5%9b%9e%e8%b0%83%e9%a1%b5%e9%9d%a2%e4%b8%8e%e6%8e%88%e6%9d%83%e7%a0%81%e8%8e%b7%e5%8f%96">步骤三</a>）</li>
+<li>客户端验证返回的 <code>state</code> 是否与发送的一致</li>
+</ul>
+<p>如果 <code>state</code> 不匹配，说明这个回调可能来自攻击者，客户端会拒绝处理。</p>
+<p>这就像取快递时的取件码——驿站小哥需要确定你的取件码，他们才会把快递给你。</p>
+<h5 class="heading-element" id="222-pkce-安全机制"><span>2.2.2 PKCE 安全机制</span>
+  <a href="#222-pkce-%e5%ae%89%e5%85%a8%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><blockquote>
+<p>💡 <strong>PKCE</strong>：即使授权码被偷了，攻击者也无法使用。</p>
+</blockquote>
+<p>PKCE（Proof Key for Code Exchange）是 OAuth 2.0 的安全增强机制，专门防止授权码被截获后的恶意利用。</p>
+<p><strong>为什么授权码被截获很危险？</strong></p>
+<p>在传统的 OAuth 流程中，如果攻击者通过网络监听、恶意软件或其他手段截获了授权码，他们可以：</p>
+<ul>
+<li>使用截获的授权码向授权服务器请求访问令牌</li>
+<li>获得完整的账号访问权限</li>
+<li>消耗用户的资源配额</li>
+<li>窃取敏感数据</li>
+</ul>
+<p>这就像有人偷看了你的快递取件码，然后冒充你取走了包裹。</p>
+<p><strong>PKCE的工作原理复杂一些</strong>：</p>
+<ol>
+<li>
+<p><strong>生成密钥对</strong>（<a href="#311-%e6%ad%a5%e9%aa%a4%e4%b8%80%e5%90%af%e5%8a%a8%e8%ae%a4%e8%af%81%e6%b5%81%e7%a8%8b">步骤一</a>）：客户端生成一个随机字符串 <code>code_verifier</code>，然后计算其 SHA256 哈希值作为 <code>code_challenge</code></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-js"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">code_verifier</span> <span class="o">=</span> <span class="s2">&#34;dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk&#34;</span> <span class="c1">// 原始随机字符串，保存在本地
+</span></span></span><span class="line"><span class="cl"><span class="nx">code_challenge</span> <span class="o">=</span> <span class="nx">SHA256</span><span class="p">(</span><span class="nx">code_verifier</span><span class="p">)</span> <span class="o">=</span> <span class="s2">&#34;aM_o8LfwOVdvgSNkK3Gr4RLWS4olNGv4tuGBl3X3_Mo&#34;</span> <span class="c1">// 发送给服务器
+</span></span></span></code></pre></div></div></li>
+<li>
+<p><strong>发送 code_challenge</strong>（<a href="#311-%e6%ad%a5%e9%aa%a4%e4%b8%80%e5%90%af%e5%8a%a8%e8%ae%a4%e8%af%81%e6%b5%81%e7%a8%8b">步骤一</a>）：在授权请求中只发送 <code>code_challenge</code>，不发送 <code>code_verifier</code></p>
+</li>
+<li>
+<p><strong>验证身份</strong>（<a href="#322-%e6%ad%a5%e9%aa%a4%e5%9b%9btoken-%e5%ae%89%e5%85%a8%e4%ba%a4%e6%8d%a2---pkce-%e7%9a%84%e5%85%b3%e9%94%ae%e4%bd%9c%e7%94%a8">步骤四</a>）：Token 交换时提供 <code>code_verifier</code>，服务器验证：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-js"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">SHA256</span><span class="p">(</span><span class="nx">code_verifier</span><span class="p">)</span> <span class="o">===</span> <span class="nx">code_challenge</span></span></span></code></pre></div></div></li>
+</ol>
+<p><strong>为什么 PKCE 能够防护？</strong></p>
+<p>PKCE 的巧妙之处在于：</p>
+<ul>
+<li>攻击者即使截获了授权码，也没有原始的 <code>code_verifier</code></li>
+<li>SHA256 是单向哈希函数，无法从 <code>code_challenge</code> 反推出 <code>code_verifier</code></li>
+<li>没有 <code>code_verifier</code>，就无法通过服务器的验证，Token 交换会失败</li>
+</ul>
+<p>这就像银行的双重验证 —— 即使小偷拿到了你的银行卡（授权码），没有密码（verifier）也取不了钱。 虽然你最终要在 ATM 机上输入密码，但密码是通过安全的加密通道（HTTPS）直接传给银行的，而不是通过容易被窥视的浏览器重定向。</p>
+<h3 class="heading-element" id="3-claude-code-cli-认证流程详解"><span>3. Claude Code CLI 认证流程详解</span>
+  <a href="#3-claude-code-cli-%e8%ae%a4%e8%af%81%e6%b5%81%e7%a8%8b%e8%af%a6%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在深入每个步骤的细节之前，让我们先通过一张流程图了解整个 OAuth 认证的全貌：</p>
+<p><img loading="lazy" src='/posts/202508-claude/mermaid.png' alt="Auth Flowchart" height="5568" width="4254"></p>
+<p>这个流程展示了 Claude Code 如何通过 OAuth 2.0 + PKCE 安全地获取访问权限：</p>
+<ul>
+<li><strong>授权请求阶段</strong>（蓝色）：CLI 生成安全参数，引导用户在浏览器中完成授权</li>
+<li><strong>授权响应阶段</strong>（紫色）：用户授权后，CLI 使用授权码和 PKCE verifier 交换访问令牌</li>
+<li><strong>Token 管理阶段</strong>（绿色）：CLI 保存令牌并管理其生命周期，包括自动刷新</li>
+</ul>
+<p>接下来，让我们详细了解每个步骤的具体实现。</p>
+<h4 class="heading-element" id="31-授权请求阶段"><span>3.1 授权请求阶段</span>
+  <a href="#31-%e6%8e%88%e6%9d%83%e8%af%b7%e6%b1%82%e9%98%b6%e6%ae%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 class="heading-element" id="311-步骤一启动认证流程"><span>3.1.1 步骤一：启动认证流程</span>
+  <a href="#311-%e6%ad%a5%e9%aa%a4%e4%b8%80%e5%90%af%e5%8a%a8%e8%ae%a4%e8%af%81%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">$ claude</span></span></code></pre></div></div><p>当在 Claude Code CLI 中选择账号登录后，Claude Code 会生成一个 OAuth 授权链接并尝试在浏览器中打开。如果浏览器无法自动打开，CLI 会显示完整的授权 URL 供用户手动访问。</p>
+<p><img loading="lazy" src='/posts/202508-claude/image.png' alt="claude-code-oauth-url" height="416" width="690"></p>
+<p><strong>OAuth URL 参数解析：</strong></p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">类别</th>
+            <th style="text-align: left">参数</th>
+            <th style="text-align: left">说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left"><strong>身份</strong></td>
+            <td style="text-align: left"><code>client_id</code></td>
+            <td style="text-align: left">Claude Code 的 OAuth 客户端 ID（所有 Claude Code 实例共用）</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>模式</strong></td>
+            <td style="text-align: left"><code>code</code></td>
+            <td style="text-align: left">启用授权码模式标识</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>模式</strong></td>
+            <td style="text-align: left"><code>response_type</code></td>
+            <td style="text-align: left">指定 OAuth 流程类型为授权码模式</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>权限</strong></td>
+            <td style="text-align: left"><code>scope</code></td>
+            <td style="text-align: left">请求的权限范围：创建组织 API 密钥、访问用户信息、执行推理请求</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>回调</strong></td>
+            <td style="text-align: left"><code>redirect_uri</code></td>
+            <td style="text-align: left">授权成功后的回调地址</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>安全</strong></td>
+            <td style="text-align: left"><code>state</code></td>
+            <td style="text-align: left">防止 CSRF 攻击（<a href="#221-state-%e5%8f%82%e6%95%b0%e4%b8%8e-csrf-%e9%98%b2%e6%8a%a4">详见预备知识</a>）</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>安全</strong></td>
+            <td style="text-align: left"><code>code_challenge</code></td>
+            <td style="text-align: left">PKCE 挑战码（<a href="#222-pkce-%e5%ae%89%e5%85%a8%e6%9c%ba%e5%88%b6">详见预备知识</a>）</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><strong>安全</strong></td>
+            <td style="text-align: left"><code>code_challenge_method</code></td>
+            <td style="text-align: left">PKCE 加密方法（SHA256）</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>这些参数共同构成了一个完整的授权请求。</p>
+<p>这正是 OAuth 的核心价值：Claude Code 不需要存储你的密码，只需要通过授权，就能安全地访问你的账号资源。</p>
+<h5 class="heading-element" id="312-步骤二浏览器授权页面"><span>3.1.2 步骤二：浏览器授权页面</span>
+  <a href="#312-%e6%ad%a5%e9%aa%a4%e4%ba%8c%e6%b5%8f%e8%a7%88%e5%99%a8%e6%8e%88%e6%9d%83%e9%a1%b5%e9%9d%a2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>在浏览器中打开授权链接后，会跳转到 Anthropic 的 OAuth 授权页面：</p>
+<p><img loading="lazy" src='/posts/202508-claude/image-1.png' alt="oauth-authorization-page" height="500" width="513"></p>
+<p>在这个页面上，Anthropic 会明确展示 Claude Code 请求的权限范围（即上一步中的 scope 参数）。只有在你确认并点击&quot;Authorize&quot;后，Anthropic 才会颁发授权码。这确保了用户对授权过程的完全知情和控制。</p>
+<h4 class="heading-element" id="32-授权响应阶段"><span>3.2 授权响应阶段</span>
+  <a href="#32-%e6%8e%88%e6%9d%83%e5%93%8d%e5%ba%94%e9%98%b6%e6%ae%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 class="heading-element" id="321-步骤三回调页面与授权码获取"><span>3.2.1 步骤三：回调页面与授权码获取</span>
+  <a href="#321-%e6%ad%a5%e9%aa%a4%e4%b8%89%e5%9b%9e%e8%b0%83%e9%a1%b5%e9%9d%a2%e4%b8%8e%e6%8e%88%e6%9d%83%e7%a0%81%e8%8e%b7%e5%8f%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>当用户在授权页面点击 “Authorize” 按钮后，浏览器会重定向到回调页面：
+<img loading="lazy" src='/posts/202508-claude/image-2.png' alt="oauth-callback-page" height="259" width="690"></p>
+<p><strong>关键流程解析：</strong></p>
+<ol>
+<li><strong>浏览器重定向</strong>：用户确认授权后，Anthropic 将浏览器重定向到回调地址：
+<pre tabindex="0"><code>https://console.anthropic.com/oauth/code/callback?code=ac_2PJ...&amp;state=1ejO...</code></pre></li>
+<li><strong>授权码颁发</strong>：URL 参数中的 <code>code</code> 就是 Anthropic 颁发的授权码（Authorization Code）
+<ul>
+<li>授权码是一次性的，有效期很短（通常 10 分钟）</li>
+<li>必须配合正确的 PKCE verifier 才能使用</li>
+<li>这是 OAuth 2.0 的核心安全设计：授权码本身不是访问令牌</li>
+</ul>
+</li>
+<li><strong>状态验证</strong>： <code>state</code> 参数原样返回，Claude Code 会验证其是否与步骤一发送的一致（<a href="#221-state-%e5%8f%82%e6%95%b0%e4%b8%8e-csrf-%e9%98%b2%e6%8a%a4">详见预备知识</a>）</li>
+</ol>
+<p>这一步中 Anthropic 给了你一张&quot;取货凭证&quot;（授权码）。这张凭证有效期很短，必须赶紧拿去换取真正的&quot;通行证&quot;（访问令牌）。</p>
+<h5 class="heading-element" id="322-步骤四token-安全交换---pkce-的关键作用"><span>3.2.2 步骤四：Token 安全交换 - PKCE 的关键作用</span>
+  <a href="#322-%e6%ad%a5%e9%aa%a4%e5%9b%9btoken-%e5%ae%89%e5%85%a8%e4%ba%a4%e6%8d%a2---pkce-%e7%9a%84%e5%85%b3%e9%94%ae%e4%bd%9c%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>回到 CLI 界面，将授权码粘贴到命令行中，叮…登录成功!!!：</p>
+<p><img loading="lazy" src='/posts/202508-claude/image-3.png' alt="cli-paste-code" height="462" width="690">
+这一步中，实际上 CLI 收到授权码后，立即发起 Token 交换请求：</p>
+<json-viewer value="&#34;POST https://api.anthropic.com/oauth/token\n{\n  \&#34;grant_type\&#34;: \&#34;authorization_code\&#34;,\n  \&#34;code\&#34;: \&#34;ac_2PJ3kL5mN7qR9sT...\&#34;,\n  \&#34;client_id\&#34;: \&#34;9d1c250a-e61b-44d9-88ed-5944d1962f5e\&#34;,\n  \&#34;code_verifier\&#34;: \&#34;dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk\&#34;,\n  \&#34;redirect_uri\&#34;: \&#34;https://console.anthropic.com/oauth/code/callback\&#34;\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p><strong>PKCE 验证</strong>：</p>
+<p>此时 Anthropic 服务器会执行 PKCE 验证（<a href="#222-pkce-%e5%ae%89%e5%85%a8%e6%9c%ba%e5%88%b6">详见预备知识</a>）：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-js"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">收到的</span> <span class="nx">code_verifier</span> <span class="o">=</span> <span class="s2">&#34;dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">步骤一的</span> <span class="nx">code_challenge</span> <span class="o">=</span> <span class="s2">&#34;aM_o8LfwOVdvgSNkK3Gr4RLWS4olNGv4tuGBl3X3_Mo&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">验证</span><span class="err">：</span><span class="nx">SHA256</span><span class="p">(</span><span class="nx">code_verifier</span><span class="p">)</span> <span class="o">===</span> <span class="nx">code_challenge</span> <span class="err">✓</span></span></span></code></pre></div></div><p>只有验证通过，Token 交换才会成功。这确保了即使授权码被截获，攻击者也无法完成认证流程。</p>
+<h4 class="heading-element" id="33-token-管理阶段"><span>3.3 Token 管理阶段</span>
+  <a href="#33-token-%e7%ae%a1%e7%90%86%e9%98%b6%e6%ae%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 class="heading-element" id="331-步骤五获取访问令牌并本地存储"><span>3.3.1 步骤五：获取访问令牌并本地存储</span>
+  <a href="#331-%e6%ad%a5%e9%aa%a4%e4%ba%94%e8%8e%b7%e5%8f%96%e8%ae%bf%e9%97%ae%e4%bb%a4%e7%89%8c%e5%b9%b6%e6%9c%ac%e5%9c%b0%e5%ad%98%e5%82%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>Token 交换验证通过后，Anthropic 返回访问令牌，Claude Code 将其存储到本地配置文件 <code>.credentials.json</code>：</p>
+<json-viewer value="&#34;{\n  \&#34;claudeAiOauth\&#34;: {\n    \&#34;accessToken\&#34;: \&#34;sk-ant-oat01-...\&#34;,\n    \&#34;refreshToken\&#34;: \&#34;sk-ant-ort01-...\&#34;,\n    \&#34;expiresAt\&#34;: 1754945252465,\n    \&#34;scopes\&#34;: [\&#34;user:inference\&#34;, \&#34;user:profile\&#34;],\n    \&#34;subscriptionType\&#34;: \&#34;max\&#34;\n  }\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">字段</th>
+            <th style="text-align: left">说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left"><code>accessToken</code></td>
+            <td style="text-align: left">API 调用令牌（短期，8 小时）</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>refreshToken</code></td>
+            <td style="text-align: left">刷新令牌（长期）</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>expiresAt</code></td>
+            <td style="text-align: left">accessToken 的过期时间戳（毫秒）</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>scopes</code></td>
+            <td style="text-align: left">权限范围</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>subscriptionType</code></td>
+            <td style="text-align: left">订阅类型（<code>max</code> / <code>pro</code>）</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>至此，OAuth 认证流程完成！Claude Code 已经安全地获得了访问你 Anthropic 账号资源的&quot;钥匙&quot;，可以开始愉快地使用了。</p>
+<h5 class="heading-element" id="332-步骤六token-自动刷新机制"><span>3.3.2 步骤六：Token 自动刷新机制</span>
+  <a href="#332-%e6%ad%a5%e9%aa%a4%e5%85%adtoken-%e8%87%aa%e5%8a%a8%e5%88%b7%e6%96%b0%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p><code>accessToken</code> 的有效期为 8 小时，当 Claude Code 检测到令牌即将过期时，会自动使用 <code>refreshToken</code> 获取新的访问令牌。</p>
+<p><strong>刷新请求</strong>：</p>
+<json-viewer value="&#34;\&#34;POST https://api.anthropic.com/oauth/token\n{\n  \\\&#34;grant_type\\\&#34;: \\\&#34;refresh_token\\\&#34;,\n  \\\&#34;refresh_token\\\&#34;: \\\&#34;sk-ant-ort01-...\\\&#34;,\n  \\\&#34;client_id\\\&#34;: \\\&#34;9d1c250a-e61b-44d9-88ed-5944d1962f5e\\\&#34;\n}\&#34;&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><blockquote>
+<p><strong>⚠️安全警告</strong></p>
+<p><code>refreshToken</code> 就像你家的备用钥匙 —— 丢了它，别人就能一直进你家。</p>
+<p>即使你改了密码，拿到 <code>refreshToken</code> 的人依然能持续访问你的 Claude 账号，消耗额度，窃取对话记录。</p>
+<p><strong>请务必</strong>：</p>
+<ul>
+<li>不要分享 <code>.credentials.json</code> 文件</li>
+<li>不要提交令牌到 Git 仓库</li>
+<li>定期检查账号活动，发现异常立即撤销授权</li>
+</ul>
+</blockquote>
+<h3 class="heading-element" id="4-总结"><span>4. 总结</span>
+  <a href="#4-%e6%80%bb%e7%bb%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>看到这里，你已经完全掌握了 Claude Code CLI 的认证流程。</p>
+<p><strong>Claude Code 用了三招保证安全</strong>：</p>
+<ul>
+<li>PKCE：即使授权码被偷了也没用，因为小偷没有本地的密钥</li>
+<li>State：防止恶意网站偷偷让你授权</li>
+<li>短期授权码：10分钟就过期，用完就扔</li>
+</ul>
+<p><strong>最重要的是</strong>：保护好你的 <code>.credentials.json</code> 文件！这就是你家的钥匙，丢了就麻烦了。</p>
+<p>理解了这套机制，不管是自己开发 CLI 工具，还是构建 API 网关来&quot;拼车&quot;，你都有了坚实的基础。</p>
+<p>下篇文章我们聊聊怎么在 Web 环境里实现同样的认证流程，敬请期待！</p>
+<h1 class="heading-element" id="claude-api-深度解析"><span>Claude API 深度解析</span>
+  <a href="#claude-api-%e6%b7%b1%e5%ba%a6%e8%a7%a3%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="claude-codeapi-篇claude-api-深度解析"><span>Claude CodeAPI 篇：Claude API 深度解析</span>
+  <a href="#claude-codeapi-%e7%af%87claude-api-%e6%b7%b1%e5%ba%a6%e8%a7%a3%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="1-引言"><span>1. 引言</span>
+  <a href="#1-%e5%bc%95%e8%a8%80" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在尝试为 Claude Code 引入外部 LLM 供应商时，我们遇到的核心挑战：如何在 Claude API 和 OpenAI API 格式之间进行准确的转换。</p>
+<p>这实际并不是一个简单的问题。Claude API 有其独特的设计 —— thinking 模式、tool use 机制、多模态支持等，每个特性都需要深入理解才能正确转换。</p>
+<p>本文将通过完整的示例和详细的解析，帮助我们更全面的理解 Claude API 的请求与响应结构。</p>
+<h3 class="heading-element" id="2-claude-api-请求剖析"><span>2. Claude API 请求剖析</span>
+  <a href="#2-claude-api-%e8%af%b7%e6%b1%82%e5%89%96%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="21-请求与响应的本质"><span>2.1 请求与响应的本质</span>
+  <a href="#21-%e8%af%b7%e6%b1%82%e4%b8%8e%e5%93%8d%e5%ba%94%e7%9a%84%e6%9c%ac%e8%b4%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>LLM API 的标准设计：<strong>每次请求都包含完整的对话历史，而响应则是基于这个完整上下文生成的新内容</strong>。</p>
+<p><img loading="lazy" src='/posts/202508-claude/mermaid-1.png' alt="Request Response Flow" height="1000" width="3716"></p>
+<p>这种无状态设计带来了显著的优势：</p>
+<ul>
+<li><strong>可靠性</strong>：每个请求都是自包含的，不依赖服务端状态</li>
+<li><strong>灵活性</strong>：客户端可以随时修改、重组历史消息</li>
+<li><strong>可调试性</strong>：任何请求都可以独立重现和调试</li>
+</ul>
+<h4 class="heading-element" id="22-核心角色系统"><span>2.2 核心角色系统</span>
+  <a href="#22-%e6%a0%b8%e5%bf%83%e8%a7%92%e8%89%b2%e7%b3%bb%e7%bb%9f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Claude API 定义了严格的角色系统：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">角色</th>
+            <th style="text-align: left">说明</th>
+            <th style="text-align: left">位置</th>
+            <th style="text-align: left">约束</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left"><code>system</code></td>
+            <td style="text-align: left">系统提示词</td>
+            <td style="text-align: left">请求顶层</td>
+            <td style="text-align: left">单一、可选，定义整体行为</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>user</code></td>
+            <td style="text-align: left">用户消息</td>
+            <td style="text-align: left">messages 数组</td>
+            <td style="text-align: left">可包含文本、图片、工具结果</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>assistant</code></td>
+            <td style="text-align: left">助手响应</td>
+            <td style="text-align: left">messages 数组</td>
+            <td style="text-align: left">可包含文本、工具调用</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p><strong>重要约束</strong>：在 <code>messages</code> 数组中，消息必须严格遵循 user-assistant 交替模式：</p>
+<ul>
+<li>不能连续出现两条相同角色的消息</li>
+<li>工具结果（tool_result）虽然是工具执行后返回的，但使用 <code>user</code> 角色来传递给 Claude</li>
+</ul>
+<h4 class="heading-element" id="23-内容类型体系"><span>2.3 内容类型体系</span>
+  <a href="#23-%e5%86%85%e5%ae%b9%e7%b1%bb%e5%9e%8b%e4%bd%93%e7%b3%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>每个消息的 <code>content</code> 字段支持两种形式：</p>
+<json-viewer value="&#34;// 形式1：简单字符串（仅支持纯文本）\n\&#34;content\&#34;: \&#34;Hello, Claude!\&#34;\n\n// 形式2：结构化数组（支持多种内容类型）\n\&#34;content\&#34;: [\n  {\&#34;type\&#34;: \&#34;text\&#34;, \&#34;text\&#34;: \&#34;分析这张图\&#34;},\n  {\&#34;type\&#34;: \&#34;image\&#34;, \&#34;source\&#34;: {...}}\n]&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p>完整的内容类型表：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">类型</th>
+            <th style="text-align: left">可用角色</th>
+            <th style="text-align: left">描述</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left"><code>text</code></td>
+            <td style="text-align: left">user, assistant</td>
+            <td style="text-align: left">纯文本内容</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>image</code></td>
+            <td style="text-align: left">user</td>
+            <td style="text-align: left">图片输入</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>thinking</code></td>
+            <td style="text-align: left">assistant</td>
+            <td style="text-align: left">推理过程内容（需启用思考模式）</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>tool_use</code></td>
+            <td style="text-align: left">assistant</td>
+            <td style="text-align: left">工具调用请求</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>tool_result</code></td>
+            <td style="text-align: left">user</td>
+            <td style="text-align: left">工具执行结果</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h4 class="heading-element" id="24-渐进式请求讲解"><span>2.4 渐进式请求讲解</span>
+  <a href="#24-%e6%b8%90%e8%bf%9b%e5%bc%8f%e8%af%b7%e6%b1%82%e8%ae%b2%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>让我们通过一个完整的对话流程，深入理解每个请求特性。</p>
+<p><img loading="lazy" src='/posts/202508-claude/mermaid-2.png' alt="API Flow Chart" height="3918" width="3003"></p>
+<h5 class="heading-element" id="第一步设置系统提示词"><span>第一步：设置系统提示词</span>
+  <a href="#%e7%ac%ac%e4%b8%80%e6%ad%a5%e8%ae%be%e7%bd%ae%e7%b3%bb%e7%bb%9f%e6%8f%90%e7%a4%ba%e8%af%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>系统提示词定义了 Claude 的角色和行为准则，在整个对话中持续生效：</p>
+<json-viewer value="&#34;{\n  \&#34;system\&#34;: \&#34;你是一个专业的金融分析师，擅长股票市场分析。请用专业但易懂的语言回答问题。\&#34;\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h5 class="heading-element" id="第二步基础对话结构"><span>第二步：基础对话结构</span>
+  <a href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e5%9f%ba%e7%a1%80%e5%af%b9%e8%af%9d%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>包含系统提示词的基础请求：</p>
+<json-viewer value="&#34;{\n  \&#34;model\&#34;: \&#34;claude-opus-4-1-20250805\&#34;,\n  \&#34;max_tokens\&#34;: 1024,\n  \&#34;system\&#34;: \&#34;你是一个专业的金融分析师，擅长股票市场分析。请用专业但易懂的语言回答问题。\&#34;,\n  \&#34;messages\&#34;: [\n    {\&#34;role\&#34;: \&#34;user\&#34;, \&#34;content\&#34;: \&#34;特斯拉的股票值得投资吗？\&#34;}\n  ]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h5 class="heading-element" id="第三步多模态内容"><span>第三步：多模态内容</span>
+  <a href="#%e7%ac%ac%e4%b8%89%e6%ad%a5%e5%a4%9a%e6%a8%a1%e6%80%81%e5%86%85%e5%ae%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>当需要发送图片时，content 结构发生变化：</p>
+<json-viewer value="&#34;{\n  \&#34;messages\&#34;: [\n    {\n      \&#34;role\&#34;: \&#34;user\&#34;,\n      \&#34;content\&#34;: [\n        {\n          \&#34;type\&#34;: \&#34;text\&#34;,\n          \&#34;text\&#34;: \&#34;请分析这个股票走势图\&#34;\n        },\n        {\n          \&#34;type\&#34;: \&#34;image\&#34;,\n          \&#34;source\&#34;: {\n            \&#34;type\&#34;: \&#34;base64\&#34;,\n            \&#34;media_type\&#34;: \&#34;image/png\&#34;,\n            \&#34;data\&#34;: \&#34;iVBORw0KGgoAAAANSUhEUgA...\&#34;\n          }\n        }\n      ]\n    }\n  ]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h5 class="heading-element" id="第四步启用思考模式"><span>第四步：启用思考模式</span>
+  <a href="#%e7%ac%ac%e5%9b%9b%e6%ad%a5%e5%90%af%e7%94%a8%e6%80%9d%e8%80%83%e6%a8%a1%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>思考模式让 Claude 的推理过程变得透明。在请求中添加 <code>thinking</code> 配置：</p>
+<json-viewer value="&#34;{\n  \&#34;model\&#34;: \&#34;claude-opus-4-1-20250805\&#34;,\n  \&#34;max_tokens\&#34;: 1024,\n  \&#34;thinking\&#34;: {\n    \&#34;type\&#34;: \&#34;enabled\&#34;,\n    \&#34;budget_tokens\&#34;: 10000\n  },\n  \&#34;messages\&#34;: [...]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p>启用后，Claude 的响应会包含独立的思考内容块：</p>
+<json-viewer value="&#34;{\n  \&#34;role\&#34;: \&#34;assistant\&#34;,\n  \&#34;content\&#34;: [\n    {\n      \&#34;type\&#34;: \&#34;thinking\&#34;,\n      \&#34;thinking\&#34;: \&#34;用户提供了一个股票走势图，需要我进行分析。\\n从图表看，这是特斯拉(TSLA)的走势图。\\n为了进行准确的分析，我需要获取当前的实时价格，以便将图表趋势与最新价格结合起来分析。\&#34;\n    },\n    {\n      \&#34;type\&#34;: \&#34;text\&#34;,\n      \&#34;text\&#34;: \&#34;从走势图来看，我需要获取当前的实时价格来进行更准确的分析。\&#34;\n    }\n  ]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h5 class="heading-element" id="第五步工具调用"><span>第五步：工具调用</span>
+  <a href="#%e7%ac%ac%e4%ba%94%e6%ad%a5%e5%b7%a5%e5%85%b7%e8%b0%83%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>当 Claude 需要外部数据或功能时，会在响应中包含工具调用请求：</p>
+<json-viewer value="&#34;{\n  \&#34;role\&#34;: \&#34;assistant\&#34;,\n  \&#34;content\&#34;: [\n    {\n      \&#34;type\&#34;: \&#34;thinking\&#34;,\n      \&#34;thinking\&#34;: \&#34;用户提供了一个股票走势图，需要我进行分析。\\n从图表看，这是特斯拉(TSLA)的走势图。\\n为了进行准确的分析，我需要获取当前的实时价格，以便将图表趋势与最新价格结合起来分析。\&#34;\n    },\n    {\n      \&#34;type\&#34;: \&#34;text\&#34;,\n      \&#34;text\&#34;: \&#34;从走势图来看，我需要获取当前的实时价格来进行更准确的分析。\&#34;\n    },\n    {\n      \&#34;type\&#34;: \&#34;tool_use\&#34;,\n      \&#34;id\&#34;: \&#34;toolu_01\&#34;,\n      \&#34;name\&#34;: \&#34;get_stock_price\&#34;,\n      \&#34;input\&#34;: {\&#34;symbol\&#34;: \&#34;TSLA\&#34;}\n    }\n  ]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h3 class="heading-element" id="3-工具调用机制详解"><span>3. 工具调用机制详解</span>
+  <a href="#3-%e5%b7%a5%e5%85%b7%e8%b0%83%e7%94%a8%e6%9c%ba%e5%88%b6%e8%af%a6%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="31-为什么工具调用如此重要"><span>3.1 为什么工具调用如此重要</span>
+  <a href="#31-%e4%b8%ba%e4%bb%80%e4%b9%88%e5%b7%a5%e5%85%b7%e8%b0%83%e7%94%a8%e5%a6%82%e6%ad%a4%e9%87%8d%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>工具调用是 LLM 迈向 Agent 的分水岭。没有工具调用时，LLM 只能基于训练数据回答；有了工具调用后，它能获取实时信息、执行操作、与外部世界交互。</p>
+<h4 class="heading-element" id="32-工具调用的完整流程"><span>3.2 工具调用的完整流程</span>
+  <a href="#32-%e5%b7%a5%e5%85%b7%e8%b0%83%e7%94%a8%e7%9a%84%e5%ae%8c%e6%95%b4%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><img loading="lazy" src='/posts/202508-claude/mermaid-3.png' alt="Tool Call Flow" height="2550" width="2539"></p>
+<h5 class="heading-element" id="步骤-1工具定义"><span>步骤 1：工具定义</span>
+  <a href="#%e6%ad%a5%e9%aa%a4-1%e5%b7%a5%e5%85%b7%e5%ae%9a%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>客户端在请求中声明可用工具。</p>
+<json-viewer value="&#34;{\n  \&#34;model\&#34;: \&#34;claude-opus-4-1-20250805\&#34;,\n  \&#34;max_tokens\&#34;: 1024,\n  \&#34;tools\&#34;: [{\n    \&#34;name\&#34;: \&#34;get_stock_price\&#34;,\n    \&#34;description\&#34;: \&#34;获取股票的实时价格\&#34;,\n    \&#34;input_schema\&#34;: {\n      \&#34;type\&#34;: \&#34;object\&#34;,\n      \&#34;properties\&#34;: {\n        \&#34;symbol\&#34;: {\n          \&#34;type\&#34;: \&#34;string\&#34;,\n          \&#34;description\&#34;: \&#34;股票代码，如 AAPL\&#34;\n        }\n      },\n      \&#34;required\&#34;: [\&#34;symbol\&#34;]\n    }\n  }],\n  \&#34;messages\&#34;: [...]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h5 class="heading-element" id="步骤-2--3claude-的思考与决策"><span>步骤 2 &amp; 3：Claude 的思考与决策</span>
+  <a href="#%e6%ad%a5%e9%aa%a4-2--3claude-%e7%9a%84%e6%80%9d%e8%80%83%e4%b8%8e%e5%86%b3%e7%ad%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>启用思考模式后，Claude 首先分析用户意图，然后决定调用工具并生成响应：</p>
+<json-viewer value="&#34;{\n  \&#34;role\&#34;: \&#34;assistant\&#34;,\n  \&#34;content\&#34;: [\n    {\n      \&#34;type\&#34;: \&#34;thinking\&#34;,\n      \&#34;thinking\&#34;: \&#34;...\&#34;\n    },\n    {\n      \&#34;type\&#34;: \&#34;text\&#34;,\n      \&#34;text\&#34;: \&#34;从走势图来看，我需要获取当前的实时价格来进行更准确的分析。\&#34;\n    },\n    {\n      \&#34;type\&#34;: \&#34;tool_use\&#34;,\n      \&#34;id\&#34;: \&#34;toolu_01\&#34;,\n      \&#34;name\&#34;: \&#34;get_stock_price\&#34;,\n      \&#34;input\&#34;: {\&#34;symbol\&#34;: \&#34;TSLA\&#34;}\n    }\n  ],\n  \&#34;stop_reason\&#34;: \&#34;tool_use\&#34;\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p><code>stop_reason: &quot;tool_use&quot;</code> 表示响应暂停等待工具执行。</p>
+<h5 class="heading-element" id="步骤-4客户端执行并返回结果"><span>步骤 4：客户端执行并返回结果</span>
+  <a href="#%e6%ad%a5%e9%aa%a4-4%e5%ae%a2%e6%88%b7%e7%ab%af%e6%89%a7%e8%a1%8c%e5%b9%b6%e8%bf%94%e5%9b%9e%e7%bb%93%e6%9e%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>客户端执行工具，并将结果包装成新的用户消息发送回 Claude。</p>
+<json-viewer value="&#34;{\n  \&#34;role\&#34;: \&#34;user\&#34;,\n  \&#34;content\&#34;: [{\n    \&#34;type\&#34;: \&#34;tool_result\&#34;,\n    \&#34;tool_use_id\&#34;: \&#34;toolu_01\&#34;,\n    \&#34;content\&#34;: \&#34;{\\\&#34;price\\\&#34;: 245.32, \\\&#34;change\\\&#34;: -3.45, \\\&#34;change_percent\\\&#34;: \\\&#34;-1.39%\\\&#34;}\&#34;\n  }]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h5 class="heading-element" id="步骤-5claude-生成最终响应"><span>步骤 5：Claude 生成最终响应</span>
+  <a href="#%e6%ad%a5%e9%aa%a4-5claude-%e7%94%9f%e6%88%90%e6%9c%80%e7%bb%88%e5%93%8d%e5%ba%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>收到工具结果后，Claude 会将工具返回的数据转化为自然、友好的响应。</p>
+<json-viewer value="&#34;{\n  \&#34;role\&#34;: \&#34;assistant\&#34;,\n  \&#34;content\&#34;: [\n    {\n      \&#34;type\&#34;: \&#34;thinking\&#34;,\n      \&#34;thinking\&#34;: \&#34;现在我有了实时价格数据...\&#34;\n    },\n    {\n      \&#34;type\&#34;: \&#34;text\&#34;,\n      \&#34;text\&#34;: \&#34;基于走势图和当前价格 $245.32（下跌 1.39%），特斯拉股票的投资建议如下...\&#34;\n    }\n  ],\n  \&#34;stop_reason\&#34;: \&#34;end_turn\&#34;\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><h3 class="heading-element" id="4-响应内容深度剖析"><span>4. 响应内容深度剖析</span>
+  <a href="#4-%e5%93%8d%e5%ba%94%e5%86%85%e5%ae%b9%e6%b7%b1%e5%ba%a6%e5%89%96%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="41-响应内容概述"><span>4.1 响应内容概述</span>
+  <a href="#41-%e5%93%8d%e5%ba%94%e5%86%85%e5%ae%b9%e6%a6%82%e8%bf%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>基础响应格式：</p>
+<json-viewer value="&#34;{\n  \&#34;id\&#34;: \&#34;msg_013Zva2CMHLNnXjNJJKqJ2EF\&#34;,\n  \&#34;type\&#34;: \&#34;message\&#34;,\n  \&#34;role\&#34;: \&#34;assistant\&#34;,\n  \&#34;model\&#34;: \&#34;claude-opus-4-1-20250805\&#34;,\n  \&#34;content\&#34;: [\n    {\n      \&#34;type\&#34;: \&#34;text\&#34;,\n      \&#34;text\&#34;: \&#34;基于走势图和当前价格 $245.32...\&#34;\n    }\n  ],\n  \&#34;stop_reason\&#34;: \&#34;end_turn\&#34;,\n  \&#34;stop_sequence\&#34;: null,\n  \&#34;usage\&#34;: {\n    \&#34;input_tokens\&#34;: 1895,\n    \&#34;output_tokens\&#34;: 387\n  }\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p><strong><code>stop_reason</code> 的含义</strong>:</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">值</th>
+            <th style="text-align: left">说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left"><code>end_turn</code></td>
+            <td style="text-align: left">正常结束，Claude 完成了回复</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>max_tokens</code></td>
+            <td style="text-align: left">达到最大 token 限制，响应被截断</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>tool_use</code></td>
+            <td style="text-align: left">Claude 需要调用工具</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 class="heading-element" id="5-流式响应实时交互的实现"><span>5. 流式响应：实时交互的实现</span>
+  <a href="#5-%e6%b5%81%e5%bc%8f%e5%93%8d%e5%ba%94%e5%ae%9e%e6%97%b6%e4%ba%a4%e4%ba%92%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="51-为什么需要流式响应"><span>5.1 为什么需要流式响应</span>
+  <a href="#51-%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e6%b5%81%e5%bc%8f%e5%93%8d%e5%ba%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>即时反馈</strong>：用户立即看到 Claude 开始处理，而非长时间等待。</li>
+<li><strong>渐进式体验</strong>：内容像人类打字一样逐步展现，更加自然。</li>
+<li><strong>可中断性</strong>：用户可以在看到部分内容后决定是否继续。</li>
+</ul>
+<h4 class="heading-element" id="52-sseclaude-流式响应的基础"><span>5.2 SSE：Claude 流式响应的基础</span>
+  <a href="#52-sseclaude-%e6%b5%81%e5%bc%8f%e5%93%8d%e5%ba%94%e7%9a%84%e5%9f%ba%e7%a1%80" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Claude 的流式响应基于 Server-Sent Events (SSE) 协议实现。在请求中添加 <code>&quot;stream&quot;: true</code> 即可启用。</p>
+<h4 class="heading-element" id="53-claude-sse-事件类型"><span>5.3 Claude SSE 事件类型</span>
+  <a href="#53-claude-sse-%e4%ba%8b%e4%bb%b6%e7%b1%bb%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">事件类型</th>
+            <th style="text-align: left">说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left"><code>message_start</code></td>
+            <td style="text-align: left">响应开始</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>content_block_start</code></td>
+            <td style="text-align: left">内容块开始</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>content_block_delta</code></td>
+            <td style="text-align: left">内容增量</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>content_block_stop</code></td>
+            <td style="text-align: left">内容块结束</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>message_delta</code></td>
+            <td style="text-align: left">消息更新</td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><code>message_stop</code></td>
+            <td style="text-align: left">响应结束</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 class="heading-element" id="6-结语"><span>6. 结语</span>
+  <a href="#6-%e7%bb%93%e8%af%ad" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>经过深入剖析，我们完整地了解了 Claude API 的核心特性：从基础的消息格式，到强大的工具调用机制，再到灵活的响应处理和流式输出。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-08-23 00:00:00">更新于 2025-08-23&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202508-Claude/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202508-claude/" data-title="Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析" data-hashtags="tips"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202508-claude/" data-hashtag="tips"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202508-claude/" data-title="Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/tips/" class="post-tag" title="标签 - Tips">Tips</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202508-functincallmcp/" class="post-nav-item" rel="prev" title="Function Calling 与 MCP 协议"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Function Calling 与 MCP 协议</a><a href="/posts/202508-llmarch/" class="post-nav-item" rel="next" title="大型LLM架构对比">大型LLM架构对比<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#claude-code一认证篇">Claude Code（一）：认证篇</a>
+      <ul>
+        <li><a href="#1-引言一个关于拼车的想法">1. 引言：一个关于&quot;拼车&quot;的想法</a></li>
+        <li><a href="#2-oauth-20-流程预备知识">2. OAuth 2.0 流程预备知识</a>
+          <ul>
+            <li><a href="#21-三个关键角色">2.1 三个关键角色</a></li>
+            <li><a href="#22-两大安全机制">2.2 两大安全机制</a>
+              <ul>
+                <li><a href="#221-state-参数与-csrf-防护">2.2.1 State 参数与 CSRF 防护</a></li>
+                <li><a href="#222-pkce-安全机制">2.2.2 PKCE 安全机制</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#3-claude-code-cli-认证流程详解">3. Claude Code CLI 认证流程详解</a>
+          <ul>
+            <li><a href="#31-授权请求阶段">3.1 授权请求阶段</a>
+              <ul>
+                <li><a href="#311-步骤一启动认证流程">3.1.1 步骤一：启动认证流程</a></li>
+                <li><a href="#312-步骤二浏览器授权页面">3.1.2 步骤二：浏览器授权页面</a></li>
+              </ul>
+            </li>
+            <li><a href="#32-授权响应阶段">3.2 授权响应阶段</a>
+              <ul>
+                <li><a href="#321-步骤三回调页面与授权码获取">3.2.1 步骤三：回调页面与授权码获取</a></li>
+                <li><a href="#322-步骤四token-安全交换---pkce-的关键作用">3.2.2 步骤四：Token 安全交换 - PKCE 的关键作用</a></li>
+              </ul>
+            </li>
+            <li><a href="#33-token-管理阶段">3.3 Token 管理阶段</a>
+              <ul>
+                <li><a href="#331-步骤五获取访问令牌并本地存储">3.3.1 步骤五：获取访问令牌并本地存储</a></li>
+                <li><a href="#332-步骤六token-自动刷新机制">3.3.2 步骤六：Token 自动刷新机制</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#4-总结">4. 总结</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#claude-codeapi-篇claude-api-深度解析">Claude CodeAPI 篇：Claude API 深度解析</a>
+      <ul>
+        <li><a href="#1-引言">1. 引言</a></li>
+        <li><a href="#2-claude-api-请求剖析">2. Claude API 请求剖析</a>
+          <ul>
+            <li><a href="#21-请求与响应的本质">2.1 请求与响应的本质</a></li>
+            <li><a href="#22-核心角色系统">2.2 核心角色系统</a></li>
+            <li><a href="#23-内容类型体系">2.3 内容类型体系</a></li>
+            <li><a href="#24-渐进式请求讲解">2.4 渐进式请求讲解</a>
+              <ul>
+                <li><a href="#第一步设置系统提示词">第一步：设置系统提示词</a></li>
+                <li><a href="#第二步基础对话结构">第二步：基础对话结构</a></li>
+                <li><a href="#第三步多模态内容">第三步：多模态内容</a></li>
+                <li><a href="#第四步启用思考模式">第四步：启用思考模式</a></li>
+                <li><a href="#第五步工具调用">第五步：工具调用</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#3-工具调用机制详解">3. 工具调用机制详解</a>
+          <ul>
+            <li><a href="#31-为什么工具调用如此重要">3.1 为什么工具调用如此重要</a></li>
+            <li><a href="#32-工具调用的完整流程">3.2 工具调用的完整流程</a>
+              <ul>
+                <li><a href="#步骤-1工具定义">步骤 1：工具定义</a></li>
+                <li><a href="#步骤-2--3claude-的思考与决策">步骤 2 &amp; 3：Claude 的思考与决策</a></li>
+                <li><a href="#步骤-4客户端执行并返回结果">步骤 4：客户端执行并返回结果</a></li>
+                <li><a href="#步骤-5claude-生成最终响应">步骤 5：Claude 生成最终响应</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#4-响应内容深度剖析">4. 响应内容深度剖析</a>
+          <ul>
+            <li><a href="#41-响应内容概述">4.1 响应内容概述</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-流式响应实时交互的实现">5. 流式响应：实时交互的实现</a>
+          <ul>
+            <li><a href="#51-为什么需要流式响应">5.1 为什么需要流式响应</a></li>
+            <li><a href="#52-sseclaude-流式响应的基础">5.2 SSE：Claude 流式响应的基础</a></li>
+            <li><a href="#53-claude-sse-事件类型">5.3 Claude SSE 事件类型</a></li>
+          </ul>
+        </li>
+        <li><a href="#6-结语">6. 结语</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/json-viewer-element/json-viewer-element.umd.js" defer></script><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/ce5e2fb4066f467c315f470f6d4626d7.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

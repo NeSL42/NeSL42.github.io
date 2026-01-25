@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>02.Uniswap V2 Swap 操作 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="这份学习笔记将Uniswap V2的swap操作进行了深入剖析，涵盖了其核心机制、数学原理和代码实现，以及手续费的计算方式。
+核心摘要 (Key Takeaways) Uniswap V2 架构与路由灵活性：V2引入了任何ERC20代币之间直接交换的能力，不再强制通过ETH作为中介。用户通过UniswapV2Router02合约进行交互，该合约负责寻找并协调UniswapV2Pair合约完成交易，支持单跳和多跳（多级路由）交换。 两种核心交换类型：V2提供了两种主要的swap函数： swapExactTokensForTokens：用户指定精确的输入代币数量，系统计算并返回尽可能多的输出代币。 swapTokensForExactTokens：用户指定精确的输出代币数量，系统计算所需的最小输入代币数量。 0.3%固定手续费机制：每次swap操作都会对输入代币收取0.3%（千分之三）的手续费。这意味着实际用于AMM计算的输入量是用户提供量的99.7%。多跳交易会累积手续费。 数学原理与代码实现：UniswapV2Library中的getAmountOut和getAmountIn函数是核心计算逻辑，它们基于恒定乘积做市商（AMM）公式，并融入了0.3%的手续费计算，确保了交易的准确性。 滑点与MEV攻击：用户可以通过设置amountOutMin（最小输出量）来控制滑点。然而，这种机制也可能被MEV（矿工可提取价值）套利者利用，通过三明治攻击（Front-running &#43; Back-running）来捕获用户设定的最小输出与实际可能输出之间的差价。 1. Uniswap V2 核心架构与合约 Uniswap V2 的代码主要存在于两个仓库：
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="02.Uniswap V2 swap 操作">
+  <meta itemprop="description" content="这份学习笔记将Uniswap V2的swap操作进行了深入剖析，涵盖了其核心机制、数学原理和代码实现，以及手续费的计算方式。
+核心摘要 (Key Takeaways) Uniswap V2 架构与路由灵活性：V2引入了任何ERC20代币之间直接交换的能力，不再强制通过ETH作为中介。用户通过UniswapV2Router02合约进行交互，该合约负责寻找并协调UniswapV2Pair合约完成交易，支持单跳和多跳（多级路由）交换。 两种核心交换类型：V2提供了两种主要的swap函数： swapExactTokensForTokens：用户指定精确的输入代币数量，系统计算并返回尽可能多的输出代币。 swapTokensForExactTokens：用户指定精确的输出代币数量，系统计算所需的最小输入代币数量。 0.3%固定手续费机制：每次swap操作都会对输入代币收取0.3%（千分之三）的手续费。这意味着实际用于AMM计算的输入量是用户提供量的99.7%。多跳交易会累积手续费。 数学原理与代码实现：UniswapV2Library中的getAmountOut和getAmountIn函数是核心计算逻辑，它们基于恒定乘积做市商（AMM）公式，并融入了0.3%的手续费计算，确保了交易的准确性。 滑点与MEV攻击：用户可以通过设置amountOutMin（最小输出量）来控制滑点。然而，这种机制也可能被MEV（矿工可提取价值）套利者利用，通过三明治攻击（Front-running &#43; Back-running）来捕获用户设定的最小输出与实际可能输出之间的差价。 1. Uniswap V2 核心架构与合约 Uniswap V2 的代码主要存在于两个仓库：">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="5596">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap02/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="02.Uniswap V2 swap 操作">
+  <meta property="og:description" content="这份学习笔记将Uniswap V2的swap操作进行了深入剖析，涵盖了其核心机制、数学原理和代码实现，以及手续费的计算方式。
+核心摘要 (Key Takeaways) Uniswap V2 架构与路由灵活性：V2引入了任何ERC20代币之间直接交换的能力，不再强制通过ETH作为中介。用户通过UniswapV2Router02合约进行交互，该合约负责寻找并协调UniswapV2Pair合约完成交易，支持单跳和多跳（多级路由）交换。 两种核心交换类型：V2提供了两种主要的swap函数： swapExactTokensForTokens：用户指定精确的输入代币数量，系统计算并返回尽可能多的输出代币。 swapTokensForExactTokens：用户指定精确的输出代币数量，系统计算所需的最小输入代币数量。 0.3%固定手续费机制：每次swap操作都会对输入代币收取0.3%（千分之三）的手续费。这意味着实际用于AMM计算的输入量是用户提供量的99.7%。多跳交易会累积手续费。 数学原理与代码实现：UniswapV2Library中的getAmountOut和getAmountIn函数是核心计算逻辑，它们基于恒定乘积做市商（AMM）公式，并融入了0.3%的手续费计算，确保了交易的准确性。 滑点与MEV攻击：用户可以通过设置amountOutMin（最小输出量）来控制滑点。然而，这种机制也可能被MEV（矿工可提取价值）套利者利用，通过三明治攻击（Front-running &#43; Back-running）来捕获用户设定的最小输出与实际可能输出之间的差价。 1. Uniswap V2 核心架构与合约 Uniswap V2 的代码主要存在于两个仓库：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="02.Uniswap V2 swap 操作">
+  <meta name="twitter:description" content="这份学习笔记将Uniswap V2的swap操作进行了深入剖析，涵盖了其核心机制、数学原理和代码实现，以及手续费的计算方式。
+核心摘要 (Key Takeaways) Uniswap V2 架构与路由灵活性：V2引入了任何ERC20代币之间直接交换的能力，不再强制通过ETH作为中介。用户通过UniswapV2Router02合约进行交互，该合约负责寻找并协调UniswapV2Pair合约完成交易，支持单跳和多跳（多级路由）交换。 两种核心交换类型：V2提供了两种主要的swap函数： swapExactTokensForTokens：用户指定精确的输入代币数量，系统计算并返回尽可能多的输出代币。 swapTokensForExactTokens：用户指定精确的输出代币数量，系统计算所需的最小输入代币数量。 0.3%固定手续费机制：每次swap操作都会对输入代币收取0.3%（千分之三）的手续费。这意味着实际用于AMM计算的输入量是用户提供量的99.7%。多跳交易会累积手续费。 数学原理与代码实现：UniswapV2Library中的getAmountOut和getAmountIn函数是核心计算逻辑，它们基于恒定乘积做市商（AMM）公式，并融入了0.3%的手续费计算，确保了交易的准确性。 滑点与MEV攻击：用户可以通过设置amountOutMin（最小输出量）来控制滑点。然而，这种机制也可能被MEV（矿工可提取价值）套利者利用，通过三明治攻击（Front-running &#43; Back-running）来捕获用户设定的最小输出与实际可能输出之间的差价。 1. Uniswap V2 核心架构与合约 Uniswap V2 的代码主要存在于两个仓库：">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap02/" title="02.Uniswap V2 swap 操作 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap03/" title="03.Uniswap V2 手续费机制" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-llmquart/" title="量化可视化指南揭秘：大型语言模型的压缩" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "02.Uniswap V2 swap 操作",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap02\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  5596 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap02\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>02.Uniswap V2 Swap 操作</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="5596 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 5600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 12 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#1-uniswap-v2-核心架构与合约">1. Uniswap V2 核心架构与合约</a></li>
+    <li><a href="#2-用户交换流程-单交易对">2. 用户交换流程 (单交易对)</a></li>
+    <li><a href="#3-两种主要的-swap-函数类型">3. 两种主要的 Swap 函数类型</a>
+      <ul>
+        <li><a href="#31-swapexacttokensfortokens-和-swapexactethfortokens">3.1 <code>swapExactTokensForTokens</code> (和 <code>swapExactETHForTokens</code>)</a></li>
+        <li><a href="#32-swaptokensforexacttokens-和-swaptokensforexacteth">3.2 <code>swapTokensForExactTokens</code> (和 <code>swapTokensForExactETH</code>)</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-多跳multi-hop交换机制">4. 多跳（Multi-Hop）交换机制</a>
+      <ul>
+        <li><a href="#多跳交换流程示例-dai---usdt---mkr">多跳交换流程示例 (DAI -&gt; USDT -&gt; MKR)</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-滑点控制与-mev-三明治攻击">5. 滑点控制与 MEV (三明治攻击)</a></li>
+    <li><a href="#6-uniswap-v2-手续费机制与数学推导">6. Uniswap V2 手续费机制与数学推导</a>
+      <ul>
+        <li><a href="#61-恒定乘积做市商-amm-公式">6.1 恒定乘积做市商 (AMM) 公式</a></li>
+        <li><a href="#62-getamountout-已知输入-dx求输出-dy">6.2 <code>getAmountOut</code> (已知输入 $DX$，求输出 $DY$)</a></li>
+        <li><a href="#63-getamountin-已知输出-dy求输入-dx">6.3 <code>getAmountIn</code> (已知输出 $DY$，求输入 $DX$)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p><strong>这份学习笔记将Uniswap V2的swap操作进行了深入剖析，涵盖了其核心机制、数学原理和代码实现，以及手续费的计算方式。</strong></p>
+<h2 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ul>
+<li><strong>Uniswap V2 架构与路由灵活性</strong>：V2引入了任何ERC20代币之间直接交换的能力，不再强制通过ETH作为中介。用户通过<code>UniswapV2Router02</code>合约进行交互，该合约负责寻找并协调<code>UniswapV2Pair</code>合约完成交易，支持单跳和多跳（多级路由）交换。</li>
+<li><strong>两种核心交换类型</strong>：V2提供了两种主要的<code>swap</code>函数：
+<ol>
+<li><code>swapExactTokensForTokens</code>：用户指定<strong>精确的输入代币数量</strong>，系统计算并返回尽可能多的输出代币。</li>
+<li><code>swapTokensForExactTokens</code>：用户指定<strong>精确的输出代币数量</strong>，系统计算所需的最小输入代币数量。</li>
+</ol>
+</li>
+<li><strong>0.3%固定手续费机制</strong>：每次<code>swap</code>操作都会对<strong>输入代币</strong>收取0.3%（千分之三）的手续费。这意味着实际用于AMM计算的输入量是用户提供量的99.7%。多跳交易会累积手续费。</li>
+<li><strong>数学原理与代码实现</strong>：<code>UniswapV2Library</code>中的<code>getAmountOut</code>和<code>getAmountIn</code>函数是核心计算逻辑，它们基于恒定乘积做市商（AMM）公式，并融入了0.3%的手续费计算，确保了交易的准确性。</li>
+<li><strong>滑点与MEV攻击</strong>：用户可以通过设置<code>amountOutMin</code>（最小输出量）来控制滑点。然而，这种机制也可能被MEV（矿工可提取价值）套利者利用，通过三明治攻击（Front-running + Back-running）来捕获用户设定的最小输出与实际可能输出之间的差价。</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="1-uniswap-v2-核心架构与合约"><span>1. Uniswap V2 核心架构与合约</span>
+  <a href="#1-uniswap-v2-%e6%a0%b8%e5%bf%83%e6%9e%b6%e6%9e%84%e4%b8%8e%e5%90%88%e7%ba%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Uniswap V2 的代码主要存在于两个仓库：</p>
+<ul>
+<li><code>v2-periphery</code>：https://github.com/Uniswap/v2-periphery</li>
+<li><code>v2-core</code>：https://github.com/Uniswap/v2-core</li>
+</ul>
+<p>其核心合约有三个：</p>
+<ul>
+<li><code>UniswapV2Pair.sol</code>：交易对合约，存储流动性，执行实际的<code>swap</code>操作。</li>
+<li><code>UniswapV2Factory.sol</code>：工厂合约，负责部署和管理所有的<code>Pair</code>合约。</li>
+<li><code>UniswapV2Router02.sol</code>：路由合约，用户与Uniswap V2交互的主要入口，负责找到合适的交易对并协调交易流程。它依赖于<code>UniswapV2Library</code>进行核心计算。</li>
+</ul>
+<h2 class="heading-element" id="2-用户交换流程-单交易对"><span>2. 用户交换流程 (单交易对)</span>
+  <a href="#2-%e7%94%a8%e6%88%b7%e4%ba%a4%e6%8d%a2%e6%b5%81%e7%a8%8b-%e5%8d%95%e4%ba%a4%e6%98%93%e5%af%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>用户想要完成一次代币交换（例如 DAI 换 USDT），通常会经历以下步骤：</p>
+<div class="diagram-container">
+  <pre class="mermaid">sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant Pair as UniswapV2Pair.sol (DAI/USDT)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens (DAI, USDT)
+    Note over Router02: (内部逻辑) 检查参数, 计算路径
+    Router02->>Pair: 2. 调用 transferFrom(User, Pair, amountIn) - Router02将用户DAI转入Pair (需用户预先授权)
+    Pair->>Pair: 3. 内部执行 swap 逻辑 (AMM计算, 扣除手续费)
+    Pair-->>Pair: (内部) 更新流动性储备
+    Pair->>User: 4. 调用 transfer(User, amountOut) - Pair将USDT转给用户
+    Router02-->>User: (交易完成)</pre>
+  <pre class="mermaid-dark">sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant Pair as UniswapV2Pair.sol (DAI/USDT)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens (DAI, USDT)
+    Note over Router02: (内部逻辑) 检查参数, 计算路径
+    Router02->>Pair: 2. 调用 transferFrom(User, Pair, amountIn) - Router02将用户DAI转入Pair (需用户预先授权)
+    Pair->>Pair: 3. 内部执行 swap 逻辑 (AMM计算, 扣除手续费)
+    Pair-->>Pair: (内部) 更新流动性储备
+    Pair->>User: 4. 调用 transfer(User, amountOut) - Pair将USDT转给用户
+    Router02-->>User: (交易完成)</pre>
+  <pre class="mermaid-neutral">sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant Pair as UniswapV2Pair.sol (DAI/USDT)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens (DAI, USDT)
+    Note over Router02: (内部逻辑) 检查参数, 计算路径
+    Router02->>Pair: 2. 调用 transferFrom(User, Pair, amountIn) - Router02将用户DAI转入Pair (需用户预先授权)
+    Pair->>Pair: 3. 内部执行 swap 逻辑 (AMM计算, 扣除手续费)
+    Pair-->>Pair: (内部) 更新流动性储备
+    Pair->>User: 4. 调用 transfer(User, amountOut) - Pair将USDT转给用户
+    Router02-->>User: (交易完成)</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant Pair as UniswapV2Pair.sol (DAI/USDT)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens (DAI, USDT)
+    Note over Router02: (内部逻辑) 检查参数, 计算路径
+    Router02->>Pair: 2. 调用 transferFrom(User, Pair, amountIn) - Router02将用户DAI转入Pair (需用户预先授权)
+    Pair->>Pair: 3. 内部执行 swap 逻辑 (AMM计算, 扣除手续费)
+    Pair-->>Pair: (内部) 更新流动性储备
+    Pair->>User: 4. 调用 transfer(User, amountOut) - Pair将USDT转给用户
+    Router02-->>User: (交易完成)</pre></template>
+</div><p><strong>流程说明</strong>：</p>
+<ol>
+<li><strong>用户调用路由合约</strong>：用户首先与<code>UniswapV2Router02.sol</code>合约进行交互，调用其<code>swap</code>方法。</li>
+<li><strong>转账至交易对</strong>：路由合约（作为用户预先授权的<code>spender</code>）会调用<code>transferFrom</code>函数，将用户待交换的代币（例如 DAI）从用户地址转入对应的<code>UniswapV2Pair</code>合约（DAI/USDT 交易对）。</li>
+<li><strong>交易对内部交换</strong>：<code>Pair</code>合约收到代币后，在其内部根据恒定乘积做市商（AMM）公式执行交换逻辑，并扣除手续费。</li>
+<li><strong>转账回用户</strong>：<code>Pair</code>合约将交换得到的代币（例如 USDT）通过<code>transfer</code>函数转回给用户。</li>
+</ol>
+<h2 class="heading-element" id="3-两种主要的-swap-函数类型"><span>3. 两种主要的 Swap 函数类型</span>
+  <a href="#3-%e4%b8%a4%e7%a7%8d%e4%b8%bb%e8%a6%81%e7%9a%84-swap-%e5%87%bd%e6%95%b0%e7%b1%bb%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><code>UniswapV2Router02.sol</code>提供了两类主要的<code>swap</code>函数，其核心区别在于<code>exact</code>关键字的位置：</p>
+<h3 class="heading-element" id="31-swapexacttokensfortokens-和-swapexactethfortokens"><span>3.1 <code>swapExactTokensForTokens</code> (和 <code>swapExactETHForTokens</code>)</span>
+  <a href="#31-swapexacttokensfortokens-%e5%92%8c-swapexactethfortokens" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nf">swapExactTokensForTokens</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">amountIn</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">amountOutMin</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">address</span><span class="p">[]</span> <span class="n">calldata</span> <span class="n">path</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">address</span> <span class="n">to</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">deadline</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="k">external</span> <span class="k">virtual</span> <span class="k">override</span> <span class="n">ensure</span><span class="p">(</span><span class="n">deadline</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">uint</span><span class="p">[]</span> <span class="k">memory</span> <span class="n">amounts</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">amounts</span> <span class="o">=</span> <span class="n">UniswapV2Library</span><span class="p">.</span><span class="n">getAmountsOut</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">amountIn</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">require</span><span class="p">(</span><span class="n">amounts</span><span class="p">[</span><span class="n">amounts</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">amountOutMin</span><span class="p">,</span> <span class="s">&#39;UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TransferHelper</span><span class="p">.</span><span class="n">safeTransferFrom</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">msg</span><span class="p">.</span><span class="nb">sender</span><span class="p">,</span> <span class="n">UniswapV2Library</span><span class="p">.</span><span class="n">pairFor</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">amounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_swap</span><span class="p">(</span><span class="n">amounts</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">to</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><ul>
+<li><strong>含义</strong>：用户<strong>精确指定</strong>想要投入的代币数量（<code>amountIn</code>），系统计算并返回能够获得的最大输出代币数量（<code>amountOut</code>）。</li>
+<li><strong>特点</strong>：输入量确定，输出量不确定（但用户可设置最小输出量<code>amountOutMin</code>来控制滑点）。</li>
+<li><strong>例子</strong>：我有100个 DAI，想换成 USDT，我不知道能换多少 USDT，但我要求至少换到 95 USDT。</li>
+</ul>
+<h3 class="heading-element" id="32-swaptokensforexacttokens-和-swaptokensforexacteth"><span>3.2 <code>swapTokensForExactTokens</code> (和 <code>swapTokensForExactETH</code>)</span>
+  <a href="#32-swaptokensforexacttokens-%e5%92%8c-swaptokensforexacteth" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl">    <span class="kd">function</span> <span class="nf">swapTokensForExactTokens</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">uint</span> <span class="n">amountOut</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">uint</span> <span class="n">amountInMax</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">address</span><span class="p">[]</span> <span class="n">calldata</span> <span class="n">path</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">address</span> <span class="n">to</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">uint</span> <span class="n">deadline</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="k">external</span> <span class="k">virtual</span> <span class="k">override</span> <span class="n">ensure</span><span class="p">(</span><span class="n">deadline</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">uint</span><span class="p">[]</span> <span class="k">memory</span> <span class="n">amounts</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">amounts</span> <span class="o">=</span> <span class="n">UniswapV2Library</span><span class="p">.</span><span class="n">getAmountsIn</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">amountOut</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">require</span><span class="p">(</span><span class="n">amounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">amountInMax</span><span class="p">,</span> <span class="s">&#39;UniswapV2Router: EXCESSIVE_INPUT_AMOUNT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TransferHelper</span><span class="p">.</span><span class="n">safeTransferFrom</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">msg</span><span class="p">.</span><span class="nb">sender</span><span class="p">,</span> <span class="n">UniswapV2Library</span><span class="p">.</span><span class="n">pairFor</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">amounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">_swap</span><span class="p">(</span><span class="n">amounts</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">to</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><ul>
+<li><strong>含义</strong>：用户<strong>精确指定</strong>想要获得的代币数量（<code>amountOut</code>），系统计算并要求用户提供完成此交换所需的最小输入代币数量（<code>amountIn</code>）。</li>
+<li><strong>特点</strong>：输出量确定，输入量不确定（但用户可设置最大输入量<code>amountInMax</code>来控制滑点）。</li>
+<li><strong>例子</strong>：我想要获得 100 个 USDT，我不知道需要多少 DAI 来换，但我最多只能提供 105 DAI。</li>
+</ul>
+<p><code>swapExactETHForTokens</code> 和 <code>swapTokensForExactETH</code> 是为了方便 ETH 与 ERC20 代币交换而设计的特殊版本，因为 ETH 不是 ERC20 代币，需要特殊处理（例如，在内部进行 WETH 的封装/解封装）。</p>
+<h2 class="heading-element" id="4-多跳multi-hop交换机制"><span>4. 多跳（Multi-Hop）交换机制</span>
+  <a href="#4-%e5%a4%9a%e8%b7%b3multi-hop%e4%ba%a4%e6%8d%a2%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Uniswap V2 的一个重要特性是支持任意 ERC20 代币之间的交换，即使它们之间没有直接的交易对。这通过**多跳路由（Multi-Hop Path）**实现。</p>
+<ul>
+<li><strong>原理</strong>：用户可以通过中间代币进行多次交换。例如，如果 <code>DAI/MKR</code> 交易对不存在，但存在 <code>DAI/USDT</code> 和 <code>USDT/MKR</code> 交易对，用户可以先将 DAI 换成 USDT，再将 USDT 换成 MKR。</li>
+<li><strong><code>path</code>参数</strong>：路由合约的<code>swap</code>函数接受一个<code>path</code>参数，这是一个代币地址数组，定义了交换的路径。
+<ul>
+<li><strong>例子</strong>：<code>path = [DAI_Address, USDT_Address, MKR_Address]</code> 表示 <code>DAI -&gt; USDT -&gt; MKR</code>。</li>
+</ul>
+</li>
+<li><strong>路由合约内部逻辑</strong>：<code>UniswapV2Router02</code>合约内部会有一个<code>for</code>循环，遍历<code>path</code>中的每一个交易对，依次执行<code>transferFrom</code>、<code>swap</code>、<code>transfer</code>操作，直到完成整个路径的交换。</li>
+<li><strong>手续费累积</strong>：<strong>每一次独立的<code>swap</code>操作都会收取0.3%的手续费</strong>。因此，多跳交易会累积手续费，用户通常会倾向于选择最短的路径以减少费用。</li>
+<li><strong>最优路径选择</strong>：Uniswap 官方前端或套利机器人可能会根据市场价差，选择非最短路径，以实现更高的最终收益，即使这意味着支付更多的手续费。</li>
+</ul>
+<h3 class="heading-element" id="多跳交换流程示例-dai---usdt---mkr"><span>多跳交换流程示例 (DAI -&gt; USDT -&gt; MKR)</span>
+  <a href="#%e5%a4%9a%e8%b7%b3%e4%ba%a4%e6%8d%a2%e6%b5%81%e7%a8%8b%e7%a4%ba%e4%be%8b-dai---usdt---mkr" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="diagram-container">
+  <pre class="mermaid">sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant PairDAIUSDT as UniswapV2Pair.sol (DAI/USDT)
+    participant PairUSDTMKR as UniswapV2Pair.sol (USDT/MKR)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens(amountInDAI, amountOutMinMKR, path=[DAI, USDT, MKR], to=User, deadline)
+    Note over Router02: (内部逻辑) 根据path遍历交易对
+
+    activate Router02
+    Router02->>PairDAIUSDT: 2. transferFrom(User, PairDAIUSDT, amountInDAI) - Router02将用户DAI转入DAI/USDT Pair (需用户预先授权)
+    activate PairDAIUSDT
+    PairDAIUSDT->>PairDAIUSDT: 3. 内部执行 swap (DAI -> USDT)
+    PairDAIUSDT-->>PairDAIUSDT: (内部) 更新DAI/USDT储备
+    deactivate PairDAIUSDT
+    Router02->>PairUSDTMKR: 4. transfer(PairDAIUSDT, PairUSDTMKR, amountOutUSDT_from_DAI) - 中间USDT从DAI/USDT Pair转入USDT/MKR Pair
+    activate PairUSDTMKR
+    PairUSDTMKR->>PairUSDTMKR: 5. 内部执行 swap (USDT -> MKR)
+    PairUSDTMKR-->>PairUSDTMKR: (内部) 更新USDT/MKR储备
+    deactivate PairUSDTMKR
+    Router02->>User: 6. transfer(PairUSDTMKR, User, amountOutMKR_final) - 最终MKR从USDT/MKR Pair转给用户
+    deactivate Router02
+    Router02-->>User: (交易完成)</pre>
+  <pre class="mermaid-dark">sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant PairDAIUSDT as UniswapV2Pair.sol (DAI/USDT)
+    participant PairUSDTMKR as UniswapV2Pair.sol (USDT/MKR)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens(amountInDAI, amountOutMinMKR, path=[DAI, USDT, MKR], to=User, deadline)
+    Note over Router02: (内部逻辑) 根据path遍历交易对
+
+    activate Router02
+    Router02->>PairDAIUSDT: 2. transferFrom(User, PairDAIUSDT, amountInDAI) - Router02将用户DAI转入DAI/USDT Pair (需用户预先授权)
+    activate PairDAIUSDT
+    PairDAIUSDT->>PairDAIUSDT: 3. 内部执行 swap (DAI -> USDT)
+    PairDAIUSDT-->>PairDAIUSDT: (内部) 更新DAI/USDT储备
+    deactivate PairDAIUSDT
+    Router02->>PairUSDTMKR: 4. transfer(PairDAIUSDT, PairUSDTMKR, amountOutUSDT_from_DAI) - 中间USDT从DAI/USDT Pair转入USDT/MKR Pair
+    activate PairUSDTMKR
+    PairUSDTMKR->>PairUSDTMKR: 5. 内部执行 swap (USDT -> MKR)
+    PairUSDTMKR-->>PairUSDTMKR: (内部) 更新USDT/MKR储备
+    deactivate PairUSDTMKR
+    Router02->>User: 6. transfer(PairUSDTMKR, User, amountOutMKR_final) - 最终MKR从USDT/MKR Pair转给用户
+    deactivate Router02
+    Router02-->>User: (交易完成)</pre>
+  <pre class="mermaid-neutral">sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant PairDAIUSDT as UniswapV2Pair.sol (DAI/USDT)
+    participant PairUSDTMKR as UniswapV2Pair.sol (USDT/MKR)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens(amountInDAI, amountOutMinMKR, path=[DAI, USDT, MKR], to=User, deadline)
+    Note over Router02: (内部逻辑) 根据path遍历交易对
+
+    activate Router02
+    Router02->>PairDAIUSDT: 2. transferFrom(User, PairDAIUSDT, amountInDAI) - Router02将用户DAI转入DAI/USDT Pair (需用户预先授权)
+    activate PairDAIUSDT
+    PairDAIUSDT->>PairDAIUSDT: 3. 内部执行 swap (DAI -> USDT)
+    PairDAIUSDT-->>PairDAIUSDT: (内部) 更新DAI/USDT储备
+    deactivate PairDAIUSDT
+    Router02->>PairUSDTMKR: 4. transfer(PairDAIUSDT, PairUSDTMKR, amountOutUSDT_from_DAI) - 中间USDT从DAI/USDT Pair转入USDT/MKR Pair
+    activate PairUSDTMKR
+    PairUSDTMKR->>PairUSDTMKR: 5. 内部执行 swap (USDT -> MKR)
+    PairUSDTMKR-->>PairUSDTMKR: (内部) 更新USDT/MKR储备
+    deactivate PairUSDTMKR
+    Router02->>User: 6. transfer(PairUSDTMKR, User, amountOutMKR_final) - 最终MKR从USDT/MKR Pair转给用户
+    deactivate Router02
+    Router02-->>User: (交易完成)</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>sequenceDiagram
+    actor User
+    participant Router02 as UniswapV2Router02.sol
+    participant PairDAIUSDT as UniswapV2Pair.sol (DAI/USDT)
+    participant PairUSDTMKR as UniswapV2Pair.sol (USDT/MKR)
+
+    User->>Router02: 1. 调用 swapExactTokensForTokens(amountInDAI, amountOutMinMKR, path=[DAI, USDT, MKR], to=User, deadline)
+    Note over Router02: (内部逻辑) 根据path遍历交易对
+
+    activate Router02
+    Router02->>PairDAIUSDT: 2. transferFrom(User, PairDAIUSDT, amountInDAI) - Router02将用户DAI转入DAI/USDT Pair (需用户预先授权)
+    activate PairDAIUSDT
+    PairDAIUSDT->>PairDAIUSDT: 3. 内部执行 swap (DAI -> USDT)
+    PairDAIUSDT-->>PairDAIUSDT: (内部) 更新DAI/USDT储备
+    deactivate PairDAIUSDT
+    Router02->>PairUSDTMKR: 4. transfer(PairDAIUSDT, PairUSDTMKR, amountOutUSDT_from_DAI) - 中间USDT从DAI/USDT Pair转入USDT/MKR Pair
+    activate PairUSDTMKR
+    PairUSDTMKR->>PairUSDTMKR: 5. 内部执行 swap (USDT -> MKR)
+    PairUSDTMKR-->>PairUSDTMKR: (内部) 更新USDT/MKR储备
+    deactivate PairUSDTMKR
+    Router02->>User: 6. transfer(PairUSDTMKR, User, amountOutMKR_final) - 最终MKR从USDT/MKR Pair转给用户
+    deactivate Router02
+    Router02-->>User: (交易完成)</pre></template>
+</div><p><strong>流程说明</strong>：</p>
+<ol>
+<li><strong>用户调用路由合约</strong>：用户调用<code>UniswapV2Router02.sol</code>的<code>swap</code>方法，并传入一个包含所有中间代币的<code>path</code>数组。</li>
+<li><strong>第一跳：DAI -&gt; USDT</strong>：
+<ul>
+<li>路由合约（作为用户预先授权的<code>spender</code>）会调用<code>transferFrom</code>函数，将初始代币（DAI）从用户地址转入第一个交易对（<code>DAI/USDT</code> Pair）。</li>
+<li><code>DAI/USDT</code> Pair 内部执行 <code>swap</code>，将 DAI 换成 USDT，并扣除第一次手续费。</li>
+<li>路由合约将生成的 USDT 从 <code>DAI/USDT</code> Pair 转入下一个交易对（<code>USDT/MKR</code> Pair）。</li>
+</ul>
+</li>
+<li><strong>第二跳：USDT -&gt; MKR</strong>：
+<ul>
+<li><code>USDT/MKR</code> Pair 收到 USDT 后，内部执行 <code>swap</code>，将 USDT 换成 MKR，并扣除第二次手续费。</li>
+<li>路由合约将最终生成的 MKR 从 <code>USDT/MKR</code> Pair 转回给用户。</li>
+</ul>
+</li>
+</ol>
+<p>这个过程可以推广到任意多跳，每次跳跃都会在相应的交易对中完成一次独立的 <code>swap</code> 操作和手续费扣除。</p>
+<h2 class="heading-element" id="5-滑点控制与-mev-三明治攻击"><span>5. 滑点控制与 MEV (三明治攻击)</span>
+  <a href="#5-%e6%bb%91%e7%82%b9%e6%8e%a7%e5%88%b6%e4%b8%8e-mev-%e4%b8%89%e6%98%8e%e6%b2%bb%e6%94%bb%e5%87%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ul>
+<li><strong>滑点控制</strong>：
+<ul>
+<li>对于<code>swapExactTokensForTokens</code>，用户通过<code>amountOutMin</code>参数设定能接受的最小输出代币数量。</li>
+<li>对于<code>swapTokensForExactTokens</code>，用户通过<code>amountInMax</code>参数设定愿意支付的最大输入代币数量。</li>
+<li>这些参数用于防止因交易执行时市场价格波动导致的用户损失。</li>
+</ul>
+</li>
+<li><strong>MEV (Miner Extractable Value) 与三明治攻击</strong>：
+<ul>
+<li><strong>例子</strong>：用户想用 1 WETH 换 USDT，市场价 2000 USDT，用户设置 <code>amountOutMin = 1950 USDT</code>。</li>
+<li>假设实际计算结果可以得到 1990 USDT。</li>
+<li>MEV 机器人（或科学家）看到这笔交易有利可图（1990 - 1950 = 40 USDT 的潜在利润空间）。</li>
+<li><strong>三明治攻击</strong>：
+<ol>
+<li><strong>Front-run</strong>：MEV 机器人先于用户交易，以略微改变价格的方式进行一笔小额交易，将池子价格推向对用户不利的方向。</li>
+<li><strong>User&rsquo;s Transaction</strong>：用户的交易执行，由于价格被推高，用户只能获得接近 <code>amountOutMin</code> 的数量（例如 1950 USDT）。</li>
+<li><strong>Back-run</strong>：MEV 机器人在用户交易之后，立即执行另一笔交易，将池子价格恢复到接近原始状态，从而捕获之前推高价格所产生的利润。</li>
+</ol>
+</li>
+<li>MEV 科学家通过这种方式，将用户本可以获得的额外收益（例如上述的 40 USDT）收入囊中。MEV 的实现与用户设定的这些参数密切相关。</li>
+</ul>
+</li>
+</ul>
+<h2 class="heading-element" id="6-uniswap-v2-手续费机制与数学推导"><span>6. Uniswap V2 手续费机制与数学推导</span>
+  <a href="#6-uniswap-v2-%e6%89%8b%e7%bb%ad%e8%b4%b9%e6%9c%ba%e5%88%b6%e4%b8%8e%e6%95%b0%e5%ad%a6%e6%8e%a8%e5%af%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Uniswap V2 每次<code>swap</code>操作都会对<strong>输入代币</strong>收取 <strong>0.3% (0.003)</strong> 的固定手续费。这意味着实际用于 AMM 计算的输入量是用户提供量的 <code>(1 - 0.003)</code> 倍，即 <code>0.997</code> 倍。</p>
+<h3 class="heading-element" id="61-恒定乘积做市商-amm-公式"><span>6.1 恒定乘积做市商 (AMM) 公式</span>
+  <a href="#61-%e6%81%92%e5%ae%9a%e4%b9%98%e7%a7%af%e5%81%9a%e5%b8%82%e5%95%86-amm-%e5%85%ac%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>基础公式：$X \cdot Y = K$
+其中：</p>
+<ul>
+<li>$X_0, Y_0$：交易前池中两种代币的储备量。</li>
+<li>$K$：常数乘积。</li>
+<li>$DX$：用户输入的代币数量。</li>
+<li>$DY$：用户获得的代币数量。</li>
+</ul>
+<p>考虑手续费后，实际进入池子的输入量为 $(1 - F) \cdot DX$，其中 $F = 0.003$。
+因此，AMM 恒定乘积公式变为：
+$$ (X_0 + (1 - F) \cdot DX) \cdot (Y_0 - DY) = X_0 \cdot Y_0 $$</p>
+<h3 class="heading-element" id="62-getamountout-已知输入-dx求输出-dy"><span>6.2 <code>getAmountOut</code> (已知输入 $DX$，求输出 $DY$)</span>
+  <a href="#62-getamountout-%e5%b7%b2%e7%9f%a5%e8%be%93%e5%85%a5-dx%e6%b1%82%e8%be%93%e5%87%ba-dy" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这个函数用于 <code>swapExactTokensForTokens</code> 场景。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nf">getAmountOut</span><span class="p">(</span><span class="kt">uint</span> <span class="n">amountIn</span><span class="p">,</span> <span class="kt">uint</span> <span class="n">reserveIn</span><span class="p">,</span> <span class="kt">uint</span> <span class="n">reserveOut</span><span class="p">)</span> <span class="k">internal</span> <span class="k">pure</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">uint</span> <span class="n">amountOut</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">require</span><span class="p">(</span><span class="n">amountIn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">require</span><span class="p">(</span><span class="n">reserveIn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">reserveOut</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;UniswapV2Library: INSUFFICIENT_LIQUIDITY&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">amountInWithFee</span> <span class="o">=</span> <span class="n">amountIn</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">997</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">numerator</span> <span class="o">=</span> <span class="n">amountInWithFee</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">reserveOut</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">denominator</span> <span class="o">=</span> <span class="n">reserveIn</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">).</span><span class="n">add</span><span class="p">(</span><span class="n">amountInWithFee</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">amountOut</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div><p><strong>推导过程</strong>：</p>
+<ol>
+<li>从考虑手续费的 AMM 公式开始：
+$$ (X_0 + (1 - F) \cdot DX) \cdot (Y_0 - DY) = X_0 \cdot Y_0 $$</li>
+<li>展开并整理，目标是解出 $DY$：
+$$ Y_0 - DY = \frac{X_0 \cdot Y_0}{X_0 + (1 - F) \cdot DX} $$
+$$ DY = Y_0 - \frac{X_0 \cdot Y_0}{X_0 + (1 - F) \cdot DX} $$
+$$ DY = \frac{Y_0 \cdot (X_0 + (1 - F) \cdot DX) - X_0 \cdot Y_0}{X_0 + (1 - F) \cdot DX} $$
+$$ DY = \frac{X_0 \cdot Y_0 + (1 - F) \cdot DX \cdot Y_0 - X_0 \cdot Y_0}{X_0 + (1 - F) \cdot DX} $$
+$$ DY = \frac{(1 - F) \cdot DX \cdot Y_0}{X_0 + (1 - F) \cdot DX} $$</li>
+<li>代入手续费率 $F = 0.003$：
+$$ DY = \frac{0.997 \cdot DX \cdot Y_0}{X_0 + 0.997 \cdot DX} $$</li>
+<li>为了避免浮点数计算，通常将分子分母同乘以 1000：
+$$ DY = \frac{997 \cdot DX \cdot Y_0}{1000 \cdot X_0 + 997 \cdot DX} $$
+<ul>
+<li>其中，$X_0$ 对应 <code>reserveIn</code>，$Y_0$ 对应 <code>reserveOut</code>。</li>
+</ul>
+</li>
+</ol>
+<p><strong>代码实现 (<code>UniswapV2Library.sol</code> 中的 <code>getAmountOut</code>)</strong>：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="c1">// reserveIn: X0, reserveOut: Y0, amountIn: DX
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint</span> <span class="n">numerator</span> <span class="o">=</span> <span class="n">amountIn</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">997</span><span class="p">).</span><span class="n">mul</span><span class="p">(</span><span class="n">reserveOut</span><span class="p">);</span> <span class="c1">// 997 * DX * Y0
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint</span> <span class="n">denominator</span> <span class="o">=</span> <span class="n">reserveIn</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">).</span><span class="n">add</span><span class="p">(</span><span class="n">amountIn</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">997</span><span class="p">));</span> <span class="c1">// 1000 * X0 + 997 * DX
+</span></span></span><span class="line"><span class="cl"><span class="n">amountOut</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">;</span> <span class="o">//</span> <span class="n">DY</span></span></span></code></pre></div></div><h3 class="heading-element" id="63-getamountin-已知输出-dy求输入-dx"><span>6.3 <code>getAmountIn</code> (已知输出 $DY$，求输入 $DX$)</span>
+  <a href="#63-getamountin-%e5%b7%b2%e7%9f%a5%e8%be%93%e5%87%ba-dy%e6%b1%82%e8%be%93%e5%85%a5-dx" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这个函数用于 <code>swapTokensForExactTokens</code> 场景。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nf">getAmountIn</span><span class="p">(</span><span class="kt">uint</span> <span class="n">amountOut</span><span class="p">,</span> <span class="kt">uint</span> <span class="n">reserveIn</span><span class="p">,</span> <span class="kt">uint</span> <span class="n">reserveOut</span><span class="p">)</span> <span class="k">internal</span> <span class="k">pure</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">uint</span> <span class="n">amountIn</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">require</span><span class="p">(</span><span class="n">amountOut</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;UniswapV2Library: INSUFFICIENT_OUTPUT_AMOUNT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">require</span><span class="p">(</span><span class="n">reserveIn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">reserveOut</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;UniswapV2Library: INSUFFICIENT_LIQUIDITY&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">numerator</span> <span class="o">=</span> <span class="n">reserveIn</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">amountOut</span><span class="p">).</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">denominator</span> <span class="o">=</span> <span class="n">reserveOut</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">amountOut</span><span class="p">).</span><span class="n">mul</span><span class="p">(</span><span class="mi">997</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">amountIn</span> <span class="o">=</span> <span class="p">(</span><span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">).</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div><p><strong>推导过程</strong>：</p>
+<ol>
+<li>从考虑手续费的 AMM 公式开始：
+$$ (X_0 + (1 - F) \cdot DX) \cdot (Y_0 - DY) = X_0 \cdot Y_0 $$</li>
+<li>展开并整理，目标是解出 $DX$：
+$$ X_0 + (1 - F) \cdot DX = \frac{X_0 \cdot Y_0}{Y_0 - DY} $$
+$$ (1 - F) \cdot DX = \frac{X_0 \cdot Y_0}{Y_0 - DY} - X_0 $$
+$$ (1 - F) \cdot DX = \frac{X_0 \cdot Y_0 - X_0 \cdot (Y_0 - DY)}{Y_0 - DY} $$
+$$ (1 - F) \cdot DX = \frac{X_0 \cdot Y_0 - X_0 \cdot Y_0 + X_0 \cdot DY}{Y_0 - DY} $$
+$$ (1 - F) \cdot DX = \frac{X_0 \cdot DY}{Y_0 - DY} $$
+$$ DX = \frac{X_0 \cdot DY}{(Y_0 - DY) \cdot (1 - F)} $$</li>
+<li>代入手续费率 $F = 0.003$：
+$$ DX = \frac{X_0 \cdot DY}{(Y_0 - DY) \cdot 0.997} $$</li>
+<li>为了避免浮点数计算，通常将分子分母同乘以 1000：
+$$ DX = \frac{1000 \cdot X_0 \cdot DY}{(Y_0 - DY) \cdot 997} $$
+<ul>
+<li>其中，$X_0$ 对应 <code>reserveIn</code>，$Y_0$ 对应 <code>reserveOut</code>。</li>
+</ul>
+</li>
+</ol>
+<p><strong>代码实现 (<code>UniswapV2Library.sol</code> 中的 <code>getAmountIn</code>)</strong>：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="c1">// reserveIn: X0, reserveOut: Y0, amountOut: DY
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint</span> <span class="n">numerator</span> <span class="o">=</span> <span class="n">reserveIn</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">amountOut</span><span class="p">).</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span> <span class="c1">// 1000 * X0 * DY
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint</span> <span class="n">denominator</span> <span class="o">=</span> <span class="n">reserveOut</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">amountOut</span><span class="p">).</span><span class="n">mul</span><span class="p">(</span><span class="mi">997</span><span class="p">);</span> <span class="c1">// (Y0 - DY) * 997
+</span></span></span><span class="line"><span class="cl"><span class="n">amountIn</span> <span class="o">=</span> <span class="p">(</span><span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">).</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="o">//</span> <span class="n">DX</span> <span class="p">(</span><span class="err">向上取整</span><span class="p">)</span></span></span></code></pre></div></div><ul>
+<li><code>.add(1)</code> 是为了向上取整，确保用户提供的输入量足够满足精确输出。</li>
+</ul>
+<p>这些数学公式是 Uniswap V2 能够高效、透明地进行代币交换的核心，也是理解其机制的关键。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap02/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap02/" data-title="02.Uniswap V2 Swap 操作" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap02/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap02/" data-title="02.Uniswap V2 Swap 操作"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap03/" class="post-nav-item" rel="prev" title="03.Uniswap V2 手续费机制"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>03.Uniswap V2 手续费机制</a><a href="/posts/202509-llmquart/" class="post-nav-item" rel="next" title="量化可视化指南揭秘：大型语言模型的压缩">量化可视化指南揭秘：大型语言模型的压缩<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#1-uniswap-v2-核心架构与合约">1. Uniswap V2 核心架构与合约</a></li>
+    <li><a href="#2-用户交换流程-单交易对">2. 用户交换流程 (单交易对)</a></li>
+    <li><a href="#3-两种主要的-swap-函数类型">3. 两种主要的 Swap 函数类型</a>
+      <ul>
+        <li><a href="#31-swapexacttokensfortokens-和-swapexactethfortokens">3.1 <code>swapExactTokensForTokens</code> (和 <code>swapExactETHForTokens</code>)</a></li>
+        <li><a href="#32-swaptokensforexacttokens-和-swaptokensforexacteth">3.2 <code>swapTokensForExactTokens</code> (和 <code>swapTokensForExactETH</code>)</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-多跳multi-hop交换机制">4. 多跳（Multi-Hop）交换机制</a>
+      <ul>
+        <li><a href="#多跳交换流程示例-dai---usdt---mkr">多跳交换流程示例 (DAI -&gt; USDT -&gt; MKR)</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-滑点控制与-mev-三明治攻击">5. 滑点控制与 MEV (三明治攻击)</a></li>
+    <li><a href="#6-uniswap-v2-手续费机制与数学推导">6. Uniswap V2 手续费机制与数学推导</a>
+      <ul>
+        <li><a href="#61-恒定乘积做市商-amm-公式">6.1 恒定乘积做市商 (AMM) 公式</a></li>
+        <li><a href="#62-getamountout-已知输入-dx求输出-dy">6.2 <code>getAmountOut</code> (已知输入 $DX$，求输出 $DY$)</a></li>
+        <li><a href="#63-getamountin-已知输出-dy求输入-dx">6.3 <code>getAmountIn</code> (已知输出 $DY$，求输入 $DX$)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/714efbae1db00d8dbf69b5e736d0cd09.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

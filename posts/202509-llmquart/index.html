@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>量化可视化指南揭秘：大型语言模型的压缩 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="量化技术图解指南 深入浅出，揭秘大语言模型的压缩之道 所谓大语言模型（LLM），“大”是其最显著的特征之一。这不仅体现在它们能够处理海量信息，更直接地体现在其庞大的体积上。这些模型动辄拥有数十亿的参数，通常需要配备大显存的顶级 GPU 才能流畅运行，这无疑将许多普通用户和开发者拒之门外。
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="量化可视化指南揭秘：大型语言模型的压缩">
+  <meta itemprop="description" content="量化技术图解指南 深入浅出，揭秘大语言模型的压缩之道 所谓大语言模型（LLM），“大”是其最显著的特征之一。这不仅体现在它们能够处理海量信息，更直接地体现在其庞大的体积上。这些模型动辄拥有数十亿的参数，通常需要配备大显存的顶级 GPU 才能流畅运行，这无疑将许多普通用户和开发者拒之门外。">
+  <meta itemprop="datePublished" content="2025-09-06T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-06T00:00:00+00:00">
+  <meta itemprop="wordCount" content="7098">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-llmquart/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="量化可视化指南揭秘：大型语言模型的压缩">
+  <meta property="og:description" content="量化技术图解指南 深入浅出，揭秘大语言模型的压缩之道 所谓大语言模型（LLM），“大”是其最显著的特征之一。这不仅体现在它们能够处理海量信息，更直接地体现在其庞大的体积上。这些模型动辄拥有数十亿的参数，通常需要配备大显存的顶级 GPU 才能流畅运行，这无疑将许多普通用户和开发者拒之门外。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-06T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-06T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="量化可视化指南揭秘：大型语言模型的压缩">
+  <meta name="twitter:description" content="量化技术图解指南 深入浅出，揭秘大语言模型的压缩之道 所谓大语言模型（LLM），“大”是其最显著的特征之一。这不仅体现在它们能够处理海量信息，更直接地体现在其庞大的体积上。这些模型动辄拥有数十亿的参数，通常需要配备大显存的顶级 GPU 才能流畅运行，这无疑将许多普通用户和开发者拒之门外。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-llmquart/" title="量化可视化指南揭秘：大型语言模型的压缩 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap02/" title="02.Uniswap V2 swap 操作" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-ethbasestruct/" title="以太坊-基础数据结构解析" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "量化可视化指南揭秘：大型语言模型的压缩",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-llmquart\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  7098 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-llmquart\/","datePublished": "2025-09-06T00:00:00+00:00","dateModified": "2025-09-06T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>量化可视化指南揭秘：大型语言模型的压缩</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-06 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-06">2025-09-06</time></span>&nbsp;<span title="7098 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 7100 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 15 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#深入浅出揭秘大语言模型的压缩之道">深入浅出，揭秘大语言模型的压缩之道</a></li>
+      </ul>
+    </li>
+    <li><a href="#第一部分大语言模型的大问题">第一部分：大语言模型的“大”问题</a>
+      <ul>
+        <li><a href="#数值是如何表示的">数值是如何表示的？</a></li>
+        <li><a href="#内存的限制">内存的限制</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二部分量化技术简介">第二部分：量化技术简介</a>
+      <ul>
+        <li><a href="#常见的数据类型">常见的数据类型</a>
+          <ul>
+            <li><a href="#fp16">FP16</a></li>
+            <li><a href="#bf16">BF16</a></li>
+            <li><a href="#int8">INT8</a></li>
+          </ul>
+        </li>
+        <li><a href="#对称量化">对称量化</a></li>
+        <li><a href="#非对称量化">非对称量化</a></li>
+        <li><a href="#范围映射与裁剪clipping">范围映射与裁剪（Clipping）</a></li>
+        <li><a href="#校准calibration">校准（Calibration）</a>
+          <ul>
+            <li><a href="#权重和偏置"><strong>权重</strong>（和偏置）</a></li>
+            <li><a href="#激活值"><strong>激活值</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#第三部分训练后量化-ptq">第三部分：训练后量化 (PTQ)</a>
+      <ul>
+        <li><a href="#动态量化">动态量化</a></li>
+        <li><a href="#静态量化">静态量化</a></li>
+        <li><a href="#挺进-4-比特时代">挺进 4 比特时代</a>
+          <ul>
+            <li><a href="#gptq">GPTQ</a></li>
+            <li><a href="#gguf">GGUF</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#第四部分量化感知训练-qat">第四部分：量化感知训练 (QAT)</a>
+      <ul>
+        <li><a href="#1位llm的时代bitnet">1位LLM的时代：BitNet</a>
+          <ul>
+            <li><a href="#权重-量化">权重 量化</a></li>
+            <li><a href="#激活值量化">激活值量化</a></li>
+            <li><a href="#反量化">反量化</a></li>
+          </ul>
+        </li>
+        <li><a href="#llm-的终极形态158-比特">LLM 的终极形态？1.58 比特</a>
+          <ul>
+            <li><a href="#0-的魔力">0 的魔力</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#结语">结语</a>
+      <ul>
+        <li><a href="#推荐阅读">推荐阅读</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="量化技术图解指南"><span>量化技术图解指南</span>
+  <a href="#%e9%87%8f%e5%8c%96%e6%8a%80%e6%9c%af%e5%9b%be%e8%a7%a3%e6%8c%87%e5%8d%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="深入浅出揭秘大语言模型的压缩之道"><span>深入浅出，揭秘大语言模型的压缩之道</span>
+  <a href="#%e6%b7%b1%e5%85%a5%e6%b5%85%e5%87%ba%e6%8f%ad%e7%a7%98%e5%a4%a7%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8b%e7%9a%84%e5%8e%8b%e7%bc%a9%e4%b9%8b%e9%81%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><hr>
+<p>所谓大语言模型（LLM），“大”是其最显著的特征之一。这不仅体现在它们能够处理海量信息，更直接地体现在其庞大的体积上。这些模型动辄拥有数十亿的参数，通常需要配备大显存的顶级 GPU 才能流畅运行，这无疑将许多普通用户和开发者拒之门外。</p>
+<p>因此，学术界和工业界正不懈探索如何为这些庞然大物“瘦身”，例如改进训练方法、引入适配器（Adapters）技术等。而在众多技术中，有一项关键技术扮演着举足轻重的角色，那就是——<strong>量化（Quantization）</strong>。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe9d17077-d9af-4b37-9b9b-57ef9aaa1ca9_680x486.png' alt="量化技术" height="486" width="680"></p>
+<p>在本文中，我将以大语言模型为背景，为您详细解读量化技术。我们将通过一系列直观的图示，逐一剖析相关概念、方法论、应用案例及其背后的核心原理。</p>
+<p>这份图解指南包含超过 <strong>50 张原创图示</strong>，旨在帮助您建立对量化技术的直观理解！</p>
+<hr>
+<h2 class="heading-element" id="第一部分大语言模型的大问题"><span>第一部分：大语言模型的“大”问题</span>
+  <a href="#%e7%ac%ac%e4%b8%80%e9%83%a8%e5%88%86%e5%a4%a7%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8b%e7%9a%84%e5%a4%a7%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>大语言模型的“大”，体现在其海量的参数上。如今，模型的参数（主要是<strong>权重</strong>）规模已达数十亿级别，存储成本极其高昂。</p>
+<p>不仅如此，在模型推理（即生成内容）时，输入数据与权重相乘产生的<strong>激活值（activations）</strong>，其规模同样不容小觑。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb99fe2ba-d4f4-4046-850c-e3f469add123_1368x708.png' alt="LLM中的权重与激活值" height="708" width="1368"></p>
+<p>因此，我们迫切需要一种更高效的方式来表示这数十亿个数值，从而最大限度地压缩它们的存储空间。</p>
+<p>要理解如何优化，我们得先从数值的表示方法说起。</p>
+<h3 class="heading-element" id="数值是如何表示的"><span>数值是如何表示的？</span>
+  <a href="#%e6%95%b0%e5%80%bc%e6%98%af%e5%a6%82%e4%bd%95%e8%a1%a8%e7%a4%ba%e7%9a%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在计算机中，数值通常以**浮点数（float）**的形式存在，也就是我们熟悉的小数。</p>
+<p>这些数值在底层是由“<strong>位（bits）</strong>”或二进制数字来表示的。国际标准 <strong>IEEE-754</strong> 定义了如何用位来组合成三个关键部分，共同构成一个浮点数：<strong>符号（sign）</strong>、<strong>指数（exponent）<strong>和</strong>小数（fraction）</strong>（也称尾数 <em>mantissa</em>）。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc8362c0e-0a77-4eda-80a8-8e5e1df4433f_1252x308.png' alt="浮点数的组成部分" height="308" width="1252"></p>
+<p>这三部分通过以下公式共同决定了浮点数的最终值：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4783fd02-a138-40c7-82c7-79dd05a179e4_1472x772.png' alt="浮点数计算公式" height="772" width="1472"></p>
+<p>通常来说，用来表示一个数值的位数越多，它就越<strong>精确</strong>：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1eafac2a-d027-4d66-95de-7030e0392b39_1796x940.png' alt="不同位宽的浮点数精度对比" height="940" width="1796"></p>
+<h3 class="heading-element" id="内存的限制"><span>内存的限制</span>
+  <a href="#%e5%86%85%e5%ad%98%e7%9a%84%e9%99%90%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>可用的位数越多，能够表示的数值范围也越广。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff306b7f1-dd3c-4001-91d3-bd61f22c5782_1128x452.png' alt="不同位宽可表示的数值范围" height="452" width="1128"></p>
+<p>一种表示法所能覆盖的数值区间，我们称之为<strong>动态范围（dynamic range）</strong>；而两个相邻数值之间的最小间隔，则代表了其<strong>精度（precision）</strong>。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F7dbb8398-9f3f-4d9a-b63f-591cb37bdbdd_1144x856.png' alt="动态范围与精度" height="856" width="1144"></p>
+<p>利用“位”，我们可以方便地计算出存储一个数值需要多少内存。因为 1 字节（byte）等于 8 位（bits），所以我们可以得出一个简单的换算公式。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe146740d-72e9-44dc-99e1-f7bc42737cec_1128x144.png' alt="内存计算公式" height="144" width="1128"></p>
+<blockquote>
+<p><strong>注意</strong>：实际上，影响推理所需显存（VRAM）的因素还有很多，比如上下文长度和模型架构。此处的计算只是一个简化的估算。</p>
+</blockquote>
+<p>现在，我们来算一笔账。假设有一个 700 亿参数的开源模型，它原生使用 32 位浮点数（即<strong>全精度</strong>）进行存储。这意味着，仅仅是把模型加载到内存中，就需要 <strong>280GB</strong>！</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F9c28e9b0-c002-4a49-9441-af24f261df40_1128x548.png' alt="模型内存占用计算示例" height="548" width="1128"></p>
+<p>这个数字对于绝大多数消费级硬件来说是遥不可及的。因此，人们自然会想到，能否减少表示模型参数的位数，从而降低内存占用？然而，降低精度往往会牺牲模型的性能。</p>
+<p>那么，有没有一种方法，既能减少位数，又能最大程度地保留模型的性能呢？答案就是<strong>量化</strong>。</p>
+<hr>
+<h2 class="heading-element" id="第二部分量化技术简介"><span>第二部分：量化技术简介</span>
+  <a href="#%e7%ac%ac%e4%ba%8c%e9%83%a8%e5%88%86%e9%87%8f%e5%8c%96%e6%8a%80%e6%9c%af%e7%ae%80%e4%bb%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>量化的核心目标，就是将模型参数的表示精度从高位宽（如 32 位浮点数）降低到低位宽（如 8 位整数）。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F82ac8f88-0cf5-4244-ba9f-cbffdb283947_1008x496.png' alt="量化过程示意图" height="496" width="1008"></p>
+<p>当我们用更少的位数来表示原始参数时，通常会损失一部分精度，让表示变得“粗粒度”。</p>
+<p>为了直观理解这个过程，我们可以把它比作图像处理：想象一下，我们把一张色彩丰富的图片，强制用 8 种颜色来重新绘制。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa33638d8-3506-4471-986f-5960184f98f0_2657x1260.jpeg' alt="图像色彩量化示例" height="1260" width="2657">
+<em>图片改编自 <a href="https://pixabay.com/users/slava_web-designer-39623293/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=8668140" title="Slava Sidorov" target="_blank" rel="external nofollow noopener noreferrer">Slava Sidorov</a> 的原作。</em></p>
+<p>不难发现，放大后的局部细节变得“粗糙”了许多，因为我们可用的颜色（精度）变少了。</p>
+<p>量化的艺术，就在于找到一种最佳的“压缩”方法，在减少位数（颜色）的同时，尽可能地保留原始参数（画面）的精髓。</p>
+<h3 class="heading-element" id="常见的数据类型"><span>常见的数据类型</span>
+  <a href="#%e5%b8%b8%e8%a7%81%e7%9a%84%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>首先，我们来认识几种常见的数据类型，看看用它们替代 32 位浮点数（<strong>全精度</strong> 或 <strong>FP32</strong>）会发生什么。</p>
+<h4 class="heading-element" id="fp16"><span>FP16</span>
+  <a href="#fp16" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>从 32 位浮点数（FP32）转换到 16 位浮点数（<strong>半精度</strong> 或 <strong>FP16</strong>），存储占用减半。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff4ac888a-02b9-4153-915a-e103a12c33a4_1460x892.png' alt="FP32 vs FP16" height="892" width="1460"></p>
+<blockquote>
+<p><strong>注意</strong>：FP16虽然节省了空间，但其动态范围比FP32小得多，这意味着它更容易出现数值溢出（过大）或下溢（过小）的问题。</p>
+</blockquote>
+<h4 class="heading-element" id="bf16"><span>BF16</span>
+  <a href="#bf16" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>为了在保持 16 位宽度的同时，获得与 FP32 相似的动态范围，业界引入了 <strong>bfloat16 (BF16)</strong>。它就像一个“截短版”的 FP32，保留了与 FP32 相同的指数位数，牺牲了部分小数精度。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F172c93aa-58ae-4d11-8cb7-2917c265cb68_1460x936.png' alt="FP32 vs BF16" height="936" width="1460"></p>
+<blockquote>
+<p><strong>解读</strong>：BF16 和 FP16 都用 16 位，但 BF16 的动态范围更大，更不容易溢出，而 FP16 的精度更高。在深度学习中，动态范围往往比极致的精度更重要，因此 BF16 越来越受欢迎。</p>
+</blockquote>
+<h4 class="heading-element" id="int8"><span>INT8</span>
+  <a href="#int8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>当我们继续压缩，就进入了<strong>整数表示</strong>的领域。例如，从 FP32 转换到 8 位整数 INT8，位数直接减少到原来的四分之一。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffa37a58d-1f5a-433c-b235-5b073596bbca_1460x848.png' alt="FP32 vs INT8" height="739" width="1272"></p>
+<blockquote>
+<p><strong>优势</strong>：整数运算在某些硬件上通常比浮点数运算更快。更少的位数本身也意味着更快的数据传输和计算速度。</p>
+</blockquote>
+<p>每次降低位数，我们都需要进行一次<strong>映射（Mapping）</strong>，将原始的 FP32 数值“挤”进更小的表示空间里。实际上，我们并不需要将 FP32 <code>[-3.4e38, 3.4e38]</code> 的整个庞大范围都映射过去，只需要覆盖模型参数实际分布的范围即可。</p>
+<p>最常见的两种线性映射方法是<strong>对称量化</strong>和<strong>非对称量化</strong>。</p>
+<h3 class="heading-element" id="对称量化"><span>对称量化</span>
+  <a href="#%e5%af%b9%e7%a7%b0%e9%87%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在对称量化中，原始浮点值的范围被映射到一个关于零点对称的量化空间中。这意味着，浮点数中的 0，在量化后也精确地对应 0。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F730bbb8a-3a44-47f6-aefe-f652b117ae22_1124x600.png' alt="对称量化示意图" height="600" width="1124"></p>
+<p>一个经典的对称量化方法是<strong>绝对值最大值（absmax）量化</strong>。</p>
+<p>我们只需找到原始数值中的<strong>绝对值最大值（α）</strong>，并以此作为边界来进行线性映射。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F782beaa8-340f-45b8-ba7f-20491f66867a_1172x848.png' alt="Absmax 量化示例" height="848" width="1172"></p>
+<blockquote>
+<p><code>[-127, 127]</code> 是 INT8 对称量化常用的范围，它舍弃了 -128 以确保范围关于 0 完全对称。</p>
+</blockquote>
+<p>这个过程的数学公式非常直观。首先，我们计算<strong>缩放因子（<em>s</em>）</strong>：</p>
+<ul>
+<li><strong>b</strong> 是目标位数（这里是 8）。</li>
+<li><strong>α</strong> 是绝对值最大值。</li>
+</ul>
+<p>然后，用 <strong>s</strong> 来量化输入 <strong>x</strong>：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F7cc76e35-13bf-4d6f-94bf-dbe4725c084f_1644x486.png' alt="对称量化公式" height="486" width="1644"></p>
+<p>我们来实际计算一下：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3fd92531-447c-45de-af37-f33ffc446b0b_1644x486.png' alt="对称量化计算过程" height="486" width="1644"></p>
+<p>为了从量化值恢复到原始浮点数，我们可以使用相同的<strong>缩放因子（<em>s</em>）</strong> 进行<strong>反量化</strong> 。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe708f283-3c74-4344-ae76-e96412098c0b_1644x246.png' alt="对称反量化公式" height="246" width="1644"></p>
+<p>量化后再反量化的完整过程如下：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5ea2d627-efc7-4a8a-9cf0-7a7020f1253d_1236x348.png' alt="量化与反量化过程" height="348" width="1236"></p>
+<p>可以看到，像 <strong>3.08</strong> 和 <strong>3.02</strong> 这样不同的原始值，都被映射到了同一个整数 <strong>36</strong>。当它们被反量化回浮点数时，丢失的精度无法恢复，两者变得无法区分。</p>
+<p>原始值与反量化值之间的差异，就是<strong>量化误差</strong>。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe173b13b-ed99-4de0-a5e0-4b9114899b3f_1236x372.png' alt="量化误差计算" height="372" width="1236"></p>
+<p>通常，量化的位数越低，量化误差就越大。</p>
+<h3 class="heading-element" id="非对称量化"><span>非对称量化</span>
+  <a href="#%e9%9d%9e%e5%af%b9%e7%a7%b0%e9%87%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>与对称量化不同，非对称量化并不强求映射范围关于零点对称。它将原始浮点数范围的<strong>最小值（β）</strong> 和<strong>最大值（α）</strong>，精确地映射到量化范围的两个端点。这种方法也称为** 零点量化（zero-point quantization）**。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8ffa0c54-88bf-45c1-8636-bdb097bb8e6b_1172x848.png' alt="非对称量化示意图" height="848" width="1172"></p>
+<blockquote>
+<p><strong>核心区别</strong>：注意看，原始值中的 0 被映射到了量化空间中的 -45，不再是 0。这个偏移，就是非对称量化的关键。当原始数据的分布本身就是偏斜的（例如，所有值都是正数），非对称量化能更充分地利用有限的量化空间，从而可能获得更小的量化误差。</p>
+</blockquote>
+<p>由于存在偏移，我们需要计算一个<strong>零点（zero-point, <em>z</em>）</strong> 来辅助线性映射。<strong>缩放因子（<em>s</em>）</strong> 的计算方式也略有不同，它利用了 INT8 的完整范围 <code>[-128, 127]</code>。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F16cde2f6-aeb5-44d8-b056-846a5f1a0448_1096x508.png' alt="非对称量化公式" height="508" width="1096"></p>
+<p>我们代入数值计算一下：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F92ad0583-277f-4168-bbc7-a5503b5e45c4_1096x468.png' alt="非对称量化计算过程" height="468" width="1096"></p>
+<p>反量化时，我们需要同时使用**缩放因子（<em>s</em>）<strong>和</strong>零点（<em>z</em>）**来复原数值。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F0aee7fd2-c070-4710-9d8c-ccf598d5befe_1016x160.png' alt="非对称反量化公式"></p>
+<p>将两者并排比较，区别一目了然：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F01404566-e2ae-4e3f-9101-cafc68d92b40_1172x716.png' alt="对称与非对称量化对比" height="716" width="1172"></p>
+<h3 class="heading-element" id="范围映射与裁剪clipping"><span>范围映射与裁剪（Clipping）</span>
+  <a href="#%e8%8c%83%e5%9b%b4%e6%98%a0%e5%b0%84%e4%b8%8e%e8%a3%81%e5%89%aaclipping" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>前面的例子中，我们都将原始数值的完整范围（min ถึง max）映射到了量化空间。这种做法虽然能覆盖所有值，但有一个致命弱点——<strong>离群值（outliers）</strong>。</p>
+<p>想象一下下面这个向量：</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fce7fd7ab-3c4b-401d-893e-d417db946fd8_1172x184.png' alt="包含离群值的向量" height="184" width="1172"></p>
+<p>其中有一个值（10.8）远大于其他所有值，是个典型的离群值。如果我们直接按 <code>[-7.59, 10.8]</code> 这个范围进行映射，那么大部分集中在 <code>[-1, 4]</code> 区间的“正常”值，都会被挤压到量化空间中一个很小的区域内，从而失去区分度，导致巨大的精度损失。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F72052ddb-1c54-45b3-9800-2c4335cc9581_1120x564.png' alt="离群值对量化的影响" height="564" width="1120"></p>
+<blockquote>
+<p><strong>解读</strong>：这就像用一把最大刻度为 100 米的尺子去量一堆长度在 1 厘米左右的物体，其中只有一个是 10 米长。为了迁就那个 10 米的大家伙，所有 1 厘米的物体在尺子上看起来几乎没有差别。</p>
+</blockquote>
+<p>为了解决这个问题，我们可以选择**裁剪（clip）**离群值。我们设定一个更合理的动态范围，将所有超出该范围的数值都视为边界值。</p>
+<p>例如，如果我们手动将动态范围设为 <code>[-5, 5]</code>，那么所有小于 -5 的值都会被当作 -5，所有大于 5 的值都会被当作 5，然后再进行量化。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F52511453-ca48-42ca-9818-d1afa6dd7369_1120x408.png' alt="裁剪对量化的影响" height="408" width="1120"></p>
+<blockquote>
+<p><strong>权衡</strong>：这样做的代价是离群值的量化误差变大了，但好处是，绝大多数“正常”值的量化误差显著降低，整体性能往往更好。</p>
+</blockquote>
+<h3 class="heading-element" id="校准calibration"><span>校准（Calibration）</span>
+  <a href="#%e6%a0%a1%e5%87%86calibration" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如何确定 <code>[-5, 5]</code> 这个最佳的裁剪范围呢？这个寻找最佳动态范围的过程，就叫做<strong>校准（calibration）</strong>。其目标是找到一个既能覆盖绝大多数数值，又能使整体量化误差最小化的黄金范围。</p>
+<p>对不同类型的参数，校准方法也有所不同。</p>
+<h4 class="heading-element" id="权重和偏置"><span><strong>权重</strong>（和偏置）</span>
+  <a href="#%e6%9d%83%e9%87%8d%e5%92%8c%e5%81%8f%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>LLM 的权重和偏置在模型加载后是<strong>静态</strong>的、已知的。例如，我们下载的 Llama 3 模型文件，其内容主要就是这些固定的权重和偏置。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F7d79e60e-92ea-4c91-bbdb-297c819cd821_1456x440.png' alt="LLM 中的静态权重" height="440" width="1456"></p>
+<p>对于这些静态值，我们可以从容地分析它们的分布，并选择合适的校准技术来确定量化范围，例如：</p>
+<ul>
+<li><strong>百分位数法</strong>：简单粗暴，直接取权重的某个百分位（如 99.9%）作为边界。</li>
+<li><strong>均方误差（MSE）最小化</strong>：搜索一个范围，使得原始权重与量化后权重的均方误差最小。</li>
+<li><strong>KL 散度最小化</strong>：寻找一个范围，使得原始分布与量化后分布的差异（用 KL 散度衡量）最小。</li>
+</ul>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff24238b2-de53-40c8-8869-9a7d83678544_772x312.png' alt="权重校准技术" height="312" width="772"></p>
+<h4 class="heading-element" id="激活值"><span><strong>激活值</strong></span>
+  <a href="#%e6%bf%80%e6%b4%bb%e5%80%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>与权重不同，<strong>激活值</strong>是<strong>动态</strong>的，它们是模型在处理输入数据时实时生成的中间结果。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6baaee7f-40dd-4f6a-9a8d-bd79a7b2abc7_1456x520.png' alt="LLM 中的动态激活值" height="520" width="1456"></p>
+<p>因为不同的输入会产生完全不同的激活值，我们无法事先知道它们的分布。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6fbb4248-fc4f-4317-b13a-898976010536_1230x672.png' alt="激活值的动态特性" height="672" width="1230"></p>
+<p>总的来说，根据执行量化的时机，主要分为两大流派：</p>
+<ul>
+<li><strong>训练后量化（Post-Training Quantization, PTQ）</strong>：在模型已经训练<strong>完成之后</strong>进行量化。</li>
+<li><strong>量化感知训练（Quantization Aware Training, QAT）</strong>：在模型训练或微调的<strong>过程中</strong>就引入量化。</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="第三部分训练后量化-ptq"><span>第三部分：训练后量化 (PTQ)</span>
+  <a href="#%e7%ac%ac%e4%b8%89%e9%83%a8%e5%88%86%e8%ae%ad%e7%bb%83%e5%90%8e%e9%87%8f%e5%8c%96-ptq" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>PTQ 是目前最流行、最便捷的量化技术。它无需重新训练，直接对训练好的模型进行处理。</p>
+<p>对于<strong>权重</strong>，由于其静态特性，我们可以直接使用之前提到的校准方法进行量化。</p>
+<p>而对于<strong>激活值</strong>，PTQ 又分为两种策略：</p>
+<ul>
+<li><strong>动态</strong>量化</li>
+<li><strong>静态</strong>量化</li>
+</ul>
+<h3 class="heading-element" id="动态量化"><span>动态量化</span>
+  <a href="#%e5%8a%a8%e6%80%81%e9%87%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>动态量化是一种“即用即算”的策略。在推理时，每当一批数据流经模型的一层，系统会<strong>实时</strong>收集这一批数据产生的激活值，并为它们计算出专属的<strong>缩放因子（<em>s</em>）<strong>和</strong>零点（<em>z</em>）</strong>，然后进行量化。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffa593d70-c28a-43e3-b32c-5c7e46186408_1476x876.png' alt="动态量化流程" height="876" width="1476"></p>
+<blockquote>
+<p><strong>特点</strong>：精度高，因为量化参数是为每一批输入“量身定制”的。但缺点是，实时计算这些参数会带来额外的计算开销，可能影响推理速度。</p>
+</blockquote>
+<h3 class="heading-element" id="静态量化"><span>静态量化</span>
+  <a href="#%e9%9d%99%e6%80%81%e9%87%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>静态量化则是一种“未雨绸缪”的策略。它不是在实时推理时计算量化参数，而是在此之前就准备好。</p>
+<p>具体做法是，我们先准备一个小的<strong>校准数据集</strong>（例如几百个样本），让它流过整个模型，并记录下每一层激活值的典型分布范围。</p>
+<p><img loading="lazy" src='/posts/202509-llmquart/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F46dd6825-2a1c-459e-88c0-022a01dcebf2_1194x636.png' alt="使用校准数据集" height="636" width="1194"></p>
+<p>根据这些记录，我们为每一层计算出一组合适的、固定的<strong>缩放因子（<em>s</em>）<strong>和</strong>零点（<em>z</em>）</strong>。在之后的实际推理中，无论输入什么数据，都直接使用这套预先算好的参数进行量化。</p>
+<blockquote>
+<p><strong>特点</strong>：速度快，因为省去了实时计算量化参数的开销。但精度可能略低于动态量化，因为固定的参数不一定能完美适配所有不同输入的激活值分布。</p>
+</blockquote>
+<h3 class="heading-element" id="挺进-4-比特时代"><span>挺进 4 比特时代</span>
+  <a href="#%e6%8c%ba%e8%bf%9b-4-%e6%af%94%e7%89%b9%e6%97%b6%e4%bb%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>将量化位数降至 8 位以下（如 4 位、2 位）极具挑战性，因为精度损失会急剧增加。幸运的是，研究者们发明了一些巧妙的方法来应对这一挑战。</p>
+<p>我们将介绍两种在 HuggingFace 社区非常流行的 4 位量化方案：</p>
+<ul>
+<li><strong>GPTQ</strong>（通常要求整个模型在 GPU 上运行）</li>
+<li><strong>GGUF</strong>（设计用于在 CPU 和 GPU 之间灵活分配模型层）</li>
+</ul>
+<h4 class="heading-element" id="gptq"><span>GPTQ</span>
+  <a href="#gptq" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>GPTQ 是目前最高效、最精准的 PTQ 4 位量化方法之一。</p>
+<p>它的核心思想是<strong>逐层量化</strong>，并巧妙地在量化过程中进行误差补偿。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc260ef95-2dbf-4f7e-80ba-213ce6623fcd_1230x816.png' alt="GPTQ 逐层量化"></p>
+<p>对于每一层，GPTQ 首先计算其权重的<strong>逆海森矩阵（inverse-Hessian）</strong>。这是一个复杂的数学概念，但我们可以将其直观地理解为<strong>一个衡量每个权重“重要性”的指标</strong>。逆海森矩阵中值越小的权重，对模型输出的影响越大，也就越“重要”。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fad39a51b-e47f-44ec-af23-474292719be3_1440x696.png' alt="逆海森矩阵表示权重重要性"></p>
+<p>接下来，GPTQ 逐行（或逐列）对权重进行量化。当它量化完一个权重后，会立刻计算出<strong>量化误差</strong>。然后，它并不会忽略这个误差，而是根据逆海森矩阵，将这个误差按“重要性”的比例“补偿”给本层中还未被量化的其他权重。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Faf47538b-4a3b-48df-9dbd-dded0ed09ce4_1284x438.png' alt="GPTQ 误差补偿过程"></p>
+<blockquote>
+<p><strong>核心思想</strong>：这个过程就像一个团队合作。当一个成员（权重）因为量化而“牺牲”了部分精度时，其他相关的成员会主动承担起一部分责任，进行微调，以确保整个团队（模型层）的最终输出尽可能地接近原始状态。</p>
+</blockquote>
+<h4 class="heading-element" id="gguf"><span>GGUF</span>
+  <a href="#gguf" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>GGUF 是一种专为 <code>llama.cpp</code> 项目设计的文件格式，其最大的特点是能够让模型的一部分在 GPU 上运行，另一部分在 CPU 上运行。这对于显存不足的用户来说是巨大的福音。</p>
+<p>GGUF 内置了一套独特的量化方案，其核心是<strong>分块量化</strong>。它将一层的权重分成多个“超级块”，每个“超级块”又包含若干“子块”。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F98047d62-3925-4a29-a23b-c5bfa517f073_894x480.png' alt="GGUF 分块结构"></p>
+<p>它的巧妙之处在于<strong>嵌套量化</strong>：</p>
+<ol>
+<li>首先，对每个“子块”内的权重进行量化。这个过程需要一个<strong>缩放因子</strong>。</li>
+<li>然后，它并不会以高精度存储这些缩放因子，而是用“超级块”的量化参数，对这些“子块”的缩放因子<strong>再次进行量化</strong>。</li>
+</ol>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe3e7f68b-6ce8-45ba-a844-80b5eb0ab2d3_1096x196.png' alt="嵌套量化示意图"></p>
+<blockquote>
+<p>这就像一个两级压缩系统，通过对元数据（缩放因子）本身进行压缩，实现了极致的存储优化。GGUF 提供了多种量化级别（如 Q4_K_M, Q5_K_S 等），它们在块大小、缩放因子精度等方面各有不同，为用户在模型大小和性能之间提供了丰富的选择。</p>
+</blockquote>
+<hr>
+<h2 class="heading-element" id="第四部分量化感知训练-qat"><span>第四部分：量化感知训练 (QAT)</span>
+  <a href="#%e7%ac%ac%e5%9b%9b%e9%83%a8%e5%88%86%e9%87%8f%e5%8c%96%e6%84%9f%e7%9f%a5%e8%ae%ad%e7%bb%83-qat" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>PTQ 虽然方便，但它毕竟是在模型“成型”后做的“补救”措施，量化过程与模型的训练是脱节的。</p>
+<p><strong>量化感知训练（QAT）<strong>则从根源上解决了这个问题。它在模型训练或微调的</strong>过程中</strong>就模拟量化的影响，让模型“学着”去适应低精度环境。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1ad4fa3b-b440-4be3-90bd-b66e219f191e_1368x810.png' alt="PTQ vs QAT"></p>
+<p>QAT 的核心是引入“<strong>伪量化</strong>”（fake quantization）节点。在训练的正向传播中，它会将高精度的权重（如 FP32）先量化到低位宽（如 INT4），然后再立刻反量化回 FP32。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc3a17734-65f8-45d7-8e4e-f7bc1c592577_1824x360.png' alt="伪量化过程"></p>
+<blockquote>
+<p><strong>目的</strong>：这个“量化 -&gt; 反量化”的操作，将量化误差提前引入了训练过程。模型在计算损失和更新权重时，就能“看到”量化带来的影响，从而主动调整参数，学习如何在一个对量化误差更“不敏感”的区域达到最优。</p>
+</blockquote>
+<p>我们可以把损失函数想象成一个山谷。常规训练可能会找到一个非常“尖锐”的谷底（<strong>窄最小值</strong>），这里的性能最好，但稍有扰动（如量化误差），性能就会急剧下降。而 QAT 会引导模型去寻找一个更“平坦开阔”的谷底（<strong>宽最小值</strong>），即使存在量化误差，性能也依然稳健。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa70ee37e-3b4f-4598-8eef-2a9ab13658c1_1200x640.png' alt="宽最小值 vs 窄最小值"></p>
+<p>因此，QAT 通常能获得比 PTQ 更好的低位宽量化性能，但代价是需要额外的训练或微调成本。</p>
+<h3 class="heading-element" id="1位llm的时代bitnet"><span>1位LLM的时代：BitNet</span>
+  <a href="#1%e4%bd%8dllm%e7%9a%84%e6%97%b6%e4%bb%a3bitnet" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>我们之前看到的 4 位量化已经相当小了，还能进一步压缩吗？</p>
+<p>这就是 <a href="https://arxiv.org/pdf/2310.11453" title="**BitNet**" target="_blank" rel="external nofollow noopener noreferrer"><strong>BitNet</strong></a> 的切入点，它将模型的权重用单个 1 位来表示，每个权重的值要么是 <strong>-1</strong> 要么是 <strong>1</strong>。</p>
+<p>它通过将量化过程直接注入到 Transformer 架构中来实现这一点。</p>
+<p>我们知道，Transformer 架构是大多数 LLM 的基础，它由涉及<strong>线性层</strong> 的计算组成：</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe3587e75-d631-4ecd-8da9-26fedfc68c53_1364x768.png' alt="Transformer 中的线性层"></p>
+<p>这些线性层通常以较高精度（如 FP16）表示，并且是模型中大部分权重所在的位置。</p>
+<p>BitNet 将这些线性层替换为一种他们称之为 <strong>BitLinear</strong> 的结构：</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa6b8cbbf-057d-46c9-b275-dab262dd78d5_1364x768.png' alt="BitNet 中的 BitLinear 层"></p>
+<p>BitLinear 层的工作方式与常规线性层相同，都是基于权重与激活值的乘积来计算输出。</p>
+<p>不同之处在于，BitLinear 层用 1 位表示权重，用 INT8 表示激活值：</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F9806feb5-2212-4fc3-af0b-ef42ae536787_1240x552.png' alt="BitLinear 层的数据类型"></p>
+<p>与量化感知训练（QAT）类似，BitLinear 层在训练期间执行一种“伪量化”，以分析权重和激活值量化的影响：</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F25935e2a-7643-4705-8961-0b40506fe757_1296x832.png' alt="BitLinear 伪量化流程"></p>
+<blockquote>
+<p><strong>注意</strong>：在原论文中他们使用了 <strong>γ</strong> 而不是 <strong>α</strong>，但由于我们在整个示例中都使用了 α，所以这里我也用它。另外，请注意这里的 <strong>β</strong> 与我们在零点量化中使用的不同，这里指的是平均绝对值。</p>
+</blockquote>
+<p>让我们一步步地解析 BitLinear 的过程。</p>
+<h4 class="heading-element" id="权重-量化"><span>权重 量化</span>
+  <a href="#%e6%9d%83%e9%87%8d-%e9%87%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在训练期间，权重以 INT8 格式存储，然后使用一种称为<strong>符号函数（signum function）</strong> 的基本策略量化为 1 位。</p>
+<p>本质上，它将权重分布移动到以 0 为中心，然后将所有小于 0 的值赋为 -1，大于 0 的值赋为 1：</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb1080b79-6d3c-4dde-a6f1-a354afae4f54_1152x508.png' alt="权重的符号函数量化"></p>
+<p>此外，它还跟踪一个值 <strong>β</strong>（<strong>平均</strong>绝对值），我们之后将用它来进行反量化。</p>
+<h4 class="heading-element" id="激活值量化"><span>激活值量化</span>
+  <a href="#%e6%bf%80%e6%b4%bb%e5%80%bc%e9%87%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>为了量化激活值，BitLinear 利用 <strong>absmax 量化</strong> 将激活值从 FP16 转换为 INT8，因为它们在进行矩阵乘法（×）时需要有更高的精度。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fbc69928b-3169-4c35-963b-c25ec218bc12_1260x552.png' alt="激活值的 Absmax 量化"></p>
+<p>此外，它还跟踪 <strong>α</strong>（<strong>最大</strong>绝对值），我们之后将用它来进行反量化。</p>
+<h4 class="heading-element" id="反量化"><span>反量化</span>
+  <a href="#%e5%8f%8d%e9%87%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>我们跟踪了 <strong>α</strong>（激活值的最大绝对值）和 <strong>β</strong>（权重的平均绝对值），因为这些值将帮助我们将激活值反量化回 FP16。</p>
+<p>输出的激活值会用 {<strong>α</strong>, <strong>β</strong>} 进行重新缩放，以将它们反量化回原始精度：</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F330cb1bb-9a98-45c1-b140-0fa8038d521f_1296x404.png' alt="反量化过程"></p>
+<p>就是这样！这个过程相对直接，使得模型可以用 <strong>-1</strong> 或 <strong>1</strong> 这两个值来表示。</p>
+<p>通过这个过程，作者们观察到，随着模型规模的增长，1 位模型和 FP16 训练的模型之间的性能差距会越来越小。</p>
+<p>然而，这仅适用于超大模型（&gt;300亿参数），对于较小的模型，性能差距仍然相当大。</p>
+<h3 class="heading-element" id="llm-的终极形态158-比特"><span>LLM 的终极形态？1.58 比特</span>
+  <a href="#llm-%e7%9a%84%e7%bb%88%e6%9e%81%e5%bd%a2%e6%80%81158-%e6%af%94%e7%89%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了解决 BitNet 在中小规模模型上性能不佳的问题，研究者们提出了 <a href="https://arxiv.org/pdf/2402.17764" title="**BitNet b1.58**" target="_blank" rel="external nofollow noopener noreferrer"><strong>BitNet b1.58</strong></a>。</p>
+<p>这个名字里的 &ldquo;1.58&rdquo; 是一个信息论上的计算结果，它代表了一个<strong>三元（ternary）</strong> 系统。也就是说，每个权重的值可以是 <strong>-1</strong>、<strong>0</strong> 或 <strong>1</strong>。</p>
+<h4 class="heading-element" id="0-的魔力"><span>0 的魔力</span>
+  <a href="#0-%e7%9a%84%e9%ad%94%e5%8a%9b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>仅仅是增加了一个 <strong>0</strong>，就带来了革命性的变化。这完全改变了矩阵乘法的计算方式。</p>
+<p>常规的矩阵乘法包含大量的<strong>乘法</strong> 和<strong>加法</strong> 运算。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5f3a7393-5ad4-4375-8382-197c7a5aa442_1048x360.png' alt="常规矩阵乘法"></p>
+<p>但在 BitNet b1.58 中，由于权重只有三种可能，乘法运算被彻底消除了：</p>
+<ul>
+<li>如果权重是 <strong>1</strong>，就<strong>加上</strong>对应的激活值。</li>
+<li>如果权重是 <strong>-1</strong>，就<strong>减去</strong>对应的激活值。</li>
+<li>如果权重是 <strong>0</strong>，就<strong>跳过</strong>，什么也不做。</li>
+</ul>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5fed2720-9aa3-4b83-8ba7-4347b2fe1f0d_1048x360.png' alt="BitNet 1.58b 的加法运算"></p>
+<blockquote>
+<p><strong>重大意义</strong>：计算完全变成了加减法和条件判断，这在硬件层面可以实现极高的能效和速度。同时，将权重设为 0 还相当于进行了一种<strong>特征筛选</strong>或<strong>网络剪枝</strong>，赋予了模型更大的灵活性。</p>
+</blockquote>
+<p>在量化方法上，BitNet b1.58 采用了一种名为<strong>绝对平均值（absmean）量化</strong>的变体来处理权重，将它们映射到 <code>{-1, 0, 1}</code> 这三个值上。</p>
+<p><img loading="lazy" src='https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Facda9425-8b3d-47fe-92de-16c33e57613b_1108x512.png' alt="Absmean 量化"></p>
+<p>结果令人惊叹：一个 130 亿参数的 BitNet b1.58 模型，在推理速度、内存占用和能耗方面，甚至优于一个 30 亿参数的 FP16 模型。这预示着一个极致轻量化、高效率大模型时代的到来。</p>
+<hr>
+<h2 class="heading-element" id="结语"><span>结语</span>
+  <a href="#%e7%bb%93%e8%af%ad" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>我们的量化之旅到此告一段落。希望这篇图文并茂的指南能让您对量化技术有一个清晰而直观的认识。从节省显存的 PTQ，到追求极致性能的 QAT，再到颠覆计算范式的 1.58 比特模型，量化技术正不断拓展着大语言模型的应用边界。未来的模型会变得多小、多高效？让我们拭目以待！</p>
+<h3 class="heading-element" id="推荐阅读"><span>推荐阅读</span>
+  <a href="#%e6%8e%a8%e8%8d%90%e9%98%85%e8%af%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如果您想继续深入探索，以下资源可能会对您有帮助：</p>
+<ul>
+<li>一篇关于 <strong><a href="https://huggingface.co/blog/hf-bitsandbytes-integration" title="LLM.int8()" target="_blank" rel="external nofollow noopener noreferrer">LLM.int8()</a></strong> 量化方法的 HuggingFace 博客。</li>
+<li>另一篇关于**<a href="https://huggingface.co/blog/embedding-quantization" title="嵌入（embeddings）" target="_blank" rel="external nofollow noopener noreferrer">嵌入（embeddings）</a>**量化的 HuggingFace 博客。</li>
+<li>一篇关于 <a href="https://blog.eleuther.ai/transformer-math/" title="Transformer 数学基础" target="_blank" rel="external nofollow noopener noreferrer">Transformer 数学基础</a>的博客，详细解析了 Transformer 的计算和内存原理。</li>
+<li><a href="https://huggingface.co/spaces/NyxKrage/LLM-Model-VRAM-Calculator" title="这个" target="_blank" rel="external nofollow noopener noreferrer">这个</a>和<a href="https://vram.asmirnov.xyz/" title="这个" target="_blank" rel="external nofollow noopener noreferrer">这个</a>工具可以帮助您估算不同模型所需的显存。</li>
+<li>一个关于<strong>GPTQ</strong>原理的<a href="https://www.youtube.com/watch?v=mii-xFaPCrA" title="精彩 YouTube 视频" target="_blank" rel="external nofollow noopener noreferrer">精彩 YouTube 视频</a>，解释得极其直观。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-06 00:00:00">更新于 2025-09-06&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-LLMQuart/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-llmquart/" data-title="量化可视化指南揭秘：大型语言模型的压缩" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-llmquart/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-llmquart/" data-title="量化可视化指南揭秘：大型语言模型的压缩"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap02/" class="post-nav-item" rel="prev" title="02.Uniswap V2 Swap 操作"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>02.Uniswap V2 Swap 操作</a><a href="/posts/202509-ethbasestruct/" class="post-nav-item" rel="next" title="以太坊-基础数据结构解析">以太坊-基础数据结构解析<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#深入浅出揭秘大语言模型的压缩之道">深入浅出，揭秘大语言模型的压缩之道</a></li>
+      </ul>
+    </li>
+    <li><a href="#第一部分大语言模型的大问题">第一部分：大语言模型的“大”问题</a>
+      <ul>
+        <li><a href="#数值是如何表示的">数值是如何表示的？</a></li>
+        <li><a href="#内存的限制">内存的限制</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二部分量化技术简介">第二部分：量化技术简介</a>
+      <ul>
+        <li><a href="#常见的数据类型">常见的数据类型</a>
+          <ul>
+            <li><a href="#fp16">FP16</a></li>
+            <li><a href="#bf16">BF16</a></li>
+            <li><a href="#int8">INT8</a></li>
+          </ul>
+        </li>
+        <li><a href="#对称量化">对称量化</a></li>
+        <li><a href="#非对称量化">非对称量化</a></li>
+        <li><a href="#范围映射与裁剪clipping">范围映射与裁剪（Clipping）</a></li>
+        <li><a href="#校准calibration">校准（Calibration）</a>
+          <ul>
+            <li><a href="#权重和偏置"><strong>权重</strong>（和偏置）</a></li>
+            <li><a href="#激活值"><strong>激活值</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#第三部分训练后量化-ptq">第三部分：训练后量化 (PTQ)</a>
+      <ul>
+        <li><a href="#动态量化">动态量化</a></li>
+        <li><a href="#静态量化">静态量化</a></li>
+        <li><a href="#挺进-4-比特时代">挺进 4 比特时代</a>
+          <ul>
+            <li><a href="#gptq">GPTQ</a></li>
+            <li><a href="#gguf">GGUF</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#第四部分量化感知训练-qat">第四部分：量化感知训练 (QAT)</a>
+      <ul>
+        <li><a href="#1位llm的时代bitnet">1位LLM的时代：BitNet</a>
+          <ul>
+            <li><a href="#权重-量化">权重 量化</a></li>
+            <li><a href="#激活值量化">激活值量化</a></li>
+            <li><a href="#反量化">反量化</a></li>
+          </ul>
+        </li>
+        <li><a href="#llm-的终极形态158-比特">LLM 的终极形态？1.58 比特</a>
+          <ul>
+            <li><a href="#0-的魔力">0 的魔力</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#结语">结语</a>
+      <ul>
+        <li><a href="#推荐阅读">推荐阅读</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/147087f0d4b6a93dc22dc0631358a972.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

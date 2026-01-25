@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>论文阅读《The Geometry of Constant Function Market Makers》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="论文标题：恒定函数做市商的几何原理
+0.摘要 恒定函数做市商（CFMMs）是目前加密货币代币去中心化交易场所中最流行的类型。本文提出了一种极为通用的几何框架（或称“公理”），该框架涵盖并推广了文献中关于CFMMs的诸多已知结论，且无需依赖可微性或齐次性等严格条件。该框架的一个重要推论是：每个CFMM都具有（唯一的）典型交易函数，这种函数具有凹性、齐次性和非递减性，从而证明许多仅适用于齐次交易函数的结论实际上具有普适性。
+"><meta name="keywords" content='量化'>
+  <meta itemprop="name" content="论文阅读《The Geometry of Constant Function Market Makers》">
+  <meta itemprop="description" content="论文标题：恒定函数做市商的几何原理
+0.摘要 恒定函数做市商（CFMMs）是目前加密货币代币去中心化交易场所中最流行的类型。本文提出了一种极为通用的几何框架（或称“公理”），该框架涵盖并推广了文献中关于CFMMs的诸多已知结论，且无需依赖可微性或齐次性等严格条件。该框架的一个重要推论是：每个CFMM都具有（唯一的）典型交易函数，这种函数具有凹性、齐次性和非递减性，从而证明许多仅适用于齐次交易函数的结论实际上具有普适性。">
+  <meta itemprop="datePublished" content="2025-10-04T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-10-04T00:00:00+00:00">
+  <meta itemprop="wordCount" content="6987">
+  <meta itemprop="keywords" content="量化"><meta property="og:url" content="http://localhost:1313/posts/2025100-tgcfmm/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="论文阅读《The Geometry of Constant Function Market Makers》">
+  <meta property="og:description" content="论文标题：恒定函数做市商的几何原理
+0.摘要 恒定函数做市商（CFMMs）是目前加密货币代币去中心化交易场所中最流行的类型。本文提出了一种极为通用的几何框架（或称“公理”），该框架涵盖并推广了文献中关于CFMMs的诸多已知结论，且无需依赖可微性或齐次性等严格条件。该框架的一个重要推论是：每个CFMM都具有（唯一的）典型交易函数，这种函数具有凹性、齐次性和非递减性，从而证明许多仅适用于齐次交易函数的结论实际上具有普适性。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:tag" content="量化">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="论文阅读《The Geometry of Constant Function Market Makers》">
+  <meta name="twitter:description" content="论文标题：恒定函数做市商的几何原理
+0.摘要 恒定函数做市商（CFMMs）是目前加密货币代币去中心化交易场所中最流行的类型。本文提出了一种极为通用的几何框架（或称“公理”），该框架涵盖并推广了文献中关于CFMMs的诸多已知结论，且无需依赖可微性或齐次性等严格条件。该框架的一个重要推论是：每个CFMM都具有（唯一的）典型交易函数，这种函数具有凹性、齐次性和非递减性，从而证明许多仅适用于齐次交易函数的结论实际上具有普适性。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/2025100-tgcfmm/" title="论文阅读《The Geometry of Constant Function Market Makers》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/apo-01/" title="《高级投资组合优化》阅读笔记-第一二章" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202510-aeaortcfmms/" title="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "论文阅读《The Geometry of Constant Function Market Makers》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/2025100-tgcfmm\/"
+    },"genre": "posts","keywords": "量化","wordcount":  6987 ,
+    "url": "http:\/\/localhost:1313\/posts\/2025100-tgcfmm\/","datePublished": "2025-10-04T00:00:00+00:00","dateModified": "2025-10-04T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>论文阅读《The Geometry of Constant Function Market Makers》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-10-04 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-10-04">2025-10-04</time></span>&nbsp;<span title="6987 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 7000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 14 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#0解释">0.解释</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#11-什么是cfmm">1.1 什么是CFMM</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-可达集">2.1 可达集</a>
+      <ul>
+        <li><a href="#定义">定义</a></li>
+        <li><a href="#深层解读">深层解读</a></li>
+        <li><a href="#示例">示例</a>
+          <ul>
+            <li><a href="#拟凹性">拟凹性</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>论文标题：恒定函数做市商的几何原理</p>
+<h1 class="heading-element" id="0摘要"><span>0.摘要</span>
+  <a href="#0%e6%91%98%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>恒定函数做市商（CFMMs）是目前加密货币代币去中心化交易场所中最流行的类型。本文提出了一种极为通用的几何框架（或称“公理”），该框架涵盖并推广了文献中关于CFMMs的诸多已知结论，且无需依赖可微性或齐次性等严格条件。该框架的一个重要推论是：每个CFMM都具有（唯一的）典型交易函数，这种函数具有凹性、齐次性和非递减性，从而证明许多仅适用于齐次交易函数的结论实际上具有普适性。</p>
+<p>我们同时证明了CFMMs遵循若干直观的几何组合规则，并通过锥对偶性给出了投资组合价值函数与交易函数等价性的新证明。许多结论被推广到CFMMs不具有路径独立性的一般场景（仅允许单次交易）。最后，我们揭示了所有&quot;路径无关&quot;的CFMMs都具有不依赖&quot;交易历史&quot;概念的简单几何描述。本文多数结论基于一类对凹性、齐次性且非递减函数的对偶性研究，该对偶性理论本身可能具有独立学术价值。</p>
+<h2 class="heading-element" id="0解释"><span>0.解释</span>
+  <a href="#0%e8%a7%a3%e9%87%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这里写一下“凹性、齐次性和非递减性”：</p>
+<ul>
+<li>非递减性: <strong>当CFMM持有的任意一种资产数量增加（另一种不变或也增加）时，$\tilde{\varphi}(R)$ 的结果只会变大或保持不变，绝不会变小</strong>——这完全符合CFMM的实际逻辑：储备越充足，交易函数对应的“合规阈值”越高。</li>
+<li>齐次性: <strong>若将CFMM的两种资产储备同时按某个非负比例 $\alpha$（比如2倍、0.5倍）缩放，$\tilde{\varphi}(R)$的结果也会按相同比例缩放</strong>——这体现了CFMM“交易规模与储备成比例”的直观逻辑。</li>
+<li>“凹性”是这三个性质中最贴合CFMM交易实际的，核心含义是：当CFMM的资产储备持续增加时，每多增加一单位资产带来的“函数值增量”会逐渐减少——这直接对应Uniswap等CFMM的“汇率递减”规则：买得越多，每单位货币能换的资产越少。</li>
+</ul>
+<p>用“ETH储备增加时的函数值增量”来直观感受：</p>
+<ol>
+<li>初始储备$R_1=(1, 10000)$，$\tilde{\varphi}(R_1)=\sqrt{1 \times 10000} = 100$；</li>
+</ol>
+<ul>
+<li>当ETH增加1单位（变为2），储备$R_2=(2, 10000)$，函数值$\sqrt{2 \times 10000} \approx 141.42$，增量为$141.42 - 100 = 41.42$；</li>
+</ul>
+<ol>
+<li>
+<p>继续增加1单位ETH（变为3），储备$R_3=(3, 10000)$，函数值$\sqrt{3 \times 10000} \approx 173.20$，增量为$173.20 - 141.42 = 31.78$（比上一轮增量41.42减少）；</p>
+</li>
+<li>
+<p>再增加1单位ETH（变为4），储备$R_4=(4, 10000)$，函数值$\sqrt{4 \times 10000} = 200$，增量为$200 - 173.20 = 26.80$（继续减少）。</p>
+</li>
+</ol>
+<p>可以看到：每多增加1单位ETH，函数值的增量越来越小——这就是“凹性”的直观表现。对应到CFMM交易中，它意味着“储备越充足，新增单位资产对‘合规交易阈值’的提升效果越弱”，本质是通过数学性质保证交易汇率的合理性，防止极端价格波动。</p>
+<h1 class="heading-element" id="1介绍"><span>1.介绍</span>
+  <a href="#1%e4%bb%8b%e7%bb%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>自动做市商的研究已存在数十年，其根源可追溯至至少20世纪50年代的评分规则相关文献[McC56]。然而，这类机制直到以区块链去中心化交易所（DEX）的形式落地后，才实现大规模应用。包括Curve Finance[Ego19]、Uniswap[AZR20]和Balancer[MM19]等在内的此类交易所，累计促成了数万亿美元的交易量，日均总交易量也稳定在数十亿美元规模。令人意外的是，在实践中最受欢迎的自动做市商类型，与区块链出现前提出的做市商类型几乎毫无相似之处。相反，基于区块链的自动做市商中，最主流的是一类被称为“恒定函数做市商”（即CFMM）的机制。这类做市商通常比早期设计（如基于对数评分规则的做市商）更简洁，同时为高效流动性聚合与订单路由提供了可行路径。但为何这类机制能取得成功呢？ 这类机制在加密货币领域广受欢迎的一个核心原因，在于“最优套利问题”的求解过程（即通过多大交易量，使CFMM与其他交易平台的价格趋于一致）在计算层面通常“易于实现”[Ang+22b]。这种易实现性直接源于CFMM所具备的一种通用且高度几何化的凸性特征。尽管最早将CFMM定义为实用类别、并开启相关研究的文献，重点关注了其几何属性[AC20]，但后续大多数关于CFMM的研究，都聚焦于依赖明确参数化的解析属性[LP21; WM22; MMR23b; SKM23; FPW23; MMR23a; Goy+23; FKP23; FP23]。 直接研究CFMM的几何属性具有重要意义，原因有四：</p>
+<ol>
+<li>借助几何视角，CFMM的诸多属性及可执行操作，都能以更自然的方式被表述；</li>
+<li>开发者在实践中做出的许多“有效却看似意外”的决策，可通过理解CFMM的几何特征来解释。例如，从直观上看，CFMM的“曲率”对应着一种流动性概念[ACE22]——从业者在这一概念被正式定义前，就已在实践中感知到它的存在；</li>
+<li>CFMM的几何分析框架通用性极强，几乎无需依赖可微性、齐次性或其他类似属性；</li>
+<li>基于几何视角分析CFMM时，无需关注其具体的交易函数及表示形式，即可展开推理。</li>
+</ol>
+<h2 class="heading-element" id="11-什么是cfmm"><span>1.1 什么是CFMM</span>
+  <a href="#11-%e4%bb%80%e4%b9%88%e6%98%afcfmm" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>恒定函数做市商（CFMM）最初见于文献[AC20]，是自动做市商的一种类型，通常由交易函数 $\varphi: \mathbb{R}^{n} \to \mathbb{R}$定义。CFMM的状态由其持有的资产数量决定，我们将该数量表示为非负向量$R \in \mathbb{R}<em>{+}^{n}$。交易者可通过提出一笔交易$\Delta \in \mathbb{R}^{n}$与CFMM交互：若某一元素为正值（例如$\Delta</em>{i}&gt;0$），表示交易者希望获得数量为$\Delta_{i}$的资产$i$；若某一元素为负值（例如$\Delta_{j}&lt;0$），则表示交易者希望向市场提交资产$j$。 在当前储备为$R$的情况下，CFMM仅在满足以下条件时才会接受交易$\Delta$： $$\varphi (R-\Delta )\geq \varphi (R). \tag{1}$$ （若该不等式不成立，交易将被忽略，不会发生任何交易行为。）换句话说，若交易被接受，用新储备$R-\Delta$计算得到的交易函数值，必须不小于用当前储备$R$计算得到的交易函数值。 假设交易函数$\varphi$具有连续性，在其他条件不变的情况下，交易者总会偏好持有更多代币而非更少，因此合理的交易提案应使不等式（1）始终以等式形式成立。（这也正是“恒定函数做市商”这一名称的由来。）</p>
+<p>这类自动做市商不仅描述和实现方式简单，还具备诸多强有力的理论保障，这正是其得以成功的部分原因——尤其是在公有链这类安全性较难保障的环境中。尽管描述方式简单，恒定函数做市商（CFMM）已催生出大量针对其金融属性、套利机制及路由特性的研究（例如[Ang+22b; DKP21; Dia+23; FMW23; MDP23]等）。最新综述可参见文献[Ang+22a]。</p>
+<p><strong>示例</strong>：或许最著名的CFMM是恒定乘积做市商，该机制最初由Uniswap平台[AZR20]实现；截至2023年10月，其促成的交易量已接近5000亿美元。这类CFMM用于两种代币的交易，由交易函数$$\varphi(R) = R_1R_2$$定义。 由于所有“合理”的交易都会使该函数值保持不变，我们可设$k = R_1R_2$（其中$R$代表CFMM当前的资产储备）。显然，在条件（1）的约束下，还有许多其他交易函数能实现等效功能。例如，对$\varphi$进行任意单调递增变换，得到的新函数都具有相同效果。以如下交易函数为例： $$\tilde{\varphi}(R) = \sqrt{R_1R_2}$$ 不难发现，该函数具有凹性、齐次性和非递减性。它与原交易函数“等效”，具体体现为：对于任意交易$\Delta \in \mathbb{R}^n$，$\varphi(R - \Delta) \geq k$，当且仅当$\tilde{\varphi}(R - \Delta) \geq \sqrt{k}$。 恒定乘积做市商还可通过投资组合价值函数来定义。给定价格向量$c \in \mathbb{R}^n_+$（其中$c_i$代表资产$i$以某一共同记账单位计价的价格），在无套利条件下，投资组合价值函数$V: \mathbb{R}^n_+ \to \mathbb{R}$可将这些价格$c$映射为CFMM持有的资产价值（我们将在第2.4节中对其进行更严谨的定义）。在这种情况下，恒定乘积做市商的投资组合价值函数为： $V(c) = 2\sqrt{k c_1 c_2}$ 这种对恒定乘积做市商的表示方式对应着相同的底层对象，且可证明具有唯一性——即恒定乘积做市商交易函数的任何表示形式，都恰好对应这一投资组合价值函数。</p>
+<p><strong>几何视角</strong>：从某种意义上说，无论是通过交易函数还是投资组合价值函数进行表示，最终都指向同一个底层对象。一套实用的定义应当不依赖于该对象的具体表示形式。 几乎从定义本身就能看出，CFMM的几何描述具有唯一性，且处理起来相对简便。例如，利用几何表示可定义CFMM的天然“加法”运算（我们将在第2.1节中介绍这一运算）；而若要在交易函数层面描述对应的运算，则并不直观，且很可能不存在天然的类似运算。正是由于这类运算（如加法）在几何定义下“易于”在CFMM上执行，与基于函数的方法相比，采用几何方法进行证明往往能显著简化过程。</p>
+<p><strong>本文概况</strong>：本文旨在基于凸集、圆锥等经典几何对象来表示CFMM，并仅设定最低限度的前提条件。借助这些几何对象，我们不仅复现了多篇文献中关于无手续费CFMM（也称为“路径无关”CFMM）的研究结论，还推导了针对“单次交易、无CFMM类型限制”场景的诸多结论。本文重点研究的几何对象是一类特殊的圆锥（我们称之为“流动性圆锥”）及其对应的对偶圆锥。交易函数、投资组合价值函数、无套利区间等诸多“常见对象”，均由这些几何对象直接构建而成。这一研究思路得出了多项有趣结论，例如：所有（路径无关的）CFMM都存在一个标准交易函数，该函数具有凹性、齐次性和非递减性（即所谓的“一致性函数”）；同时，本文还为一些已有的早期结论提供了新的证明方法。从更广泛的意义上看，本文提出了关于一致性函数类的通用对偶性结论及等价关系，这一内容本身也具有独立的研究价值。 本文假设读者已具备一定的凸优化知识基础，并在附录A中提供了关于圆锥对偶性的简短入门内容，供读者回顾参考。</p>
+<h1 class="heading-element" id="2无手续费恒定函数做市商"><span>2.无手续费恒定函数做市商</span>
+  <a href="#2%e6%97%a0%e6%89%8b%e7%bb%ad%e8%b4%b9%e6%81%92%e5%ae%9a%e5%87%bd%e6%95%b0%e5%81%9a%e5%b8%82%e5%95%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在本节中，我们将探讨路径无关（path-independent）的恒定函数做市商（CFMM）的一般情况。后文第3.4节将进一步阐述这类“路径无关”或“无手续费”（fee-free）的恒定函数做市商，与“通用型”恒定函数做市商之间的关联。我们优先研究此类情况，一方面是因为它是现有文献中最常见的情形[AC20; FPW23; Goy+23]，另一方面，它也为后续研究更通用的情况提供了良好起点。</p>
+<p><strong>本节结构安排</strong></p>
+<p>本节开篇将提出一组基础要求（有时也称为“公理”），其形式与众多文献中采用的标准假设有所不同。我们将证明，基于这些本质上源于几何视角的要求，不仅能推导出诸多已有的研究结论，还能得到若干据我们所知尚未在现有文献中出现的推广结论。例如，一个重要结论是：<strong>任意CFMM都存在一个规范交易函数（canonical trading function），该函数具有齐次性（homogeneous）、非递减性（nondecreasing）和凹性（concave）</strong>。在以往研究中，这一性质通常以某种形式被直接假设（例如参见文献[AEC21; FPW23; SKM23]），但本文将证明：只要CFMM满足若干基本性质（这些性质对于一个合理的CFMM而言几乎是必需的），就必然具备上述规范交易函数。（事实上，这些性质要么几乎始终是文献中一长串假设的组成部分，要么是文献中常用假设子集的直接推论。）此外，该几何分析框架还能简化现有文献中的若干结论（如文献[AEC23]中的相关表述）——通过证明“投资组合价值函数与交易函数的等价性”，本质上是锥对偶（conic duality）的一种特殊情形。</p>
+<h2 class="heading-element" id="21-可达集"><span>2.1 可达集</span>
+  <a href="#21-%e5%8f%af%e8%be%be%e9%9b%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>我们将储备的可达集定义为满足特定条件的集合$S \subseteq \mathbb{R}^n$，该集合代表恒定函数做市商（CFMM）的有效资产持有组合。<br>
+通常，若$R \in S$为CFMM当前的储备，交易者可通过向CFMM卖出资产组合$R&rsquo; - R$，将CFMM的储备调整为$R&rsquo; \in S$。在此过程中，对于$R&rsquo; - R$这一向量：若某一元素为负值，交易者将获得该负值对应的资产（即从CFMM处获取对应数量的资产）；若某一元素为正值，交易者需提交该正值对应的资产（即向CFMM卖出对应数量的资产）。从本质上看，可达集$S$可理解为CFMM所有有效储备状态的集合。</p>
+<h3 class="heading-element" id="定义"><span>定义</span>
+  <a href="#%e5%ae%9a%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>若集合$S$满足以下规则（或称“公理”），则称其为可达集（该集合用于定义无手续费或“路径独立”的CFMM）：</p>
+<ol>
+<li>所有储备均为非负，即$S \subseteq \mathbb{R}_{+}^n$；</li>
+<li>集合$S$非空、闭且凸；</li>
+<li>集合$S$具有上闭性：若$R \in S$，则对任意满足$R&rsquo; \geq R$（向量各元素均不小于$R$对应元素）的$R&rsquo;$，均有$R&rsquo; \in S$。</li>
+</ol>
+<p>基于上述三条规则，我们可推导并推广现有文献中的诸多结论。通常无需假设$0 \notin S$（$0$代表零储备向量），但需注意：若$0 \notin S$，则$S = \mathbb{R}_{+}^n$，这种情况无实际意义，因此后续多数证明会排除该情形。</p>
+<h3 class="heading-element" id="深层解读"><span>深层解读</span>
+  <a href="#%e6%b7%b1%e5%b1%82%e8%a7%a3%e8%af%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>第一条规则表明，CFMM无法持有负资产（即无债务），始终保持偿付能力。即便放宽该条件，经小幅调整后，多数（非全部）结论仍成立。</p>
+<p>第二条规则中的“凸性”，本质对应“交易规模扩大时，交易者无法获得更优汇率”这一现实逻辑；“非空性”仅确保$S$存在有效储备组合，“闭性”则是为满足数学推导的技术性要求。</p>
+<p>第三条“上闭性”规则意味着：若CFMM接受某笔交易，则必然接受另一笔“提交资产数量更多”的交易（从技术角度看，该条件并非绝对必需：对于满足第一条规则的非空集合$S$，只需令$\tilde{S} = S + \mathbb{R}_{+}^n$满足第二条规则，下文几乎所有结论均成立）。此外，上闭性还使$S$的边界可解读为CFMM的帕累托最优储备边界——从理性决策角度，交易者绝不会在$S$的内部进行交易（内部交易意味着存在优化空间，不符合理性选择）。</p>
+<h3 class="heading-element" id="示例"><span>示例</span>
+  <a href="#%e7%a4%ba%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>可达集的典型案例包括Uniswap平台[AZR20]的可达集，其定义为：<br>
+$$S = {R \in \mathbb{R}_{+}^2 \mid R_1R_2 \geq k}$$</p>
+<p>其中$k &gt; 0$为常数（示例见图1）。另一案例是Uniswap v3[Ada+21]中的“档位（tick）”机制，其可达集定义为：<br>
+$$S = {R \in \mathbb{R}_{+}^2 \mid (R_1 + \alpha)(R_2 + \beta) \geq k}$$</p>
+<p>其中$\alpha、\beta、k &gt; 0$均为给定常数。</p>
+<p><img loading="lazy" src='/posts/2025100-tgcfmm/image.png' alt="alt text" height="530" width="1400">
+<strong>图1</strong>：Uniswap（左图）与Uniswap v3（右图）的储备可达集。</p>
+<h4 class="heading-element" id="拟凹性"><span>拟凹性</span>
+  <a href="#%e6%8b%9f%e5%87%b9%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>需注意，上述示例中，$S$均为某一拟凹、非递减函数的上水平集。事实上可证明：对于任意由下式定义的非空集合$S$：<br>
+$$S = {R \in \mathbb{R}<em>{+}^n \mid \psi(R) \geq \alpha} \tag{2}$$　
+若$\psi: \mathbb{R}</em>{+}^n \to \mathbb{R} \cup {-\infty}$为拟凹、非递减函数，则$S$是满足上述规则的可达集。该结论将文献[SKM23]和[FPW23]的内容纳入特殊情形，且无需额外假设齐次性——后续将证明：对任意满足可达集规则的$S$，即便“原始函数”$\psi$不具备齐次性，也总能选取一个凹、非递减且齐次的$\psi$，因此齐次性无需作为前提假设。此外，也可将式(2)中的不等式替换为等式，定义集合：<br>
+$$S = {R&rsquo; \in \mathbb{R}_{+}^n \mid \exists R \text{ 满足 } \psi(R) = \alpha \text{ 且 } R&rsquo; \geq R}$$。<br>
+需注意：若$\psi$在$\psi^{-1}(N)$（其中$N$为$\alpha$的邻域）内连续，则上述两种定义等价。</p>
+<h1 class="heading-element" id="ref"><span>REF</span>
+  <a href="#ref" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ul>
+<li>[AC20] Guillermo Angeris, Tarun Chitra. &ldquo;Improved price oracles: Constant function market makers&rdquo;. In: Proceedings of the 2nd ACM Conference on Advances in Financial Technologies. 2020, pp. 80–91.</li>
+<li>[ACE22] Guillermo Angeris, Tarun Chitra, Alex Evans. &ldquo;When Does The Tail Wag The Dog? Curvature and Market Making&rdquo;. In: Cryptoeconomic Systems 2.1 (2022). Ed. by Reuben Youngblom.</li>
+<li>[Ada+21] Hayden Adams, Noah Zinsmeister, Moody Salem, River Keefer, Dan Robinson. &ldquo;Uniswap v3 core&rdquo;. In: Tech. rep., Uniswap, Tech. Rep. (2021).</li>
+<li>[AEC21] Guillermo Angeris, Alex Evans, Tarun Chitra. A Note on Privacy in Constant Function Market Makers. 2021. arXiv: 2103.01193 [cs, math].</li>
+<li>[AEC23] Guillermo Angeris, Alex Evans, Tarun Chitra. &ldquo;Replicating market makers&rdquo;. In: Digital Finance (2023), pp. 1–21.</li>
+<li>[AFK15] Jacob Abernethy, Rafael Frongillo, Sindhu Kutty. &ldquo;On risk measures, market making, and exponential families&rdquo;. In: ACM SIGecom Exchanges 13.2 (2015), pp. 21–25.</li>
+<li>[Ang+22a] Guillermo Angeris, Akshay Agrawal, Alex Evans, Tarun Chitra, Stephen Boyd. &ldquo;Constant function market makers: Multi-asset trades via convex optimization&rdquo;. In: Handbook on Blockchain. Springer, 2022, pp. 415–444.</li>
+<li>[Ang+22b] Guillermo Angeris, Alex Evans, Tarun Chitra, Stephen Boyd. &ldquo;Optimal routing for constant function market makers&rdquo;. In: Proceedings of the 23rd ACM Conference on Economics and Computation. 2022, pp. 115–128.</li>
+<li>[Art+99] Philippe Artzner, Freddy Delbaen, Jean-Marc Eber, David Heath. &ldquo;Coherent measures of risk&rdquo;. In: Mathematical finance 9.3 (1999), pp. 203–228.</li>
+<li>[AZR20] Hayden Adams, Noah Zinsmeister, Dan Robinson. &ldquo;Uniswap v2 Core&rdquo;. In: URL: <a href="https://uniswap.org/whitepaper.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://uniswap.org/whitepaper.pdf</a> (2020).</li>
+<li>[Ber09] Dimitri Bertsekas. Convex optimization theory. Vol. 1. Athena Scientific, 2009.</li>
+<li>[BV04] Stephen P. Boyd, Lieven Vandenberghe. Convex Optimization. Cambridge, UK; New York: Cambridge University Press, 2004. isbn: 978-0-521-83378-3.</li>
+<li>[CAE21] Tarun Chitra, Guillermo Angeris, Alex Evans. &ldquo;How Liveness Separates CFMMs and Order Books&rdquo;. In: (2021).</li>
+<li>[Dia+23] Theo Diamandis, Max Resnick, Tarun Chitra, Guillermo Angeris. &ldquo;An Efficient Algorithm for Optimal Routing Through Constant Function Market Makers&rdquo;. In: arXiv preprint arXiv:2302.04938 (2023).</li>
+<li>[DKP21] Vincent Danos, Hamza El Khalloufi, Julien Prat. &ldquo;Global Order Routing on Exchange Networks&rdquo;. In: Financial Cryptography and Data Security. FC 2021 International Workshops. Ed. by Matthew Bernhard, Andrea Bracciali, Lewis Gudgeon, Thomas Haines, Ariah Klages-Mundt, Shin’ichiro Matsuo, Daniel Perez, Massimiliano Sala, Sam Werner. Berlin, Heidelberg: Springer Berlin Heidelberg, 2021, pp. 207–226. isbn: 978-3-662-63958-0.</li>
+<li>[Ego19] Michael Egorov. &ldquo;Stableswap-efficient mechanism for stablecoin liquidity&rdquo;. In: (2019).</li>
+<li>[EH21] Daniel Engel, Maurice Herlihy. &ldquo;Composing networks of automated market makers&rdquo;. In: Proceedings of the 3rd ACM Conference on Advances in Financial Technologies. ACM, 2021. doi: 10.1145/3479722.3480987. url: <a href="https://doi.org/10.1145%2F3479722.3480987" target="_blank" rel="external nofollow noopener noreferrer">https://doi.org/10.1145%2F3479722.3480987</a>.</li>
+<li>[FKP23] Michele Fabi, Myriam Kassoul, Julien Prat. &ldquo;SoK: constant function market makers&rdquo;. In: Working paper (2023).</li>
+<li>[FMW23] Masaaki Fukasawa, Basile Maire, Marcus Wunsch. &ldquo;Weighted variance swaps hedge against impermanent loss&rdquo;. In: Quantitative Finance 23.6 (2023), pp. 901–911. doi: 10.1080/14697688.2023.2202708. eprint: <a href="https://doi.org/10.1080/14697688.2023.2202708" target="_blank" rel="external nofollow noopener noreferrer">https://doi.org/10.1080/14697688.2023.2202708</a>. url: <a href="https://doi.org/10.1080/14697688.2023.2202708" target="_blank" rel="external nofollow noopener noreferrer">https://doi.org/10.1080/14697688.2023.2202708</a>.</li>
+<li>[FP23] Michele Fabi, Julien Prat. &ldquo;The economics of constant function market makers&rdquo;. In: Working paper (2023).</li>
+<li>[FPW23] Rafael Frongillo, Maneesha Papireddygari, Bo Waggoner. &ldquo;An Axiomatic Characterization of CFMMs and Equivalence to Prediction Markets&rdquo;. In: arXiv preprint arXiv:2302.00196 (2023).</li>
+<li>[Goy+23] Mohak Goyal, Geoffrey Ramseyer, Ashish Goel, David Mazières. &ldquo;Finding the Right Curve: Optimal Design of Constant Function Market Makers&rdquo;. In: Proceedings of the 24th ACM Conference on Economics and Computation. 2023, pp. 783–812.</li>
+<li>[LP21] Alfred Lehar, Christine A Parlour. &ldquo;Decentralized exchanges&rdquo;. In: Available at SSRN 3905316 (2021).</li>
+<li>[McC56] John McCarthy. &ldquo;Measures of the value of information&rdquo;. In: Proceedings of the National Academy of Sciences 42.9 (1956), pp. 654–655.</li>
+<li>[MDP23] Bruno Mazorra, Nicolás Della Penna. &ldquo;Towards Optimal Prior-Free Permissionless Rebate Mechanisms, with applications to Automated Market Makers &amp; Combinatorial Orderflow Auctions&rdquo;. In: arXiv preprint arXiv:2306.17024 (2023).</li>
+<li>[MM19] Fernando Martinelli, Nikolai Mushegian. &ldquo;A non-custodial portfolio manager, liquidity provider, and price sensor&rdquo;. In: URL: <a href="https://balancer.finance/whitepaper" target="_blank" rel="external nofollow noopener noreferrer">https://balancer.finance/whitepaper</a> (2019).</li>
+<li>[MMR23a] Jason Milionis, Ciamac C. Moallemi, Tim Roughgarden. A Myersonian Framework for Optimal Liquidity Provision in Automated Market Makers. 2023. arXiv: 2303.00208 [cs.GT].</li>
+<li>[MMR23b] Jason Milionis, Ciamac C. Moallemi, Tim Roughgarden. Complexity-Approximation Trade-offs in Exchange Mechanisms: AMMs vs. LOBs. 2023. arXiv: 2302.11652 [math.FA].</li>
+<li>[SKM23] Jan Christoph Schlegel, Mateusz Kwaśnicki, Akaki Mamageishvili. Axioms for Constant Function Market Makers. 2023. arXiv: 2210.00048 [cs.GT].</li>
+<li>[WC23] Robert C Williamson, Zac Cranko. &ldquo;The geometry and calculus of losses&rdquo;. In: Journal of Machine Learning Research 24.342 (2023), pp. 1–72.</li>
+<li>[Wil14] Robert C Williamson. &ldquo;The geometry of losses&rdquo;. In: Conference on Learning Theory. PMLR. 2014, pp. 1078–1108.</li>
+<li>[WM22] Mike Wu, Will McTighe. Constant Power Root Market Makers. 2022. arXiv: 2205.07452 [cs.CE].</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-10-04 00:00:00">更新于 2025-10-04&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/2025100-TGCFMM/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/2025100-tgcfmm/" data-title="论文阅读《The Geometry of Constant Function Market Makers》" data-hashtags="量化"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/2025100-tgcfmm/" data-hashtag="量化"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/2025100-tgcfmm/" data-title="论文阅读《The Geometry of Constant Function Market Makers》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E9%87%8F%E5%8C%96/" class="post-tag" title="标签 - 量化">量化</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/apo-01/" class="post-nav-item" rel="prev" title="《高级投资组合优化》阅读笔记-第一二章"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>《高级投资组合优化》阅读笔记-第一二章</a><a href="/posts/202510-aeaortcfmms/" class="post-nav-item" rel="next" title="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》">论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#0解释">0.解释</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#11-什么是cfmm">1.1 什么是CFMM</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-可达集">2.1 可达集</a>
+      <ul>
+        <li><a href="#定义">定义</a></li>
+        <li><a href="#深层解读">深层解读</a></li>
+        <li><a href="#示例">示例</a>
+          <ul>
+            <li><a href="#拟凹性">拟凹性</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/b03b4abf431efe8dbba03a3f42d757e1.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>环签论文阅读《How to Leak a Secret》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="论文标题： How to Leak a Secret 作者： Ronald L. Rivest, Adi Shamir, and Yael Tauman
+1. 引言 (Introduction) 1.1 研究背景： 在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，群签名 (Group Signatures) 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。
+"><meta name="keywords" content='tips'>
+  <meta itemprop="name" content="环签论文阅读《How to Leak a Secret》">
+  <meta itemprop="description" content="论文标题： How to Leak a Secret 作者： Ronald L. Rivest, Adi Shamir, and Yael Tauman
+1. 引言 (Introduction) 1.1 研究背景： 在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，群签名 (Group Signatures) 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。">
+  <meta itemprop="datePublished" content="2025-08-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-23T00:00:00+00:00">
+  <meta itemprop="wordCount" content="9222">
+  <meta itemprop="keywords" content="Tips"><meta property="og:url" content="http://localhost:1313/posts/202508-ringsign/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="环签论文阅读《How to Leak a Secret》">
+  <meta property="og:description" content="论文标题： How to Leak a Secret 作者： Ronald L. Rivest, Adi Shamir, and Yael Tauman
+1. 引言 (Introduction) 1.1 研究背景： 在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，群签名 (Group Signatures) 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-23T00:00:00+00:00">
+    <meta property="article:tag" content="Tips">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="环签论文阅读《How to Leak a Secret》">
+  <meta name="twitter:description" content="论文标题： How to Leak a Secret 作者： Ronald L. Rivest, Adi Shamir, and Yael Tauman
+1. 引言 (Introduction) 1.1 研究背景： 在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，群签名 (Group Signatures) 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202508-ringsign/" title="环签论文阅读《How to Leak a Secret》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202508-gitclonedir/" title="使用GIT clone指定仓库的制定文件夹" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202508-functincallmcp/" title="Function Calling 与 MCP 协议" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "环签论文阅读《How to Leak a Secret》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202508-ringsign\/"
+    },"genre": "posts","keywords": "tips","wordcount":  9222 ,
+    "url": "http:\/\/localhost:1313\/posts\/202508-ringsign\/","datePublished": "2025-08-23T00:00:00+00:00","dateModified": "2025-08-23T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>环签论文阅读《How to Leak a Secret》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-23 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-23">2025-08-23</time></span>&nbsp;<span title="9222 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 9300 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 19 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#11-研究背景"><strong>1.1 研究背景：</strong></a></li>
+    <li><a href="#12-研究问题目标"><strong>1.2 研究问题/目标：</strong></a></li>
+    <li><a href="#13-核心贡献重要性"><strong>1.3 核心贡献/重要性：</strong></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-核心方法模型流程"><strong>2.1 核心方法/模型/流程：</strong></a></li>
+    <li><a href="#22-环签名方案的定义包含两个核心过程"><strong>2.2 环签名方案的定义包含两个核心过程：</strong></a></li>
+    <li><a href="#23-整体框架"><strong>2.3 整体框架</strong></a></li>
+    <li><a href="#24-环签名生成过程-generating-a-ring-signature">2.4 环签名生成过程 (Generating a ring signature)</a></li>
+    <li><a href="#25-环签名验证过程-verifying-a-ring-signature">2.5 环签名验证过程 (Verifying a ring signature)</a></li>
+    <li><a href="#26-关键算法与数学公式"><strong>2.6 关键算法与数学公式：</strong></a></li>
+    <li><a href="#27-主要创新点总结"><strong>2.7 主要创新点总结：</strong></a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#6-核心参考文献-core-references"><strong>6. 核心参考文献 (Core References)</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p><strong>论文标题：</strong> How to Leak a Secret
+<strong>作者：</strong> Ronald L. Rivest, Adi Shamir, and Yael Tauman</p>
+<h1 class="heading-element" id="1-引言-introduction"><span><strong>1. 引言 (Introduction)</strong></span>
+  <a href="#1-%e5%bc%95%e8%a8%80-introduction" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="11-研究背景"><span><strong>1.1 研究背景：</strong></span>
+  <a href="#11-%e7%a0%94%e7%a9%b6%e8%83%8c%e6%99%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，<strong>群签名 (Group Signatures)</strong> 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。</p>
+<h2 class="heading-element" id="12-研究问题目标"><span><strong>1.2 研究问题/目标：</strong></span>
+  <a href="#12-%e7%a0%94%e7%a9%b6%e9%97%ae%e9%a2%98%e7%9b%ae%e6%a0%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>本文旨在解决如何在不透露实际签名者身份的情况下，证明消息确实来自一个预定义的可能签名者集合（即“环”中的成员）的核心问题。具体目标是设计一种新型的数字签名方案，即“<strong>环签名 (Ring Signatures)</strong>”，它应具备以下特性：</p>
+<ol>
+<li><strong>签名者模糊性 (Signer-Ambiguity)：</strong> 验证者无法区分环中哪个成员是实际签名者。</li>
+<li><strong>无需设置 (Set-up Free)：</strong> 签名者无需其他环成员的知识、同意或协助，即可将他们纳入环中。</li>
+<li><strong>高效性 (Efficiency)：</strong> 即使对于大型环也能保持高效。</li>
+<li><strong>不可否认性 (Non-Repudiation)：</strong> 确保消息确实来自环中的某个成员。</li>
+</ol>
+<h2 class="heading-element" id="13-核心贡献重要性"><span><strong>1.3 核心贡献/重要性：</strong></span>
+  <a href="#13-%e6%a0%b8%e5%bf%83%e8%b4%a1%e7%8c%ae%e9%87%8d%e8%a6%81%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>作者声称本文的关键贡献在于首次正式提出并构建了<strong>环签名</strong>的概念，并证明了其重要性。具体贡献包括：</p>
+<ul>
+<li><strong>提出并定义了环签名：</strong> 一种新型的数字签名方案，允许签名者从一组可能的签名者中选择任意子集进行匿名签名，且无需预先协调。</li>
+<li><strong>实现无条件签名者匿名性：</strong> 在主要构造中，即使是拥有无限计算能力和无限量签名样本的攻击者，也无法以高于 $1/r$ 的概率识别实际签名者（$r$ 为环成员数量）。</li>
+<li><strong>高效且实用：</strong> 基于 RSA 或 Rabin 签名，本文提出的方案在生成和验证环签名时，仅需比常规签名多出少量（每个非签名者一到两次）的模块化乘法运算，即使环成员数量庞大也具有极高的效率。</li>
+<li><strong>在随机预言模型下可证明安全：</strong> 方案的健全性 (soundness) 在随机预言模型下可规约到基础陷门单向置换的安全性。</li>
+<li><strong>广泛的应用场景：</strong> 环签名可用于解决如“深喉”式的信息泄露场景，以及实现“<strong>指定验证者签名</strong>” (Designated Verifier Signatures)，从而在电子邮件等系统中提供轻量级认证而无第三方不可否认性。</li>
+</ul>
+<h1 class="heading-element" id="2-研究设计方法与创新点-research-design-methodology--innovations"><span><strong>2. 研究设计、方法与创新点 (Research Design, Methodology &amp; Innovations)</strong></span>
+  <a href="#2-%e7%a0%94%e7%a9%b6%e8%ae%be%e8%ae%a1%e6%96%b9%e6%b3%95%e4%b8%8e%e5%88%9b%e6%96%b0%e7%82%b9-research-design-methodology--innovations" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="21-核心方法模型流程"><span><strong>2.1 核心方法/模型/流程：</strong></span>
+  <a href="#21-%e6%a0%b8%e5%bf%83%e6%96%b9%e6%b3%95%e6%a8%a1%e5%9e%8b%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>本文提出的环签名方案基于陷门单向置换（如 RSA 函数）、对称加密和哈希函数。其核心流程围绕一个“环方程”构建，该方程将所有环成员的公钥和签名者的私钥巧妙地结合起来。</p>
+<h2 class="heading-element" id="22-环签名方案的定义包含两个核心过程"><span><strong>2.2 环签名方案的定义包含两个核心过程：</strong></span>
+  <a href="#22-%e7%8e%af%e7%ad%be%e5%90%8d%e6%96%b9%e6%a1%88%e7%9a%84%e5%ae%9a%e4%b9%89%e5%8c%85%e5%90%ab%e4%b8%a4%e4%b8%aa%e6%a0%b8%e5%bf%83%e8%bf%87%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ul>
+<li><code>ring-sign(m, P_1, P_2, ..., P_r, s, S_s)</code>：给定消息 $m$、环中 $r$ 个成员的公钥 $P_1, &hellip;, P_r$ 以及实际签名者 $s$ 的私钥 $S_s$，生成一个环签名 $\sigma$。</li>
+<li><code>ring-verify(m, σ)</code>：给定消息 $m$ 和签名 $\sigma$（其中包含所有可能签名者的公钥），输出 <code>true</code> 或 <code>false</code>。</li>
+</ul>
+<h2 class="heading-element" id="23-整体框架"><span><strong>2.3 整体框架</strong></span>
+  <a href="#23-%e6%95%b4%e4%bd%93%e6%a1%86%e6%9e%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><img loading="lazy" src='/posts/202508-ringsign/image.png' alt="图1" height="167" width="687"></p>
+<p><img loading="lazy" src='/posts/202508-ringsign/image-1.png' alt="图2" height="392" width="693"></p>
+<p>整体框架如 图 1 和 图 2 所示，主要组件和流程如下：**</p>
+<ol>
+<li><strong>RSA 陷门置换 (RSA Trap-Door Permutations)：</strong></li>
+</ol>
+<p>每个环成员 $A_i$ 都有一个 RSA 公钥 $P_i = (n_i, e_i)$，定义了一个陷门单向置换 $f_i$:</p>
+<p>$$
+f_i(x) = x^{e_i} \pmod{n_i}
+$$</p>
+<p>其中</p>
+<ul>
+<li>$n_i = p_i \times q_i $：两个大素数的乘积（RSA 模数）。</li>
+<li>$ e_i $：公开的指数，通常为 65537 或小素数。</li>
+</ul>
+<p>对应的陷门单向置换的输入输出：</p>
+<ul>
+<li>输入： $x \in \mathbb{Z}_{n_i} $（整数模 $ n_i$ ）。</li>
+<li>输出： $x^{e_i} \mod n_i$ 。</li>
+</ul>
+<p><strong>单向性</strong>：给定 $x$，计算 $f_i(x)$ 是高效的（多项式时间）；但逆向计算 $f_i^{-1}(y)$（即求 $y$ 的 $e_i$-次根模 $n_i$）在不知道 $n_i$ 的因式分解时，被认为是计算困难的（RSA 问题的核心假设）。</p>
+<p><strong>陷门性质</strong>： 只有知道私钥 $d_i$（满足 $e_i \cdot d_i \equiv 1 \pmod{\phi(n_i)}$）的成员 $A_i$ 可高效计算逆置换：
+$$f_i^{-1}(y) = y^{d_i} \pmod{n_i}$$</p>
+<ol start="2">
+<li><strong>将陷门置换扩展到公共域 (Extending Trap-Door Permutations to a Common Domain)：</strong></li>
+</ol>
+<p>由于不同 RSA 模数 $n_i$ 的大小可能不同，为了将这些独立的签名组合起来，需要将所有陷门置换 $f_i$ 扩展到一个公共域 ${0,1}^b$。扩展后的陷门置换 $g_i$ 定义如下：</p>
+<p>$$
+g_i(m) = \begin{cases} q_i n_i + f_i(r_i) &amp; \text{if } (q_i+1)n_i \le 2^b \ m &amp; \text{else} \end{cases}
+$$</p>
+<p>其中 $m = q_i n_i + r_i$ 且 $0 \le r_i &lt; n_i$。直观上， $g_i$ 通过对 $m$ 的低位数字应用 $f_i$ 来操作，高位数字不变。</p>
+<p>通俗解释：</p>
+<blockquote>
+<p><strong>背景回顾：为什么需要扩展？</strong></p>
+<p>首先理解核心问题：</p>
+<ul>
+<li>我们有多个独立的 <strong>陷门置换</strong> $f_i$。在RSA的语境下，一个陷门置换 $f_i(x) = x^{e_i} \pmod{n_i}$。</li>
+<li>这里的 $n_i$ 是每个成员 $A_i$ 自己的RSA模数。不同的 $A_i$ 拥有不同的 $n_i$。</li>
+<li><strong>问题</strong>在于：这些 $n_i$ 的大小可能不一样。这意味着 $f_i$ 的操作范围（或者说它的“域”和“值域”）是 $[0, n_i-1]$，这个范围对于每个 $i$ 都是不同的。</li>
+<li>如果我们要将这些独立的签名（或者其他基于这些 $f_i$ 的操作）组合起来，我们需要它们在一个统一的、公共的“语言”或“空间”下工作。这个公共空间就是 ${0,1}^b$，一个固定长度为 $b$ 比特的字符串集合。</li>
+</ul>
+<p>简单来说，就是把很多个在不同大小的盒子（$n_i$）里进行的魔术（$f_i$）统一到一个巨大的共同盒子（${0,1}^b$）里去。</p>
+<p><strong>扩展后的陷门置换 $g_i(m)$ 的定义</strong></p>
+<p>现在我们来看这个定义：</p>
+<p>$$
+g_i(m) = \begin{cases} q_i n_i + f_i(r_i) &amp; \text{if } (q_i+1)n_i \le 2^b \ m &amp; \text{else} \end{cases}
+$$</p>
+<p>其中 $m \in {0,1}^b$ 是输入（来自公共域），并且 $m = q_i n_i + r_i$ 且 $0 \le r_i &lt; n_i$。</p>
+<p>我们一步步来拆解：</p>
+<ol>
+<li>
+<p><strong>输入 $m$ 的处理：$m = q_i n_i + r_i$</strong></p>
+<ul>
+<li><strong>公共域输入 $m$</strong>: 这个 $m$ 是来自 ${0,1}^b$ 的一个数字。它的大小可能远远超过任何一个 $n_i$。</li>
+<li><strong>欧几里得除法</strong>: $m = q_i n_i + r_i$ 这句话的意思是，我们将输入 $m$ 用 $n_i$ 进行除法。
+<ul>
+<li>$q_i$ 是商（<code>quotient</code>），它代表 $m$ 中“在 $n_i$ 之上的高位部分”。</li>
+<li>$r_i$ 是余数（<code>remainder</code>），它代表 $m$ 中“在 $n_i$ 以内的低位部分”，且 $0 \le r_i &lt; n_i$。</li>
+</ul>
+</li>
+<li><strong>直观理解</strong>: 假设 $n_i$ 是100。如果 $m$ 是 345，那么 $q_i = 3$，$r_i = 45$。这就像把 $m$ 拆分成了“多少个 $n_i$ 的块”和“在当前块内的偏移量”。</li>
+</ul>
+</li>
+<li>
+<p><strong>条件判断：$(q_i+1)n_i \le 2^b$</strong></p>
+<ul>
+<li>这个条件是判断我们是否可以安全地应用 $f_i$ 并且保持结果在公共域 ${0,1}^b$ 内。</li>
+<li>我们知道 $r_i$ 在 $[0, n_i-1]$ 之间，那么 $f_i(r_i)$ 也在 $[0, n_i-1]$ 之间。</li>
+<li>如果应用了 $f_i$，输出将是 $q_i n_i + f_i(r_i)$。</li>
+<li>这个输出的最大值会接近 $q_i n_i + (n_i-1) = (q_i+1)n_i - 1$。</li>
+<li>所以，$(q_i+1)n_i \le 2^b$ 这个条件是检查：<strong>如果 $m$ 所在的“区块” (由 $q_i$ 标识) 加上一个完整的 $n_i$ ($(q_i+1)n_i$) 仍然在公共域 $2^b$ 的范围之内，那么就可以进行操作</strong>。</li>
+<li>换句话说，它确保了“我们进行置换操作后，结果不会溢出公共域 ${0,1}^b$”。</li>
+</ul>
+</li>
+<li>
+<p><strong>两种情况的输出：</strong></p>
+<ul>
+<li>
+<p><strong>Case 1: $(q_i+1)n_i \le 2^b$ （条件成立）</strong></p>
+<ul>
+<li>$g_i(m) = q_i n_i + f_i(r_i)$</li>
+<li>这意味着：我们保持了 $m$ 的高位部分 $q_i n_i$ 不变（它决定了 $m$ 在哪个“块”里），但对 $m$ 的低位部分 $r_i$ 应用了原始的陷门置换 $f_i$。</li>
+<li><strong>直观理解</strong>: 把 $m$ 看作一个大数字，其中 $r_i$ 是它的“尾巴”。$g_i$ 函数就是抓住 $m$ 的“身体” ($q_i n_i$) 不放，只对它的“尾巴” ($r_i$) 执行 $f_i$ 这个魔术，然后把新的“尾巴”接回到“身体”上。</li>
+<li>这有效地将 $f_i$ 的作用范围“提升”到了公共域的特定子区间内，而不是仅限于 $[0, n_i-1]$。</li>
+</ul>
+</li>
+<li>
+<p><strong>Case 2: <code>else</code> (即 $(q_i+1)n_i &gt; 2^b$，条件不成立)</strong></p>
+<ul>
+<li>$g_i(m) = m$</li>
+<li>这意味着：如果输入 $m$ 已经非常大，以至于它所在的“区块”几乎接近公共域的最大值 $2^b$（或者说，如果我对 $r_i$ 进行了 $f_i$ 操作，即使结果依然在 $[0, n_i-1]$，但加上 $q_i n_i$ 之后可能导致溢出 $2^b$），那么为了安全起见，函数 $g_i$ 就不做任何操作，直接返回原始的 $m$。</li>
+<li><strong>直观理解</strong>: 如果 $m$ 已经接近或处于公共域的“边缘地带”，我们就不去动它，避免产生溢出或者其他不可预测的行为。这是一个安全机制，确保 $g_i$ 的输出始终在 ${0,1}^b$ 范围内。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>总结“直观上”的意义</strong>：</p>
+<p>这行字 <strong>“直观上，$g_i$ 通过对 $m$ 的低位数字应用 $f_i$ 来操作，高位数字不变。”</strong> 精准地概括了 Case 1 的行为。</p>
+<ul>
+<li><strong>低位数字应用 $f_i$</strong>: 指的是 $f_i(r_i)$。<code>r_i</code> 是 $m$ 模 $n_i$ 后的余数，通常认为是 $m$ 的“低位”或“有效部分”对于 $n_i$ 而言。</li>
+<li><strong>高位数字不变</strong>: 指的是 $q_i n_i$ 这部分，它保持了 $m$ 的“高位”结构。</li>
+</ul>
+<p>通过这种方式，所有的陷门置换 $f_i$ 都被“包装”成了可以在公共域 ${0,1}^b$ 上操作的 $g_i$ 函数，但它们各自的陷门特性（单向性，以及只有知道 $d_i$ 才能逆转）仍然体现在 $f_i(r_i)$ 的计算中。这种结构对于构建多方安全计算（如门限签名）是至关重要的，因为它允许不同参与者的操作在同一个框架下进行组合。</p>
+</blockquote>
+<ol start="3">
+<li><strong>对称加密 (Symmetric Encryption)：</strong></li>
+</ol>
+<p>假定存在一个公开定义的对称加密算法 $E$，其函数 $E_k$ 对于任何长度为 $l$ 的密钥 $k$ 都是 ${0,1}^b$ 字符串上的置换。本文在随机（置换）预言模型下建模 $E_k$ 及其逆 $E_k^{-1}$。</p>
+<ol start="4">
+<li><strong>哈希函数 (Hash Functions)：</strong></li>
+</ol>
+<p>假定存在一个公开定义的抗碰撞哈希函数 $h$，将任意输入映射到长度为 $l$ 的字符串，用作对称加密的密钥。本文将 $h$ 建模为随机预言机。</p>
+<ol start="5">
+<li><strong>组合函数 (Combining Functions) $C_{k,v}$：</strong></li>
+</ol>
+<p>这是环签名的核心，它将所有环成员的输出 $y_i = g_i(x_i)$ 结合起来。该函数 $C_{k,v}(y_1, y_2, &hellip;, y_r)$ 接受密钥 $k$、初始化值 $v$ 和一系列值 $y_1, &hellip;, y_r$，并输出一个值 $z \in {0,1}^b$。它必须满足三个关键性质：</p>
+<ul>
+<li><strong>每个输入上的置换性：</strong> 对于任意 $s \in {1, &hellip;, r}$，固定其他输入 $y_i (i \ne s)$ 和 $k, v$，函数 $C_{k,v}$ 是从 $y_s$ 到输出 $z$ 的一对一映射。</li>
+<li><strong>对任意单个输入高效可解：</strong> 对于任意 $s$，给定 $b$ 位值 $z$ 和除 $y_s$ 之外的所有输入值，可以高效地找到 $y_s$。</li>
+<li><strong>在没有陷门的情况下无法求解验证方程：</strong> 给定 $k, v$ 和 $z$，攻击者在无法反转任何陷门函数 $g_i$ 的情况下，无法求解方程 $C_{k,v}(g_1(x_1), &hellip;, g_r(x_r)) = z$。本文提出的组合函数利用对称加密函数 $E_k$ 实现，如下所示：
+$$
+C_{k,v}(y_1, y_2, &hellip;, y_r) = E_k(y_r \oplus E_k(y_{r-1} \oplus E_k(&hellip; \oplus E_k(y_1 \oplus v)&hellip;)))
+$$
+其中 $\oplus$ 是 $b$ 位字的异或操作。这个结构确保了环的对称性和安全性。</li>
+</ul>
+<h2 class="heading-element" id="24-环签名生成过程-generating-a-ring-signature"><span>2.4 环签名生成过程 (Generating a ring signature)</span>
+  <a href="#24-%e7%8e%af%e7%ad%be%e5%90%8d%e7%94%9f%e6%88%90%e8%bf%87%e7%a8%8b-generating-a-ring-signature" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><strong>目标：</strong> 签名者 (第 $s$ 个成员) 给定消息 $m$ 和自己的私钥 ($S_s$)，以及环里所有人的公钥 ($P_1, &hellip;, P_r$)，生成一个有效的环签名。</p>
+<p><strong>步骤逐一解释：</strong></p>
+<ol>
+<li>
+<p><strong>选择密钥 $k$：</strong> $k = h(m)$。</p>
+<ul>
+<li><strong>解释：</strong> 这里的 $h$ 是一个密码学哈希函数。这一步是为了 <strong>将签名和消息 $m$ 绑定起来</strong>。如果消息 $m$ 变了，那么 $k$ 就会变，签名就会失效，从而确保签名的完整性。你可以把 $k$ 理解为针对这个特定消息的一个“上下文”或“会话ID”。</li>
+</ul>
+</li>
+<li>
+<p><strong>选择随机“胶水值” $v$：</strong> 签名者从 ${0,1}^b$ 中均匀随机选择一个初始化值 $v$。</p>
+<ul>
+<li><strong>解释：</strong> 这个 $v$ 是整个环置换过程的 <strong>起点和终点</strong>。它就像一块“胶水”，把环的开始和结束连接起来。随机选择 $v$ 增加了签名的随机性，使得每次对同一消息签名的结果都不同，防止重放攻击。你可以把它想象成一个循环赛道的起点和终点，我们希望跑一圈后能回到这个点。</li>
+</ul>
+</li>
+<li>
+<p><strong>选择随机 $x_i$&lsquo;s：</strong> 对于所有非签名者 $i \ne s$，签名者从 ${0,1}^b$ 中均匀随机选择 $x_i$，并计算 $y_i = g_i(x_i)$。</p>
+<ul>
+<li><strong>解释：</strong> 这是签名者为 <strong>环中其他成员（非签名者）“伪造”或者说“填充”部分环节</strong>。
+<ul>
+<li>回想一下 $g_i(x)$ 是公共可计算的（只用到公钥 $P_i$）。</li>
+<li>签名者不知道其他成员的私钥 ($S_i$)，所以他 <strong>不能</strong> 进行 $g_i^{-1}(y_i)$ 这样的逆向操作。</li>
+<li>因此，对于非签名者，签名者只能 <strong>正向计算</strong>：随机选一个输入 $x_i$，然后计算出对应的输出 $y_i = g_i(x_i)$。</li>
+</ul>
+</li>
+<li><strong>直观理解：</strong> 在这个环里，大部分的环节，签名者都是随机挑选一个值作为输入，然后利用那个成员的公钥算出这个环节的输出。他无法控制这个环节的输出必须是什么，因为他没有私钥去反推。</li>
+</ul>
+</li>
+<li>
+<p><strong>求解 $y_s$：</strong> 签名者通过组合函数 $C_{k,v}$ 求解环方程中的 $y_s$：
+$$
+C_{k,v}(y_1, y_2, &hellip;, y_r) = v
+$$
+由于 $C_{k,v}$ 对单个输入是高效可解的，因此可以找到唯一的 $y_s$。</p>
+<ul>
+<li><strong>解释：</strong> 这是最核心的一步。“环方程” $C_{k,v}(y_1, y_2, &hellip;, y_r) = v$ 是一个巧妙设计的方程，它把所有 $y_i$ 值（加上 $k$ 和 $v$）联系起来，形成一个循环。
+<ul>
+<li>签名者现在已经有了 $y_1, &hellip;, y_{s-1}, y_{s+1}, &hellip;, y_r$（这些都是在步骤 3 中计算出来的）。</li>
+<li>他知道 $k$ (来自消息) 和 $v$ (随机选择的“胶水值”)。</li>
+<li>现在，他需要找到一个 <strong>特定的 $y_s$</strong>，使得这个环方程能够闭合，即等式成立。</li>
+<li>由于 $C_{k,v}$ 的设计特性，虽然它能把所有值“揉”在一起，但当只缺少一个 $y_s$ 的时候，它允许签名者 <strong>高效地反推出这个唯一的 $y_s$ 值</strong>。</li>
+</ul>
+</li>
+<li><strong>直观理解：</strong> 环的起点是 $v$。我们已经沿着环走了大部分路（通过 $y_1, &hellip;, y_{s-1}, y_{s+1}, &hellip;, y_r$），现在我们正好处在签名者 $s$ 的环节前面。为了让环最终回到 $v$，签名者需要计算出他这个环节的 <strong>目标输出 $y_s$ 必须是什么</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>反转签名者的陷门置换：</strong> 签名者利用其私钥（陷门信息）反转 $g_s$ 上的 $y_s$ 以获得 $x_s$： $$x_s = g_s^{-1}(y_s)$$</p>
+<ul>
+<li><strong>解释：</strong> 签名者在步骤 4 中得到了一个 <strong>目标 $y_s$ 值</strong>。现在，他需要找到一个 $x_s$，使得应用 $g_s$ 后能得到这个目标 $y_s$。
+<ul>
+<li>这正是 <strong>陷门性质</strong> 发挥作用的地方！只有签名者拥有自己的私钥 $S_s$ (对应于 $d_s$)，才能高效地计算 $g_s^{-1}(y_s)$。</li>
+<li>他通过自己的私钥， <strong>反向计算出</strong> 那个能产生 $y_s$ 的输入 $x_s$。</li>
+</ul>
+</li>
+<li><strong>直观理解：</strong> 这一步就是签名者利用自己的“魔术能力”（私钥）来完成环中关键的一环。他知道这个环节必须输出 $y_s$，所以他利用私钥做逆运算，找到一个 $x_s$ 作为输入，这样 $g_s(x_s)$ 就会等于 $y_s$，从而完美地将环闭合。</li>
+</ul>
+</li>
+<li>
+<p><strong>输出环签名：</strong> 签名是 $(2r+1)$ 元组：$(P_1, P_2, &hellip;, P_r; v; x_1, x_2, &hellip;, x_r)$。</p>
+<ul>
+<li><strong>解释：</strong> 最终的签名就是这些公开信息和计算出来的 $x_i$ 值的集合。
+<ul>
+<li>$P_1, &hellip;, P_r$: 公钥集合，用于定义是哪个环。</li>
+<li>$v$: 随机选择的“胶水值”，是验证环的基础。</li>
+<li>$x_1, &hellip;, x_r$: 这是由签名者生成的所有输入值，其中只有一个 ($x_s$) 是通过私钥逆向计算出来的，其他都是随机选择的。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 class="heading-element" id="25-环签名验证过程-verifying-a-ring-signature"><span>2.5 环签名验证过程 (Verifying a ring signature)</span>
+  <a href="#25-%e7%8e%af%e7%ad%be%e5%90%8d%e9%aa%8c%e8%af%81%e8%bf%87%e7%a8%8b-verifying-a-ring-signature" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><strong>目标：</strong> 验证者给定消息 $m$ 和一个环签名，判断这个签名是否有效。</p>
+<p><strong>步骤逐一解释：</strong></p>
+<ol>
+<li>
+<p><strong>应用陷门置换：</strong> 对于 $i = 1, &hellip;, r$，验证者计算 $y_i = g_i(x_i)$。</p>
+<ul>
+<li><strong>解释：</strong> 验证者拿到了签名中的所有 $x_i$ 值。由于 $g_i$ 是公开可计算的（使用公钥 $P_i$），验证者可以对每一个 $x_i$ 进行正向计算，得到对应的 $y_i$。</li>
+<li><strong>请注意：</strong> 验证者只进行 $g_i$ 的正向计算，他不需要，也不能进行 $g_i^{-1}$ 的计算，因为他没有私钥。</li>
+</ul>
+</li>
+<li>
+<p><strong>获取密钥 $k$：</strong> $k = h(m)$。</p>
+<ul>
+<li><strong>解释：</strong> 验证者用同样的哈希函数 $h$ 计算消息 $m$ 的哈希值，得到 $k$。这确保验证是针对正确的消息进行的。</li>
+</ul>
+</li>
+<li>
+<p><strong>验证环方程：</strong> 验证者检查 $y_i$&rsquo;s 是否满足基本方程：
+$$
+C_{k,v}(y_1, y_2, &hellip;, y_r) = v
+$$
+如果方程满足，验证者接受签名有效；否则拒绝。</p>
+<ul>
+<li><strong>解释：</strong> 验证者现在拥有了所有需要的元素：
+<ul>
+<li>所有 $y_i$ (在步骤 1 计算得出)。</li>
+<li>$k$ (在步骤 2 计算得出)。</li>
+<li>$v$ (来自签名)。</li>
+</ul>
+</li>
+<li>他将这些值代入环方程 $C_{k,v}$ 进行计算。</li>
+<li><strong>如果计算结果恰好等于签名中提供的 $v$</strong>，那就说明整个环“闭合”了。这意味着确实有一个拥有私钥的环成员完成了那个关键的逆向操作，从而使得环方程得以满足。否则，如果计算结果不等于 $v$，就说明签名是无效的。</li>
+</ul>
+</li>
+</ol>
+<h2 class="heading-element" id="26-关键算法与数学公式"><span><strong>2.6 关键算法与数学公式：</strong></span>
+  <a href="#26-%e5%85%b3%e9%94%ae%e7%ae%97%e6%b3%95%e4%b8%8e%e6%95%b0%e5%ad%a6%e5%85%ac%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ol>
+<li><strong>RSA 陷门置换：</strong></li>
+</ol>
+<ul>
+<li><strong>公式：</strong> $$f_i(x) = x^{e_i} \pmod{n_i}$$</li>
+<li><strong>符号定义：</strong>
+<ul>
+<li>$f_i$: 第 $i$ 个环成员的陷门单向置换。</li>
+<li>$x$: 输入值。</li>
+<li>$e_i$: 第 $i$ 个环成员的 RSA 公钥指数。</li>
+<li>$n_i$: 第 $i$ 个环成员的 RSA 公钥模数。</li>
+</ul>
+</li>
+<li><strong>目的与用途：</strong> 作为构建环签名的基础单向函数，其逆运算只有拥有私钥的签名者才能高效完成。</li>
+</ul>
+<ol start="2">
+<li><strong>扩展陷门置换到公共域：</strong></li>
+</ol>
+<ul>
+<li><strong>公式：</strong>
+$$g_i(m) = \begin{cases} q_i n_i + f_i(r_i) &amp; \text{if } (q_i+1)n_i \le 2^b \ m &amp; \text{else} \end{cases}$$</li>
+<li><strong>符号定义：</strong>
+<ul>
+<li>$g_i$: 扩展后的陷门置换。</li>
+<li>$m$: $b$ 位输入值。</li>
+<li>$q_i, r_i$: $m = q_i n_i + r_i$，其中 $0 \le r_i &lt; n_i$。</li>
+<li>$b$: 公共域 ${0,1}^b$ 的位长度，足够大以包含所有 $n_i$。</li>
+</ul>
+</li>
+<li><strong>目的与用途：</strong> 将不同模数 $n_i$ 的 RSA 置换统一到一个公共域，以便进行组合操作。</li>
+</ul>
+<ol start="3">
+<li><strong>组合函数：</strong></li>
+</ol>
+<ul>
+<li><strong>公式：</strong> $$C_{k,v}(y_1, y_2, &hellip;, y_r) = E_k(y_r \oplus E_k(y_{r-1} \oplus E_(&hellip; \oplus E_k(y_1 \oplus v)&hellip;)))$$</li>
+<li><strong>符号定义：</strong>
+<ul>
+<li>$C_{k,v}$: 组合函数。</li>
+<li>$k$: 对称加密密钥，由消息 $m$ 的哈希值 $h(m)$ 得到。</li>
+<li>$v$: 随机选择的初始化“胶水值”。</li>
+<li>$y_j$: 第 $j$ 个环成员的 $g_j(x_j)$ 输出。</li>
+<li>$E_k$: 对称加密函数。</li>
+<li>$\oplus$: 异或操作。</li>
+</ul>
+</li>
+<li><strong>目的与用途：</strong> 构建环方程的核心，确保签名者模糊性、可验证性和安全性。</li>
+</ul>
+<h2 class="heading-element" id="27-主要创新点总结"><span><strong>2.7 主要创新点总结：</strong></span>
+  <a href="#27-%e4%b8%bb%e8%a6%81%e5%88%9b%e6%96%b0%e7%82%b9%e6%80%bb%e7%bb%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ol>
+<li>
+<p><strong>环签名概念的提出与形式化：</strong> 本文首次提出了“环签名”这一全新的数字签名范式，解决了在匿名性和可信性
+之间取得平衡的难题，并对其进行了严格的数学定义。</p>
+</li>
+<li>
+<p><strong>无条件签名者匿名性设计：</strong> 通过巧妙的环方程设计和随机化过程，实现了在主构造中对实际签名者的无条件
+匿名保护，这是其与现有群签名方案的关键区别。</p>
+</li>
+<li>
+<p><strong>高效且无需设置的方案构造：</strong> 提出的方案在效率上远超现有群签名方案，且无需任何预先的群组设置、群管理器或成员间的协调，极大地降低了部署和使用的复杂性。</p>
+</li>
+</ol>
+<h1 class="heading-element" id="3-研究实验结果与发现-results--findings"><span><strong>3. 研究、实验结果与发现 (Results &amp; Findings)</strong></span>
+  <a href="#3-%e7%a0%94%e7%a9%b6%e5%ae%9e%e9%aa%8c%e7%bb%93%e6%9e%9c%e4%b8%8e%e5%8f%91%e7%8e%b0-results--findings" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>本文主要通过理论分析和与现有方案的对比来展示其“结果与发现”，而非传统的实验数据表格。</p>
+<ul>
+<li>
+<p><strong>核心结果：</strong></p>
+<ol>
+<li>
+<p><strong>效率显著提升：</strong> 与现有群签名方案相比，本文提出的环签名方案在效率上具有显著优势。</p>
+<ul>
+<li><strong>签名生成：</strong> 仅需一次模块化指数运算，加上每个非签名者一到两次模块化乘法。</li>
+<li><strong>签名验证：</strong> 每个环成员仅需一到两次模块化乘法。</li>
+<li><strong>对比：</strong> 比 Camenisch 的方案快两到三个数量级，而 Camenisch 的方案已经比早期方案快四倍。这意味着即使环中包含数百名成员，该方案也具有实际应用价值。</li>
+</ul>
+</li>
+<li>
+<p><strong>无条件签名者匿名性：</strong> 提出的环签名方案（RSA 版本）提供了无条件的签名者匿名性。这意味着，对于任何密钥 $k$ 和“胶水值” $v$，环方程都存在 $(2^b)^{r-1}$ 个解，并且签名生成过程以相同的概率选择其中任何一个解，与签名者的身份无关。这种匿名性不依赖于任何计算复杂性假设。</p>
+</li>
+<li>
+<p><strong>可证明的计算健全性：</strong> 在随机预言模型下，方案的健全性是可证明的。这意味着，任何能够以不可忽略的概率伪造环签名的算法 $A$ 都可以被转化为一个算法 $B$，该算法 $B$ 能够以不可忽略的概率反转一个陷门单向函数。这使得环签名的安全性可规约到基础的陷门单向函数的安全性。</p>
+</li>
+<li>
+<p><strong>广泛的应用潜力：</strong></p>
+<ul>
+<li><strong>匿名信息泄露：</strong> 完美解决了“深喉”问题，允许内部人士匿名泄露可信信息。</li>
+<li><strong>指定验证者签名：</strong> 通过将发送者和接收者作为环成员，可以实现一种“轻量级签名”，即消息仅对指定接收者可认证，但接收者无法向第三方证明消息的来源，从而避免了不可否认性。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>数据支撑：</strong>
+由于论文未提供具体的性能测试数据表格，以下将效率对比以文本形式呈现：</p>
+<ul>
+<li><strong>效率对比 (基于 RSA 或 Rabin 签名)：</strong>
+<ul>
+<li><strong>签名生成成本：</strong> 1次模块化指数运算 + (1-2次模块化乘法/非签名者)。</li>
+<li><strong>签名验证成本：</strong> (1-2次模块化乘法/环成员)。</li>
+<li><strong>与 Camenisch 方案对比：</strong> 效率高出 2-3 个数量级。</li>
+<li><strong>签名大小：</strong> 线性增长，与环成员数量 $r$ 成正比，因为签名必须包含所有环成员的公钥和 $x_i$ 值。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 class="heading-element" id="4-讨论-discussion"><span><strong>4. 讨论 (Discussion)</strong></span>
+  <a href="#4-%e8%ae%a8%e8%ae%ba-discussion" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ul>
+<li>
+<p><strong>4.1. 结果的深度解读：</strong>
+这些发现表明，环签名成功地在匿名性和可信性之间找到了一个创新的平衡点。通过无需预先设置的环结构和巧妙设计的环方程，它使得一个群体中的任何成员都可以在不暴露自己身份的情况下，向外部证明消息确实来自该群体。这解决了传统数字签名暴露身份、匿名器缺乏可信度以及群签名效率低下且存在群管理器风险的问题。例如，在“深喉”场景中，记者可以确信消息来自内阁成员，但无法知道具体是哪一位，这为举报者提供了完美的保护。在指定验证者签名中，公司A可以向公司B发送可认证的草稿，但B无法将此草稿的来源向第三方证明，从而避免了法律上的不可否认性，这对于商业谈判中的非正式文档交换非常有用。</p>
+</li>
+<li>
+<p><strong>4.2. 理论贡献：</strong>
+本研究对现有理论是重要的扩展和新框架的提出。它引入了“环签名”这一全新的密码学原语，扩展了数字签名的应用范围。</p>
+<ul>
+<li><strong>超越群签名：</strong> 环签名摒弃了群签名中对群管理器和预设群组的依赖，提出了“设置自由”的签名概念，使得任意集合的公钥都能构成一个“环”，极大地提高了灵活性和实用性。</li>
+<li><strong>无条件匿名性：</strong> 在主构造中实现了无条件的签名者匿名性，这在密码学理论中是一个强有力的安全保证，超越了许多仅提供计算匿名性的方案。</li>
+<li><strong>创新组合函数：</strong> 提出的基于对称加密和异或操作的组合函数 $C_{k,v}$ 巧妙地满足了环签名的所有安全和效率要求，避免了简单线性代数攻击，为后续的密码学设计提供了新的思路。</li>
+</ul>
+</li>
+<li>
+<p><strong>4.3. 实践启示：</strong>
+本研究对相关领域的实践者具有重要的指导意义：</p>
+<ul>
+<li><strong>安全通信与隐私保护：</strong> 为需要匿名但可信认证的场景提供了实用的解决方案，如举报系统、匿名投票、敏感信息发布等。</li>
+<li><strong>电子邮件系统：</strong> 可以作为现有电子邮件系统的一个额外选项，实现指定验证者签名，为非正式或敏感的邮件内容提供轻量级认证，同时保护发送者的隐私。</li>
+<li><strong>区块链与去中心化应用：</strong> 虽然论文未直接提及，但环签名在需要匿名交易或身份验证的去中心化应用（如 Monero 等隐私币）中具有巨大的潜力，可以隐藏交易发起者的真实身份。</li>
+<li><strong>法律与政策制定者：</strong> 提供了技术手段，可以在保护举报人身份的同时，确保其提供信息的真实性和来源可信度，有助于反腐和信息透明化。</li>
+</ul>
+</li>
+<li>
+<p><strong>4.4. 局限性与未来研究：</strong></p>
+<ul>
+<li>
+<p><strong>作者承认的研究局限性：</strong></p>
+<ol>
+<li><strong>签名大小与环成员数量的线性增长：</strong> 环签名的大小必须随环成员数量的增加而线性增长，因为它必须列出所有环成员的信息，这限制了其在超大型环中的可扩展性。</li>
+<li><strong>Rabin 方案的非置换问题：</strong> 当基于 Rabin 签名（$f_i(x)=x^2 \pmod{n_i}$）时，由于 $x^2 \pmod{n_i}$ 不是一个置换，可能导致只有部分消息可签名，并且一个输出可能对应多个输入。虽然论文通过“弹珠和桶”定理解决了匿名性问题，但签名生成过程可能需要多次尝试。</li>
+<li><strong>修改版本仅提供计算匿名性：</strong> 论文讨论的某些扩展（如允许签名者稍后证明自己的作者身份或证明某个成员不是作者）只能提供计算匿名性，这意味着强大的攻击者仍有可能通过穷举搜索等方式揭露签名者。</li>
+</ol>
+</li>
+<li>
+<p><strong>潜在的局限性（推断）：</strong></p>
+<ol>
+<li><strong>随机预言模型依赖：</strong> 方案的安全性证明依赖于随机预言模型，这在理论上是一个理想化的模型，实际哈希函数可能不完全满足其性质。</li>
+<li><strong>密钥管理复杂性：</strong> 尽管方案是“设置自由”的，但签名者仍需要收集所有环成员的有效公钥，这在某些大规模或动态变化的场景中可能构成实际挑战。</li>
+</ol>
+</li>
+<li>
+<p><strong>未来研究方向：</strong></p>
+<ol>
+<li><strong>提高签名效率和减少签名大小：</strong> 探索新的组合函数或密码学原语，以期在保持安全性的前提下，进一步提高签名和验证效率，并减少签名大小，尤其是在环成员数量非常庞大的情况下。</li>
+<li><strong>基于其他陷门函数的环签名：</strong> 研究除了 RSA 和 Rabin 之外的其他陷门单向函数（如椭圆曲线离散对数问题）是否能构建出更高效或具有其他优点的环签名方案。</li>
+<li><strong>非随机预言模型下的安全性证明：</strong> 探索在标准模型下（不依赖随机预言）证明环签名的安全性的方法，以增强其理论基础。</li>
+<li><strong>动态环成员管理：</strong> 研究如何更有效地管理动态变化的环成员，例如支持成员的加入和退出，同时保持匿名性和效率。</li>
+<li><strong>更灵活的匿名性级别：</strong> 进一步探索在不同应用场景下，如何灵活调整匿名性级别（如从无条件匿名到计算匿名，甚至可追溯匿名）的方案设计。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h1 class="heading-element" id="5-结论-conclusion"><span><strong>5. 结论 (Conclusion)</strong></span>
+  <a href="#5-%e7%bb%93%e8%ae%ba-conclusion" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>本文成功引入并形式化了“环签名”这一创新密码学原语，它允许消息在确保来自一组可信来源的同时，完全保护实际签名者的匿名性。该方案在 RSA 或 Rabin 基础上构建，具有极高的效率和无条件的签名者匿名性（在主构造中），且无需任何预先设置。环签名不仅解决了长期存在的匿名认证难题，还为“深喉”式信息泄露和指定验证者签名等多种实际应用提供了强大而实用的解决方案，对数字签名和隐私保护领域具有深远影响。</p>
+<h3 class="heading-element" id="6-核心参考文献-core-references"><span><strong>6. 核心参考文献 (Core References)</strong></span>
+  <a href="#6-%e6%a0%b8%e5%bf%83%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae-core-references" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>
+<p><strong>Rivest, R. L., Shamir, A., &amp; Adleman, L. M. (1978). A method for obtaining digital signatures and public-key cryptosystems. <em>Communications of the ACM</em>, 21(2), 120-126.</strong></p>
+<ul>
+<li><strong>重要性：</strong> 这篇论文奠定了 <strong>RSA 公钥密码系统</strong>的理论基础，本文的环签名方案正是基于 RSA 陷门置换构建的。</li>
+</ul>
+</li>
+<li>
+<p><strong>Rabin, M. (1979). Digitalized signatures as intractable as factorization. Technical Report MIT/LCS/TR-212, MIT Laboratory for Computer Science.</strong></p>
+<ul>
+<li><strong>重要性：</strong> 这篇论文介绍了 <strong>Rabin 签名方案</strong>，本文也探讨了基于 Rabin 签名的环签名版本，并讨论了其特性和挑战。</li>
+</ul>
+</li>
+<li>
+<p><strong>Diffie, W., &amp; Hellman, M. E. (1976). New directions in cryptography. <em>IEEE Transactions on Information Theory</em>, IT-22(6), 644-654.</strong></p>
+<ul>
+<li><strong>重要性：</strong> 这篇开创性论文提出了<strong>公钥密码学的概念</strong>，为本文中陷门单向置换的使用提供了理论模型和背景。</li>
+</ul>
+</li>
+<li>
+<p><strong>Camenisch, J. (1997). Efficient and generalized group signatures. In W. Fumy (Ed.), <em>Advances in Cryptology – Eurocrypt &lsquo;97</em> (pp. 465-479). Springer.</strong></p>
+<ul>
+<li><strong>重要性：</strong> 这篇论文介绍了<strong>高效的群签名方案</strong>。本文将其作为主要的对比对象，突出了环签名在效率和“设置自由”方面的优势。</li>
+</ul>
+</li>
+<li>
+<p><strong>Chaum, D., &amp; Van Heyst, E. (1991). Group signatures. In D.W. Davies (Ed.), <em>Advances in Cryptology – Eurocrypt &lsquo;91</em> (pp. 257-265). Springer.</strong></p>
+<ul>
+<li><strong>重要性：</strong> 这篇论文首次提出了<strong>群签名</strong>的概念。本文在引言中讨论了群签名的局限性，从而引出了环签名的需求。</li>
+</ul>
+</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-08-23 00:00:00">更新于 2025-08-23&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202508-ringsign/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202508-ringsign/" data-title="环签论文阅读《How to Leak a Secret》" data-hashtags="tips"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202508-ringsign/" data-hashtag="tips"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202508-ringsign/" data-title="环签论文阅读《How to Leak a Secret》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/tips/" class="post-tag" title="标签 - Tips">Tips</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202508-gitclonedir/" class="post-nav-item" rel="prev" title="使用GIT Clone指定仓库的制定文件夹"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>使用GIT Clone指定仓库的制定文件夹</a><a href="/posts/202508-functincallmcp/" class="post-nav-item" rel="next" title="Function Calling 与 MCP 协议">Function Calling 与 MCP 协议<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#11-研究背景"><strong>1.1 研究背景：</strong></a></li>
+    <li><a href="#12-研究问题目标"><strong>1.2 研究问题/目标：</strong></a></li>
+    <li><a href="#13-核心贡献重要性"><strong>1.3 核心贡献/重要性：</strong></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-核心方法模型流程"><strong>2.1 核心方法/模型/流程：</strong></a></li>
+    <li><a href="#22-环签名方案的定义包含两个核心过程"><strong>2.2 环签名方案的定义包含两个核心过程：</strong></a></li>
+    <li><a href="#23-整体框架"><strong>2.3 整体框架</strong></a></li>
+    <li><a href="#24-环签名生成过程-generating-a-ring-signature">2.4 环签名生成过程 (Generating a ring signature)</a></li>
+    <li><a href="#25-环签名验证过程-verifying-a-ring-signature">2.5 环签名验证过程 (Verifying a ring signature)</a></li>
+    <li><a href="#26-关键算法与数学公式"><strong>2.6 关键算法与数学公式：</strong></a></li>
+    <li><a href="#27-主要创新点总结"><strong>2.7 主要创新点总结：</strong></a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#6-核心参考文献-core-references"><strong>6. 核心参考文献 (Core References)</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/b1447417182b47c7f46a521887a134cb.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

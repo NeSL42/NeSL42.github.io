@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>《高级投资组合优化》阅读笔记-第一二章 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="第一章：引言 核心思想 投资组合优化 (Portfolio Optimization)：核心目标是为投资者找到最适合其需求的 最佳资产配置 (best asset allocation)。
+"><meta name="keywords" content='量化'>
+  <meta itemprop="name" content="《高级投资组合优化》阅读笔记-第一二章">
+  <meta itemprop="description" content="第一章：引言 核心思想 投资组合优化 (Portfolio Optimization)：核心目标是为投资者找到最适合其需求的 最佳资产配置 (best asset allocation)。">
+  <meta itemprop="datePublished" content="2025-09-20T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-20T00:00:00+00:00">
+  <meta itemprop="wordCount" content="4316">
+  <meta itemprop="keywords" content="量化"><meta property="og:url" content="http://localhost:1313/posts/apo-01/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="《高级投资组合优化》阅读笔记-第一二章">
+  <meta property="og:description" content="第一章：引言 核心思想 投资组合优化 (Portfolio Optimization)：核心目标是为投资者找到最适合其需求的 最佳资产配置 (best asset allocation)。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:tag" content="量化">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="《高级投资组合优化》阅读笔记-第一二章">
+  <meta name="twitter:description" content="第一章：引言 核心思想 投资组合优化 (Portfolio Optimization)：核心目标是为投资者找到最适合其需求的 最佳资产配置 (best asset allocation)。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/apo-01/" title="《高级投资组合优化》阅读笔记-第一二章 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/apo-03/" title="《高级投资组合优化》阅读笔记-第三章 3.1 矩" /><link rel="next" type="text/html" href="http://localhost:1313/posts/2025100-tgcfmm/" title="论文阅读《The Geometry of Constant Function Market Makers》" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "《高级投资组合优化》阅读笔记-第一二章",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/apo-01\/"
+    },"genre": "posts","keywords": "量化","wordcount":  4316 ,
+    "url": "http:\/\/localhost:1313\/posts\/apo-01\/","datePublished": "2025-09-20T00:00:00+00:00","dateModified": "2025-09-20T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>《高级投资组合优化》阅读笔记-第一二章</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-20 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-20">2025-09-20</time></span>&nbsp;<span title="4316 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 4400 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 9 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#第一章引言">第一章：引言</a>
+      <ul>
+        <li><a href="#核心思想">核心思想</a></li>
+        <li><a href="#11-本书的起源受众与风格-origin-audience-and-style">1.1 本书的起源、受众与风格 (Origin, Audience, and Style)</a></li>
+        <li><a href="#12-投资组合优化的历史-history-of-portfolio-optimization">1.2 投资组合优化的历史 (History of Portfolio Optimization)</a></li>
+        <li><a href="#13-本书结构-structure-of-the-book">1.3 本书结构 (Structure of the Book)</a></li>
+      </ul>
+    </li>
+    <li><a href="#chapter-2-why-use-python">Chapter 2 Why Use Python?</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 class="heading-element" id="第一章引言"><span>第一章：引言</span>
+  <a href="#%e7%ac%ac%e4%b8%80%e7%ab%a0%e5%bc%95%e8%a8%80" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="核心思想"><span>核心思想</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>投资组合优化 (Portfolio Optimization)</strong>：核心目标是为投资者找到最适合其需求的 <strong>最佳资产配置</strong> (best asset allocation)。</p>
+</li>
+<li>
+<p><strong>两种主要方法</strong>：</p>
+<ol>
+<li>
+<p><strong>启发式方法 (Heuristics)</strong>：</p>
+<ul>
+<li>
+<p><strong>特点</strong>：基于经验法则，不需要复杂的数学知识。</p>
+</li>
+<li>
+<p><strong>例子</strong>：1/N 投资组合 (所有资产权重相同)、60/40 投资组合 (60%股票, 40%债券)。</p>
+</li>
+<li>
+<p><strong>缺点</strong>：<strong>无法</strong> 为投资者提供个性化的最优配置。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>量化模型 (Quantitative Models)</strong>：</p>
+<ul>
+<li>
+<p><strong>特点</strong>：需要更高级的数学知识，但可以 <strong>定制化</strong> 以满足投资者需求。</p>
+</li>
+<li>
+<p><strong>优点</strong>：能产出最优的资产配置方案。</p>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>本书焦点</strong>：专注于 <strong>量化模型</strong>，从经典的马科维茨 (Markowitz) 模型讲到最新的发展，如结合图论 (graph theory) 的算法。</p>
+</li>
+</ul>
+<h3 class="heading-element" id="11-本书的起源受众与风格-origin-audience-and-style"><span>1.1 本书的起源、受众与风格 (Origin, Audience, and Style)</span>
+  <a href="#11-%e6%9c%ac%e4%b9%a6%e7%9a%84%e8%b5%b7%e6%ba%90%e5%8f%97%e4%bc%97%e4%b8%8e%e9%a3%8e%e6%a0%bc-origin-audience-and-style" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>写作动机</strong>：</p>
+<ul>
+<li>
+<p>传统课程/书籍过于侧重 <strong>马科维茨模型的理论</strong>，忽略了 <strong>实际应用</strong> 和 <strong>后续发展</strong>。</p>
+</li>
+<li>
+<p>作者为了解决这个问题，开发了一个名为 <code>Riskfolio-Lib</code> 的 Python 库，本书正是基于该库的课程讲义和学术研究汇编而成。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>目标读者</strong>：</p>
+<ul>
+<li>
+<p>具备 <strong>基础到中等</strong> 水平的线性代数、统计学、微积分、金融学和 Python 编程知识的学生、学者和从业者。</p>
+</li>
+<li>
+<p>希望学习超越经典均值-方差模型，并设计定制化投资组合的人。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>本书风格</strong>：</p>
+<ul>
+<li>
+<p><strong>直接且注重实践</strong>。</p>
+</li>
+<li>
+<p><strong>结构</strong>：先解释模型的 <strong>数学原理</strong>，然后通过 <strong>Python 代码示例</strong> 进行实现。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="12-投资组合优化的历史-history-of-portfolio-optimization"><span>1.2 投资组合优化的历史 (History of Portfolio Optimization)</span>
+  <a href="#12-%e6%8a%95%e8%b5%84%e7%bb%84%e5%90%88%e4%bc%98%e5%8c%96%e7%9a%84%e5%8e%86%e5%8f%b2-history-of-portfolio-optimization" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是一个关键的时间线，记录了该领域的重要里程碑：</p>
+<ul>
+<li><strong>1952 - 马科维茨 (Markowitz)</strong>：
+<ul>
+<li>均值-方差模型由马科维茨于1952年提出。该模型从收益-风险权衡的角度阐释投资决策，即投资者在追求预期收益最大化的同时，力求最小化由投资组合收益波动性表征的风险。其核心理论在于分散投资能降低组合整体风险——通过持有收益不完全相关的多元化资产组合，投资者可在既定风险水平下获得更高收益，或在既定收益水平下承担更低风险。该模型在数学上被表述为二次规划问题。</li>
+</ul>
+</li>
+<li><strong>1960s - 资本资产定价模型 (CAPM)</strong>：
+<ul>
+<li>资本资产定价模型（CAPM）由特雷诺（1961）、夏普（1964）、林特纳（1965）和莫辛（1966）分别独立提出。该模型作为首个线性因子模型，通过以市场组合为代表的风险因子，以及资产收益率对市场组合的敏感性（即贝塔系数）所体现的系统性风险，来确定资产的预期收益。CAPM成为现代金融学的基石，深刻揭示了风险、收益与市场效率之间的内在关联。</li>
+</ul>
+</li>
+<li><strong>1976 - 套利定价理论 (APT)</strong>：
+<ul>
+<li>套利定价理论（APT）是罗斯（1976）对资本资产定价模型（CAPM）的扩展，该理论通过基于多个系统性因素及其敏感性（贝塔值）的线性多因子模型来解释资产的预期收益。</li>
+</ul>
+</li>
+<li><strong>1982 - 基尼平均差 (GMD)</strong>：
+<ul>
+<li>基尼平均差（GMD）模型由Yitzhaki（1982年）提出。这是第二个投资组合优化模型，也是第一个被表述为线性规划问题的模型。然而，由于由此产生的线性规划问题非常难以解决（因为约束条件的数量与观测值的平方成正比），该模型并未被学术界和实务界采纳。当投资组合收益呈正态分布时，该模型与均值-方差模型产生的结果相同。在近期研究中，Cajas（2023b）提出了一种基于幂锥的近似方法，该方法大幅缩短了计算时间。</li>
+</ul>
+</li>
+<li><strong>1991 - 平均绝对偏差模型 (MAD)</strong>：
+<ul>
+<li>平均绝对偏差（MAD）模型由Konno和Yamazaki于1991年提出。这是第三个投资组合优化模型，也是第二个以线性规划问题形式呈现的模型。作为均值-方差模型的替代方案，该模型首次实现了计算可行性，因为其约束条件的数量与观测值数量成比例增长。当投资组合收益服从正态分布时，该模型与均值-方差模型得出的结果相同。</li>
+</ul>
+</li>
+<li><strong>1992 - Black-Litterman 模型</strong>：
+<ul>
+<li>Black和Litterman（1992年）开发了一个模型，<strong>允许分析师将他们的先验信息或观点纳入投资组合优化过程</strong>。通过使用Theil和Goldberger（1961年）提出的混合估计器以及逆向优化程序，Black-Litterman模型能够获得预期收益向量和协方差矩阵的后验估计值，这些估计值融合了历史信息和先验信息，并可作为经典均值-方差模型的输入。Meucci（2010年）、Cheung（2007年）以及Kolm和Ritter（2016年）对Black-Litterman模型进行了改进，融入了来自因子模型的信息。</li>
+</ul>
+</li>
+<li><strong>1993 - Fama-French 三因子模型</strong>：
+<ul>
+<li>Fama和French（1993年）提出了一个三因子模型，在资本资产定价模型（CAPM）的基础上增加了两个因子，该模型在学术界和实务界广受欢迎。新增的两个因子分别是小公司相对于大公司的超额收益，以及高账面市值比公司相对于低账面市值比公司的超额收益。</li>
+</ul>
+</li>
+<li><strong>1994 - 风险价值 (VaR)</strong>：
+<ul>
+<li>风险价值（VaR）由美国投资银行摩根大通在20世纪80年代开发；然而，在1993年的一次会议上，摩根大通向客户展示了其VaR系统后，客户表现出了极大的兴趣。1994年，摩根大通发布了其服务Riskmetrics以及一份技术文档，详细解释了VaR计算背后的数学原理。</li>
+</ul>
+</li>
+<li><strong>1995 - 均值-方差-偏度 (MVS) 投资组合模型</strong>:
+<ul>
+<li>均值-方差-偏度(MVS)投资组合模型由Konno和Suzuki(1995)提出。他们基于整数规划提出了偏度的分段线性近似方法，用以建模投资组合偏度。在此研究基础上，后续多项研究探索了将高阶矩纳入投资组合优化模型的技术方法。</li>
+</ul>
+</li>
+<li><strong>1998 - 最小化最大损失模型 (Minimax)</strong>：
+<ul>
+<li>Young（1998）提出了最小化最大损失模型（minimax模型）。这是首个引入下行风险度量（即仅考虑损失的风险度量）的投资组合模型，其被构建为一个线性规划模型，旨在以100%置信水平最小化样本内最大损失、最差实现值或风险价值（VaR）。</li>
+</ul>
+</li>
+<li><strong>1999 - Mantegna (图论应用)</strong>：
+<ul>
+<li>曼特尼亚（1999年）首次提出可以用最小生成树来表示资产的相互依存关系。他还提出，我们可以根据在树状图中观察到的层次结构对资产进行分组。这些成为随后几年开发的大多数机器学习资产配置算法的核心思想。</li>
+</ul>
+</li>
+<li><strong>2000 - 条件风险价值 (CVaR)</strong>：
+<ul>
+<li>Rockafellar和Uryasev（2000）提出了条件风险价值（CVaR）最小化模型。这是第二个下行风险度量投资组合模型，并以线性规划问题的形式提出。由于VaR缺乏次可加性，通常无法最小化VaR。CVaR作为VaR的替代方案出现，具有更好的特性，可以最小化，其最小化意味着VaR的降低。</li>
+</ul>
+</li>
+<li><strong>2000 - 稳健优化 (Robust Optimization)</strong>：
+<ul>
+<li>首批稳健优化投资组合模型由Sousa Lobo和Boyd（2000年）提出。均值-方差模型因其缺乏稳健性及最优解缺乏分散性而受到批评。为克服这些问题，稳健优化假设均值向量和协方差矩阵位于一个不确定性区域内，并将该信息纳入优化过程。他们利用二阶锥规划和半定规划等现代优化技术来构建这些问题。</li>
+</ul>
+</li>
+<li><strong>2000 - 排序加权平均 (OWA) 投资组合优化</strong>：
+<ul>
+<li>排序加权平均（OWA）投资组合优化由Ogryczak（2000年）提出。他证明了，那些可以表示为具有单调非负权重的OWA算子的风险度量，可以通过求解一个线性规划问题来进行优化；然而，由于约束条件的数量与观测值数量的阶乘成正比，该方法在计算上并不可行。在后续研究中，Cajas（2021c）提出了适用于单调实数权重的、最高效的OWA投资组合模型公式。</li>
+</ul>
+</li>
+<li><strong>2004 - 基于回撤的风险度量</strong>：
+<ul>
+<li>Chekhlov等人（2004年）提出了最小化基于回撤的风险度量。他们引入了四种新的风险度量：平均回撤（ADD）、风险回撤（DaR）、条件风险回撤（CDaR）和最大回撤（MDD），这些度量与基于投资组合收益的风险度量相似。在这些新风险度量中，只有ADD、CDaR和MDD可以被构建为线性规划问题。</li>
+</ul>
+</li>
+<li><strong>2007 - VaR 最小化</strong>：
+<ul>
+<li>VaR的最小化由Benati和Rizzi（2007年）提出。该问题被构建为一个整数线性规划模型；然而，由于它是一个NP-hard问题，对于大量观测值而言，无法进行有效求解。</li>
+</ul>
+</li>
+<li><strong>2008 - 凯利准则 (Kelly Criterion)</strong>：
+<ul>
+<li>Thorp（2008年）将凯利准则引入投资组合优化，通过使用投资组合的前两阶矩来近似几何收益的平均对数。在后续研究中，Cajas（2021b）引入了几何收益平均对数的精确公式，将该模型表述为一个指数锥规划问题。</li>
+</ul>
+</li>
+<li><strong>2008 - 风险平价 (Risk Parity)</strong>：
+<ul>
+<li>Maillard等人（2008年）首次使用最小二乘法和风险预算方法，为方差提出了风险平价的数学公式。随后，Bruder和Roncalli（2012年）利用风险预算方法，将风险平价准则扩展到承认欧拉分解的凸风险度量上。最后，Mausser和Romanko（2014年）证明了方差情况下的最小二乘法可以表示为一个二阶锥规划问题。</li>
+</ul>
+</li>
+<li><strong>2016 - 层级风险平价 (HRP)</strong>：
+<ul>
+<li>López de Prado（2016年）引入了层级风险平价（HRP），这是第一个融合了机器学习技术的资产配置算法。借鉴Mantegna（1999年）关于使用树状图展示资产间层级关系的思想，López de Prado提出按照从树状图获得的资产顺序，并使用朴素风险平价方法来分配投资组合风险。HRP的改进版本，如Raffinot（2018年）提出的层级等风险贡献（HERC）和López de Prado（2019年）提出的嵌套聚类优化（NCO），分别融入了遵循树状图结构分配风险和嵌套优化的思想。</li>
+</ul>
+</li>
+<li><strong>2019 - 熵风险价值 (EVaR)</strong>：
+<ul>
+<li>熵风险价值（EVaR）的最小化由Ahmadi-Javid和Fallah-Tafti（2019年）提出。这是第一个基于香农熵的散度风险度量的投资组合优化模型。最初的解决方案基于一个仅适用于最小化情况的自定义算法。为克服这一缺陷，Cajas（2019b）提出了一个可表述为指数锥规划问题的EVaR优化模型。</li>
+</ul>
+</li>
+<li><strong>2023 - 相对论风险价值 (RLVaR)</strong>：
+<ul>
+<li>相对论风险价值（RLVaR）的优化由Cajas（2023h）提出。这是第二个基于Kaniadakis熵的散度风险度量的投资组合优化模型。RLVaR模型的优化可以被构建为一个幂锥规划问题。</li>
+</ul>
+</li>
+<li><strong>2020s - 图论信息的融合</strong>：
+<ul>
+<li>将来自图论的信息融入投资组合优化过程，如Puerto等人（2020年）、Ricca和Scozzari（2024年）、Cajas（2023c）和Cajas（2023d）的研究。图论提供了一种表示资产间最重要关系的方法，以及一种基于图连接或资产在图中相对位置的全新投资组合分散化方式。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="13-本书结构-structure-of-the-book"><span>1.3 本书结构 (Structure of the Book)</span>
+  <a href="#13-%e6%9c%ac%e4%b9%a6%e7%bb%93%e6%9e%84-structure-of-the-book" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>投资组合优化的五个阶段</strong>：</p>
+<ol>
+<li><strong>确定可选资产集</strong> (本书不涉及)。</li>
+<li><strong>估计输入参数</strong> (本书 <strong>第一部分</strong> 讲解)。</li>
+<li><strong>选择优化模型</strong> (本书 <strong>第二、三部分</strong> 核心内容)。</li>
+<li><strong>模型回测</strong> (本书 <strong>第四部分</strong> 讲解)。</li>
+<li><strong>实施模型</strong> (本书不涉及)。</li>
+</ol>
+</li>
+<li>
+<p><strong>全书内容划分</strong>：</p>
+<ul>
+<li><strong>第一部分</strong>：<strong>参数估计方法</strong> (如何准备模型的“食材”)。</li>
+<li><strong>第二部分</strong>：基于 <strong>凸优化</strong> 的模型 (经典的数学优化方法)。</li>
+<li><strong>第三部分</strong>：基于 <strong>机器学习</strong> 的模型 (现代的数据驱动方法)。</li>
+<li><strong>第四部分</strong>：<strong>回测方法</strong> (如何检验策略的好坏)。</li>
+<li><strong>附录</strong>：相关的数学知识回顾。</li>
+</ul>
+</li>
+</ul>
+<h2 class="heading-element" id="chapter-2-why-use-python"><span>Chapter 2 Why Use Python?</span>
+  <a href="#chapter-2-why-use-python" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这一章没啥写的，就是一些基础和环境啥的。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-20 00:00:00">更新于 2025-09-20&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/APO-01/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/apo-01/" data-title="《高级投资组合优化》阅读笔记-第一二章" data-hashtags="量化"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/apo-01/" data-hashtag="量化"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/apo-01/" data-title="《高级投资组合优化》阅读笔记-第一二章"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E9%87%8F%E5%8C%96/" class="post-tag" title="标签 - 量化">量化</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/apo-03/" class="post-nav-item" rel="prev" title="《高级投资组合优化》阅读笔记-第三章 3.1 矩"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>《高级投资组合优化》阅读笔记-第三章 3.1 矩</a><a href="/posts/2025100-tgcfmm/" class="post-nav-item" rel="next" title="论文阅读《The Geometry of Constant Function Market Makers》">论文阅读《The Geometry of Constant Function Market Makers》<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#第一章引言">第一章：引言</a>
+      <ul>
+        <li><a href="#核心思想">核心思想</a></li>
+        <li><a href="#11-本书的起源受众与风格-origin-audience-and-style">1.1 本书的起源、受众与风格 (Origin, Audience, and Style)</a></li>
+        <li><a href="#12-投资组合优化的历史-history-of-portfolio-optimization">1.2 投资组合优化的历史 (History of Portfolio Optimization)</a></li>
+        <li><a href="#13-本书结构-structure-of-the-book">1.3 本书结构 (Structure of the Book)</a></li>
+      </ul>
+    </li>
+    <li><a href="#chapter-2-why-use-python">Chapter 2 Why Use Python?</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/c712b63c9180d2496c322e782ac77245.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

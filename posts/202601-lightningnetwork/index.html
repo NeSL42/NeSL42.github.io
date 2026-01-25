@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>闪电网络白皮书阅读 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem) 这一章为整个协议奠定了物理学和经济学基础。论证了为什么“单纯增加区块大小（Block Size Increase）”是一条死路，以及为什么必须将交易移至链下（Off-chain）。
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="闪电网络白皮书阅读">
+  <meta itemprop="description" content="1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem) 这一章为整个协议奠定了物理学和经济学基础。论证了为什么“单纯增加区块大小（Block Size Increase）”是一条死路，以及为什么必须将交易移至链下（Off-chain）。">
+  <meta itemprop="datePublished" content="2026-01-18T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-01-18T00:00:00+00:00">
+  <meta itemprop="wordCount" content="12996">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="http://localhost:1313/posts/202601-lightningnetwork/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="闪电网络白皮书阅读">
+  <meta property="og:description" content="1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem) 这一章为整个协议奠定了物理学和经济学基础。论证了为什么“单纯增加区块大小（Block Size Increase）”是一条死路，以及为什么必须将交易移至链下（Off-chain）。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-18T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="闪电网络白皮书阅读">
+  <meta name="twitter:description" content="1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem) 这一章为整个协议奠定了物理学和经济学基础。论证了为什么“单纯增加区块大小（Block Size Increase）”是一条死路，以及为什么必须将交易移至链下（Off-chain）。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202601-lightningnetwork/" title="闪电网络白皮书阅读 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202511-trline/" title="关于TRLine的一些想法——与Openai问答" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202601-aavev1/" title="AAVE v1 白皮书阅读" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "闪电网络白皮书阅读",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202601-lightningnetwork\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  12996 ,
+    "url": "http:\/\/localhost:1313\/posts\/202601-lightningnetwork\/","datePublished": "2026-01-18T00:00:00+00:00","dateModified": "2026-01-18T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>闪电网络白皮书阅读</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2026-01-18 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2026-01-18">2026-01-18</time></span>&nbsp;<span title="12996 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 13000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 26 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-比特币区块链的扩展性难题-the-bitcoin-blockchain-scalability-problem">1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem)</a>
+      <ul>
+        <li><a href="#11-广播协议的本质缺陷-the-gossip-protocol-bottleneck">1.1 广播协议的本质缺陷 (The &ldquo;Gossip Protocol&rdquo; Bottleneck)</a></li>
+        <li><a href="#12-visa-级别的吞吐量推演-the-visa-scale-math">1.2 Visa 级别的吞吐量推演 (The Visa-Scale Math)</a></li>
+        <li><a href="#13-中心化陷阱-the-centralization-trap">1.3 中心化陷阱 (The Centralization Trap)</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-微支付通道网络解决扩展性-a-network-of-micropayment-channels-can-solve-scalability">2. 微支付通道网络解决扩展性 (A Network of Micropayment Channels Can Solve Scalability)</a>
+      <ul>
+        <li><a href="#21-重新定义共识本地化与延迟-local-consensus--deferral">2.1 重新定义共识：本地化与延迟 (Local Consensus &amp; Deferral)</a></li>
+        <li><a href="#22-信任锚点2-of-2-多重签名-the-2-of-2-multisig-anchor">2.2 信任锚点：2-of-2 多重签名 (The 2-of-2 Multisig Anchor)</a></li>
+        <li><a href="#23-状态更新与时间戳难题-the-timestamping-problem">2.3 状态更新与“时间戳”难题 (The Timestamping Problem)</a></li>
+        <li><a href="#24-从通道到图路由网络-network-of-channels">2.4 从通道到图：路由网络 (Network of Channels)</a></li>
+        <li><a href="#25-章节总结为第-3-章铺路">2.5 章节总结：为第 3 章铺路</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-双向支付通道-bidirectional-payment-channels">3. 双向支付通道 (Bidirectional Payment Channels)</a>
+      <ul>
+        <li><a href="#31-通道创建中的归责问题-the-problem-of-blame-in-channel-creation">3.1 通道创建中的归责问题 (The Problem of Blame in Channel Creation)</a>
+          <ul>
+            <li><a href="#311--312-资金交易与-sighash-noinput">3.1.1 &amp; 3.1.2 资金交易与 <code>SIGHASH NOINPUT</code></a></li>
+            <li><a href="#313-承诺交易不可执行的原始构建">3.1.3 承诺交易：不可执行的原始构建</a></li>
+            <li><a href="#314-承诺交易非对称归责-ascribing-blame">3.1.4 承诺交易：非对称归责 (Ascribing Blame)</a></li>
+          </ul>
+        </li>
+        <li><a href="#32--33-带有撤销机制的通道-creating-a-channel-with-contract-revocation">3.2 &amp; 3.3 带有撤销机制的通道 (Creating a Channel with Contract Revocation)</a>
+          <ul>
+            <li><a href="#331-时间停止-timestop">3.3.1 时间停止 (Timestop)</a></li>
+            <li><a href="#332-可撤销承诺交易-revocable-commitment-transactions">3.3.2 可撤销承诺交易 (Revocable Commitment Transactions)</a></li>
+            <li><a href="#333-赎回资金非对称的等待-redeeming-funds-from-the-channel">3.3.3 赎回资金：非对称的等待 (Redeeming Funds from the Channel)</a>
+              <ul>
+                <li><a href="#1-权益的非对称性-asymmetry-of-redemption">1. 权益的非对称性 (Asymmetry of Redemption)</a></li>
+                <li><a href="#2-可撤销交付交易-revocable-delivery-transaction-rd">2. 可撤销交付交易 (Revocable Delivery Transaction, RD)</a></li>
+              </ul>
+            </li>
+            <li><a href="#334-创建新状态与撤销旧状态-revoking-prior-commitments">3.3.4 创建新状态与撤销旧状态 (Revoking Prior Commitments)</a>
+              <ul>
+                <li><a href="#1-第一阶段建立新世界-establish-new-state">1. 第一阶段：建立新世界 (Establish New State)</a></li>
+                <li><a href="#2-第二阶段毒化旧世界-poison-old-state">2. 第二阶段：毒化旧世界 (Poison Old State)</a></li>
+                <li><a href="#3-违约补救交易-breach-remedy-transaction-br">3. 违约补救交易 (Breach Remedy Transaction, $BR$)</a></li>
+                <li><a href="#4-结论经济学威慑">4. 结论：经济学威慑</a></li>
+              </ul>
+            </li>
+            <li><a href="#335-密钥存储与优化">3.3.5 密钥存储与优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#34-合作关闭通道-cooperatively-closing-out-a-channel">3.4 合作关闭通道 (Cooperatively Closing Out a Channel)</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-哈希时间锁定合约-hashed-timelock-contract-htlc">4. 哈希时间锁定合约 (Hashed Timelock Contract, HTLC)</a>
+      <ul>
+        <li><a href="#41-非可撤销-htlc-的缺陷-non-revocable-htlc-construction">4.1 非可撤销 HTLC 的缺陷 (Non-revocable HTLC Construction)</a></li>
+        <li><a href="#42-链下可撤销-htlc-off-chain-revocable-htlc">4.2 链下可撤销 HTLC (Off-chain Revocable HTLC)</a>
+          <ul>
+            <li><a href="#421-场景-a发送方-alice-广播了-commitment-c2a">4.2.1 场景 A：发送方 Alice 广播了 Commitment (C2a)</a></li>
+            <li><a href="#422-场景-b接收方-bob-广播了-commitment-c2b">4.2.2 场景 B：接收方 Bob 广播了 Commitment (C2b)</a></li>
+          </ul>
+        </li>
+        <li><a href="#43--44-链下终止与状态更迭-htlc-termination--closing-order">4.3 &amp; 4.4 链下终止与状态更迭 (HTLC Termination &amp; Closing Order)</a>
+          <ul>
+            <li><a href="#43-正常结算流程happy-path">4.3 正常结算流程（Happy Path）</a></li>
+            <li><a href="#44-超时结算流程">4.4 超时结算流程</a></li>
+          </ul>
+        </li>
+        <li><a href="#章节总结多跳支付的基石">章节总结：多跳支付的基石</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-密钥存储-key-storage">5. 密钥存储 (Key Storage)</a>
+      <ul>
+        <li><a href="#51-merkle-tree-密钥派生">5.1 Merkle Tree 密钥派生</a></li>
+        <li><a href="#52-批量撤销-invalidating-sub-trees">5.2 批量撤销 (Invalidating Sub-trees)</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-交易费用-blockchain-transaction-fees">6. 交易费用 (Blockchain Transaction Fees)</a>
+      <ul>
+        <li><a href="#61-费用的本质时间价值">6.1 费用的本质：时间价值</a></li>
+        <li><a href="#62-归责与链上费用">6.2 归责与链上费用</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-支付即合同-pay-to-contract">7. 支付即合同 (Pay to Contract)</a>
+      <ul>
+        <li><a href="#71-r-值即收据">7.1 $R$ 值即收据</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-比特币闪电网络-the-bitcoin-lightning-network">8. 比特币闪电网络 (The Bitcoin Lightning Network)</a>
+      <ul>
+        <li><a href="#81-递减时间锁-decrementing-timelocks">8.1 递减时间锁 (Decrementing Timelocks)</a></li>
+        <li><a href="#82-清算失败与路由选择-clearing-failure--routing">8.2 清算失败与路由选择 (Clearing Failure &amp; Routing)</a></li>
+        <li><a href="#83-风险与缓解-risks">8.3 风险与缓解 (Risks)</a></li>
+        <li><a href="#总结从协议到生态">总结：从协议到生态</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-风险分析-risks">9. 风险分析 (Risks)</a>
+      <ul>
+        <li><a href="#91--92-核心系统性风险强制过期垃圾交易-forced-expiration-spam">9.1 &amp; 9.2 核心系统性风险：强制过期垃圾交易 (Forced Expiration Spam)</a></li>
+        <li><a href="#93-密钥安全热钱包风险-coin-theft-via-cracking">9.3 密钥安全：热钱包风险 (Coin Theft via Cracking)</a></li>
+        <li><a href="#94--95-数据可用性风险-data-loss--forgetting-to-broadcast">9.4 &amp; 9.5 数据可用性风险 (Data Loss &amp; Forgetting to Broadcast)</a></li>
+        <li><a href="#96-软分叉依赖-inability-to-make-necessary-soft-forks">9.6 软分叉依赖 (Inability to Make Necessary Soft-Forks)</a></li>
+        <li><a href="#97-矿工共谋-colluding-miner-attacks">9.7 矿工共谋 (Colluding Miner Attacks)</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-区块大小增加与共识-block-size-increases-and-consensus">10. 区块大小增加与共识 (Block Size Increases and Consensus)</a>
+      <ul>
+        <li><a href="#101-物理极限推算">10.1 物理极限推算</a></li>
+        <li><a href="#102-软上限与共识规则">10.2 软上限与共识规则</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-应用场景-use-cases">11. 应用场景 (Use Cases)</a>
+      <ul>
+        <li><a href="#111-即时微支付-instant-micropayments">11.1 即时微支付 (Instant Micropayments)</a></li>
+        <li><a href="#112-交易所套利与安全-exchange-arbitrage">11.2 交易所套利与安全 (Exchange Arbitrage)</a></li>
+        <li><a href="#113-跨链原子交换-cross-chain-payments">11.3 跨链原子交换 (Cross-Chain Payments)</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-结论-conclusion">12. 结论 (Conclusion)</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 class="heading-element" id="1-比特币区块链的扩展性难题-the-bitcoin-blockchain-scalability-problem"><span>1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem)</span>
+  <a href="#1-%e6%af%94%e7%89%b9%e5%b8%81%e5%8c%ba%e5%9d%97%e9%93%be%e7%9a%84%e6%89%a9%e5%b1%95%e6%80%a7%e9%9a%be%e9%a2%98-the-bitcoin-blockchain-scalability-problem" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这一章为整个协议奠定了<strong>物理学和经济学基础</strong>。论证了为什么“单纯增加区块大小（Block Size Increase）”是一条死路，以及为什么必须将交易移至链下（Off-chain）。</p>
+<h3 class="heading-element" id="11-广播协议的本质缺陷-the-gossip-protocol-bottleneck"><span>1.1 广播协议的本质缺陷 (The &ldquo;Gossip Protocol&rdquo; Bottleneck)</span>
+  <a href="#11-%e5%b9%bf%e6%92%ad%e5%8d%8f%e8%ae%ae%e7%9a%84%e6%9c%ac%e8%b4%a8%e7%bc%ba%e9%99%b7-the-gossip-protocol-bottleneck" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>比特币底层的共识机制本质上是一个<strong>谣言传播协议（Gossip Protocol）</strong>。</p>
+<ul>
+<li><strong>机制</strong>：网络中发生的每一笔状态修改（交易），都必须广播给网络中的<strong>每一个</strong>参与者。</li>
+<li><strong>代价</strong>：全网节点必须同步并验证每一笔交易，这导致系统的通信复杂度极高。</li>
+<li><strong>结论</strong>：如果要求全球每一笔咖啡交易都让全网同步，这不仅低效，而且在物理上不可持续 。</li>
+</ul>
+<h3 class="heading-element" id="12-visa-级别的吞吐量推演-the-visa-scale-math"><span>1.2 Visa 级别的吞吐量推演 (The Visa-Scale Math)</span>
+  <a href="#12-visa-%e7%ba%a7%e5%88%ab%e7%9a%84%e5%90%9e%e5%90%90%e9%87%8f%e6%8e%a8%e6%bc%94-the-visa-scale-math" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>白皮书进行了一次残酷的数学推演，证明了链上扩容的物理极限：</p>
+<ul>
+<li><strong>现状</strong>：比特币 &lt; 7 TPS (Transactions Per Second)，区块上限 1MB。</li>
+<li><strong>目标</strong>：Visa 在 2013 年峰值处理能力约为 47,000 TPS。</li>
+<li><strong>推算</strong>：
+<ul>
+<li>假设每笔交易 300 字节。</li>
+<li>要达到 47,000 TPS，比特币需要每 10 分钟产生一个 <strong>8GB</strong> 的区块。</li>
+<li>这意味着每年产生超过 <strong>400 TB</strong> 的数据。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="13-中心化陷阱-the-centralization-trap"><span>1.3 中心化陷阱 (The Centralization Trap)</span>
+  <a href="#13-%e4%b8%ad%e5%bf%83%e5%8c%96%e9%99%b7%e9%98%b1-the-centralization-trap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如果强行扩容到 8GB 区块，将引发严重的**中心化（Centralization）**后果：</p>
+<ol>
+<li><strong>节点门槛极高</strong>：世界上没有一台家用电脑能处理这种带宽和存储需求。</li>
+<li><strong>矿工中心化</strong>：只有极少数拥有巨型数据中心的实体才能参与挖矿和验证。</li>
+<li><strong>信任模型崩塌</strong>：
+<ul>
+<li>一旦普通用户无法运行全节点（Full Node）来验证账本，比特币就退化为传统的银行系统。</li>
+<li>用户被迫信任<strong>第三方托管（Trusted Custodians）</strong>。</li>
+<li>这将引入<strong>委托代理问题（Principal-Agent Problem）</strong> 和<strong>交易对手风险（Counterparty Risk）</strong>，违背了比特币“去中心化、去信任”的初衷 。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>为了让比特币在未来取代全球电子支付系统，而不退化为中心化的 Visa 变体，必须保证<strong>家用宽带连接的普通电脑</strong>也能低成本地验证账本。因此，绝大多数交易必须在<strong>链下</strong>进行。</p>
+</blockquote>
+<h2 class="heading-element" id="2-微支付通道网络解决扩展性-a-network-of-micropayment-channels-can-solve-scalability"><span>2. 微支付通道网络解决扩展性 (A Network of Micropayment Channels Can Solve Scalability)</span>
+  <a href="#2-%e5%be%ae%e6%94%af%e4%bb%98%e9%80%9a%e9%81%93%e7%bd%91%e7%bb%9c%e8%a7%a3%e5%86%b3%e6%89%a9%e5%b1%95%e6%80%a7-a-network-of-micropayment-channels-can-solve-scalability" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这一章提出了解决上述困境的架构：<strong>微支付通道（Micropayment Channels）</strong>。以下解析将聚焦于其<strong>工程实现逻辑</strong>和<strong>共识模型的转变</strong>。</p>
+<h3 class="heading-element" id="21-重新定义共识本地化与延迟-local-consensus--deferral"><span>2.1 重新定义共识：本地化与延迟 (Local Consensus &amp; Deferral)</span>
+  <a href="#21-%e9%87%8d%e6%96%b0%e5%ae%9a%e4%b9%89%e5%85%b1%e8%af%86%e6%9c%ac%e5%9c%b0%e5%8c%96%e4%b8%8e%e5%bb%b6%e8%bf%9f-local-consensus--deferral" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>引用原文 <em>&ldquo;如果一棵树在森林里倒下通过，没有人听到，它发出声音了吗？&rdquo;</em> ，其技术含义是：</p>
+<ul>
+<li><strong>全局共识（Global Consensus）</strong>：仅用于处理争议和最终结算。</li>
+<li><strong>本地共识（Local Consensus）</strong>：只要 Alice 和 Bob 对当前余额（例如 A:0.7, B:0.3）达成一致，这就已经是<strong>事实</strong>，无需全网确认。</li>
+<li><strong>延迟广播（Deferred Broadcast）</strong>：通过推迟广播交易，我们将数以万计的中间状态压缩为链上的一笔最终状态。</li>
+</ul>
+<h3 class="heading-element" id="22-信任锚点2-of-2-多重签名-the-2-of-2-multisig-anchor"><span>2.2 信任锚点：2-of-2 多重签名 (The 2-of-2 Multisig Anchor)</span>
+  <a href="#22-%e4%bf%a1%e4%bb%bb%e9%94%9a%e7%82%b92-of-2-%e5%a4%9a%e9%87%8d%e7%ad%be%e5%90%8d-the-2-of-2-multisig-anchor" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>微支付通道不是一个脱离比特币的“侧链”或“影子账本”，它是<strong>真正的比特币交易</strong>。</p>
+<ul>
+<li><strong>资金锁定</strong>：通道的基础是一个 <strong>2-of-2 多重签名</strong>地址（Funding Transaction）。
+<ul>
+<li>这意味着资金的移动必须经过 Alice 和 Bob <strong>双方同时签名</strong>。</li>
+<li>如果一方掉线或耍赖，资金会不会锁死？这正是第 3 章 RSMC 机制要解决的问题（防止 Hostage Scenario）。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="23-状态更新与时间戳难题-the-timestamping-problem"><span>2.3 状态更新与“时间戳”难题 (The Timestamping Problem)</span>
+  <a href="#23-%e7%8a%b6%e6%80%81%e6%9b%b4%e6%96%b0%e4%b8%8e%e6%97%b6%e9%97%b4%e6%88%b3%e9%9a%be%e9%a2%98-the-timestamping-problem" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在区块链上，矿工通过区块高度解决了“交易先后顺序”的问题。但在链下，如果 Alice 和 Bob 快速交换了 1000 次签名（更新了 1000 次余额状态）：</p>
+<ul>
+<li><strong>问题</strong>：区块链不知道哪个版本是“最新”的。如果 Bob 试图广播第 500 次的旧状态（那里他钱更多），矿工无法区分。</li>
+<li><strong>解决方案雏形</strong>：必须设计一种机制，使得当新状态产生时，<strong>旧状态在密码学上失效</strong>。
+<ul>
+<li>白皮书明确指出：由于不能要在全网撤销旧交易，我们必须通过<strong>惩罚机制（Penalty）</strong> 来从经济上“撤销”它。即：<strong>“谁广播旧状态，谁就失去所有资金”</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="24-从通道到图路由网络-network-of-channels"><span>2.4 从通道到图：路由网络 (Network of Channels)</span>
+  <a href="#24-%e4%bb%8e%e9%80%9a%e9%81%93%e5%88%b0%e5%9b%be%e8%b7%af%e7%94%b1%e7%bd%91%e7%bb%9c-network-of-channels" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>单对单的通道（Hub-and-Spoke）是不够的，因为我们不可能和全世界每个人都建立通道（那需要锁死海量资金）。</p>
+<ul>
+<li><strong>网络拓扑</strong>：Alice 可以通过 Bob 付钱给 Carol（A -&gt; B -&gt; C）。</li>
+<li><strong>安全保障</strong>：这种多跳支付必须是<strong>去信任（Trustless）</strong> 的。
+<ul>
+<li>Alice 不需要信任 Bob 会把钱转给 Carol。</li>
+<li>这是通过 <strong>哈希锁（Hashlock）</strong> 和 <strong>递减的时间锁（Decrementing Timelocks）</strong> 来强制执行的。即 Bob 只有在向 Alice 证明“我已经付钱给 Carol”之后，才能拿到 Alice 的钱 。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="25-章节总结为第-3-章铺路"><span>2.5 章节总结：为第 3 章铺路</span>
+  <a href="#25-%e7%ab%a0%e8%8a%82%e6%80%bb%e7%bb%93%e4%b8%ba%e7%ac%ac-3-%e7%ab%a0%e9%93%ba%e8%b7%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>第 2 章确立了闪电网络的<strong>宏观架构</strong>：</p>
+<ol>
+<li><strong>不发声</strong>：只有争议或关闭时才上链。</li>
+<li><strong>真实性</strong>：链下交易也是由比特币脚本背书的真实交易。</li>
+<li><strong>技术依赖</strong>：为了实现上述愿景，必须解决<strong>交易延展性（Malleability）</strong> 问题，并引入新的签名哈希类型（<code>SIGHASH NOINPUT</code>）。</li>
+</ol>
+<h2 class="heading-element" id="3-双向支付通道-bidirectional-payment-channels"><span>3. 双向支付通道 (Bidirectional Payment Channels)</span>
+  <a href="#3-%e5%8f%8c%e5%90%91%e6%94%af%e4%bb%98%e9%80%9a%e9%81%93-bidirectional-payment-channels" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这一章是闪电网络（Lightning Network）的灵魂所在，它解决了“如何在互不信任的双方之间建立一条可无限次更新、无需即时上链的支付通道”这一核心难题。</p>
+<p>在第 2 章中，我们了解到单向通道只能单向传输价值，这在实际网络交互中极为受限。第 3 章提出了一种基于<strong>相对时间锁定</strong>（Relative Locktime）和<strong>惩罚机制</strong>（Penalty Mechanism）的复杂合约结构，实现了双向、高频、无需信任的资金流动。</p>
+<p>核心逻辑在于：<strong>利用比特币脚本（Script）将“时间”作为共识的一部分，允许双方在链下安全地“推迟”交易广播，并能对作恶行为（广播旧状态）进行惩罚</strong>。</p>
+<h3 class="heading-element" id="31-通道创建中的归责问题-the-problem-of-blame-in-channel-creation"><span>3.1 通道创建中的归责问题 (The Problem of Blame in Channel Creation)</span>
+  <a href="#31-%e9%80%9a%e9%81%93%e5%88%9b%e5%bb%ba%e4%b8%ad%e7%9a%84%e5%bd%92%e8%b4%a3%e9%97%ae%e9%a2%98-the-problem-of-blame-in-channel-creation" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>要在网络中建立支付关系，首先需要建立通道。这里的难点在于如何安全地锁定资金，同时防止一方在资金锁定后拒绝合作（Hostage Scenario）。</p>
+<h4 class="heading-element" id="311--312-资金交易与-sighash-noinput"><span>3.1.1 &amp; 3.1.2 资金交易与 <code>SIGHASH NOINPUT</code></span>
+  <a href="#311--312-%e8%b5%84%e9%87%91%e4%ba%a4%e6%98%93%e4%b8%8e-sighash-noinput" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>注资交易（Funding Transaction）</strong> 是通道的锚点。它是一个 2-of-2 的多重签名（Multisig）输出，需要 Alice 和 Bob 共同签名才能花费。</p>
+<p><strong>设计挑战（死锁风险）：</strong>
+如果 Alice 和 Bob 先签署并广播了 Funding Transaction，但随后 Bob 拒绝签署承诺交易（Commitment Transaction），那么 Alice 的资金将被永远锁定在 2-of-2 地址中。</p>
+<p><strong>解决方案（操作顺序）：</strong></p>
+<ol>
+<li>构建 Funding Transaction（但不签名）。</li>
+<li>构建并交换花费该 Funding Output 的承诺交易（Commitment Transactions）。</li>
+<li><strong>确认持有有效的承诺交易后</strong>，才签署并广播 Funding Transaction。</li>
+</ol>
+<p><strong>技术细节：<code>SIGHASH NOINPUT</code></strong>
+由于在步骤 2 中，Funding Transaction 尚未广播（甚至尚未完全签名），因此没有 Transaction ID。标准的比特币签名需要引用父交易的 ID。
+文中提出了一种 Soft-fork 方案：<strong><code>SIGHASH NOINPUT</code></strong>。允许子交易在不引用父交易 ID 的情况下进行签名和验证。这使得双方可以在父交易生效前，就安全地签署子交易合约。</p>
+<h4 class="heading-element" id="313-承诺交易不可执行的原始构建"><span>3.1.3 承诺交易：不可执行的原始构建</span>
+  <a href="#313-%e6%89%bf%e8%af%ba%e4%ba%a4%e6%98%93%e4%b8%8d%e5%8f%af%e6%89%a7%e8%a1%8c%e7%9a%84%e5%8e%9f%e5%a7%8b%e6%9e%84%e5%bb%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>承诺交易（Commitment Transaction）</strong> 代表了通道当前的余额状态。</p>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170047173.png' alt="图 1：存在缺陷的原始 Funding 结构" height="590" width="1108"></p>
+<blockquote>
+<p>此图展示了一个朴素的方案：Funding Transaction (F) 被广播，后续的交易在链下持有。但在这种结构下，无法阻止一方广播旧的交易。</p>
+</blockquote>
+<p><strong>核心漏洞（双花问题）：</strong>
+如果通道余额从 <code>Alice:0.5, Bob:0.5</code> 更新为 <code>Alice:0.4, Bob:0.6</code>。此时双方手中持有两套有效的承诺交易。Alice 作为理性的经济人，有极大的动机广播旧的交易（即她拥有 0.5 的那个版本），从而窃取资金。
+如果不解决“如何废除旧状态”的问题，双向通道就无法成立。</p>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170132819.png' alt="图2：任何一方都可以在任何时候广播任一承诺交易，但只有一笔交易能成功从单一的资金交易中支出。这种方式行不通，因为一方不会希望广播最新的交易。" height="490" width="1104"></p>
+<blockquote>
+<p>展示了当存在多个有效承诺交易时，任何一方都可以选择对自己最有利（即旧的）那个版本进行广播，导致系统崩溃。</p>
+</blockquote>
+<h4 class="heading-element" id="314-承诺交易非对称归责-ascribing-blame"><span>3.1.4 承诺交易：非对称归责 (Ascribing Blame)</span>
+  <a href="#314-%e6%89%bf%e8%af%ba%e4%ba%a4%e6%98%93%e9%9d%9e%e5%af%b9%e7%a7%b0%e5%bd%92%e8%b4%a3-ascribing-blame" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>为了解决上述漏洞，协议引入了<strong>非对称（Asymmetric）</strong> 交易结构。
+对于同一个状态（例如余额 A:0.5, B:0.5），双方持有<strong>互不相同</strong>的交易版本：</p>
+<ul>
+<li><strong>Alice 持有的版本 ($C_{1a}$)</strong>：由 <strong>Bob</strong> 签名。</li>
+<li><strong>Bob 持有的版本 ($C_{1b}$)</strong>：由 <strong>Alice</strong> 签名。</li>
+</ul>
+<p>这意味着，如果 $C_{1a}$ 被广播到区块链上，网络可以唯一确定<strong>是 Alice 广播的</strong>（因为该交易需要 Alice 补充自己的签名才能生效，且该交易结构仅属于 Alice）。</p>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170214010.png' alt="图 3：非对称承诺交易结构" height="514" width="1106"></p>
+<blockquote>
+<p>核心图解。紫色交易仅由 Alice 广播，蓝色交易仅由 Bob 广播。这种非对称性是后续实施“惩罚机制”的基础，因为它能明确责任人。</p>
+</blockquote>
+<h3 class="heading-element" id="32--33-带有撤销机制的通道-creating-a-channel-with-contract-revocation"><span>3.2 &amp; 3.3 带有撤销机制的通道 (Creating a Channel with Contract Revocation)</span>
+  <a href="#32--33-%e5%b8%a6%e6%9c%89%e6%92%a4%e9%94%80%e6%9c%ba%e5%88%b6%e7%9a%84%e9%80%9a%e9%81%93-creating-a-channel-with-contract-revocation" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>仅识别出“谁广播了旧交易”是不够的，必须要有机制<strong>惩罚</strong>这种行为。白皮书引入了 <strong>RSMC (Revocable Sequence Maturity Contract)</strong>。</p>
+<h4 class="heading-element" id="331-时间停止-timestop"><span>3.3.1 时间停止 (Timestop)</span>
+  <a href="#331-%e6%97%b6%e9%97%b4%e5%81%9c%e6%ad%a2-timestop" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>为了防止恶意攻击者通过 DDoS 攻击塞满区块，导致受害者无法在规定时间内发出惩罚交易，文中提议了一种矿工投票机制。如果区块头中的特定位被置位，则该区块不计入相对时间锁的计数（sequence number maturity）。这是一种防洪（Anti-flood）的安全保障。</p>
+<h4 class="heading-element" id="332-可撤销承诺交易-revocable-commitment-transactions"><span>3.3.2 可撤销承诺交易 (Revocable Commitment Transactions)</span>
+  <a href="#332-%e5%8f%af%e6%92%a4%e9%94%80%e6%89%bf%e8%af%ba%e4%ba%a4%e6%98%93-revocable-commitment-transactions" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>这是闪电网络最精妙的设计之一。</p>
+<p>承诺交易 ($C_{1a}$) 的非对称输出结构 (Alice 广播视角)</p>
+<p>在 Alice 持有的承诺交易 ($C_{1a}$) 中，输出结构并非直接给双方打钱，而是带有条件：</p>
+<ol>
+<li>
+<p><strong>给 Bob 的资金（To Counterparty）：</strong></p>
+<ul>
+<li><strong>权限</strong>：Bob 可以<strong>立即</strong>花费这笔钱（通过 <strong>Delivery Transaction, $D_{1a}$</strong>）。</li>
+<li><strong>原理</strong>：由于 Alice 是交易的<strong>广播者（Broadcaster）</strong>，Bob 是被动方。Alice 广播该交易即代表她承认这笔钱归 Bob 所有，因此 Bob 无需等待，也不受任何惩罚。</li>
+</ul>
+</li>
+<li>
+<p><strong>给 Alice 自己的钱（To Broadcaster）：</strong></p>
+<ul>
+<li><strong>机制</strong>：这笔资金不会直接回到 Alice 钱包，而是被锁定在一个 <strong>RSMC (Revocable Sequence Maturity Contract)</strong> 脚本输出中。该脚本包含两个互斥的解锁条件：</li>
+<li><strong>路径 A（正常赎回路径）：</strong>
+Alice 必须等待 <strong>1000 个区块</strong>（Sequence Number Maturity）的相对确认时间后，才能通过 <strong>Revocable Delivery Transaction ($RD_{1a}$)</strong> 取回资金。</li>
+<li><strong>路径 B（惩罚/撤销路径）：</strong>
+如果 $C_{1a}$ 是一个已经被双方废弃的<strong>旧状态</strong>（意味着 Bob 已经拥有了该状态的 <strong>撤销密钥/违约补救信息</strong>），那么 Bob 无需等待，可以利用 <strong>Breach Remedy Transaction ($BR_{1a}$)</strong> <strong>立即</strong>抢在 Alice 之前扫走这笔钱，作为对 Alice 违约广播旧状态的惩罚。</li>
+</ul>
+</li>
+</ol>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170316734.png' alt="图 4：基于归责的撤销交易结构" height="868" width="1110"></p>
+<blockquote>
+<p>展示了资金流向的非对称性：广播交易的一方必须等待（受到 Sequence Number 限制），而另一方可以立即获得资金。</p>
+</blockquote>
+<p>这是对白皮书 <strong>3.3.3</strong> 章节的深度解析。这一节描述了当一方单方面将承诺交易广播上链后，资金如何在“非作弊”的场景下结算。</p>
+<p>把它插入到你现有的 3.3.2（结构定义）和 3.3.4（状态更迭与撤销）之间，能够补全“从上链到最终落袋为安”的执行逻辑。</p>
+<h4 class="heading-element" id="333-赎回资金非对称的等待-redeeming-funds-from-the-channel"><span>3.3.3 赎回资金：非对称的等待 (Redeeming Funds from the Channel)</span>
+  <a href="#333-%e8%b5%8e%e5%9b%9e%e8%b5%84%e9%87%91%e9%9d%9e%e5%af%b9%e7%a7%b0%e7%9a%84%e7%ad%89%e5%be%85-redeeming-funds-from-the-channel" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>当承诺交易（Commitment Transaction）真正被广播到区块链上时，系统并非立即把钱分给两人，而是根据 <strong>“谁是广播者”</strong> 这一事实，对双方实施截然不同的资金赎回策略。</p>
+<p>这种设计不仅仅是为了防范欺诈，更是在协议层面确立了<strong>主动行为的成本</strong>——谁想单方面结束通道，谁就要付出时间的代价。</p>
+<h5 class="heading-element" id="1-权益的非对称性-asymmetry-of-redemption"><span>1. 权益的非对称性 (Asymmetry of Redemption)</span>
+  <a href="#1-%e6%9d%83%e7%9b%8a%e7%9a%84%e9%9d%9e%e5%af%b9%e7%a7%b0%e6%80%a7-asymmetry-of-redemption" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>假设当前通道状态由承诺交易 $C_{1a}$（Alice 持有）和 $C_{1b}$（Bob 持有）定义。
+如果 <strong>Bob</strong> 决定单方面关闭通道，他将自己签名的 <strong>$C_{1b}$</strong> 广播到网络上。</p>
+<p>此时，资金赎回的时间线呈现显著差异：</p>
+<ul>
+<li>
+<p><strong>Alice（非广播方/被动方）：立即拿钱</strong></p>
+<ul>
+<li><strong>权限</strong>：Alice 可以立即赎回属于她的那部分资金。</li>
+<li><strong>逻辑</strong>：既然是 Bob 主动广播了交易，说明 Bob 承认这笔钱归 Alice 所有。Alice 作为被动卷入的一方，不应受到任何惩罚或延迟，系统允许她通过标准交易立即提现。</li>
+</ul>
+</li>
+<li>
+<p><strong>Bob（广播方/主动方）：强制等待</strong></p>
+<ul>
+<li><strong>权限</strong>：Bob 必须等待 <strong>1000 个区块</strong>（约 1 周）的相对确认时间（Sequence Number Maturity）后，才能动用他自己的资金。</li>
+<li><strong>逻辑</strong>：作为发起上链的一方，Bob 必须接受“考察期”，以向全网证明他没有广播旧的无效状态（Revoked State）。如果这 1000 个区块内 Alice 没有发起“违约补救”，说明 Bob 是诚实的。</li>
+</ul>
+</li>
+</ul>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118182258668.png' alt="图5：当鲍勃广播C1b时，爱丽丝可以立即赎回她的部分。鲍勃必须等待1000次确认。当区块被立即广播时，就处于这种状态。绿色的交易是已提交到区块链中的交易。" height="872" width="1112"></p>
+<blockquote>
+<p><strong>【图 5：非对称赎回状态】</strong>
+图中展示了 Bob 广播 $C_{1b}$ 后的瞬间状态：</p>
+<ul>
+<li><strong>Alice (上)</strong>：输出路径畅通，可立即花费。</li>
+<li><strong>Bob (下)</strong>：输出路径被 RSMC 脚本阻塞，必须等待 1000 个区块。</li>
+</ul>
+</blockquote>
+<h5 class="heading-element" id="2-可撤销交付交易-revocable-delivery-transaction-rd"><span>2. 可撤销交付交易 (Revocable Delivery Transaction, RD)</span>
+  <a href="#2-%e5%8f%af%e6%92%a4%e9%94%80%e4%ba%a4%e4%bb%98%e4%ba%a4%e6%98%93-revocable-delivery-transaction-rd" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>Bob 如何在等待期结束后拿到钱？
+他不能直接花费承诺交易的输出（因为那是锁在脚本里的），他需要广播一个预先签署好的后续交易，称为 <strong>可撤销交付交易 (Revocable Delivery Transaction, $RD_{1b}$)</strong>。</p>
+<ul>
+<li><strong>生效条件</strong>：只有当父交易（即 $C_{1b}$）在区块链上获得了 1000 次确认后，$RD_{1b}$ 才能被矿工打包。如果在 1000 区块内尝试广播 $RD_{1b}$，会被网络共识判定为无效（Invalid）并拒绝。</li>
+<li><strong>最终结算</strong>：一旦 1000 个区块过去，且 Alice 没有发起惩罚（证明 $C_{1b}$ 是最新状态），Bob 就可以成功广播 $RD_{1b}$，将资金从通道脚本中提取到自己的普通钱包地址中。</li>
+</ul>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118182343444.png' alt="图6：爱丽丝确认鲍勃广播了正确的承诺交易，且1000次确认已完成。随后，鲍勃能够在区块链上广播可撤销交付（RD1b）交易。" height="844" width="1112"></p>
+<blockquote>
+<p><strong>【图 6：延迟生效的交付】</strong>
+展示了 1000 个区块确认通过后，Bob 终于可以将 $RD_{1b}$ 上链（图中 RD1b 变为绿色），完成最终的资金交割。此时通道对双方彻底关闭。</p>
+</blockquote>
+<ul>
+<li></li>
+</ul>
+<h4 class="heading-element" id="334-创建新状态与撤销旧状态-revoking-prior-commitments"><span>3.3.4 创建新状态与撤销旧状态 (Revoking Prior Commitments)</span>
+  <a href="#334-%e5%88%9b%e5%bb%ba%e6%96%b0%e7%8a%b6%e6%80%81%e4%b8%8e%e6%92%a4%e9%94%80%e6%97%a7%e7%8a%b6%e6%80%81-revoking-prior-commitments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>这是闪电网络协议中最关键的状态转移环节。为了保证资金安全，状态更新必须遵循 <strong>“先建立新状态，再毒化旧状态”</strong> 的严格时序。</p>
+<p>假设 Alice 和 Bob 要从 <strong>State 1</strong>（各 0.5 BTC）更新到 <strong>State 2</strong>（Alice 0.4, Bob 0.6）。</p>
+<h5 class="heading-element" id="1-第一阶段建立新世界-establish-new-state"><span>1. 第一阶段：建立新世界 (Establish New State)</span>
+  <a href="#1-%e7%ac%ac%e4%b8%80%e9%98%b6%e6%ae%b5%e5%bb%ba%e7%ab%8b%e6%96%b0%e4%b8%96%e7%95%8c-establish-new-state" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>在废除旧交易之前，必须确保新交易已经签署并生效，以防止状态丢失。</p>
+<ul>
+<li><strong>动作</strong>：双方构建并交换 <strong>State 2</strong> 的承诺交易（$C_{2a}$ 和 $C_{2b}$）的签名。</li>
+<li><strong>状态</strong>：此时，区块链上尚未发生任何事情。但在逻辑上，Alice 手中同时拥有有效的 $C_1$（旧，对自己有利）和 $C_2$（新）。</li>
+<li><strong>风险</strong>：作为理性经济人，Alice 此时有极大的动机去广播旧的 $C_1$ 以保留那 0.5 BTC。</li>
+</ul>
+<h5 class="heading-element" id="2-第二阶段毒化旧世界-poison-old-state"><span>2. 第二阶段：毒化旧世界 (Poison Old State)</span>
+  <a href="#2-%e7%ac%ac%e4%ba%8c%e9%98%b6%e6%ae%b5%e6%af%92%e5%8c%96%e6%97%a7%e4%b8%96%e7%95%8c-poison-old-state" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>为了消除 Alice 作恶的动机，必须让 $C_1$ 对她变得“致命”。这是通过<strong>违约补救（Breach Remedy）</strong> 机制实现的。</p>
+<ul>
+<li><strong>动作</strong>：
+<ul>
+<li>Alice 将 $C_{1a}$ 中用于锁定她自己资金（RSMC 脚本）的<strong>撤销私钥（Revocation Private Key）</strong> 发送给 Bob。</li>
+<li>Bob 同样将 $C_{1b}$ 的撤销私钥发送给 Alice。</li>
+</ul>
+</li>
+<li><strong>本质</strong>：这相当于 Alice 把自家“旧保险箱”的备用钥匙交给了 Bob。在此之前，只有 Alice 能打开这个箱子；在此之后，Bob 也能打开，而且比 Alice 更快。</li>
+</ul>
+<h5 class="heading-element" id="3-违约补救交易-breach-remedy-transaction-br"><span>3. 违约补救交易 (Breach Remedy Transaction, $BR$)</span>
+  <a href="#3-%e8%bf%9d%e7%ba%a6%e8%a1%a5%e6%95%91%e4%ba%a4%e6%98%93-breach-remedy-transaction-br" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>如果 Alice 在交换密钥后，依然恶意（或因软件故障）广播了旧的 $C_{1a}$，协议将触发以下<strong>非对称博弈</strong>：</p>
+<ul>
+<li>
+<p><strong>Alice 的困境（时间锁）</strong>：
+因为是 Alice 主动广播，$C_{1a}$ 中属于她的资金被锁定在 RSMC 脚本中，她必须等待 <strong>1000 个区块</strong>（约 1 周）才能通过 <code>Revocable Delivery</code> 交易取回资金。</p>
+</li>
+<li>
+<p><strong>Bob 的绝杀（竞速优势）</strong>：
+Bob 监测到 $C_{1a}$ 上链后，发现这是一个已被撤销的旧状态。他利用 Alice 在第二阶段交给他的<strong>撤销私钥</strong>，构建一笔 <strong>违约补救交易 ($BR_{1a}$)</strong> 。</p>
+<ul>
+<li><strong>权限</strong>：该交易利用了 RSMC 脚本中的“路径 B”（即惩罚路径）。</li>
+<li><strong>时效</strong>：该路径<strong>没有时间锁限制</strong>，可以立即生效 。</li>
+<li><strong>结果</strong>：Bob 抢在 Alice 的 1000 区块等待期结束前，<strong>合法地扫光了 Alice 在该通道内的所有资金</strong>。</li>
+</ul>
+</li>
+</ul>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170558461.png' alt="图7：可能存在四种交易，一对包含旧承诺，另一对包含新承诺。通道内的每一方只能广播总承诺的一半（各两个）。除了惩罚性支出外，没有明确的强制措施阻止任何特定承诺被广播，因为它们都是有效的未广播支出。可撤销承诺仍存在于C1a/C1b对中，但为简洁起见未展示。" height="582" width="1108"></p>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170616684.png' alt="图8：当C2a和C2b存在时，双方会交换违约补救交易。此时，双方都有明确的经济动机避免广播旧的承诺交易（C1a/C1b）。如果任何一方希望关闭通道，他们只会使用C2a（爱丽丝）或C2b（鲍勃）。如果爱丽丝广播C1a，她所有的钱都会归鲍勃所有。如果鲍勃广播C1b，他所有的钱都会归爱丽丝所有。C2a/C2b的输出可参见前图。" height="858" width="1436"></p>
+<blockquote>
+<p><strong>【图 7 &amp; 8：状态更新与违约补救】</strong>
+解释了状态更新过程。当生成 $C2$ 后，双方交换针对 $C1$ 的 Breach Remedy 密钥。这赋予了对方“一旦你作恶，我就没收你全部资金”的权力。</p>
+</blockquote>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170739869.png' alt="图9：绿色的交易已提交至区块链。鲍勃错误地广播了C1b（只有鲍勃能够广播C1b/C2b）。由于双方都同意当前状态是C2a/C2b承诺对，并且已向对方证明旧承诺通过违约补救交易失效，因此爱丽丝能够广播BR1b并取走通道中的所有资金，前提是她要在C1b广播后的1000个区块内完成操作。" height="858" width="1436"></p>
+<blockquote>
+<p><strong>【图 9：惩罚机制生效流程】</strong>
+展示了 Bob 错误广播旧交易 $C_{1b}$ 后，Alice 如何利用手中的撤销密钥，在 Bob 的 1000 区块等待期结束前，通过 $BR_{1b}$ 交易抢先拿走资金。</p>
+</blockquote>
+<h5 class="heading-element" id="4-结论经济学威慑"><span>4. 结论：经济学威慑</span>
+  <a href="#4-%e7%bb%93%e8%ae%ba%e7%bb%8f%e6%b5%8e%e5%ad%a6%e5%a8%81%e6%85%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>通过这种机制，旧的承诺交易（$C_1$）虽然在密码学上依然有效（签名是合法的），但在<strong>博弈论</strong>上已经失效。
+只要 Alice 是理性的，她就永远不会广播一个**“不仅拿不到钱，还会损失所有本金”<strong>的交易。这种</strong>基于惩罚的撤销机制**，构成了闪电网络链下共识的基石。</p>
+<h4 class="heading-element" id="335-密钥存储与优化"><span>3.3.5 密钥存储与优化</span>
+  <a href="#335-%e5%af%86%e9%92%a5%e5%ad%98%e5%82%a8%e4%b8%8e%e4%bc%98%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>为了避免保存成千上万个旧状态的撤销密钥，方案建议使用 BIP 0032 分层确定性钱包（HD Wallet）。
+密钥通过 Merkle Tree 结构生成。当废除旧状态时，只需交换树的父节点或特定的索引，即可推导出该节点下所有的子密钥。这使得节点只需极小的存储空间即可维护数百万次交易的历史撤销权。</p>
+<h3 class="heading-element" id="34-合作关闭通道-cooperatively-closing-out-a-channel"><span>3.4 合作关闭通道 (Cooperatively Closing Out a Channel)</span>
+  <a href="#34-%e5%90%88%e4%bd%9c%e5%85%b3%e9%97%ad%e9%80%9a%e9%81%93-cooperatively-closing-out-a-channel" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>上述复杂的 RSMC 流程仅用于<strong>单方面强制关闭</strong>（Unilateral Close）或<strong>纠纷处理</strong>。
+在 99% 的正常情况下，双方合作愉快，决定关闭通道时：
+他们只需直接签署一笔对应当前余额的普通交易，花费 Funding Output，不附加任何时间锁或惩罚脚本。这被称为 <strong>Exercise Settlement</strong>。双方均可立即获得资金，且手续费最低。</p>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118170816268.png' alt="图10：如果双方都愿意合作，他们会获取当前承诺交易中的余额，并通过行权结算交易（ES）从资金交易中支出。如果最新的承诺交易被广播，那么支付金额（扣除费用后）将是相同的。" height="578" width="1110"></p>
+<blockquote>
+<p><strong>【图 10：合作结算交易】</strong>
+展示了最理想的关闭路径：双方协商一致，直接瓜分 Funding Transaction 的输出，跳过所有复杂的脚本逻辑。</p>
+</blockquote>
+<h2 class="heading-element" id="4-哈希时间锁定合约-hashed-timelock-contract-htlc"><span>4. 哈希时间锁定合约 (Hashed Timelock Contract, HTLC)</span>
+  <a href="#4-%e5%93%88%e5%b8%8c%e6%97%b6%e9%97%b4%e9%94%81%e5%ae%9a%e5%90%88%e7%ba%a6-hashed-timelock-contract-htlc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><blockquote>
+<p>如果说第 3 章解决了“两人之间如何无限次交易”的问题，那么第 4 章则是为了解决 <strong>“如何在互不信任的陌生人网络中实现多跳（Multi-hop）资金传递”</strong> 的问题。</p>
+<p>这一章的核心贡献是将<strong>全球状态（Global State）</strong> 引入到本地通道中，通过<strong>哈希锁（Hashlock）</strong> 和<strong>时间锁（Timelock）</strong> 的组合，实现了“去中心化清算”。</p>
+</blockquote>
+<p>HTLC 是闪电网络实现路由支付（Routing）的基础原子单位。它本质上是一个附带了条件条款的支付承诺。
+条款内容可以抽象为：</p>
+<ol>
+<li><strong>哈希锁（Hashlock）：</strong> 如果接收方（Bob）能在 3 天内出示一个秘密 $R$（Preimage），使得 $Hash(R) = H$，则这笔钱归 Bob。</li>
+<li><strong>时间锁（Timelock）：</strong> 如果 3 天过去了，Bob 没能拿出 $R$，则这笔钱自动退还给发送方（Alice）。</li>
+</ol>
+<p>在闪电网络的通道中，HTLC 并不是独立的交易，而是<strong>作为 Commitment Transaction 中的第三种输出（Output）</strong> 存在的（前两种是 Alice 和 Bob 的余额）。</p>
+<h3 class="heading-element" id="41-非可撤销-htlc-的缺陷-non-revocable-htlc-construction"><span>4.1 非可撤销 HTLC 的缺陷 (Non-revocable HTLC Construction)</span>
+  <a href="#41-%e9%9d%9e%e5%8f%af%e6%92%a4%e9%94%80-htlc-%e7%9a%84%e7%bc%ba%e9%99%b7-non-revocable-htlc-construction" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>白皮书首先展示了一个朴素（Naive）但不可行的设计，以此引出复杂设计的必要性。</p>
+<p><strong>原始设计：</strong>
+在 Commitment Transaction 中添加一个输出，脚本逻辑是：<code>IF (Bob 提供 R) THEN Pay Bob ELSE (3天后) Pay Alice</code>。</p>
+<p><strong>致命漏洞（竞争条件与无法终局）：</strong>
+假设 Alice 和 Bob 想要在链下结束这个 HTLC（比如 Bob 已经提供了 R，双方决定更新余额），他们会生成一个新的 Commitment Transaction（C2）来移除这个 HTLC 输出。
+但是，如果 Alice 恶意广播了包含 HTLC 的旧交易（C1）：</p>
+<ul>
+<li>即便 Bob 知道 R，如果他此时不在线，或者未能及时广播交易去认领，一旦 3 天时间过期，Alice 就可以通过“超时路径”拿回资金。</li>
+<li>更严重的是，如果不引入第 3 章的<strong>撤销机制（Revocation）</strong>，Alice 可以随时广播旧状态。如果 Bob 在一年后才披露 R，而 Alice 广播了一年前的旧交易，此时时间锁已过期，哈希锁也满足，脚本出现了两条都有效的路径，这就导致了资金归属的混乱和盗窃风险。</li>
+</ul>
+<p><strong>结论：</strong> HTLC 必须像通道余额一样，是<strong>可撤销（Revocable）</strong> 的。</p>
+<h3 class="heading-element" id="42-链下可撤销-htlc-off-chain-revocable-htlc"><span>4.2 链下可撤销 HTLC (Off-chain Revocable HTLC)</span>
+  <a href="#42-%e9%93%be%e4%b8%8b%e5%8f%af%e6%92%a4%e9%94%80-htlc-off-chain-revocable-htlc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是本章技术密度最高的部分。为了实现“可撤销”，HTLC 的输出脚本必须根据<strong>谁广播了 Commitment Transaction</strong> 而呈现出<strong>非对称结构</strong>。这直接复用了第 3 章的 RSMC（Revocable Sequence Maturity Contract）逻辑。</p>
+<p>假设当前状态是 <strong>Alice 发送 0.1 BTC 给 Bob</strong>，该资金被锁定在 HTLC 中。</p>
+<h4 class="heading-element" id="421-场景-a发送方-alice-广播了-commitment-c2a"><span>4.2.1 场景 A：发送方 Alice 广播了 Commitment (C2a)</span>
+  <a href="#421-%e5%9c%ba%e6%99%af-a%e5%8f%91%e9%80%81%e6%96%b9-alice-%e5%b9%bf%e6%92%ad%e4%ba%86-commitment-c2a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Alice 持有的交易版本（C2a）中，HTLC 输出脚本逻辑如下：</p>
+<ol>
+<li>
+<p><strong>Bob 拿钱路径（Success Path）：</strong></p>
+<ul>
+<li>Bob 只要拥有 $R$，就可以<strong>立即</strong>拿走这笔钱。</li>
+<li><strong>设计动机：</strong> Alice 是广播者（主动方），Bob 是被动方。由于是 Alice 自己把交易发到链上的，Bob 不应该受到惩罚或延迟。</li>
+<li><em>交易代号：HED1a (HTLC Execution Delivery)</em>。</li>
+</ul>
+</li>
+<li>
+<p><strong>Alice 退款路径（Timeout Path）：</strong></p>
+<ul>
+<li>前提：必须超过 3 天（CLTV 绝对时间锁）。</li>
+<li><strong>关键约束：</strong> 资金不能直接回 Alice 钱包，而是进入一个 <strong>RSMC</strong> 脚本（需要额外等待 1000 个区块的相对时间锁）。</li>
+<li><strong>设计动机：</strong> 如果 C2a 是一个<strong>已废弃</strong>的旧状态，Alice 试图通过广播它来从超时路径“偷回”这笔钱，那么这 1000 个区块的延迟给了 Bob 一个惩罚 Alice 的窗口（使用 Breach Remedy Key）。</li>
+<li><em>交易代号：HT1a (HTLC Timeout)</em>。</li>
+</ul>
+</li>
+</ol>
+<h4 class="heading-element" id="422-场景-b接收方-bob-广播了-commitment-c2b"><span>4.2.2 场景 B：接收方 Bob 广播了 Commitment (C2b)</span>
+  <a href="#422-%e5%9c%ba%e6%99%af-b%e6%8e%a5%e6%94%b6%e6%96%b9-bob-%e5%b9%bf%e6%92%ad%e4%ba%86-commitment-c2b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Bob 持有的交易版本（C2b）中，逻辑完全镜像反转：</p>
+<ol>
+<li>
+<p><strong>Alice 退款路径（Timeout Path）：</strong></p>
+<ul>
+<li>前提：超过 3 天。</li>
+<li>Alice 可以<strong>立即</strong>拿回退款。</li>
+<li><strong>设计动机：</strong> Bob 是广播者，Alice 是被动方。如果 Bob 迟迟不提供 R，Alice 有权立即拿回资金。</li>
+<li><em>交易代号：HTD1b (HTLC Timeout Delivery)</em>。</li>
+</ul>
+</li>
+<li>
+<p><strong>Bob 拿钱路径（Success Path）：</strong></p>
+<ul>
+<li>前提：Bob 拥有 $R$。</li>
+<li><strong>关键约束：</strong> 资金进入 <strong>RSMC</strong> 脚本（等待 1000 区块）。</li>
+<li><strong>设计动机：</strong> 如果 C2b 是旧状态（比如 Bob 已经在链下收到了这笔钱，更新了状态，却又广播旧交易想再领一次 HTLC 的钱），这 1000 个区块的延迟允许 Alice 使用撤销密钥没收 Bob 的资金。</li>
+<li><em>交易代号：HE1b (HTLC Execution)</em>。</li>
+</ul>
+</li>
+</ol>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118173129233.png' alt="图12：如果爱丽丝广播C2a，那么左半部分将执行。如果鲍勃广播C2b，那么右半部分将执行。任何一方都可以在任何时候广播其承诺交易。HTLC超时仅在3天后有效。只有当哈希R的原像已知时，HTLC执行才能被广播。为简洁起见，未显示先前的承诺（及其依赖交易）。" height="1182" width="1436"></p>
+<blockquote>
+<p><strong>【图 12：非对称 HTLC 执行结构】</strong>
+此图极为关键。它展示了同一笔 HTLC 资金在 Alice 和 Bob 视角下的不同命运：</p>
+<ul>
+<li><strong>左侧（Alice 广播）</strong>：Bob 拿钱无阻碍，Alice 退款需排队（受 RSMC 限制）。</li>
+<li><strong>右侧（Bob 广播）</strong>：Alice 退款无阻碍，Bob 拿钱需排队（受 RSMC 限制）。
+这种交叉限制保证了：<strong>谁广播旧状态，谁就不仅拿不到钱，还会因为 RSMC 机制丢掉所有资金。</strong></li>
+</ul>
+</blockquote>
+<h3 class="heading-element" id="43--44-链下终止与状态更迭-htlc-termination--closing-order"><span>4.3 &amp; 4.4 链下终止与状态更迭 (HTLC Termination &amp; Closing Order)</span>
+  <a href="#43--44-%e9%93%be%e4%b8%8b%e7%bb%88%e6%ad%a2%e4%b8%8e%e7%8a%b6%e6%80%81%e6%9b%b4%e8%bf%ad-htlc-termination--closing-order" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在 99% 的情况下，HTLC 不会上链。双方会在链下通过协商（Novation）来“结算”这个合约。</p>
+<h4 class="heading-element" id="43-正常结算流程happy-path"><span>4.3 正常结算流程（Happy Path）</span>
+  <a href="#43-%e6%ad%a3%e5%b8%b8%e7%bb%93%e7%ae%97%e6%b5%81%e7%a8%8bhappy-path" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
+<li><strong>披露 R</strong>：Bob 在链下直接将 $R$ 发送给 Alice。</li>
+<li><strong>验证与更新</strong>：Alice 验证 $Hash(R)$ 正确。这意味着如果上链，Bob 必胜。因此，Alice 同意更新通道余额。</li>
+<li><strong>新建状态</strong>：双方签署新的 Commitment Transaction (C3)。
+<ul>
+<li>旧状态 (C2)：Alice: 0.4, Bob: 0.5, HTLC: 0.1</li>
+<li>新状态 (C3)：Alice: 0.4, <strong>Bob: 0.6</strong> (HTLC 被移除，资金并入 Bob 余额)。</li>
+</ul>
+</li>
+<li><strong>撤销旧状态</strong>：双方交换针对 C2 的撤销密钥，<strong>同时</strong>交换 C2 中 HTLC 输出对应的私钥。这一步彻底废除了 C2 及其包含的 HTLC。</li>
+</ol>
+<h4 class="heading-element" id="44-超时结算流程"><span>4.4 超时结算流程</span>
+  <a href="#44-%e8%b6%85%e6%97%b6%e7%bb%93%e7%ae%97%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>如果 Bob 在 3 天内都没能提供 R（例如路径上的下一跳没给他 R）：</p>
+<ol>
+<li><strong>协商作废</strong>：Bob 承认失败。</li>
+<li><strong>新建状态</strong>：
+<ul>
+<li>新状态 (C3)：<strong>Alice: 0.5</strong>, Bob: 0.5 (资金退回 Alice)。</li>
+</ul>
+</li>
+<li><strong>撤销旧状态</strong>：同上。</li>
+</ol>
+<h3 class="heading-element" id="章节总结多跳支付的基石"><span>章节总结：多跳支付的基石</span>
+  <a href="#%e7%ab%a0%e8%8a%82%e6%80%bb%e7%bb%93%e5%a4%9a%e8%b7%b3%e6%94%af%e4%bb%98%e7%9a%84%e5%9f%ba%e7%9f%b3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>第 4 章构建了一个精妙的博弈模型：</p>
+<ol>
+<li><strong>原子性（Atomicity）：</strong> HTLC 保证了资金要么全额到达接收方（只要 R 被披露），要么全额退回发送方（超时）。不会出现资金卡在中间的情况。</li>
+<li><strong>无信任中继（Trustless Routing）：</strong> 这种 HTLC 结构可以在多个节点间串联（Alice -&gt; Bob -&gt; Carol -&gt; Dave）。每个节点只与相邻节点有直接的 HTLC 合约。
+<ul>
+<li>只要 Dave 披露了 R 给 Carol 拿钱，Carol 就自动获得了向 Bob 拿钱的凭证（R），Bob 进而向 Alice 拿钱。</li>
+<li><strong>反向传导：</strong> R 的披露是从接收端向发送端逆向流动的。</li>
+</ul>
+</li>
+<li><strong>惩罚机制的普遍性：</strong> 无论是通道余额还是正在进行的 HTLC，只要任何一方试图广播旧的历史状态，RSMC 机制都能保证作恶者失去一切。</li>
+</ol>
+<h2 class="heading-element" id="5-密钥存储-key-storage"><span>5. 密钥存储 (Key Storage)</span>
+  <a href="#5-%e5%af%86%e9%92%a5%e5%ad%98%e5%82%a8-key-storage" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>在第 3 章和第 4 章中，我们看到每次状态更新（State Update）和撤销（Revocation）都需要交换密钥。如果两个节点每秒进行几百次高频交易，运行几个月后，保存所有历史状态的“撤销密钥”将导致巨大的存储压力。</p>
+<p>本章提出了一种基于 <strong>BIP 0032 分层确定性钱包（HD Wallet）</strong> 的优化方案，将存储复杂度从线性 $O(N)$ 降低到对数级甚至常数级。</p>
+<h3 class="heading-element" id="51-merkle-tree-密钥派生"><span>5.1 Merkle Tree 密钥派生</span>
+  <a href="#51-merkle-tree-%e5%af%86%e9%92%a5%e6%b4%be%e7%94%9f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>节点不需要随机生成每一个 Commitment 的密钥，而是预先生成一棵巨大的 Merkle Tree（或类似的分层结构）。</p>
+<ul>
+<li><strong>结构</strong>：树根（Root） -&gt; 中间节点 -&gt; 叶子节点（具体的每一笔交易密钥）。</li>
+<li><strong>操作逻辑</strong>：Alice 在第 1 天使用树底层的叶子密钥作为 Commitment Key。</li>
+</ul>
+<h3 class="heading-element" id="52-批量撤销-invalidating-sub-trees"><span>5.2 批量撤销 (Invalidating Sub-trees)</span>
+  <a href="#52-%e6%89%b9%e9%87%8f%e6%92%a4%e9%94%80-invalidating-sub-trees" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>当 Alice 和 Bob 完成了第 1 天的所有交易，进入第 2 天时，Alice 不需要把第 1 天生成的成千上万个叶子密钥逐个发给 Bob 用于撤销。
+<strong>她只需要把第 1 天那棵子树的“父节点私钥”发给 Bob。</strong></p>
+<ul>
+<li><strong>推导</strong>：Bob 拿到父节点私钥，就可以自行推导出该节点下属的所有子密钥。</li>
+<li><strong>效果</strong>：通过这种方式，只需几 KB 的数据就能废除数百万次历史交易。这对于闪电网络支持高频微支付至关重要，使得节点无需维护庞大的数据库即可保证安全。</li>
+</ul>
+<h2 class="heading-element" id="6-交易费用-blockchain-transaction-fees"><span>6. 交易费用 (Blockchain Transaction Fees)</span>
+  <a href="#6-%e4%ba%a4%e6%98%93%e8%b4%b9%e7%94%a8-blockchain-transaction-fees" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>闪电网络的费用模型与比特币主网完全不同。主网费用是竞价购买区块空间（Block Space），而闪电网络费用是对<strong>流动性占用（Liquidity Leasing）</strong> 的补偿。</p>
+<h3 class="heading-element" id="61-费用的本质时间价值"><span>6.1 费用的本质：时间价值</span>
+  <a href="#61-%e8%b4%b9%e7%94%a8%e7%9a%84%e6%9c%ac%e8%b4%a8%e6%97%b6%e9%97%b4%e4%bb%b7%e5%80%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在链下通道中，资金被锁定在 HTLC 中等待跳转。</p>
+<ul>
+<li><strong>机会成本</strong>：当 Alice 帮别人转发资金时，她的这部分 BTC 在 HTLC 解锁前是不可用的（Locked）。</li>
+<li><strong>定价模型</strong>：费用主要基于<strong>资金的时间价值（Time-value of money）</strong>。即：<code>Fee = Base_Fee + (Amount * Time * Rate)</code>。</li>
+<li><strong>低廉原因</strong>：因为大部分交易不需要上链（Exercise Settlement），所以不需要支付昂贵的矿工费，只需支付极低的节点过路费。</li>
+</ul>
+<h3 class="heading-element" id="62-归责与链上费用"><span>6.2 归责与链上费用</span>
+  <a href="#62-%e5%bd%92%e8%b4%a3%e4%b8%8e%e9%93%be%e4%b8%8a%e8%b4%b9%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如果发生纠纷（Uncooperative Counterparty）导致必须关闭通道上链：</p>
+<ul>
+<li><strong>谁付矿工费？</strong> 协议建议由发起关闭的一方或在通道开启时协商确定的责任方支付。</li>
+<li><strong>第三方协助</strong>：文中还简略提到一种 2-of-3 的第三方托管模式来处理费用，但在后续闪电网络实现中，主流采用的是直接在 Commitment Transaction 中预留推导出的矿工费（Anchor Outputs 等现代实现的前身）。</li>
+</ul>
+<h2 class="heading-element" id="7-支付即合同-pay-to-contract"><span>7. 支付即合同 (Pay to Contract)</span>
+  <a href="#7-%e6%94%af%e4%bb%98%e5%8d%b3%e5%90%88%e5%90%8c-pay-to-contract" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这一章非常简短，定义了闪电网络支付的<strong>语义完整性</strong>。</p>
+<h3 class="heading-element" id="71-r-值即收据"><span>7.1 $R$ 值即收据</span>
+  <a href="#71-r-%e5%80%bc%e5%8d%b3%e6%94%b6%e6%8d%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在 HTLC 中，收款人必须披露原像 $R$（Preimage）才能拿到钱。</p>
+<ul>
+<li><strong>密码学证据</strong> ：$R$ 的披露不仅仅是拿钱的钥匙，它在法律和逻辑上可以作为 <strong>“已收到款项”的密码学证明</strong> 。</li>
+</ul>
+<ul>
+<li><strong>应用场景</strong>：商家在发票中承诺“如果我收到了 $Hash(R)$ 对应的钱，我就发货”。一旦 $R$ 出现在链上或被广播，商家就无法抵赖说没收到钱。这实现了去中心化的“货银对付”（Delivery Versus Payment）。</li>
+</ul>
+<h2 class="heading-element" id="8-比特币闪电网络-the-bitcoin-lightning-network"><span>8. 比特币闪电网络 (The Bitcoin Lightning Network)</span>
+  <a href="#8-%e6%af%94%e7%89%b9%e5%b8%81%e9%97%aa%e7%94%b5%e7%bd%91%e7%bb%9c-the-bitcoin-lightning-network" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这一章是将前面所有组件（通道、RSMC、HTLC、密钥管理）组装成一个完整网络的系统架构章节。核心在于解决<strong>多跳（Multi-hop）路由中的安全时序问题</strong>。</p>
+<h3 class="heading-element" id="81-递减时间锁-decrementing-timelocks"><span>8.1 递减时间锁 (Decrementing Timelocks)</span>
+  <a href="#81-%e9%80%92%e5%87%8f%e6%97%b6%e9%97%b4%e9%94%81-decrementing-timelocks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是多跳支付安全的核心机制。为了防止中间节点资金被卡住，路径上的 Time Lock（超时时间）必须<strong>沿着支付方向递减</strong>。</p>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118174255250.png' alt="图15：使用HTLC通过闪电网络进行支付。" height="202" width="1108"></p>
+<p><img loading="lazy" src='/posts/202601-lightningnetwork/file-20260118174314700.png' alt="图16：HTLC的结算，爱丽丝的资金被发送给戴夫。" height="274" width="1106"></p>
+<blockquote>
+<p><strong>【图 15 &amp; 16：多跳支付结构】</strong>
+假设路径为：Alice -&gt; Bob -&gt; Carol -&gt; Dave。
+支付流向是向右，但 $R$ 的披露（解密）流向是向左。</p>
+</blockquote>
+<p><strong>机制详解：</strong></p>
+<ol>
+<li><strong>Alice -&gt; Bob</strong>：HTLC 超时时间设为 <strong>3 天</strong>。</li>
+<li><strong>Bob -&gt; Carol</strong>：HTLC 超时时间设为 <strong>2 天</strong>。</li>
+<li><strong>Carol -&gt; Dave</strong>：HTLC 超时时间设为 <strong>1 天</strong>。</li>
+</ol>
+<p><strong>为什么必须递减？（安全逻辑）</strong></p>
+<ul>
+<li>假设 Dave 在第 1 天快结束时才披露 $R$ 给 Carol 拿走了钱。</li>
+<li>Carol 拿到 $R$ 后，必须找上游的 Bob 拿钱。她还有整整 <strong>1 天</strong>（第 2 天 - 第 1 天）的时间窗口去完成这件事。</li>
+<li>如果时间不递减（例如都是 1 天），Dave 在最后一秒披露 $R$，Carol 还没来得及转身找 Bob，她与 Bob 的合约就过期退款了。导致 Carol 赔了钱给 Dave，却没收到 Bob 的钱。</li>
+</ul>
+<p><strong>结论</strong>：上游节点必须比下游节点拥有更长的超时容错窗口。</p>
+<h3 class="heading-element" id="82-清算失败与路由选择-clearing-failure--routing"><span>8.2 清算失败与路由选择 (Clearing Failure &amp; Routing)</span>
+  <a href="#82-%e6%b8%85%e7%ae%97%e5%a4%b1%e8%b4%a5%e4%b8%8e%e8%b7%af%e7%94%b1%e9%80%89%e6%8b%a9-clearing-failure--routing" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>失败回滚</strong>：如果路径中某节点断线，交易不会卡死，而是等待超时后自动回滚（退款）。</li>
+<li><strong>网络拓扑</strong>：
+<ul>
+<li><strong>Core Nodes (Tier-1)</strong>：类似于互联网骨干网，大型节点长期在线，构建稳定的路由表。</li>
+<li><strong>Edge Nodes</strong>：普通用户，间歇性在线，不需要全网路由表，只需连接到几个可靠节点。</li>
+<li>这实际上预言了现在闪电网络中类似 LSP (Lightning Service Provider) 的结构。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="83-风险与缓解-risks"><span>8.3 风险与缓解 (Risks)</span>
+  <a href="#83-%e9%a3%8e%e9%99%a9%e4%b8%8e%e7%bc%93%e8%a7%a3-risks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>作者坦诚地列出了系统的潜在风险：</p>
+<ol>
+<li><strong>强制过期垃圾交易攻击 (Forced Expiration Spam)</strong>：攻击者故意制造大量即将超时的通道并在同一时间广播，试图塞满比特币区块，导致诚实节点无法在规定时间内把惩罚交易（Breach Remedy）上链。
+<ul>
+<li><em>对策</em>：这是最严重的系统性风险。需要区块扩容或由矿工引入“拥堵感知”的软分叉规则。</li>
+</ul>
+</li>
+<li><strong>私钥失窃 (Coin Theft via Cracking)</strong>：闪电网络节点必须在线（Hot Wallet），这带来了被黑客攻击的风险。建议大额资金仍存储在冷钱包。</li>
+<li><strong>数据丢失 (Data Loss)</strong>：如果你丢失了最新的通道状态，就无法生成惩罚交易，对方可能会广播旧状态作恶。
+<ul>
+<li><em>对策</em>：外包数据监控服务（Watchtowers 的雏形）。</li>
+</ul>
+</li>
+</ol>
+<h3 class="heading-element" id="总结从协议到生态"><span>总结：从协议到生态</span>
+  <a href="#%e6%80%bb%e7%bb%93%e4%bb%8e%e5%8d%8f%e8%ae%ae%e5%88%b0%e7%94%9f%e6%80%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>至此，白皮书完成了从微观到宏观的构建：</p>
+<ul>
+<li><strong>Ch 3</strong>: 建立了两人间的无限次支付通道（<strong>RSMC</strong>）。</li>
+<li><strong>Ch 4</strong>: 建立了跨节点的无信任传递机制（<strong>HTLC</strong>）。</li>
+<li><strong>Ch 5-7</strong>: 解决了工程落地的存储、费用和凭证问题。</li>
+<li><strong>Ch 8</strong>: 制定了网络路由和风控的顶层规则。</li>
+</ul>
+<p>这套架构证明了：比特币区块链不需要处理每一笔咖啡交易，它只需要作为<strong>最终的法院</strong>（Final Settlement Layer）。只有在发生纠纷时，才需要“上庭”（上链）；在 99.9% 的协作场景下，交易都在链下以毫秒级速度完成。</p>
+<h2 class="heading-element" id="9-风险分析-risks"><span>9. 风险分析 (Risks)</span>
+  <a href="#9-%e9%a3%8e%e9%99%a9%e5%88%86%e6%9e%90-risks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>任何分布式系统都有攻击面，闪电网络也不例外。本章详细列举了系统面临的主要威胁及缓解方案。</p>
+<h3 class="heading-element" id="91--92-核心系统性风险强制过期垃圾交易-forced-expiration-spam"><span>9.1 &amp; 9.2 核心系统性风险：强制过期垃圾交易 (Forced Expiration Spam)</span>
+  <a href="#91--92-%e6%a0%b8%e5%bf%83%e7%b3%bb%e7%bb%9f%e6%80%a7%e9%a3%8e%e9%99%a9%e5%bc%ba%e5%88%b6%e8%bf%87%e6%9c%9f%e5%9e%83%e5%9c%be%e4%ba%a4%e6%98%93-forced-expiration-spam" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是闪电网络面临的最严重的系统性攻击向量。</p>
+<p><strong>攻击原理：</strong>
+攻击者创建大量通道，并在同一时间发起关闭请求，制造海量的“超时交易”。
+如果攻击者成功塞满比特币区块（Block Filling），导致受害者无法在规定时间内（例如 <code>1000</code> 个区块内）将惩罚交易（Breach Remedy Transaction）打包上链，那么攻击者就能利用旧状态成功窃取资金。</p>
+<p><strong>缓解策略：</strong></p>
+<ol>
+<li><strong>延长 Timelocks</strong>：增加通过 CSV（<code>CheckSequenceVerify</code>）设置的相对锁定时间，给受害者更多反应时间。</li>
+<li><strong>交易替换（RBF）优化</strong>：建议引入一种机制，允许以有序的方式替换内存池中的交易，防止恶意阻塞。</li>
+<li><strong>区块大小策略</strong>：如果此类攻击成为常态，可能需要增加区块大小或引入<strong>时间停止（Timestop）</strong> 机制（即当区块拥堵时，暂停计算相对时间锁，见第 3 章），让攻击者因失去所有资金（惩罚生效）而无利可图,。</li>
+</ol>
+<h3 class="heading-element" id="93-密钥安全热钱包风险-coin-theft-via-cracking"><span>9.3 密钥安全：热钱包风险 (Coin Theft via Cracking)</span>
+  <a href="#93-%e5%af%86%e9%92%a5%e5%ae%89%e5%85%a8%e7%83%ad%e9%92%b1%e5%8c%85%e9%a3%8e%e9%99%a9-coin-theft-via-cracking" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了自动路由交易，中间节点必须保持在线并持有私钥解密数据。这使得节点成为黑客的目标。</p>
+<p><strong>架构优化：支票账户与储蓄账户</strong>
+文中建议采用分级存储策略：</p>
+<ul>
+<li><strong>Checking Account (热钱包)</strong>：少量资金用于高频路由，私钥在线。</li>
+<li><strong>Savings Account (冷钱包)</strong>：大量资金存储在 Funding Transaction 的其他输出路径中，私钥离线存储。
+这种分离确保即使节点被攻破，损失也是可控的,。</li>
+</ul>
+<h3 class="heading-element" id="94--95-数据可用性风险-data-loss--forgetting-to-broadcast"><span>9.4 &amp; 9.5 数据可用性风险 (Data Loss &amp; Forgetting to Broadcast)</span>
+  <a href="#94--95-%e6%95%b0%e6%8d%ae%e5%8f%af%e7%94%a8%e6%80%a7%e9%a3%8e%e9%99%a9-data-loss--forgetting-to-broadcast" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如果节点丢失了最新的通道状态（Data Loss），或者在对方作恶时忘记/无法广播惩罚交易，资金将被盗。</p>
+<p><strong>解决方案：</strong></p>
+<ul>
+<li><strong>第三方数据托管</strong>：将加密后的状态数据备份给第三方。</li>
+<li><strong>外包监控（Watchtowers）</strong>：委托第三方节点监控区块链。一旦发现对方广播了旧状态（Breach），第三方可以代替用户广播惩罚交易，并从中抽取手续费作为奖励。这构成了现代闪电网络中 Watchtower 服务的基础。</li>
+</ul>
+<h3 class="heading-element" id="96-软分叉依赖-inability-to-make-necessary-soft-forks"><span>9.6 软分叉依赖 (Inability to Make Necessary Soft-Forks)</span>
+  <a href="#96-%e8%bd%af%e5%88%86%e5%8f%89%e4%be%9d%e8%b5%96-inability-to-make-necessary-soft-forks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>闪电网络的落地高度依赖比特币协议的升级，特别是：</p>
+<ul>
+<li><strong>Malleability Fix (延展性修复)</strong>：即后来的 SegWit。</li>
+<li><strong><code>OP_CHECKSEQUENCEVERIFY</code> (CSV)</strong>：用于相对时间锁。
+如果社区无法就这些软分叉达成共识，闪电网络将无法安全运行,。</li>
+</ul>
+<h3 class="heading-element" id="97-矿工共谋-colluding-miner-attacks"><span>9.7 矿工共谋 (Colluding Miner Attacks)</span>
+  <a href="#97-%e7%9f%bf%e5%b7%a5%e5%85%b1%e8%b0%8b-colluding-miner-attacks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是一种极端假设。攻击者贿赂矿工，要求矿工拒绝打包受害者的惩罚交易，从而让攻击者的作弊交易生效。
+<strong>结论</strong>：这种攻击成本极高且极难协调（需要 51% 算力配合），且攻击者一旦失败将损失全部通道资金，因此在经济上不可行,。</p>
+<h2 class="heading-element" id="10-区块大小增加与共识-block-size-increases-and-consensus"><span>10. 区块大小增加与共识 (Block Size Increases and Consensus)</span>
+  <a href="#10-%e5%8c%ba%e5%9d%97%e5%a4%a7%e5%b0%8f%e5%a2%9e%e5%8a%a0%e4%b8%8e%e5%85%b1%e8%af%86-block-size-increases-and-consensus" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这一章直面了比特币的扩容争论。作者明确指出：<strong>闪电网络不是不扩容的借口，长期来看区块扩容仍是必须的。</strong></p>
+<h3 class="heading-element" id="101-物理极限推算"><span>10.1 物理极限推算</span>
+  <a href="#101-%e7%89%a9%e7%90%86%e6%9e%81%e9%99%90%e6%8e%a8%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>即便有了闪电网络，1MB 的区块上限依然是瓶颈。</p>
+<ul>
+<li>假设每个用户每年仅在链上操作 3 次（开启/关闭通道）。</li>
+<li>在 1MB 区块限制下，比特币网络最多只能支持 <strong>3500 万用户</strong>。</li>
+<li><strong>结论</strong>：要支持全球 70 亿人使用，区块扩容（Hard Fork）是必然的长期需求。</li>
+</ul>
+<h3 class="heading-element" id="102-软上限与共识规则"><span>10.2 软上限与共识规则</span>
+  <a href="#102-%e8%bd%af%e4%b8%8a%e9%99%90%e4%b8%8e%e5%85%b1%e8%af%86%e8%a7%84%e5%88%99" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了防止上述的“垃圾交易攻击”，文中探讨了矿工和非矿工节点可能采用不同的区块大小“软上限（Soft-caps）”。这允许网络在保持反垃圾交易能力的同时，逐步适应更大的吞吐量,。</p>
+<h2 class="heading-element" id="11-应用场景-use-cases"><span>11. 应用场景 (Use Cases)</span>
+  <a href="#11-%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af-use-cases" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>除了简单的支付，闪电网络开启了全新的链下应用模式。</p>
+<h3 class="heading-element" id="111-即时微支付-instant-micropayments"><span>11.1 即时微支付 (Instant Micropayments)</span>
+  <a href="#111-%e5%8d%b3%e6%97%b6%e5%be%ae%e6%94%af%e4%bb%98-instant-micropayments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>由于无需等待 10 分钟确认且手续费极低，可以实现：</p>
+<ul>
+<li><strong>按字节付费</strong>的互联网服务。</li>
+<li><strong>按文章付费</strong>的新闻阅读。
+这在 Layer 1 上是完全不可行的。</li>
+</ul>
+<h3 class="heading-element" id="112-交易所套利与安全-exchange-arbitrage"><span>11.2 交易所套利与安全 (Exchange Arbitrage)</span>
+  <a href="#112-%e4%ba%a4%e6%98%93%e6%89%80%e5%a5%97%e5%88%a9%e4%b8%8e%e5%ae%89%e5%85%a8-exchange-arbitrage" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是对中心化交易所（CEX）模式的颠覆。</p>
+<ul>
+<li><strong>现状</strong>：为了快速交易，用户必须将币充值到交易所。</li>
+<li><strong>闪电模式</strong>：用户只需与交易所建立通道。资金在自己手中，仅在下单成交的毫秒级瞬间进行转移。这大大降低了交易所被盗导致的系统性风险。</li>
+</ul>
+<h3 class="heading-element" id="113-跨链原子交换-cross-chain-payments"><span>11.3 跨链原子交换 (Cross-Chain Payments)</span>
+  <a href="#113-%e8%b7%a8%e9%93%be%e5%8e%9f%e5%ad%90%e4%ba%a4%e6%8d%a2-cross-chain-payments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是区块链互操作性的基石。
+只要两条链（例如 Bitcoin 和 Litecoin）支持相同的哈希函数，就可以实现去信任的资产交换。</p>
+<ul>
+<li><strong>流程</strong>：Alice 在比特币链上锁定 BTC，Bob 在莱特币链上锁定 LTC，两者使用同一个哈希锁 $H$。</li>
+<li><strong>原子性</strong>：一旦 Bob 披露原像 $R$ 来拿走 BTC，Alice 自动获得 $R$ 从而拿走 LTC。不需要第三方交易所,。</li>
+</ul>
+<h2 class="heading-element" id="12-结论-conclusion"><span>12. 结论 (Conclusion)</span>
+  <a href="#12-%e7%bb%93%e8%ae%ba-conclusion" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>最后，白皮书对全篇进行了宏大的总结，对比了两种扩容路径的终局：</p>
+<ol>
+<li>
+<p><strong>纯链上扩容（On-chain Scaling）：</strong></p>
+<ul>
+<li>如果要支持全球 70 亿人每天 2 笔交易。</li>
+<li>需要 <strong>24GB</strong> 的区块大小（每 10 分钟）。</li>
+<li>后果：只有极少数巨型数据中心能运行全节点，比特币将彻底中心化,。</li>
+</ul>
+</li>
+<li>
+<p><strong>闪电网络扩容（Off-chain Scaling）：</strong></p>
+<ul>
+<li>如果绝大多数交易在链下完成，每人每年仅开启/关闭 2 次通道。</li>
+<li>仅需 <strong>133MB</strong> 的区块大小。</li>
+<li>后果：家用台式机（配合 2TB 硬盘）依然可以运行全节点，维持网络的去中心化属性。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>最终论点</strong>
+通过将比特币脚本（Smart Contracts）作为法院，将交易作为私下契约，闪电网络实现了在不牺牲去中心化和无需信任（Trustless）特性的前提下，将比特币扩展为全球级的金融支付系统。</p>
+</blockquote>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2026-01-18 00:00:00">更新于 2026-01-18&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202601-lightningnetwork/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202601-lightningnetwork/" data-title="闪电网络白皮书阅读" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202601-lightningnetwork/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202601-lightningnetwork/" data-title="闪电网络白皮书阅读"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202511-trline/" class="post-nav-item" rel="prev" title="关于TRLine的一些想法——与Openai问答"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>关于TRLine的一些想法——与Openai问答</a><a href="/posts/202601-aavev1/" class="post-nav-item" rel="next" title="AAVE V1 白皮书阅读">AAVE V1 白皮书阅读<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#1-比特币区块链的扩展性难题-the-bitcoin-blockchain-scalability-problem">1. 比特币区块链的扩展性难题 (The Bitcoin Blockchain Scalability Problem)</a>
+      <ul>
+        <li><a href="#11-广播协议的本质缺陷-the-gossip-protocol-bottleneck">1.1 广播协议的本质缺陷 (The &ldquo;Gossip Protocol&rdquo; Bottleneck)</a></li>
+        <li><a href="#12-visa-级别的吞吐量推演-the-visa-scale-math">1.2 Visa 级别的吞吐量推演 (The Visa-Scale Math)</a></li>
+        <li><a href="#13-中心化陷阱-the-centralization-trap">1.3 中心化陷阱 (The Centralization Trap)</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-微支付通道网络解决扩展性-a-network-of-micropayment-channels-can-solve-scalability">2. 微支付通道网络解决扩展性 (A Network of Micropayment Channels Can Solve Scalability)</a>
+      <ul>
+        <li><a href="#21-重新定义共识本地化与延迟-local-consensus--deferral">2.1 重新定义共识：本地化与延迟 (Local Consensus &amp; Deferral)</a></li>
+        <li><a href="#22-信任锚点2-of-2-多重签名-the-2-of-2-multisig-anchor">2.2 信任锚点：2-of-2 多重签名 (The 2-of-2 Multisig Anchor)</a></li>
+        <li><a href="#23-状态更新与时间戳难题-the-timestamping-problem">2.3 状态更新与“时间戳”难题 (The Timestamping Problem)</a></li>
+        <li><a href="#24-从通道到图路由网络-network-of-channels">2.4 从通道到图：路由网络 (Network of Channels)</a></li>
+        <li><a href="#25-章节总结为第-3-章铺路">2.5 章节总结：为第 3 章铺路</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-双向支付通道-bidirectional-payment-channels">3. 双向支付通道 (Bidirectional Payment Channels)</a>
+      <ul>
+        <li><a href="#31-通道创建中的归责问题-the-problem-of-blame-in-channel-creation">3.1 通道创建中的归责问题 (The Problem of Blame in Channel Creation)</a>
+          <ul>
+            <li><a href="#311--312-资金交易与-sighash-noinput">3.1.1 &amp; 3.1.2 资金交易与 <code>SIGHASH NOINPUT</code></a></li>
+            <li><a href="#313-承诺交易不可执行的原始构建">3.1.3 承诺交易：不可执行的原始构建</a></li>
+            <li><a href="#314-承诺交易非对称归责-ascribing-blame">3.1.4 承诺交易：非对称归责 (Ascribing Blame)</a></li>
+          </ul>
+        </li>
+        <li><a href="#32--33-带有撤销机制的通道-creating-a-channel-with-contract-revocation">3.2 &amp; 3.3 带有撤销机制的通道 (Creating a Channel with Contract Revocation)</a>
+          <ul>
+            <li><a href="#331-时间停止-timestop">3.3.1 时间停止 (Timestop)</a></li>
+            <li><a href="#332-可撤销承诺交易-revocable-commitment-transactions">3.3.2 可撤销承诺交易 (Revocable Commitment Transactions)</a></li>
+            <li><a href="#333-赎回资金非对称的等待-redeeming-funds-from-the-channel">3.3.3 赎回资金：非对称的等待 (Redeeming Funds from the Channel)</a>
+              <ul>
+                <li><a href="#1-权益的非对称性-asymmetry-of-redemption">1. 权益的非对称性 (Asymmetry of Redemption)</a></li>
+                <li><a href="#2-可撤销交付交易-revocable-delivery-transaction-rd">2. 可撤销交付交易 (Revocable Delivery Transaction, RD)</a></li>
+              </ul>
+            </li>
+            <li><a href="#334-创建新状态与撤销旧状态-revoking-prior-commitments">3.3.4 创建新状态与撤销旧状态 (Revoking Prior Commitments)</a>
+              <ul>
+                <li><a href="#1-第一阶段建立新世界-establish-new-state">1. 第一阶段：建立新世界 (Establish New State)</a></li>
+                <li><a href="#2-第二阶段毒化旧世界-poison-old-state">2. 第二阶段：毒化旧世界 (Poison Old State)</a></li>
+                <li><a href="#3-违约补救交易-breach-remedy-transaction-br">3. 违约补救交易 (Breach Remedy Transaction, $BR$)</a></li>
+                <li><a href="#4-结论经济学威慑">4. 结论：经济学威慑</a></li>
+              </ul>
+            </li>
+            <li><a href="#335-密钥存储与优化">3.3.5 密钥存储与优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#34-合作关闭通道-cooperatively-closing-out-a-channel">3.4 合作关闭通道 (Cooperatively Closing Out a Channel)</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-哈希时间锁定合约-hashed-timelock-contract-htlc">4. 哈希时间锁定合约 (Hashed Timelock Contract, HTLC)</a>
+      <ul>
+        <li><a href="#41-非可撤销-htlc-的缺陷-non-revocable-htlc-construction">4.1 非可撤销 HTLC 的缺陷 (Non-revocable HTLC Construction)</a></li>
+        <li><a href="#42-链下可撤销-htlc-off-chain-revocable-htlc">4.2 链下可撤销 HTLC (Off-chain Revocable HTLC)</a>
+          <ul>
+            <li><a href="#421-场景-a发送方-alice-广播了-commitment-c2a">4.2.1 场景 A：发送方 Alice 广播了 Commitment (C2a)</a></li>
+            <li><a href="#422-场景-b接收方-bob-广播了-commitment-c2b">4.2.2 场景 B：接收方 Bob 广播了 Commitment (C2b)</a></li>
+          </ul>
+        </li>
+        <li><a href="#43--44-链下终止与状态更迭-htlc-termination--closing-order">4.3 &amp; 4.4 链下终止与状态更迭 (HTLC Termination &amp; Closing Order)</a>
+          <ul>
+            <li><a href="#43-正常结算流程happy-path">4.3 正常结算流程（Happy Path）</a></li>
+            <li><a href="#44-超时结算流程">4.4 超时结算流程</a></li>
+          </ul>
+        </li>
+        <li><a href="#章节总结多跳支付的基石">章节总结：多跳支付的基石</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-密钥存储-key-storage">5. 密钥存储 (Key Storage)</a>
+      <ul>
+        <li><a href="#51-merkle-tree-密钥派生">5.1 Merkle Tree 密钥派生</a></li>
+        <li><a href="#52-批量撤销-invalidating-sub-trees">5.2 批量撤销 (Invalidating Sub-trees)</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-交易费用-blockchain-transaction-fees">6. 交易费用 (Blockchain Transaction Fees)</a>
+      <ul>
+        <li><a href="#61-费用的本质时间价值">6.1 费用的本质：时间价值</a></li>
+        <li><a href="#62-归责与链上费用">6.2 归责与链上费用</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-支付即合同-pay-to-contract">7. 支付即合同 (Pay to Contract)</a>
+      <ul>
+        <li><a href="#71-r-值即收据">7.1 $R$ 值即收据</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-比特币闪电网络-the-bitcoin-lightning-network">8. 比特币闪电网络 (The Bitcoin Lightning Network)</a>
+      <ul>
+        <li><a href="#81-递减时间锁-decrementing-timelocks">8.1 递减时间锁 (Decrementing Timelocks)</a></li>
+        <li><a href="#82-清算失败与路由选择-clearing-failure--routing">8.2 清算失败与路由选择 (Clearing Failure &amp; Routing)</a></li>
+        <li><a href="#83-风险与缓解-risks">8.3 风险与缓解 (Risks)</a></li>
+        <li><a href="#总结从协议到生态">总结：从协议到生态</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-风险分析-risks">9. 风险分析 (Risks)</a>
+      <ul>
+        <li><a href="#91--92-核心系统性风险强制过期垃圾交易-forced-expiration-spam">9.1 &amp; 9.2 核心系统性风险：强制过期垃圾交易 (Forced Expiration Spam)</a></li>
+        <li><a href="#93-密钥安全热钱包风险-coin-theft-via-cracking">9.3 密钥安全：热钱包风险 (Coin Theft via Cracking)</a></li>
+        <li><a href="#94--95-数据可用性风险-data-loss--forgetting-to-broadcast">9.4 &amp; 9.5 数据可用性风险 (Data Loss &amp; Forgetting to Broadcast)</a></li>
+        <li><a href="#96-软分叉依赖-inability-to-make-necessary-soft-forks">9.6 软分叉依赖 (Inability to Make Necessary Soft-Forks)</a></li>
+        <li><a href="#97-矿工共谋-colluding-miner-attacks">9.7 矿工共谋 (Colluding Miner Attacks)</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-区块大小增加与共识-block-size-increases-and-consensus">10. 区块大小增加与共识 (Block Size Increases and Consensus)</a>
+      <ul>
+        <li><a href="#101-物理极限推算">10.1 物理极限推算</a></li>
+        <li><a href="#102-软上限与共识规则">10.2 软上限与共识规则</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-应用场景-use-cases">11. 应用场景 (Use Cases)</a>
+      <ul>
+        <li><a href="#111-即时微支付-instant-micropayments">11.1 即时微支付 (Instant Micropayments)</a></li>
+        <li><a href="#112-交易所套利与安全-exchange-arbitrage">11.2 交易所套利与安全 (Exchange Arbitrage)</a></li>
+        <li><a href="#113-跨链原子交换-cross-chain-payments">11.3 跨链原子交换 (Cross-Chain Payments)</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-结论-conclusion">12. 结论 (Conclusion)</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/5e28baa7fde43928623fd8ea5326cb9a.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

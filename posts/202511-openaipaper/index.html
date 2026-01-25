@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>论文整理来自OPENAI - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="先直接说结论： 我不可能数学意义上“全网穷举所有论文”，但我已经围绕你提到的几个方向——
+DEX/AMM 上的多池 / 多跳 / 三角套利与最优路径搜索 DeFi ↔ CEX 价差套利（含跨链） 现货–期货 / 永续合约资金费率 / 基差套利 做了多轮英文关键词检索，把近几年和“在几十/几百个池子里快速找最优套利路径、高计算复杂度算法”最相关的研究论文和接近论文风格的技术文全部整理出来（下面会把我“搜到的都列出来”，并注明不是严格意义上的论文时）。
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="论文整理来自OPENAI">
+  <meta itemprop="description" content="先直接说结论： 我不可能数学意义上“全网穷举所有论文”，但我已经围绕你提到的几个方向——
+DEX/AMM 上的多池 / 多跳 / 三角套利与最优路径搜索 DeFi ↔ CEX 价差套利（含跨链） 现货–期货 / 永续合约资金费率 / 基差套利 做了多轮英文关键词检索，把近几年和“在几十/几百个池子里快速找最优套利路径、高计算复杂度算法”最相关的研究论文和接近论文风格的技术文全部整理出来（下面会把我“搜到的都列出来”，并注明不是严格意义上的论文时）。">
+  <meta itemprop="datePublished" content="2025-11-26T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-11-26T00:00:00+00:00">
+  <meta itemprop="wordCount" content="7232">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="http://localhost:1313/posts/202511-openaipaper/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="论文整理来自OPENAI">
+  <meta property="og:description" content="先直接说结论： 我不可能数学意义上“全网穷举所有论文”，但我已经围绕你提到的几个方向——
+DEX/AMM 上的多池 / 多跳 / 三角套利与最优路径搜索 DeFi ↔ CEX 价差套利（含跨链） 现货–期货 / 永续合约资金费率 / 基差套利 做了多轮英文关键词检索，把近几年和“在几十/几百个池子里快速找最优套利路径、高计算复杂度算法”最相关的研究论文和接近论文风格的技术文全部整理出来（下面会把我“搜到的都列出来”，并注明不是严格意义上的论文时）。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-11-26T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="论文整理来自OPENAI">
+  <meta name="twitter:description" content="先直接说结论： 我不可能数学意义上“全网穷举所有论文”，但我已经围绕你提到的几个方向——
+DEX/AMM 上的多池 / 多跳 / 三角套利与最优路径搜索 DeFi ↔ CEX 价差套利（含跨链） 现货–期货 / 永续合约资金费率 / 基差套利 做了多轮英文关键词检索，把近几年和“在几十/几百个池子里快速找最优套利路径、高计算复杂度算法”最相关的研究论文和接近论文风格的技术文全部整理出来（下面会把我“搜到的都列出来”，并注明不是严格意义上的论文时）。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202511-openaipaper/" title="论文整理来自OPENAI - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202511-frl/" title="论文阅读《愿望还是现实？论加密货币市场中三角套利的可利用性》" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202511-trline/" title="关于TRLine的一些想法——与Openai问答" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "论文整理来自OPENAI",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202511-openaipaper\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  7232 ,
+    "url": "http:\/\/localhost:1313\/posts\/202511-openaipaper\/","datePublished": "2025-11-26T00:00:00+00:00","dateModified": "2025-11-26T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>论文整理来自OPENAI</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-11-26 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-11-26">2025-11-26</time></span>&nbsp;<span title="7232 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 7300 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 15 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#一amm--dex-上的最优路由--多池套利重点推荐">一、AMM / DEX 上的最优路由 &amp; 多池套利（重点推荐）</a>
+      <ul>
+        <li><a href="#1-marginal-price-optimization-a-new-framework-for-arbitrage-and-routing-in-amm-driven-markets-2025">1. Marginal Price Optimization: A new framework for arbitrage and routing in AMM-driven markets (2025)</a></li>
+        <li><a href="#2-optimal-routing-for-constant-function-market-makers">2. Optimal Routing for Constant Function Market Makers</a></li>
+        <li><a href="#3-an-efficient-algorithm-for-optimal-routing-through-constant-function-market-makers-fc-2023">3. An Efficient Algorithm for Optimal Routing Through Constant Function Market Makers (FC 2023)</a></li>
+        <li><a href="#4-constant-function-market-makers-multiasset-multipoolcfmm-大论文">4. Constant Function Market Makers: Multi‑asset, multi‑pool（CFMM 大论文）</a></li>
+        <li><a href="#5-an-improved-algorithm-to-identify-more-arbitrage-opportunities-on-decentralized-exchanges-2024">5. An Improved Algorithm to Identify More Arbitrage Opportunities on Decentralized Exchanges (2024)</a></li>
+        <li><a href="#6-cyclic-arbitrage-in-decentralized-exchanges-2021">6. Cyclic Arbitrage in Decentralized Exchanges (2021)</a></li>
+        <li><a href="#7-on-the-justintime-discovery-of-profitgenerating-transactions-in-defi-protocols-ieee-sp-2021-defiposer">7. On the Just‑In‑Time Discovery of Profit‑Generating Transactions in DeFi Protocols (IEEE S&amp;P 2021, DeFiPoser)</a></li>
+        <li><a href="#8-optimal-arbitrage-timing-between-decentralized-and-centralized-exchanges">8. Optimal Arbitrage Timing between Decentralized and Centralized Exchanges</a></li>
+        <li><a href="#9-arbitrage-in-automated-market-makers-frontiers-in-blockchain-2024">9. Arbitrage in Automated Market Makers (Frontiers in Blockchain, 2024)</a></li>
+        <li><a href="#10-decentralised-finance-and-automated-market-making-execution-and-statistical-arbitrage-2023">10. Decentralised Finance and Automated Market Making: Execution and Statistical Arbitrage (2023)</a></li>
+        <li><a href="#11-measuring-arbitrage-losses-and-profitability-of-amm-liquidity-2024">11. Measuring Arbitrage Losses and Profitability of AMM Liquidity (2024)</a></li>
+        <li><a href="#12-configurable-arbitrage-and-slippage-in-automated-market-making-systems-2025">12. Configurable arbitrage and slippage in automated market making systems (2025)</a></li>
+        <li><a href="#13-quantifying-arbitrage-in-automated-market-makers-an-empirical-study-of-ethereum-zk-rollups-2024">13. Quantifying Arbitrage in Automated Market Makers: An Empirical Study of Ethereum ZK Rollups (2024)</a></li>
+        <li><a href="#14-a-netting-protocol-for-liquidity-saving-automated-market-makers-2025">14. A Netting Protocol for Liquidity-saving Automated Market Makers (2025)</a></li>
+      </ul>
+    </li>
+    <li><a href="#二defi-套利检测--mev-图模型--gnn-相关">二、DeFi 套利检测 / MEV 图模型 &amp; GNN 相关</a>
+      <ul>
+        <li><a href="#15-unraveling-the-mev-enigma-abi-free-detection-model-using-graph-neural-networks-arbinet">15. Unraveling the MEV enigma: ABI-free detection model using Graph Neural Networks (ArbiNet)</a></li>
+        <li><a href="#16-crosschain-arbitrage-the-next-frontier-of-mev-in-decentralized-finance-2025">16. Cross‑Chain Arbitrage: The Next Frontier of MEV in Decentralized Finance (2025)</a></li>
+        <li><a href="#17-retrospectively-identifying-profitgenerating-transactions-on-the-ethereum-blockchain硕士论文">17. Retrospectively Identifying Profit‑Generating Transactions on the Ethereum Blockchain（硕士论文）</a></li>
+        <li><a href="#18-mev-in-multiple-concurrent-proposer-blockchains-2025">18. MEV in Multiple Concurrent Proposer Blockchains (2025)</a></li>
+      </ul>
+    </li>
+    <li><a href="#三三角--多货币--多跳套利算法偏传统金融但算法可迁移">三、三角 / 多货币 / 多跳套利算法（偏传统金融，但算法可迁移）</a>
+      <ul>
+        <li><a href="#19-efficient-triangular-arbitrage-detection-via-graph-neural-networks-2025">19. Efficient Triangular Arbitrage Detection via Graph Neural Networks (2025)</a></li>
+        <li><a href="#20-a-new-waveletbased-ultrahighfrequency-analysis-of-triangular-arbitrage">20. A new wavelet‑based ultra‑high‑frequency analysis of triangular arbitrage</a></li>
+        <li><a href="#21-triangular-statistical-arbitrage-in-foreign-exchange-market">21. Triangular Statistical Arbitrage in Foreign Exchange Market</a></li>
+        <li><a href="#22-toxic-arbitrage">22. Toxic Arbitrage</a></li>
+        <li><a href="#23-graph-learning-for-foreign-exchange-rate-prediction-and-statistical-arbitrage-2025">23. Graph Learning for Foreign Exchange Rate Prediction and Statistical Arbitrage (2025)</a></li>
+      </ul>
+    </li>
+    <li><a href="#四现货期货--资金费率--基差套利crypto-derivatives-学术研究">四、现货–期货 / 资金费率 / 基差套利（Crypto Derivatives 学术研究）</a>
+      <ul>
+        <li><a href="#24-crypto-carrybis-working-paper-no-1087">24. Crypto Carry（BIS Working Paper No. 1087）</a></li>
+        <li><a href="#25-pricing-efficiency-and-arbitrage-in-the-bitcoin-spot-and-futures-markets">25. Pricing Efficiency and Arbitrage in the Bitcoin Spot and Futures Markets</a></li>
+        <li><a href="#26-arbitrage-opportunities-and-feedback-trading-in-regulated-bitcoin-futures-markets-2023">26. Arbitrage opportunities and feedback trading in regulated bitcoin futures markets (2023)</a></li>
+        <li><a href="#27-exploring-arbitrage-opportunities-between-the-btc-spot-and-futures-markets">27. Exploring Arbitrage Opportunities between the BTC Spot and Futures Markets</a></li>
+      </ul>
+    </li>
+    <li><a href="#五接近论文风格的技术长文--开源实现不是严格学术论文但很有实战价值">五、接近论文风格的技术长文 &amp; 开源实现（不是严格学术论文，但很有实战价值）</a>
+      <ul>
+        <li><a href="#defi-多池--多跳套利算法--实战">DeFi 多池 / 多跳套利算法 &amp; 实战</a></li>
+        <li><a href="#图搜索cfmm-套利的开源代码仓库">图搜索/CFMM 套利的开源代码仓库</a></li>
+      </ul>
+    </li>
+    <li><a href="#六这些工作里常见的多池最优套利路径方法小结给你一个快速-mental-map">六、这些工作里常见的“多池最优套利路径”方法小结（给你一个快速 mental map）</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>先直接说结论：
+我不可能<strong>数学意义上“全网穷举所有论文”</strong>，但我已经围绕你提到的几个方向——</p>
+<ul>
+<li>DEX/AMM 上的多池 / 多跳 / 三角套利与<strong>最优路径搜索</strong></li>
+<li>DeFi ↔ CEX 价差套利（含跨链）</li>
+<li>现货–期货 / 永续合约资金费率 / 基差套利</li>
+</ul>
+<p>做了多轮英文关键词检索，把近几年<strong>和“在几十/几百个池子里快速找最优套利路径、高计算复杂度算法”最相关</strong>的研究论文和接近论文风格的技术文全部整理出来（下面会把我“搜到的都列出来”，并注明不是严格意义上的论文时）。</p>
+<hr>
+<h2 class="heading-element" id="一amm--dex-上的最优路由--多池套利重点推荐"><span>一、AMM / DEX 上的最优路由 &amp; 多池套利（重点推荐）</span>
+  <a href="#%e4%b8%80amm--dex-%e4%b8%8a%e7%9a%84%e6%9c%80%e4%bc%98%e8%b7%af%e7%94%b1--%e5%a4%9a%e6%b1%a0%e5%a5%97%e5%88%a9%e9%87%8d%e7%82%b9%e6%8e%a8%e8%8d%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这些是最贴近你说的「在几十/上百个池子里求最优路由/套利路径」的<strong>数学/算法型论文</strong>。</p>
+<h3 class="heading-element" id="1-marginal-price-optimization-a-new-framework-for-arbitrage-and-routing-in-amm-driven-markets-2025"><span>1. Marginal Price Optimization: A new framework for arbitrage and routing in AMM-driven markets (2025)</span>
+  <a href="#1-marginal-price-optimization-a-new-framework-for-arbitrage-and-routing-in-amm-driven-markets-2025" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>类型</strong>：arXiv 预印本</p>
+</li>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/html/2502.08258v1" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/html/2502.08258v1</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>把多条 AMM 曲线上的路由+套利问题写成统一的优化框架。</li>
+<li>关键 trick 是用<strong>代币的边际价格</strong>参数化，把原本“每条曲线 2 个变量”的高维凸优化问题，降维成“每个代币 1 个变量”的根寻找问题。</li>
+<li>结果：在包含几十甚至上百条曲线的网络里，联合求解<strong>最优路由 + 最优套利</strong>变成低维问题，更利于快速迭代和数值稳定。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="2-optimal-routing-for-constant-function-market-makers"><span>2. Optimal Routing for Constant Function Market Makers</span>
+  <a href="#2-optimal-routing-for-constant-function-market-makers" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>作者</strong>：Guillermo Angeris 等（Stanford/Boyd 组）</p>
+</li>
+<li>
+<p><strong>链接</strong>：PDF：<a href="https://web.stanford.edu/~boyd/papers/pdf/cfmm-routing.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://web.stanford.edu/~boyd/papers/pdf/cfmm-routing.pdf</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>把「在一张 CFMM（AMM）网络上执行大额多资产订单」形式化为一个<strong>凸优化问题</strong>（忽略固定费用时）。</li>
+<li>如果加入每个池的固定调用成本，则变成<strong>混合整数凸优化问题</strong>（理论上 NP 难），需要全局优化或启发式方法。</li>
+<li>给出了可扩展的求解方法和数值例子，证明在几十个池的网络下仍可在合理时间内找到近似最优拆单与路由。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="3-an-efficient-algorithm-for-optimal-routing-through-constant-function-market-makers-fc-2023"><span>3. An Efficient Algorithm for Optimal Routing Through Constant Function Market Makers (FC 2023)</span>
+  <a href="#3-an-efficient-algorithm-for-optimal-routing-through-constant-function-market-makers-fc-2023" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>作者</strong>：Theo Diamandis, Max Resnick, Tarun Chitra, Guillermo Angeris</p>
+</li>
+<li>
+<p><strong>链接</strong>（任意一个）：</p>
+<ul>
+<li>preprint：<a href="https://arxiv.org/pdf/2302.04938" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/2302.04938</a></li>
+<li>另一版 PDF：<a href="https://angeris.github.io/papers/routing-algorithm.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://angeris.github.io/papers/routing-algorithm.pdf</a></li>
+</ul>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>在上面 Boyd 那篇凸优化建模基础上，提出了一个<strong>分解算法（decomposition method）</strong>。</li>
+<li>把大网络拆成子问题迭代求解，从而在包含**大量池子（几十/上百 CFMM）**的网络上，比通用商业求解器快很多。</li>
+<li>数值实验对比 commercial solver，给出显著加速和几乎相同的最优值，非常贴近你说的“复杂度高/池子多但要快”的需求。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="4-constant-function-market-makers-multiasset-multipoolcfmm-大论文"><span>4. Constant Function Market Makers: Multi‑asset, multi‑pool（CFMM 大论文）</span>
+  <a href="#4-constant-function-market-makers-multiasset-multipoolcfmm-%e5%a4%a7%e8%ae%ba%e6%96%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://web.stanford.edu/~boyd/papers/pdf/cfmm.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://web.stanford.edu/~boyd/papers/pdf/cfmm.pdf</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>系统地构建了 CFMM 的一般数学框架，覆盖 Uniswap / Curve / Balancer 等。</li>
+<li>讨论了在更古典的打分规则（log scoring rules）里，<strong>计算最优套利组合是 #P‑hard</strong> 的结果，用来说明某些 AMM/预言机设计下<strong>套利搜索本身可以达到非常高的计算复杂度</strong>。</li>
+<li>虽然不是直接给出路径搜索算法，但在复杂度层面给你一个理论上界。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="5-an-improved-algorithm-to-identify-more-arbitrage-opportunities-on-decentralized-exchanges-2024"><span>5. An Improved Algorithm to Identify More Arbitrage Opportunities on Decentralized Exchanges (2024)</span>
+  <a href="#5-an-improved-algorithm-to-identify-more-arbitrage-opportunities-on-decentralized-exchanges-2024" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>作者</strong>：Yu Zhang et al.</p>
+</li>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/abs/2406.16573" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/abs/2406.16573</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>
+<p>传统 DeFi 套利检测用 <strong>Moore–Bellman–Ford + walk‑to‑root</strong> 找<strong>负环（套利闭环）</strong>，但难以覆盖非环形路径。</p>
+</li>
+<li>
+<p>这篇在 token 图上同时寻找：</p>
+<ul>
+<li>闭环（A → … → A）</li>
+<li>非闭环路径（A → … → N），从而涵盖更多实际套利机会。</li>
+</ul>
+</li>
+<li>
+<p>提出改进算法，在同等图规模下找到<strong>更多路径</strong>，还能控制时间复杂度，在现实 DEX 图（成百上千个池子/边）上跑得动。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="6-cyclic-arbitrage-in-decentralized-exchanges-2021"><span>6. Cyclic Arbitrage in Decentralized Exchanges (2021)</span>
+  <a href="#6-cyclic-arbitrage-in-decentralized-exchanges-2021" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>作者</strong>：Ye Wang et al.</p>
+</li>
+<li>
+<p><strong>链接</strong>：</p>
+<ul>
+<li>arXiv：<a href="https://arxiv.org/abs/2105.02784" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/abs/2105.02784</a></li>
+</ul>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>形式化研究 DEX（如 Uniswap V2）里的<strong>循环（三角/多边）套利</strong>，给出套利盈利条件和最优交易策略。</li>
+<li>用 Uniswap V2 实际交易数据，统计 11 个月里近 30 万次循环套利、1.38 亿美金收益，并指出存在长期未被挖掘的大额机会 ⇒ 市场并不完全高效。</li>
+<li>算法部分没有像 DeFiPoser 一样复杂，但给出了不错的理论框架。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="7-on-the-justintime-discovery-of-profitgenerating-transactions-in-defi-protocols-ieee-sp-2021-defiposer"><span>7. On the Just‑In‑Time Discovery of Profit‑Generating Transactions in DeFi Protocols (IEEE S&amp;P 2021, DeFiPoser)</span>
+  <a href="#7-on-the-justintime-discovery-of-profitgenerating-transactions-in-defi-protocols-ieee-sp-2021-defiposer" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>作者</strong>：Liyi Zhou et al.</p>
+</li>
+<li>
+<p><strong>链接</strong>：</p>
+<ul>
+<li>arXiv：<a href="https://arxiv.org/abs/2103.02228" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/abs/2103.02228</a></li>
+</ul>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>把 DeFi 协议组合成一个<strong>有向图上的市场</strong>，用 <strong>Bellman‑Ford‑Moore</strong> 找负环实现套利（DEFIPOSER‑ARB）。</li>
+<li>进一步用 SMT（DEFIPOSER‑SMT）在一个逻辑模型上搜索<strong>更复杂的多协议组合交易</strong>，可以自动挖掘攻击/套利机会。</li>
+<li>给出<strong>每个区块几秒级</strong>的搜索性能（几十个协议 + 多资产），非常接近你要的“复杂又要快”的设计思路。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="8-optimal-arbitrage-timing-between-decentralized-and-centralized-exchanges"><span>8. Optimal Arbitrage Timing between Decentralized and Centralized Exchanges</span>
+  <a href="#8-optimal-arbitrage-timing-between-decentralized-and-centralized-exchanges" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>作者</strong>：J. Reed 等</p>
+</li>
+<li>
+<p><strong>链接</strong>：<a href="https://pages.stern.nyu.edu/~jreed/papers/paper28.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://pages.stern.nyu.edu/~jreed/papers/paper28.pdf</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>模型化一个在 CEX/DEX 之间搬砖的套利者，在不同价格动态假设（martingale / submartingale / supermartingale）下，求解<strong>最优执行时机策略</strong>。</li>
+<li>重点是<strong>时机选择</strong>而不是多池路径，但如果你做跨市场路由，这个动态控制框架可以和上面的路径搜索结合。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="9-arbitrage-in-automated-market-makers-frontiers-in-blockchain-2024"><span>9. Arbitrage in Automated Market Makers (Frontiers in Blockchain, 2024)</span>
+  <a href="#9-arbitrage-in-automated-market-makers-frontiers-in-blockchain-2024" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://www.frontiersin.org/journals/blockchain/articles/10.3389/fbloc.2024.1455070/full" target="_blank" rel="external nofollow noopener noreferrer">https://www.frontiersin.org/journals/blockchain/articles/10.3389/fbloc.2024.1455070/full</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>分析 AMM 与其他交易场所之间的套利如何影响池子资产数量与价格。</li>
+<li>更偏<strong>经济学/动态平衡分析</strong>，不直接给图算法，但对理解“频繁套利如何塑造池子状态、LP 收益”有帮助。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="10-decentralised-finance-and-automated-market-making-execution-and-statistical-arbitrage-2023"><span>10. Decentralised Finance and Automated Market Making: Execution and Statistical Arbitrage (2023)</span>
+  <a href="#10-decentralised-finance-and-automated-market-making-execution-and-statistical-arbitrage-2023" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/pdf/2307.03499" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/2307.03499</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>研究在 CPM（constant‑product market）上的<strong>最佳执行 + 统计套利</strong>。</li>
+<li>把交易冲击成本与 AMM 曲线凸性联系起来，并用实证数据校准；说明怎样利用 AMM 特性构建统计套利策略。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="11-measuring-arbitrage-losses-and-profitability-of-amm-liquidity-2024"><span>11. Measuring Arbitrage Losses and Profitability of AMM Liquidity (2024)</span>
+  <a href="#11-measuring-arbitrage-losses-and-profitability-of-amm-liquidity-2024" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/pdf/2404.05803" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/2404.05803</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>不直接给套利路径算法，而是量化 LP 因被套利产生的损失与整体盈利。</li>
+<li>对设计“内置捕获套利”的 AMM 或自建 LP 策略很有参考价值。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="12-configurable-arbitrage-and-slippage-in-automated-market-making-systems-2025"><span>12. Configurable arbitrage and slippage in automated market making systems (2025)</span>
+  <a href="#12-configurable-arbitrage-and-slippage-in-automated-market-making-systems-2025" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：ScienceDirect 文章：Configurable arbitrage and slippage in AMMs</p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>引入<strong>constant elasticity</strong> 定价函数，推广 Uniswap 的常乘积函数，构造可以显式控制流动性与套利空间的 AMM。</li>
+<li>讨论在这种 AMM 上实现“<strong>无套利价格</strong>”与可配置滑点，对套利空间做出精细控制。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="13-quantifying-arbitrage-in-automated-market-makers-an-empirical-study-of-ethereum-zk-rollups-2024"><span>13. Quantifying Arbitrage in Automated Market Makers: An Empirical Study of Ethereum ZK Rollups (2024)</span>
+  <a href="#13-quantifying-arbitrage-in-automated-market-makers-an-empirical-study-of-ethereum-zk-rollups-2024" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：</p>
+<ul>
+<li>arXiv：<a href="https://arxiv.org/abs/2403.16083" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/abs/2403.16083</a></li>
+<li>Springer 会议论文：MARBLE 2024</li>
+</ul>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>提出<strong>最大套利价值（Maximal Arbitrage Value, MAV）</strong> 的理论公式，考虑价格差 + 各场所流动性。</li>
+<li>实证研究以太坊 zk‑rollup 上 AMM 与 CEX 间的套利机会和实际执行情况。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="14-a-netting-protocol-for-liquidity-saving-automated-market-makers-2025"><span>14. A Netting Protocol for Liquidity-saving Automated Market Makers (2025)</span>
+  <a href="#14-a-netting-protocol-for-liquidity-saving-automated-market-makers-2025" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://backend.orbit.dtu.dk/ws/portalfiles/portal/383703434/paper18.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://backend.orbit.dtu.dk/ws/portalfiles/portal/383703434/paper18.pdf</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>提出一种带净额结算的 AMM 机制，减少链上资本占用。</li>
+<li>文中一部分讨论如何借鉴“跨多 AMM 的最优路由/套利”策略来达到流动性节省目标。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="二defi-套利检测--mev-图模型--gnn-相关"><span>二、DeFi 套利检测 / MEV 图模型 &amp; GNN 相关</span>
+  <a href="#%e4%ba%8cdefi-%e5%a5%97%e5%88%a9%e6%a3%80%e6%b5%8b--mev-%e5%9b%be%e6%a8%a1%e5%9e%8b--gnn-%e7%9b%b8%e5%85%b3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这些不一定都是“找最优路径”的 convex 优化，但都是从<strong>图论/GNN/MEV</strong>角度系统研究链上套利/多跳交易。</p>
+<h3 class="heading-element" id="15-unraveling-the-mev-enigma-abi-free-detection-model-using-graph-neural-networks-arbinet"><span>15. Unraveling the MEV enigma: ABI-free detection model using Graph Neural Networks (ArbiNet)</span>
+  <a href="#15-unraveling-the-mev-enigma-abi-free-detection-model-using-graph-neural-networks-arbinet" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：ScienceDirect: Computers &amp; Electrical Engineering 论文</p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>提出 <strong>ArbiNet</strong>，用 GNN 在不依赖 ABI 的前提下识别 MEV 交易（包含套利、三明治等）。</li>
+<li>核心是把交易和调用关系构成图，通过 GNN 学习“典型套利模式”，对你想用 ML 做套利机会筛选很有参考。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="16-crosschain-arbitrage-the-next-frontier-of-mev-in-decentralized-finance-2025"><span>16. Cross‑Chain Arbitrage: The Next Frontier of MEV in Decentralized Finance (2025)</span>
+  <a href="#16-crosschain-arbitrage-the-next-frontier-of-mev-in-decentralized-finance-2025" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/pdf/2501.17335v2" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/2501.17335v2</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>
+<p>分析跨链套利的两种模式：</p>
+<ul>
+<li><strong>Inventory arbitrage</strong>：多链同时持仓</li>
+<li><strong>Bridge arbitrage</strong>：通过跨链桥搬资产</li>
+</ul>
+</li>
+<li>
+<p>给出一个<strong>利润‑成本模型</strong>，比较何时应该走桥、何时应该双边预存资金；并基于九条链的实证数据分析跨链 MEV。</p>
+</li>
+<li>
+<p>虽然不是“多池最优路径”的凸优化，但在跨链场景下的<strong>路径/时机决策模型</strong>很重要。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="17-retrospectively-identifying-profitgenerating-transactions-on-the-ethereum-blockchain硕士论文"><span>17. Retrospectively Identifying Profit‑Generating Transactions on the Ethereum Blockchain（硕士论文）</span>
+  <a href="#17-retrospectively-identifying-profitgenerating-transactions-on-the-ethereum-blockchain%e7%a1%95%e5%a3%ab%e8%ae%ba%e6%96%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：TUM 硕士论文 PDF</p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>系统回溯以太坊上的盈利交易，使用 Bellman‑Ford 等算法检测负环。</li>
+<li>总结了多篇 AMM &amp; 套利文献（包括 DeFiPoser 等），对你做文献综述很有帮助。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="18-mev-in-multiple-concurrent-proposer-blockchains-2025"><span>18. MEV in Multiple Concurrent Proposer Blockchains (2025)</span>
+  <a href="#18-mev-in-multiple-concurrent-proposer-blockchains-2025" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/html/2511.13080v1" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/html/2511.13080v1</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>分析在多 proposer 并行出块的链上，<strong>多跳 DeFi 交易/套利</strong>的执行如何受到影响。</li>
+<li>更偏共识 + MEV 机制设计，但里面对“紧耦合多跳交易”的分析可以帮你理解路径执行层面的约束。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="三三角--多货币--多跳套利算法偏传统金融但算法可迁移"><span>三、三角 / 多货币 / 多跳套利算法（偏传统金融，但算法可迁移）</span>
+  <a href="#%e4%b8%89%e4%b8%89%e8%a7%92--%e5%a4%9a%e8%b4%a7%e5%b8%81--%e5%a4%9a%e8%b7%b3%e5%a5%97%e5%88%a9%e7%ae%97%e6%b3%95%e5%81%8f%e4%bc%a0%e7%bb%9f%e9%87%91%e8%9e%8d%e4%bd%86%e7%ae%97%e6%b3%95%e5%8f%af%e8%bf%81%e7%a7%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这些主要在 FX/多货币市场里研究三角或多边套利，但模型和图算法可以直接搬到 Web3。</p>
+<h3 class="heading-element" id="19-efficient-triangular-arbitrage-detection-via-graph-neural-networks-2025"><span>19. Efficient Triangular Arbitrage Detection via Graph Neural Networks (2025)</span>
+  <a href="#19-efficient-triangular-arbitrage-detection-via-graph-neural-networks-2025" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/abs/2502.03194" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/abs/2502.03194</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>把货币对网络看成图，用 GNN 学习识别<strong>三角套利机会</strong>。</li>
+<li>对比穷举搜索和线性规划方案，在大规模货币图上更快地找到潜在套利。</li>
+<li>虽然论文场景是 FX，但方法（图建模 + GNN 评分）直接可应用于 DEX 池子图。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="20-a-new-waveletbased-ultrahighfrequency-analysis-of-triangular-arbitrage"><span>20. A new wavelet‑based ultra‑high‑frequency analysis of triangular arbitrage</span>
+  <a href="#20-a-new-waveletbased-ultrahighfrequency-analysis-of-triangular-arbitrage" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：Sciencedirect 期刊（Economic Modelling 等）</p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>用小波分析研究高频三角套利机会与交易成本的关系。</li>
+<li>对高频下三角套利的持续时间、规模做统计，很适合理解高频环境中套利机会的“时间分布”。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="21-triangular-statistical-arbitrage-in-foreign-exchange-market"><span>21. Triangular Statistical Arbitrage in Foreign Exchange Market</span>
+  <a href="#21-triangular-statistical-arbitrage-in-foreign-exchange-market" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://ijiset.com/vol9/v9s3/IJISET_V9_I03_12.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://ijiset.com/vol9/v9s3/IJISET_V9_I03_12.pdf</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>把三角套利与统计套利结合，利用 triangle rule 保证长期协整。</li>
+<li>形成一种<strong>统计意义上的三角套利策略</strong>，在有噪声环境下仍然可行。</li>
+<li>方法论可以迁移到多资产池子之间做“多腿统计套利”。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="22-toxic-arbitrage"><span>22. Toxic Arbitrage</span>
+  <a href="#22-toxic-arbitrage" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：JSTOR：Toxic Arbitrage</p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>使用三角套利的数据，区分“有毒”和“无毒”套利机会，并研究它们对流动性的影响。</li>
+<li>对你理解高频三角套利对市场质量的影响（包括 DeFi 场景）很有启发。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="23-graph-learning-for-foreign-exchange-rate-prediction-and-statistical-arbitrage-2025"><span>23. Graph Learning for Foreign Exchange Rate Prediction and Statistical Arbitrage (2025)</span>
+  <a href="#23-graph-learning-for-foreign-exchange-rate-prediction-and-statistical-arbitrage-2025" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://arxiv.org/html/2508.14784v1" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/html/2508.14784v1</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>用图学习预测 FX 汇率，并构造三货币以上的多边统计套利。</li>
+<li>提出带执行时滞和价格不确定性的<strong>随机优化问题</strong>，对“多跳套利 + 延迟风险”做了比较严谨的处理。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="四现货期货--资金费率--基差套利crypto-derivatives-学术研究"><span>四、现货–期货 / 资金费率 / 基差套利（Crypto Derivatives 学术研究）</span>
+  <a href="#%e5%9b%9b%e7%8e%b0%e8%b4%a7%e6%9c%9f%e8%b4%a7--%e8%b5%84%e9%87%91%e8%b4%b9%e7%8e%87--%e5%9f%ba%e5%b7%ae%e5%a5%97%e5%88%a9crypto-derivatives-%e5%ad%a6%e6%9c%af%e7%a0%94%e7%a9%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>你提到的“现货期货、资金费率、基差套利”在学术圈更多是从<strong>价格效率 / 限制套利 / cash‑and‑carry</strong>角度研究。</p>
+<h3 class="heading-element" id="24-crypto-carrybis-working-paper-no-1087"><span>24. Crypto Carry（BIS Working Paper No. 1087）</span>
+  <a href="#24-crypto-carrybis-working-paper-no-1087" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>作者</strong>：M. Drehmann 等（BIS）</p>
+</li>
+<li>
+<p><strong>链接</strong>：</p>
+<ul>
+<li>概览：<a href="https://www.bis.org/publ/work1087.htm" target="_blank" rel="external nofollow noopener noreferrer">https://www.bis.org/publ/work1087.htm</a></li>
+<li>PDF：<a href="https://www.bis.org/publ/work1087.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://www.bis.org/publ/work1087.pdf</a></li>
+</ul>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>把“现货多 + 期货空”的 crypto cash‑and‑carry 视为**“crypto carry”**，系统研究 2019–2022 年多个交易所上的 carry 分布。</li>
+<li>发现平均年化 carry 大约 10%，但存在显著的下行风险和种种<strong>套利限制（资金、杠杆、交易成本）</strong>。</li>
+<li>非常适合理解<strong>基差套利/现金‑套保套利</strong>在加密市场的宏观特性。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="25-pricing-efficiency-and-arbitrage-in-the-bitcoin-spot-and-futures-markets"><span>25. Pricing Efficiency and Arbitrage in the Bitcoin Spot and Futures Markets</span>
+  <a href="#25-pricing-efficiency-and-arbitrage-in-the-bitcoin-spot-and-futures-markets" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：ScienceDirect 期刊文章</p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>使用 CME/CBOE 的比特币期货与现货价格，研究基差是否提供价格预测信息，以及套利是否消除定价错误。</li>
+<li>发现基差对未来现货价格变化和风险溢价有预测力，但并非完全无偏预测。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="26-arbitrage-opportunities-and-feedback-trading-in-regulated-bitcoin-futures-markets-2023"><span>26. Arbitrage opportunities and feedback trading in regulated bitcoin futures markets (2023)</span>
+  <a href="#26-arbitrage-opportunities-and-feedback-trading-in-regulated-bitcoin-futures-markets-2023" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：<a href="https://www.sciencedirect.com/science/article/pii/S1059056023004021" target="_blank" rel="external nofollow noopener noreferrer">https://www.sciencedirect.com/science/article/pii/S1059056023004021</a></p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>用 5 分钟级的比特币现货与期货数据，研究套利机会对期货市场反馈交易的影响。</li>
+<li>把 <strong>spot–futures basis</strong> 视为套利机会 proxy，通过分位数回归在不同市场状态下分析其影响。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="27-exploring-arbitrage-opportunities-between-the-btc-spot-and-futures-markets"><span>27. Exploring Arbitrage Opportunities between the BTC Spot and Futures Markets</span>
+  <a href="#27-exploring-arbitrage-opportunities-between-the-btc-spot-and-futures-markets" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>链接</strong>：Atlantis Press 会议论文 PDF</p>
+</li>
+<li>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>用数据检验比特币现货与期货之间确实存在可观套利利润，特别是在市场崩盘期。</li>
+<li>更像一个实证 case study，可以作为你做现货‑期货套利历史回测的参考模板。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="五接近论文风格的技术长文--开源实现不是严格学术论文但很有实战价值"><span>五、接近论文风格的技术长文 &amp; 开源实现（不是严格学术论文，但很有实战价值）</span>
+  <a href="#%e4%ba%94%e6%8e%a5%e8%bf%91%e8%ae%ba%e6%96%87%e9%a3%8e%e6%a0%bc%e7%9a%84%e6%8a%80%e6%9c%af%e9%95%bf%e6%96%87--%e5%bc%80%e6%ba%90%e5%ae%9e%e7%8e%b0%e4%b8%8d%e6%98%af%e4%b8%a5%e6%a0%bc%e5%ad%a6%e6%9c%af%e8%ae%ba%e6%96%87%e4%bd%86%e5%be%88%e6%9c%89%e5%ae%9e%e6%88%98%e4%bb%b7%e5%80%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>你说“全网”，这里我也把我检索到、<strong>算法讲得比较硬核</strong>的技术博文/GitHub 放进来（单独标明“技术文章/代码”，方便你区分）。</p>
+<h3 class="heading-element" id="defi-多池--多跳套利算法--实战"><span>DeFi 多池 / 多跳套利算法 &amp; 实战</span>
+  <a href="#defi-%e5%a4%9a%e6%b1%a0--%e5%a4%9a%e8%b7%b3%e5%a5%97%e5%88%a9%e7%ae%97%e6%b3%95--%e5%ae%9e%e6%88%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>
+<p><strong>Arbitrage in DeFi (p1 &amp; p2)</strong> – Tr8dr 博客</p>
+<ul>
+<li>p1: <a href="https://tr8dr.github.io/MEV-p1/" target="_blank" rel="external nofollow noopener noreferrer">https://tr8dr.github.io/MEV-p1/</a></li>
+<li>p2: <a href="https://tr8dr.github.io/MEV-p2/" target="_blank" rel="external nofollow noopener noreferrer">https://tr8dr.github.io/MEV-p2/</a></li>
+<li>深入讨论<strong>通过池子图寻找最优路径与最优 size</strong> 的算法和工程实践（包括非原子套利、back‑running、清算等）。</li>
+</ul>
+</li>
+<li>
+<p><strong>Into the Dark Forest: Engineering Working DeFi Arbitrage</strong></p>
+<ul>
+<li>链接：<a href="https://hackernoon.com/into-the-dark-forest-engineering-working-defi-arbitrage" target="_blank" rel="external nofollow noopener noreferrer">https://hackernoon.com/into-the-dark-forest-engineering-working-defi-arbitrage</a></li>
+<li>从 AMM 定价、机会检测、一整个套利 bot 架构讲起，实战味很重。</li>
+</ul>
+</li>
+<li>
+<p><strong>Dijkstra’s Algorithm for Optimal Arbitrage Path Finding Across DeFi Liquidity Pools</strong></p>
+<ul>
+<li>链接：<a href="https://johal.in/dijkstras-algorithm-for-optimal-arbitrage-path-finding-across-defi-liquidity-pools/" target="_blank" rel="external nofollow noopener noreferrer">https://johal.in/dijkstras-algorithm-for-optimal-arbitrage-path-finding-across-defi-liquidity-pools/</a></li>
+<li>用 <strong>Dijkstra／最短路</strong> 对池子图建模，通过对边权取 −log(汇率) 或费用，转化为“最短路 ≈ 最优套利路径”的经典套路，并讨论了实现细节和性能。</li>
+</ul>
+</li>
+<li>
+<p><strong>Building an arbitrage bot: Finding arbitrage opportunities（Gate Learn 系列）</strong></p>
+<ul>
+<li>链接：<a href="https://www.gate.com/learn/articles/building-an-arbitrage-bot-finding-arbitrage-opportunities/2468" target="_blank" rel="external nofollow noopener noreferrer">https://www.gate.com/learn/articles/building-an-arbitrage-bot-finding-arbitrage-opportunities/2468</a></li>
+<li>推导双池套利的<strong>最优交易量闭式公式</strong>，适合作为你自己推更复杂多池模型的起点。</li>
+</ul>
+</li>
+<li>
+<p><strong>Multi‑L2 Hop Optimization: Advanced Cross‑Chain Arbitrage Strategies 2025</strong></p>
+<ul>
+<li>链接：<a href="https://coincryptorank.com/blog/multi-l2-hop-optimization" target="_blank" rel="external nofollow noopener noreferrer">https://coincryptorank.com/blog/multi-l2-hop-optimization</a></li>
+<li>偏教程，但有不少关于<strong>跨 L2 路由、费用/延迟建模和路径优化</strong>的讨论。</li>
+</ul>
+</li>
+<li>
+<p><strong>Alphador CEX–DEX Arbitrage Scanner 文档</strong></p>
+<ul>
+<li>链接：<a href="https://docs.alphador.ai/subscription-features/arbitrage/cex-dex-arbitrage-scanner" target="_blank" rel="external nofollow noopener noreferrer">https://docs.alphador.ai/subscription-features/arbitrage/cex-dex-arbitrage-scanner</a></li>
+<li>描述一个扫描 CEX/DEX 价差并输出潜在套利路径的系统结构，更多是产品文档，但能看出实际工程中的图搜索思路。</li>
+</ul>
+</li>
+</ol>
+<h3 class="heading-element" id="图搜索cfmm-套利的开源代码仓库"><span>图搜索/CFMM 套利的开源代码仓库</span>
+  <a href="#%e5%9b%be%e6%90%9c%e7%b4%a2cfmm-%e5%a5%97%e5%88%a9%e7%9a%84%e5%bc%80%e6%ba%90%e4%bb%a3%e7%a0%81%e4%bb%93%e5%ba%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol start="7">
+<li>
+<p><strong>defi‑arbitration‑model：Arbitration in DeFi as a Shortest Path Problem</strong></p>
+<ul>
+<li>GitHub：<a href="https://github.com/mmsaki/defi-arbitration-model" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/mmsaki/defi-arbitration-model</a></li>
+<li>直接把 DeFi 套利建模为<strong>最短路径问题</strong>，基于论文 <em>On the Just‑In‑Time Discovery…</em>，可以看具体实现。</li>
+</ul>
+</li>
+<li>
+<p><strong>arb‑mev‑contracts（SwapStorm: A DeFi Arbitrage Executor）</strong></p>
+<ul>
+<li>GitHub：<a href="https://github.com/dapslegend/arb-mev-contracts" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/dapslegend/arb-mev-contracts</a></li>
+<li>利用 Bellman‑Ford‑Moore 检测 DEX 图中的套利路径，并集成 DeFiPoser 思路构建执行合约。</li>
+</ul>
+</li>
+<li>
+<p><strong>defi‑arbitrage‑engine</strong></p>
+<ul>
+<li>
+<p>GitHub：<a href="https://github.com/joel-saucedo/defi-arbitrage-engine" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/joel-saucedo/defi-arbitrage-engine</a></p>
+</li>
+<li>
+<p>一个“研究级”的高频套利引擎，里面有</p>
+<ul>
+<li>Dijkstra / Floyd‑Warshall 多源最短路</li>
+<li>基于 CVXPY 的凸优化</li>
+<li>以及一堆性能优化（Rust/ASM）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Awesome‑AMM 文献列表</strong></p>
+<ul>
+<li>链接：<a href="https://0xperp.github.io/awesome-amm/" target="_blank" rel="external nofollow noopener noreferrer">https://0xperp.github.io/awesome-amm/</a></li>
+<li>集中整理了 AMM 相关论文，其中包括上面提到的很多 routing / arbitrage 文献，可用作你继续深挖的目录。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 class="heading-element" id="六这些工作里常见的多池最优套利路径方法小结给你一个快速-mental-map"><span>六、这些工作里常见的“多池最优套利路径”方法小结（给你一个快速 mental map）</span>
+  <a href="#%e5%85%ad%e8%bf%99%e4%ba%9b%e5%b7%a5%e4%bd%9c%e9%87%8c%e5%b8%b8%e8%a7%81%e7%9a%84%e5%a4%9a%e6%b1%a0%e6%9c%80%e4%bc%98%e5%a5%97%e5%88%a9%e8%b7%af%e5%be%84%e6%96%b9%e6%b3%95%e5%b0%8f%e7%bb%93%e7%bb%99%e4%bd%a0%e4%b8%80%e4%b8%aa%e5%bf%ab%e9%80%9f-mental-map" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>如果你自己要在几十/几百个池子上做“最优路径 + 套利”的论文或系统，基本都会落在下面几类方法里（上面列的论文/文章几乎都能归类）：</p>
+<ol>
+<li>
+<p><strong>凸优化 / 混合整数优化（Boyd + Diamandis 系列 + Marginal Price Optimization）</strong></p>
+<ul>
+<li>
+<p>把所有池子视为满足某种 CFMM 约束的“黑盒函数”，统一写成：</p>
+<ul>
+<li>最大化效用 / 终端资产数量</li>
+<li>约束为每个池子的 curve + 手续费 + 资金限制。</li>
+</ul>
+</li>
+<li>
+<p>再通过</p>
+<ul>
+<li>分解算法（decomposition）</li>
+<li>变量降维（marginal price parameterization）
+让问题在<strong>几十/上百个池子</strong>上可解。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>图论负环 / 最短路（DeFiPoser, Improved Algorithm, 各种 GitHub）</strong></p>
+<ul>
+<li>
+<p>利用汇率图，把 log(汇率) 作为边权，套利变成<strong>负环检测（Bellman‑Ford）<strong>或</strong>最短路问题（Dijkstra）</strong>。</p>
+</li>
+<li>
+<p>优化方向包括：</p>
+<ul>
+<li>剪枝路径空间</li>
+<li>同时寻找闭环与非闭环路径</li>
+<li>在本地搜索上做快速近似。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>GNN / 图学习筛选候选路径（ArbiNet, Triangular GNN 等）</strong></p>
+<ul>
+<li>先用 ML 在巨大图上“打分”，挑出高概率有套利的子图或路径候选；再用精确算法做数值计算。</li>
+</ul>
+</li>
+<li>
+<p><strong>随机优化 / 统计套利（FX StatArb、Graph Learning for FX）</strong></p>
+<ul>
+<li>当价格有噪声和执行延迟时，把套利视为一个<strong>带风险约束的随机优化问题</strong>，求解最优规模和持有时间。</li>
+</ul>
+</li>
+<li>
+<p><strong>跨链场景的利润‑成本模型（Cross‑Chain Arbitrage, Crypto Carry）</strong></p>
+<ul>
+<li>模型化桥的延迟、库存占用、融资成本，决定是<strong>库存套利</strong>还是<strong>桥套利</strong>更优。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>如果你后面想做更具体的事情（比如：</p>
+<blockquote>
+<p>“给我一个基于 CFMM convex 优化 + Bellman‑Ford 组合的算法框架，并写一篇论文式的 outline / 实验设计”</p>
+</blockquote>
+<p>我也可以直接按上面这些文献帮你拼一个研究路线（包括复杂度分析、实验、数据集设计等），不用你再一篇篇啃完。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-11-26 00:00:00">更新于 2025-11-26&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202511-openaipaper/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202511-openaipaper/" data-title="论文整理来自OPENAI" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202511-openaipaper/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202511-openaipaper/" data-title="论文整理来自OPENAI"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202511-frl/" class="post-nav-item" rel="prev" title="论文阅读《愿望还是现实？论加密货币市场中三角套利的可利用性》"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>论文阅读《愿望还是现实？论加密货币市场中三角套利的可利用性》</a><a href="/posts/202511-trline/" class="post-nav-item" rel="next" title="关于TRLine的一些想法——与Openai问答">关于TRLine的一些想法——与Openai问答<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#一amm--dex-上的最优路由--多池套利重点推荐">一、AMM / DEX 上的最优路由 &amp; 多池套利（重点推荐）</a>
+      <ul>
+        <li><a href="#1-marginal-price-optimization-a-new-framework-for-arbitrage-and-routing-in-amm-driven-markets-2025">1. Marginal Price Optimization: A new framework for arbitrage and routing in AMM-driven markets (2025)</a></li>
+        <li><a href="#2-optimal-routing-for-constant-function-market-makers">2. Optimal Routing for Constant Function Market Makers</a></li>
+        <li><a href="#3-an-efficient-algorithm-for-optimal-routing-through-constant-function-market-makers-fc-2023">3. An Efficient Algorithm for Optimal Routing Through Constant Function Market Makers (FC 2023)</a></li>
+        <li><a href="#4-constant-function-market-makers-multiasset-multipoolcfmm-大论文">4. Constant Function Market Makers: Multi‑asset, multi‑pool（CFMM 大论文）</a></li>
+        <li><a href="#5-an-improved-algorithm-to-identify-more-arbitrage-opportunities-on-decentralized-exchanges-2024">5. An Improved Algorithm to Identify More Arbitrage Opportunities on Decentralized Exchanges (2024)</a></li>
+        <li><a href="#6-cyclic-arbitrage-in-decentralized-exchanges-2021">6. Cyclic Arbitrage in Decentralized Exchanges (2021)</a></li>
+        <li><a href="#7-on-the-justintime-discovery-of-profitgenerating-transactions-in-defi-protocols-ieee-sp-2021-defiposer">7. On the Just‑In‑Time Discovery of Profit‑Generating Transactions in DeFi Protocols (IEEE S&amp;P 2021, DeFiPoser)</a></li>
+        <li><a href="#8-optimal-arbitrage-timing-between-decentralized-and-centralized-exchanges">8. Optimal Arbitrage Timing between Decentralized and Centralized Exchanges</a></li>
+        <li><a href="#9-arbitrage-in-automated-market-makers-frontiers-in-blockchain-2024">9. Arbitrage in Automated Market Makers (Frontiers in Blockchain, 2024)</a></li>
+        <li><a href="#10-decentralised-finance-and-automated-market-making-execution-and-statistical-arbitrage-2023">10. Decentralised Finance and Automated Market Making: Execution and Statistical Arbitrage (2023)</a></li>
+        <li><a href="#11-measuring-arbitrage-losses-and-profitability-of-amm-liquidity-2024">11. Measuring Arbitrage Losses and Profitability of AMM Liquidity (2024)</a></li>
+        <li><a href="#12-configurable-arbitrage-and-slippage-in-automated-market-making-systems-2025">12. Configurable arbitrage and slippage in automated market making systems (2025)</a></li>
+        <li><a href="#13-quantifying-arbitrage-in-automated-market-makers-an-empirical-study-of-ethereum-zk-rollups-2024">13. Quantifying Arbitrage in Automated Market Makers: An Empirical Study of Ethereum ZK Rollups (2024)</a></li>
+        <li><a href="#14-a-netting-protocol-for-liquidity-saving-automated-market-makers-2025">14. A Netting Protocol for Liquidity-saving Automated Market Makers (2025)</a></li>
+      </ul>
+    </li>
+    <li><a href="#二defi-套利检测--mev-图模型--gnn-相关">二、DeFi 套利检测 / MEV 图模型 &amp; GNN 相关</a>
+      <ul>
+        <li><a href="#15-unraveling-the-mev-enigma-abi-free-detection-model-using-graph-neural-networks-arbinet">15. Unraveling the MEV enigma: ABI-free detection model using Graph Neural Networks (ArbiNet)</a></li>
+        <li><a href="#16-crosschain-arbitrage-the-next-frontier-of-mev-in-decentralized-finance-2025">16. Cross‑Chain Arbitrage: The Next Frontier of MEV in Decentralized Finance (2025)</a></li>
+        <li><a href="#17-retrospectively-identifying-profitgenerating-transactions-on-the-ethereum-blockchain硕士论文">17. Retrospectively Identifying Profit‑Generating Transactions on the Ethereum Blockchain（硕士论文）</a></li>
+        <li><a href="#18-mev-in-multiple-concurrent-proposer-blockchains-2025">18. MEV in Multiple Concurrent Proposer Blockchains (2025)</a></li>
+      </ul>
+    </li>
+    <li><a href="#三三角--多货币--多跳套利算法偏传统金融但算法可迁移">三、三角 / 多货币 / 多跳套利算法（偏传统金融，但算法可迁移）</a>
+      <ul>
+        <li><a href="#19-efficient-triangular-arbitrage-detection-via-graph-neural-networks-2025">19. Efficient Triangular Arbitrage Detection via Graph Neural Networks (2025)</a></li>
+        <li><a href="#20-a-new-waveletbased-ultrahighfrequency-analysis-of-triangular-arbitrage">20. A new wavelet‑based ultra‑high‑frequency analysis of triangular arbitrage</a></li>
+        <li><a href="#21-triangular-statistical-arbitrage-in-foreign-exchange-market">21. Triangular Statistical Arbitrage in Foreign Exchange Market</a></li>
+        <li><a href="#22-toxic-arbitrage">22. Toxic Arbitrage</a></li>
+        <li><a href="#23-graph-learning-for-foreign-exchange-rate-prediction-and-statistical-arbitrage-2025">23. Graph Learning for Foreign Exchange Rate Prediction and Statistical Arbitrage (2025)</a></li>
+      </ul>
+    </li>
+    <li><a href="#四现货期货--资金费率--基差套利crypto-derivatives-学术研究">四、现货–期货 / 资金费率 / 基差套利（Crypto Derivatives 学术研究）</a>
+      <ul>
+        <li><a href="#24-crypto-carrybis-working-paper-no-1087">24. Crypto Carry（BIS Working Paper No. 1087）</a></li>
+        <li><a href="#25-pricing-efficiency-and-arbitrage-in-the-bitcoin-spot-and-futures-markets">25. Pricing Efficiency and Arbitrage in the Bitcoin Spot and Futures Markets</a></li>
+        <li><a href="#26-arbitrage-opportunities-and-feedback-trading-in-regulated-bitcoin-futures-markets-2023">26. Arbitrage opportunities and feedback trading in regulated bitcoin futures markets (2023)</a></li>
+        <li><a href="#27-exploring-arbitrage-opportunities-between-the-btc-spot-and-futures-markets">27. Exploring Arbitrage Opportunities between the BTC Spot and Futures Markets</a></li>
+      </ul>
+    </li>
+    <li><a href="#五接近论文风格的技术长文--开源实现不是严格学术论文但很有实战价值">五、接近论文风格的技术长文 &amp; 开源实现（不是严格学术论文，但很有实战价值）</a>
+      <ul>
+        <li><a href="#defi-多池--多跳套利算法--实战">DeFi 多池 / 多跳套利算法 &amp; 实战</a></li>
+        <li><a href="#图搜索cfmm-套利的开源代码仓库">图搜索/CFMM 套利的开源代码仓库</a></li>
+      </ul>
+    </li>
+    <li><a href="#六这些工作里常见的多池最优套利路径方法小结给你一个快速-mental-map">六、这些工作里常见的“多池最优套利路径”方法小结（给你一个快速 mental map）</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/1d968e36a5bd237c41768e1904d71490.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

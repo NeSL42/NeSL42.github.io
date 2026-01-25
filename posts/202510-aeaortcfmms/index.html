@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="摘要 该论文针对去中心化金融中多个恒定函数做市商（CFMM，如Uniswap等）组成的交易网络，提出了一种基于分解法的高效算法，用于解决最优交易路由问题（即找到能最大化用户效用的交易路径），该算法可并行处理各交易所计算、兼容复杂CFMM类型（如Uniswap v3），且通过数值实验证明其比商业求解器速度更快、能带来更高用户收益。
+"><meta name="keywords" content='量化'>
+  <meta itemprop="name" content="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》">
+  <meta itemprop="description" content="摘要 该论文针对去中心化金融中多个恒定函数做市商（CFMM，如Uniswap等）组成的交易网络，提出了一种基于分解法的高效算法，用于解决最优交易路由问题（即找到能最大化用户效用的交易路径），该算法可并行处理各交易所计算、兼容复杂CFMM类型（如Uniswap v3），且通过数值实验证明其比商业求解器速度更快、能带来更高用户收益。">
+  <meta itemprop="datePublished" content="2025-10-04T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-10-04T00:00:00+00:00">
+  <meta itemprop="wordCount" content="13414">
+  <meta itemprop="keywords" content="量化"><meta property="og:url" content="http://localhost:1313/posts/202510-aeaortcfmms/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》">
+  <meta property="og:description" content="摘要 该论文针对去中心化金融中多个恒定函数做市商（CFMM，如Uniswap等）组成的交易网络，提出了一种基于分解法的高效算法，用于解决最优交易路由问题（即找到能最大化用户效用的交易路径），该算法可并行处理各交易所计算、兼容复杂CFMM类型（如Uniswap v3），且通过数值实验证明其比商业求解器速度更快、能带来更高用户收益。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:tag" content="量化">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》">
+  <meta name="twitter:description" content="摘要 该论文针对去中心化金融中多个恒定函数做市商（CFMM，如Uniswap等）组成的交易网络，提出了一种基于分解法的高效算法，用于解决最优交易路由问题（即找到能最大化用户效用的交易路径），该算法可并行处理各交易所计算、兼容复杂CFMM类型（如Uniswap v3），且通过数值实验证明其比商业求解器速度更快、能带来更高用户收益。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202510-aeaortcfmms/" title="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/2025100-tgcfmm/" title="论文阅读《The Geometry of Constant Function Market Makers》" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202510-linearalgebra/" title="线性代数课程学习笔记" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202510-aeaortcfmms\/"
+    },"genre": "posts","keywords": "量化","wordcount":  13414 ,
+    "url": "http:\/\/localhost:1313\/posts\/202510-aeaortcfmms\/","datePublished": "2025-10-04T00:00:00+00:00","dateModified": "2025-10-04T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-10-04 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-10-04">2025-10-04</time></span>&nbsp;<span title="13414 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 13500 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 27 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#11-常函数做市商constant-function-market-makers-cfmms">1.1 常函数做市商（Constant Function Market Makers, CFMMs）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-对偶分解">2.1 对偶分解</a></li>
+    <li><a href="#22-对偶问题">2.2 对偶问题</a>
+      <ul>
+        <li><a href="#对偶最优性dual-optimality">对偶最优性（Dual Optimality）</a></li>
+      </ul>
+    </li>
+    <li><a href="#23-求解对偶问题">2.3 求解对偶问题</a>
+      <ul>
+        <li><a href="#接口设计interface">接口设计（Interface）</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-一般兑换市场general-swap-markets">3.1 一般兑换市场（General Swap Markets）</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#性能对比">性能对比</a></li>
+        <li><a href="#链上真实数据实际交易效果">链上真实数据：实际交易效果</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="摘要"><span>摘要</span>
+  <a href="#%e6%91%98%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>该论文针对去中心化金融中多个恒定函数做市商（CFMM，如Uniswap等）组成的交易网络，提出了一种基于分解法的高效算法，用于解决最优交易路由问题（即找到能最大化用户效用的交易路径），该算法可并行处理各交易所计算、兼容复杂CFMM类型（如Uniswap v3），且通过数值实验证明其比商业求解器速度更快、能带来更高用户收益。</p>
+<h1 class="heading-element" id="介绍"><span>介绍</span>
+  <a href="#%e4%bb%8b%e7%bb%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>区块链上 CFMM 的广泛应用，自然引发了关于如何在 CFMM 网络或聚合体中进行交易路由的问题。例如，假设某人希望用一定数量的资产 A 兑换尽可能多的资产 B，可能存在多种 “路径” 实现这一交易。比如，先将资产 A 兑换为资产 C，再将资产 C 兑换为资产 B。这类路由问题可以转化为在用户可交易的 CFMM 集合上的优化问题。Angeris 等人 [Ang+22b] 的研究表明，在不考虑区块链交易成本的情况下，对于凹形效用函数而言，路由的一般问题属于凸规划问题；不过，此前已有研究针对路由问题的特殊情况展开过探讨 [Wan+22; DKP21]。</p>
+<p>本文研究内容：本文将分解法应用于最优路由问题，提出了一种可在所有去中心化交易所间轻松并行运算的算法。为求解该算法的子问题，我们对 swap 市场（兑换市场）、有限流动性以及聚合型 CFMM（如 Uniswap v3）的概念进行了形式化定义，并探讨了它们的属性。最后，我们通过验证表明，所提出的最优路由算法高效、实用，能够处理当前区块链上存在的各类 CFMM。</p>
+<h1 class="heading-element" id="1-最优路由optimal-routing"><span>1 最优路由（Optimal Routing）</span>
+  <a href="#1-%e6%9c%80%e4%bc%98%e8%b7%af%e7%94%b1optimal-routing" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p><strong>资产</strong>（Assets）</p>
+<p>在最优路由问题中，我们有一个包含 $n$ 种资产的全局标签集合，这些资产是我们允许交易的对象。本文中这些资产的索引记为 $j=1,\ldots,n$。我们有时将这个“全局集合”称为可交易资产的<strong>宇宙</strong>（universe）。</p>
+<p><strong>交易集合（Trading Sets）</strong>
+此外，在这个问题中，我们有若干个市场（通常为常函数做市商 CFMM，或其聚合形式，我们将在 §1.1 中讨论），记为 $i=1,\ldots,m$。每个市场交易全局资产宇宙中的一个子集，其大小为 $n_i$。我们将市场 $i$ 在交易时刻的行为通过其<strong>交易集合</strong>（trading set）$T_i \subseteq \mathbb{R}^{n_i}$ 来定义。</p>
+<p>交易集合的运作方式如下：任何交易者都可以提出一个资产篮子 $\Delta_i \in \mathbb{R}^{n_i}$ 作为交易提议，其中 $\Delta_i$ 的正分量表示交易者从市场获得这些代币，负分量表示交易者向市场支付这些代币。（注意，这里的资产篮子仅包含该市场所支持的资产子集。）只要满足</p>
+<p>$$
+\Delta_i \in T_i,
+$$</p>
+<p>市场就会接受该交易（即从交易者处收取负分量对应的代币，并向交易者支付正分量对应的代币）。</p>
+<p>我们对集合 $T_i$ 做两个假设：一是 $T_i$ 是一个闭凸集；二是零交易总是可接受的，即 $0 \in T_i$。据作者所知，所有现有的去中心化交易所（DEX）的交易集合都满足这两个条件。</p>
+<p><strong>局部与全局索引（Local and Global Indexing）</strong></p>
+<p>每个市场 $i$ 仅交易全局资产宇宙中的 $n_i$ 个代币，因此我们引入矩阵 $A_i \in \mathbb{R}^{n \times n_i}$ 来连接局部索引和全局索引。这些矩阵的定义使得 $A_i \Delta_i$ 表示交易者在市场 $i$ 中支付或收到的资产总量（以全局索引表示）。例如，若全局共有 $3$ 种代币，而市场 $i$ 交易第 $2$ 和第 $3$ 种代币，则</p>
+<p>$$
+A_i = \begin{bmatrix}
+0 &amp; 0 \
+1 &amp; 0 \
+0 &amp; 1
+\end{bmatrix}.
+$$</p>
+<p>换一种说法，若市场局部索引中的第 $k$ 个代币对应于全局索引中的第 $j$ 个代币，则 $(A_i)_{jk} = 1$，否则为 $0$。注意，局部索引中的代币顺序无需与全局顺序一致。</p>
+<p><strong>网络交易向量（Network Trade Vector）</strong></p>
+<p>将每个市场的净交易量（在映射到全局索引后）相加，我们得到<strong>网络交易向量</strong>（network trade vector）：</p>
+<p>$$
+\Psi = \sum_{i=1}^{m} A_i \Delta_i.
+$$</p>
+<p>我们可以将 $\Psi$ 解释为整个市场网络中的净交易结果。如果 $\Psi_j &gt; 0$，表示在执行所有交易 ${ \Delta_i }_{i=1}^{m}$ 后，我们获得了若干数量的资产 $j$；如果 $\Psi_j &lt; 0$，则表示我们向网络支付了若干数量的资产 $j$。注意，$\Psi_j = 0$ 并不意味着我们没有交易资产 $j$，而只是表示我们收到的和支付的数量相等。</p>
+<p><strong>网络交易效用（Network Trade Utility）</strong></p>
+<p>定义了网络交易向量后，我们引入一个效用函数 $U: \mathbb{R}^{n} \to \mathbb{R} \cup {-\infty}$，用于衡量交易者对净交易 $\Psi$ 的效用。我们假设 $U$ 是凹函数且单调递增（即我们认为所有资产都有价值，但可能存在边际效用递减）。此外，我们使用 $U(\Psi) = -\infty$ 来编码约束条件：若某交易 $\Psi$ 导致效用为 $-\infty$，则该交易对交易者不可接受。</p>
+<p>我们可以选择不同的 $U$ 来编码市场中的多种重要行为，例如清算或购买资产组合、寻找套利机会等。参见 [Ang+22a, §5.2] 中的多个示例。</p>
+<p><strong>最优路由问题（Optimal Routing Problem）</strong></p>
+<p>最优路由问题即为：在所有合法交易中，找到一组交易以最大化交易者的效用：</p>
+<p>$$
+\begin{aligned}
+&amp; \underset{\Psi, \Delta_i}{\text{maximize}}
+&amp; &amp; U(\Psi) \
+&amp; \text{subject to}
+&amp; &amp; \Psi = \sum_{i=1}^{m} A_i \Delta_i, \
+&amp; &amp; &amp; \Delta_i \in T_i, \quad i=1, \ldots, m.
+\end{aligned}
+\tag{1}
+$$</p>
+<p>该问题的变量是网络交易向量 $\Psi \in \mathbb{R}^{n}$ 以及与每个市场的交易量 $\Delta_i \in \mathbb{R}^{n_i}$；问题的数据包括效用函数 $U: \mathbb{R}^{n} \to \mathbb{R} \cup {-\infty}$、连接矩阵 $A_i \in \mathbb{R}^{n \times n_i}$ 以及各市场的交易集合 $T_i \subseteq \mathbb{R}^{n_i}$（$i=1, \ldots, m$）。</p>
+<p>由于交易集合是凸集，且效用函数是凹函数，该问题是一个凸优化问题。</p>
+<p>在后续章节中，我们将利用凸优化的基本结果，构造一个高效算法来求解问题 (1)。</p>
+<p>这里解释一下上面的两个约束条件：</p>
+<p><strong>约束条件 1</strong>：$$\Psi = \sum_{i=1}^{m} A_i \Delta_i$$</p>
+<p>这是<strong>耦合约束</strong>（coupling constraint），它将所有市场的局部交易汇总为全局净交易。</p>
+<ul>
+<li><strong>$m$</strong>：市场上限，即你可以在 $m$ 个不同的 DEX（去中心化交易所）中交易。</li>
+<li><strong>$\Delta_i \in \mathbb{R}^{n_i}$</strong>：在市场 $i$ 中提出的交易篮子（basket of assets）。
+<ul>
+<li>正分量：从市场收到的资产；</li>
+<li>负分量：向市场支付的资产。</li>
+</ul>
+</li>
+<li><strong>$A_i \in \mathbb{R}^{n \times n_i}$</strong>：局部到全局的映射矩阵。
+<ul>
+<li>因为每个市场只交易全局 $n$ 种资产中的一个子集（比如市场 $i$ 只交易 ETH 和 USDC），所以需要用 $A_i$ 把局部索引“对齐”到全局索引。</li>
+</ul>
+</li>
+</ul>
+<p><strong>例如</strong>：全局资产顺序是 [BTC, ETH, USDC]，而市场 $i$ 只交易 ETH 和 USDC，则</p>
+<p>$$
+A_i = \begin{bmatrix}
+0 &amp; 0 \
+1 &amp; 0 \
+0 &amp; 1
+\end{bmatrix}, \quad
+\Delta_i = \begin{bmatrix}
+-1 \
+2000
+\end{bmatrix} \quad \Rightarrow \quad
+A_i \Delta_i = \begin{bmatrix}
+0 \
+-1 \
+2000
+\end{bmatrix}
+$$</p>
+<p>表示：支付 1 ETH，获得 2000 USDC，BTC 无变化。</p>
+<ul>
+<li><strong>求和 $\sum_{i=1}^{m} A_i \Delta_i$</strong>：把所有市场的交易结果加起来，得到全局净交易 $\Psi$。</li>
+</ul>
+<p>这个约束确保：你最终的资产变动 $\Psi$ 必须等于你在各个市场交易结果的总和。</p>
+<p><strong>约束条件 2</strong>：$\Delta_i \in T_i$</p>
+<p>这表示：每个市场的交易必须是该市场所允许的。</p>
+<ul>
+<li><strong>$T_i \subseteq \mathbb{R}^{n_i}$</strong> 是市场 $i$ 的<strong>交易集合</strong>（trading set）。
+<ul>
+<li>它定义了哪些交易篮子 $\Delta_i$ 被市场接受。</li>
+</ul>
+</li>
+<li>对于 CFMM（常函数做市商，如 Uniswap），$T_i$ 由不变函数 $\phi$ 和手续费参数 $\gamma$ 决定（见 §1.1）：
+$$
+T_i = {\Delta_i \mid \phi(R - \gamma \Delta_i^- - \Delta_i^+) \geq \phi(R)}
+$$
+其中 $\Delta_i^+ = \max(\Delta_i, 0)$，$\Delta_i^- = \min(\Delta_i, 0)$，$R$ 是市场的储备金。</li>
+<li><strong>假设</strong>：
+<ul>
+<li>$T_i$ 是闭凸集（closed and convex）→ 保证优化问题性质良好；</li>
+<li>$0 \in T_i$ → “什么都不做”总是允许的。</li>
+</ul>
+</li>
+</ul>
+<p>这个约束确保：你在每个市场的交易都是合法的（市场愿意执行）。</p>
+<h2 class="heading-element" id="11-常函数做市商constant-function-market-makers-cfmms"><span>1.1 常函数做市商（Constant Function Market Makers, CFMMs）</span>
+  <a href="#11-%e5%b8%b8%e5%87%bd%e6%95%b0%e5%81%9a%e5%b8%82%e5%95%86constant-function-market-makers-cfmms" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>目前大多数去中心化交易所（DEX），例如 Uniswap v2、Balancer、Curve 等，都是以常函数做市商（CFMM）的形式组织的，或者是 CFMM 的集合（例如 Uniswap v3）[AC20; Ang+22a]。常函数做市商是一种无需许可的市场机制，允许任何人将一组资产（例如 $r$ 种资产）交换为另一组相同资产，但需满足一套简单的规则，我们将在下文描述。</p>
+<p><strong>储备金与交易函数（Reserves and Trading Functions）</strong></p>
+<p>一个允许交易 $r$ 种代币的常函数做市商由两个要素定义：</p>
+<ol>
+<li><strong>储备金（reserves）</strong> $R \in \mathbb{R}_+^r$，其中 $R_j$ 表示 CFMM 中资产 $j$ 的可用数量；</li>
+<li><strong>交易函数（trading function）</strong> $\phi: \mathbb{R}_+^r \to \mathbb{R}$，这是一个凹函数，用于规定 CFMM 的行为；</li>
+<li><strong>交易手续费（fee）</strong> $0 &lt; \gamma \leq 1$，用于对交易者收取费用（通常 $\gamma=0.997$ 对应 $0.3%$ 手续费）。</li>
+</ol>
+<p><strong>接受条件（Acceptance Condition）</strong></p>
+<p>任何用户都可以向 CFMM 提交一笔交易，即一个向量 $\Delta \in \mathbb{R}^r$。该交易被接受当且仅当满足以下两个条件：</p>
+<p>$$
+\phi(R - \gamma \Delta^- - \Delta^+) \geq \phi(R), \tag{2}
+$$</p>
+<p>且</p>
+<p>$$
+R - \gamma \Delta^- - \Delta^+ \geq 0.
+$$</p>
+<p>其中：</p>
+<ul>
+<li>$\Delta^+$ 是 $\Delta$ 的逐元素正部（elementwise positive part），即 $(\Delta^+)_j = \max{\Delta_j, 0}$；</li>
+<li>$\Delta^-$ 是 $\Delta$ 的逐元素负部（elementwise negative part），即 $(\Delta^-)_j = \min{\Delta_j, 0}$。</li>
+</ul>
+<p><strong>直观理解</strong>：</p>
+<ul>
+<li>$\Delta^+$ 表示交易者<strong>从市场获得</strong>的资产篮子（received basket）；</li>
+<li>$-\Delta^-$ 表示交易者<strong>支付给市场</strong>的资产篮子（tendered basket）；</li>
+<li>手续费仅对支付部分（即 $-\Delta^-$）收取，因此实际进入储备金的是 $\gamma(-\Delta^-)$。</li>
+</ul>
+<p>CFMM 的<strong>交易集合</strong>（trading set）$T$ 正是所有满足条件 (2) 的交易向量构成的集合：</p>
+<p>$$
+T = {\Delta \in \mathbb{R}^r \mid \phi(R - \gamma \Delta^- - \Delta^+) \geq \phi(R)}. \tag{3}
+$$</p>
+<p>可以验证：</p>
+<ul>
+<li>$0 \in T$（不做交易总是允许的）；</li>
+<li>若 $\phi$ 是凹函数，则 $T$ 是凸集（convex set）——这对后续优化至关重要。</li>
+</ul>
+<p>如果交易被接受，CFMM 将从其储备金中支付 $\Delta^+$，并接收 $-\Delta^-$，因此储备金更新为：</p>
+<p>$$
+R \gets R - \Delta^- - \Delta^+.
+$$</p>
+<p>接受条件 (2) 的经济学含义是：CFMM 仅在接受交易后（考虑手续费折扣后的支付部分）其交易函数值不低于当前值时，才接受该交易。这保证了做市商不会因交易而“变穷”。</p>
+<p>此外可以证明：在一定条件下，每一个交易集合 $T$ 都对应一个交易函数 $\phi$ 生成它 [AC20]。</p>
+<p><strong>示例</strong></p>
+<p>几乎所有当前在运行的去中心化交易所都是 CFMM。以下是一些典型例子：</p>
+<ol>
+<li>
+<p><strong>乘积交易函数（Product Trading Function）</strong>
+最流行的交易函数（按交易量等指标衡量）是：
+$$
+\phi(R) = \sqrt{R_1 R_2},
+$$
+最初由 Uniswap 提出 [ZCP18]。</p>
+</li>
+<li>
+<p><strong>有界流动性变体（Bounded Liquidity Variation）</strong>
+Uniswap v3 使用的函数形式为：
+$$
+\phi(R) = \sqrt{(R_1 + \alpha)(R_2 + \beta)}, \quad \alpha, \beta \geq 0. \tag{4}
+$$</p>
+</li>
+<li>
+<p><strong>加权几何平均（Weighted Geometric Mean）</strong>
+Balancer 使用的函数 [MM19]：
+$$
+\phi(R) = \prod_{i=1}^{r} R_i^{w_i}, \tag{5}
+$$
+其中 $w \in \mathbb{R}_+^r$ 且 $\mathbf{1}^\top w = 1$ 称为权重（weights）。当 $r=2$ 且 $w_1 = w_2 = 1/2$ 时，退化为乘积函数。</p>
+</li>
+<li>
+<p><strong>Curve 交易函数</strong>
+Curve 使用的函数 [Ego]：
+$$
+\phi(R) = \alpha \mathbf{1}^\top R - \left( \prod_{i=1}^{r} R_i^{-1} \right),
+$$
+其中 $\alpha &gt; 0$ 是 CFMM 设定的参数。</p>
+</li>
+</ol>
+<p><strong>聚合 CFMM（Aggregate CFMMs）</strong></p>
+<p>在某些特殊情况下（如 Uniswap v3），可以将多个交易相同资产的 CFMM 视为一个<strong>聚合 CFMM</strong>（aggregate CFMM），即把它们合并成一个“大”的交易集合。</p>
+<ul>
+<li><strong>实际例子</strong>：Uniswap v3 中的每个“池子”实际上是由多个使用有界流动性乘积函数（公式 (4)）的 CFMM 组成的集合 [Ada+21]。
+<ul>
+<li>这些子 CFMM 的流动性分布在不同的价格区间内。</li>
+</ul>
+</li>
+<li>后文（§3.1）将说明：当这些子市场的活跃价格区间互不重叠时，可以高效地对整个聚合市场进行套利计算，而无需逐个处理每个子市场，从而显著提升性能。</li>
+</ul>
+<h1 class="heading-element" id="2-高效的算法"><span>2 高效的算法</span>
+  <a href="#2-%e9%ab%98%e6%95%88%e7%9a%84%e7%ae%97%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>解决诸如问题（1）这类仅通过单一约束条件耦合变量集的问题，常用方法是采用分解法[DW60; Ber16]。这类方法的核心思想是将原问题拆解为一系列可独立求解的简单子问题。本节将展示：对最优路由问题应用分解法时，不仅能获得跨所有市场并行化的解决方案，还能提供清晰的可编程接口——只需在给定参考价格条件下为单一市场寻找套利机会。该接口使我们能更便捷地整合多个重要去中心化交易所（如Uniswap v3）。</p>
+<h2 class="heading-element" id="21-对偶分解"><span>2.1 对偶分解</span>
+  <a href="#21-%e5%af%b9%e5%81%b6%e5%88%86%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>为应用对偶分解方法，我们首先将问题（1）的耦合约束，</p>
+<p>$$
+\Psi = \sum_{i=1}^{m} A_i \Delta_i,
+$$</p>
+<p>通过某个向量 $\nu \in \mathbb{R}^n$ 进行参数化，将其松弛为目标函数中的线性惩罚项。（我们将在 §2.2 中证明，$\nu$ 的唯一合理选择是市场出清价格，有时也称为无套利价格，并且这种选择实际上会导致松弛是紧的；即，该松弛问题的解也满足原始耦合约束。）</p>
+<blockquote>
+<p>这个约束把所有市场的交易 $\Delta_1, \ldots, \Delta_m$ 和全局净交易 $\Psi$ 耦合在一起。这导致不能单独优化每个市场，必须同时考虑所有市场，计算复杂。</p>
+<p>&ldquo;松弛&rdquo;（relax）在这里的意思是：暂时不强制要求这个等式严格成立，而是允许它被违反，但要为此付出&quot;代价&quot;。</p>
+<p>具体做法是：把这个约束从&quot;硬性条件&quot;变成&quot;软性惩罚&quot;。</p>
+</blockquote>
+<p>此松弛得到以下问题：</p>
+<p>$$
+\begin{aligned}
+&amp; \underset{\Psi, \Delta_i}{\text{maximize}}
+&amp; &amp; U(\Psi) - \nu^T \left( \Psi - \sum_{i=1}^{m} A_i \Delta_i \right) \
+&amp; \text{subject to}
+&amp; &amp; \Delta_i \in T_i, \quad i=1, \ldots, m,
+\end{aligned}
+$$</p>
+<blockquote>
+<p>这里引入一个向量 $\nu \in \mathbb{R}^n$（称为拉格朗日乘子或对偶变量），然后构造一个惩罚项：</p>
+<p>$$\nu^\top \left( \Psi - \sum_{i=1}^m A_i \Delta_i \right)$$</p>
+<ul>
+<li>如果 $\Psi = \sum_{i=1}^m A_i \Delta_i$（满足约束），那么惩罚项为 $0$；</li>
+<li>如果 $\Psi \ne \sum_{i=1}^m A_i \Delta_i$（违反约束），那么惩罚项 $\ne 0$，会降低目标函数值（因为我们要最大化目标）。</li>
+</ul>
+<p>这个惩罚项是<strong>线性</strong>的，因为它关于 $\Psi$ 和 $\Delta_i$ 都是一次函数。</p>
+</blockquote>
+<p>其中变量是网络交易向量 $\Psi \in \mathbb{R}^n$，以及与每个市场 $i=1, \ldots, m$ 的交易 $\Delta_i \in \mathbb{R}^{n_i}$。注意，此公式可视为由向量 $\nu$ 参数化的一系列问题。</p>
+<p>原问题：</p>
+<p>$$
+\begin{aligned}
+&amp; \max \quad U(\Psi) \
+&amp; \text{s.t.} \quad \Psi = \sum_{i=1}^m A_i \Delta_i, \
+&amp; \qquad \quad \Delta_i \in T_i
+\end{aligned}
+$$</p>
+<p>松弛后变成：</p>
+<p>$$
+\begin{aligned}
+&amp; \underset{\Psi, \Delta_i}{\text{maximize}}
+&amp; &amp; U(\Psi) - \nu^T \Psi + \sum_{i=1}^{m} (A_i^T \nu)^T \Delta_i \
+&amp; \text{subject to}
+&amp; &amp; \Delta_i \in T_i, \quad i=1, \ldots, m.
+\end{aligned} \tag{6}
+$$
+现在，约束 $\Psi = \sum_{i=1}^m A_i \Delta_i$ 被移除了，取而代之的是目标函数中多了一项&quot;违规成本&quot;。</p>
+<p>由于没有额外的<strong>耦合约束</strong>（即某个市场 $i$ 的交易量 $\Delta_i$ 只需满足其自身的交易集合约束 &ldquo;$\Delta_i \in T_i$&quot;，而不受其他市场 $j$（$j \ne i$）的交易量 $\Delta_j$ 的直接限制），我们可以分别求解 $\Psi$ 和每个 $\Delta_i$（$i=1, \ldots, m$）。</p>
+<p><strong>子问题</strong>。此方法产生两种类型的子问题，每种都依赖于 $\nu$。</p>
+<p>首先是关于 $\Psi$ 的子问题：</p>
+<p>$$
+\underset{\Psi}{\text{maximize}} \quad U(\Psi) - \nu^T \Psi, \tag{7}
+$$</p>
+<p>它可以被识别为 Fenchel 共轭 [BV04, §3.3] 的一个轻微变换版本。</p>
+<p>这里简单写下：对于任意函数 $f: \mathbb{R}^n \to \mathbb{R} \cup {+\infty}$，其共轭函数定义为（标准共轭是 “线性项 减去 函数”）：</p>
+<p>$$
+f^*(y) = \sup_{x \in \text{dom} f} \left( y^\top x - f(x) \right).
+$$</p>
+<p><strong>关键性质</strong>：该共轭函数 $f^*$ <strong>恒为凸函数</strong>，无论 $f$ 本身是否为凸函数。</p>
+<p>在论文的对偶分解中，子问题（7）为：
+$$
+\bar{U}(\nu) = \sup_{\Psi} \left( U(\Psi) - \nu^\top \Psi \right). \tag{7}
+$$</p>
+<p>由于效用函数 $U$ 是<strong>凹函数</strong>（concave），不能直接将其代入标准 Fenchel 共轭公式。但若定义<br>
+$$
+f(\Psi) := -U(\Psi),
+$$<br>
+则 $f$ 是<strong>凸函数</strong>，且有：
+$$
+\bar{U}(\nu) = \sup_{\Psi} \left( U(\Psi) - \nu^\top \Psi \right)
+= -\inf_{\Psi} \left( f(\Psi) + \nu^\top \Psi \right)
+= -f^*(-\nu).
+$$</p>
+<p>因此，$\bar{U}(\nu)$ 是凸函数 $f = -U$ 的 Fenchel 共轭在 $-\nu$ 处取值的<strong>负数</strong>，而非 $U$ 本身的共轭。</p>
+<p>对于许多函数 $U$，函数 $\bar{U}$ 可以很容易地以封闭形式导出。此外，由于 $\bar{U}$ 是关于由 $\nu$ 参数化的仿射函数族的的上确界，它是 $\nu$ 的一个凸函数 [BV04, §3.2.3]。另一个需要注意的重要点是，除非 $\nu \geq 0$，否则函数 $\bar{U}(\nu)$ 将取值为 $+\infty$。这可以解释为对 $\nu$ 的一个隐式约束。</p>
+<p>第二类子问题针对每个市场的，对于每个市场 $i$，可以写为：</p>
+<p>$$
+\begin{aligned}
+&amp; \underset{\Delta_i}{\text{maximize}}
+&amp; &amp; (A_i^T \nu)^T \Delta_i \
+&amp; \text{subject to}
+&amp; &amp; \Delta_i \in T_i.
+\end{aligned} \tag{8}
+$$</p>
+<p>我们将其最优值（依赖于 $A_i^T \nu$）记为 $\text{arb}_i(A_i^T \nu)$。问题 (8) 正是市场  $i$ 的最优套利问题（例如，参见 [Ang+22a]），此时外部市场价格或参考市场价格等于 $A_i^T \nu$。由于 $\text{arb}_i(A_i^T \nu)$ 也被定义为关于 $\nu$ 的仿射函数族的上确界，因此它同样是 $\nu$ 的一个凸函数。对于许多交易函数，该套利问题的解已有闭式表达。（参见附录 A 中的一些例子。）</p>
+<p><strong>将对偶变量视为价格</strong>。为什么 $\nu$ 可以被视为价格？</p>
+<p>首先引入支撑超平面定理。该定理的内容是：如果 $C$ 是凸集，则在 $C$ 的任意边界点处都存在支撑超平面。而支撑超平面的定义是：</p>
+<p>给定集合 $C$ 及其边界上一点 $x_0$，如果 $a \neq 0$ 满足 $a^T x \leq a^T x_0, \forall x \in C$，那么称集合：
+$$
+{x \mid a^T x = a^T x_0}
+$$
+为 $C$ 在边界点 $x_0$ 处的支撑超平面。</p>
+<p>问题 (8) 的最优解 $\Delta_i^\star$ 是封闭凸集 $T_i$ 中的一点，使得在点 $\Delta_i^\star$ 处存在集合 $T_i$ 的一个支撑超平面，其斜率为 $A_i^T \nu$ [BV04, §5.6]。我们可以将这些斜率解释为 $n_i$ 种资产的&quot;边际价格&rdquo;，原理如下：令 $\delta \in \mathbb{R}^{n_i}$ 为偏离最优交易 $\Delta_i^\star$ 的微小扰动，并记 $\tilde{\nu} = A_i^T \nu$ 为 $\nu$ 在局部索引中的权重，我们有：</p>
+<p>对于每个满足 $\Delta_i^\star + \delta \in T_i$ 的 $\delta$，（即调整后的交易仍属于交易所可接受的范围）有：
+$$
+\tilde{\nu}^T (\Delta_i^\star + \delta) \leq \tilde{\nu}^T \Delta_i^\star.
+$$</p>
+<p>消去项后，得到：
+$$
+\tilde{\nu}^T \delta \leq 0.
+$$</p>
+<p>例如，如果 $\delta_i$ 和 $\delta_j$ 是 $\delta$ 中仅有的两个非零项，将有
+$$\nu_i \delta_i + \nu_j \delta_j \le 0$$
+$$
+\delta_i \leq -\frac{\tilde{\nu}_j}{\tilde{\nu}_i} \delta_j,
+$$</p>
+<p>刚好符合边际价格的定义。</p>
+<p>因此 $i$ 和 $j$ 之间的汇率至多为 $\tilde{\nu}_i / \tilde{\nu}_j$。这一观察让我们可以将对偶变量 $\tilde{\nu}$（以及因此的对偶变量 $\nu$）解释为&quot;边际价格&quot;，最多相差一个常数倍数。</p>
+<h2 class="heading-element" id="22-对偶问题"><span>2.2 对偶问题</span>
+  <a href="#22-%e5%af%b9%e5%81%b6%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>问题 (6) 的目标函数值是关于对偶变量 $\nu$ 的一个函数，可写作：</p>
+<p>$$
+g(\nu) = \bar{U}(\nu) + \sum_{i=1}^m \mathrm{arb}_i(A_i^\top \nu). \tag{9}
+$$</p>
+<p>该函数 $g: \mathbb{R}^n \to \mathbb{R}$ 被称为<strong>对偶函数</strong>（dual function）。由于 $\bar{U}(\nu)$ 和每个 $\mathrm{arb}_i(A_i^\top \nu)$ 都是关于 $\nu$ 的凸函数（如 §2.1 所述），而凸函数之和仍为凸函数，因此 $g(\nu)$ 也是<strong>凸函数</strong>。</p>
+<p><strong>对偶问题</strong>（dual problem）即为在对偶变量 $\nu \in \mathbb{R}^n$ 上最小化该对偶函数：</p>
+<p>$$
+\text{minimize} \quad g(\nu). \tag{10}
+$$</p>
+<p>由于 $g$ 是凸函数，该问题是一个<strong>凸优化问题</strong>。</p>
+<h3 class="heading-element" id="对偶最优性dual-optimality"><span>对偶最优性（Dual Optimality）</span>
+  <a href="#%e5%af%b9%e5%81%b6%e6%9c%80%e4%bc%98%e6%80%a7dual-optimality" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>虽然我们定义了对偶问题，但尚未说明它与原始路由问题（即问题 (1)）之间的关系。设 $\nu^\star$ 是对偶问题 (10) 的一个最优解。</p>
+<p>假设对偶函数 $g$ 在 $\nu^\star$ 处可微，则问题 (10) 的一阶无约束最优性条件为：</p>
+<p>$$
+\nabla g(\nu^\star) = 0.
+$$</p>
+<p>（若 $g$ 不可微，可用次梯度代替，结论类似。）</p>
+<p>可以证明：若 $\bar{U}$ 在 $\nu^\star$ 处可微，则其梯度为</p>
+<p>$$
+\nabla \bar{U}(\nu^\star) = -\Psi^\star,
+$$</p>
+<p>其中 $\Psi^\star$ 是子问题 (7)（即 $\max_\Psi , U(\Psi) - (\nu^\star)^\top \Psi$）的最优解。（这是因为：当最大值函数可微时，其梯度等于目标函数在最优解处关于参数的偏导。）</p>
+<p>类似地，$\mathrm{arb}_i(A_i^\top \nu)$ 在 $\nu = \nu^\star$ 处的梯度（通过链式法则）为：</p>
+<p>$$
+\nabla_\nu , \mathrm{arb}_i(A_i^\top \nu^\star) = A_i \Delta_i^\star,
+$$</p>
+<p>其中 $\Delta_i^\star$ 是市场 $i$ 的套利子问题 (8) 在边际价格 $A_i^\top \nu^\star$ 下的最优交易。</p>
+<p>因此，对偶函数的梯度为：</p>
+<p>$$
+\nabla g(\nu^\star) = -\Psi^\star + \sum_{i=1}^m A_i \Delta_i^\star. \tag{11}
+$$</p>
+<p>令其为零，即得：</p>
+<p>$$
+0 = -\Psi^\star + \sum_{i=1}^m A_i \Delta_i^\star \quad \Rightarrow \quad \Psi^\star = \sum_{i=1}^m A_i \Delta_i^\star.
+$$</p>
+<p><strong>这正是原始问题 (1) 中的耦合约束！</strong></p>
+<p>换句话说，当对偶变量 $\nu$ 被最优地选择（即最小化对偶问题 (10)）时，各子问题 (7) 和 (8) 的最优解 $\Psi^\star$ 与 ${\Delta_i^\star}$ <strong>自动满足原始耦合约束</strong>。</p>
+<p>由于问题 (6) 是原始问题 (1) 的一个<strong>松弛</strong>（relaxation），任何满足原始耦合约束的 (6) 的可行解也必然是原始问题 (1) 的最优解。</p>
+<p>因此，<strong>求解原始路由问题等价于求解对偶问题 (10)</strong>。剩下的任务就是：如何高效地找到对偶问题的最优解 $\nu^\star$。这将在下一节讨论。</p>
+<h2 class="heading-element" id="23-求解对偶问题"><span>2.3 求解对偶问题</span>
+  <a href="#23-%e6%b1%82%e8%a7%a3%e5%af%b9%e5%81%b6%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>对偶问题<br>
+$$
+\text{minimize} \quad g(\nu)
+$$<br>
+是一个凸优化问题，在实际应用中即使面对非常大的资产数量 $n$ 和市场数量 $m$，也易于高效求解。在许多场景下，我们可以直接使用现成的优化求解器，例如 SCS [O’D+16]、Hypatia [CKV21] 和 Mosek [ApS19]。</p>
+<p>当梯度易于计算时，一种特别高效的方法是 <strong>L-BFGS-B 算法</strong> [Byr+95; Zhu+97; MN11]。该算法只需在任意点 $\nu$ 处能够计算对偶函数 $g(\nu)$ 及其梯度 $\nabla g(\nu)$，即可在实践中快速收敛到最优解 $\nu^\star$。（具体运行时间见 §5。）</p>
+<p>根据定义，若子问题 (7) 和 (8) 易于求解，则对偶函数 $g$ 也易于计算。更重要的是，由方程 (11) 可知，梯度 $\nabla g(\nu)$ 可以<strong>几乎零额外成本地获得</strong>，因为在求解 $\bar{U}(\nu)$ 和 $\mathrm{arb}<em>i(A_i^\top \nu)$ 时，我们通常已经得到了对应的最优解 $\Psi^\star$ 和 $\Delta_i^\star$，而<br>
+$$
+\nabla g(\nu) = -\Psi^\star + \sum</em>{i=1}^m A_i \Delta_i^\star.
+$$</p>
+<h3 class="heading-element" id="接口设计interface"><span>接口设计（Interface）</span>
+  <a href="#%e6%8e%a5%e5%8f%a3%e8%ae%be%e8%ae%a1interface" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了使用户能够指定并求解对偶问题（从而求解原始路由问题），用户只需提供以下两个组件：</p>
+<p>(a) 一个用于计算 $\bar{U}(\nu)$ 及其对应最优解 $\Psi^\star$ 的方法（对应子问题 (7)）；<br>
+(b) 对每个希望纳入路由的市场 $i$，一个用于求解套利问题 (8) 并返回最优交易 $\Delta_i^\star$ 的方法。</p>
+<p><strong>新增市场极为简便</strong>：只需实现该市场的套利逻辑即可。正如后续章节所示，对于大多数实际的去中心化交易所（如 Uniswap v2/v3、Balancer、Curve 等），这一过程是直接且高效的。</p>
+<p>本文第 4 节所述的 Julia 软件包 <strong>CFMMRouter.jl</strong> 正是基于上述抽象接口的具体实现。</p>
+<h1 class="heading-element" id="3-swap-markets"><span>3. Swap markets</span>
+  <a href="#3-swap-markets" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在实际场景中，大多数交易市场仅交易两种资产；我们将这类市场称为“兑换市场”（swap markets）。由于这类市场极为常见，我们所提算法的性能主要取决于其在这类双资产市场上快速求解（8）式的能力。关于这些计算的实际示例，我们将在附录A中展示。在本节中，我们将省略下标$i$，默认讨论的是某个特定市场$i$。</p>
+<h2 class="heading-element" id="31-一般兑换市场general-swap-markets"><span>3.1 一般兑换市场（General Swap Markets）</span>
+  <a href="#31-%e4%b8%80%e8%88%ac%e5%85%91%e6%8d%a2%e5%b8%82%e5%9c%bageneral-swap-markets" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>兑换市场（swap markets）的处理难度较低，这是因为其交易行为可完全由两种资产各自的远期兑换函数（forward exchange function）[Ang+22a] 来刻画。在下文的讨论中，我们将省略市场索引$i$，默认针对某一特定市场展开分析。</p>
+<p><strong>远期兑换函数（Forward Exchange Function）</strong></p>
+<p>设某兑换市场的交易集合为$T \subseteq \mathbb{R}^2$，我们定义远期兑换函数$f_1$为：当支付固定数量$\delta_1$的资产1时，所能获取的资产2的最大数量，数学表达式为：
+$$f_1(\delta_1) = \sup \left{ \lambda_2 ,\middle|, (-\delta_1, \lambda_2) \in T \right},$$
+同理，资产2兑换资产1的远期兑换函数$f_2$定义为：
+$$f_2(\delta_2) = \sup \left{ \lambda_1 ,\middle|, (\lambda_1, -\delta_2) \in T \right}.$$
+通俗来讲，$f_1(\delta_1)$指的是向市场支付资产组合$(\delta_1, 0)$（即仅支付$\delta_1$单位资产1）时，能够收到的资产2的最大数量；$f_2$的含义与之对称。由于交易集合$T$是闭集，若$f_1(\delta_1)$的取值有限，则上述定义中的上确界（sup）一定能够取到（即存在实际交易对应的资产数量）。</p>
+<p>所以，所有&quot;支付资产 1、收到资产 2&quot;的合法交易，都可以写成：</p>
+<p>$$
+\Delta = (-\delta_1, f_1(\delta_1)), \quad \delta_1 \geq 0.
+$$</p>
+<p><strong>交易函数表示（Trading Function Representation）</strong></p>
+<p>若交易集合$T$可通过式(3)所示的交易函数来表示（即由恒定函数做市商（CFMM）定义），且交易函数$\varphi$满足非递减性（这一性质对所有CFMM均成立[AC20]），则可证明：$f_1$是满足以下等式的逐点最大函数（pointwise largest function）：
+$$\varphi(R_1 + \gamma \delta_1,, R_2 - f_1(\delta_1)) = \varphi(R_1, R_2), \tag{12}$$
+其中$R = (R_1, R_2)$代表市场当前的资产储备量，$\gamma$为交易手续费参数。需要注意的是，此处采用等式形式（而非原始交易接受条件式(2)中的不等式），这是因为在最优交易场景下，CFMM的核心不变量（如Uniswap的乘积不变量）必然会“恰好”保持不变，而非仅满足“不小于/不大于”的不等式约束。</p>
+<p><strong>函数性质（Properties）</strong></p>
+<p><strong>凹凸性与非负性</strong>：由于交易集合$T$是凸集，远期兑换函数$f_1$和$f_2$均为凹函数；又因零交易（不支付也不获取任何资产）属于可行交易（即$0 \in T$），故$f_1$和$f_2$均满足非负性。</p>
+<p><strong>边际价格与价格冲击</strong>：$f_j$的方向导数可解读为“以支付资产为计价单位的所获资产的边际价格”。具体地，其导数定义为：
+$$f_j&rsquo;(\delta_j) = \lim_{h \to 0^+} \frac{f_j(\delta_j + h) - f_j(\delta_j)}{h}. \tag{13}$$
+该导数有时也被称为<strong>价格冲击函数</strong>（price impact function）[ACE22]，其直观含义如下：</p>
+<ul>
+<li>$f_1&rsquo;(0)$表示市场在未发生任何交易时，资产1兑换资产2的“初始报价”；</li>
+<li>$f_1&rsquo;(\delta)$表示在已支付$\delta$单位资产1的基础上，再追加极小量$\varepsilon$单位资产1时，所面临的资产1兑换资产2的“边际价格”（即每多支付1单位资产1能多获取的资产2数量）。</li>
+</ul>
+<p>需要特别说明的是：在存在交易手续费的场景中，追加交易时的边际价格$f_1&rsquo;(\delta)$通常会低于交易完成后市场的内部定价[AC20]。</p>
+<p><strong>兑换市场的套利问题（Swap Market Arbitrage Problem）</strong></p>
+<p>原始问题（对某个只交易两种资产的市场，式(8)）是：</p>
+<p>$$
+\begin{aligned}
+&amp; \underset{\Delta_i}{\text{maximize}}
+&amp; &amp; (A_i^\top \nu)^\top \Delta_i \
+&amp; \text{subject to}
+&amp; &amp; \Delta_i \in T_i \subseteq \mathbb{R}^2.
+\end{aligned}
+$$</p>
+<ul>
+<li>$\Delta_i = (\Delta_1, \Delta_2)^\top$：交易向量。
+<ul>
+<li>$\Delta_1 &gt; 0$：收到资产 1；</li>
+<li>$\Delta_1 &lt; 0$：支付资产 1；</li>
+<li>同理对 $\Delta_2$。</li>
+</ul>
+</li>
+<li>$A_i^\top \nu = (\nu_1, \nu_2)$：这是外部给定的价格（比如 ETH = $2000, USDC = $1）。</li>
+<li>目标函数 $(\nu_1, \nu_2)^\top (\Delta_1, \Delta_2) = \nu_1 \Delta_1 + \nu_2 \Delta_2$ 的含义是：按外部价格计算，这笔交易的总价值是多少。</li>
+</ul>
+<p>借助远期兑换函数，我们可将式(8)所示的一般套利问题转化为标量优化问题（仅含单个变量的优化问题）。设局部价格向量为$(\nu_1, \nu_2) = A_i^\top \nu \geq 0$（即对偶变量$\nu$在当前市场局部资产索引下的取值），则基于$f_1$（资产1兑换资产2）的套利问题可表示为：
+$$\begin{aligned}
+\text{maximize} \quad &amp; -\nu_1 \delta_1 + \nu_2 f_1(\delta_1) \
+\text{subject to} \quad &amp; \delta_1 \geq 0,
+\end{aligned} \tag{14}$$</p>
+<blockquote>
+<p>将 $\Delta = (-\delta_1, f_1(\delta_1))$ 代入原始目标函数：
+$$\nu_1 \Delta_1 + \nu_2 \Delta_2 = \nu_1 (-\delta_1) + \nu_2 f_1(\delta_1) = -\nu_1 \delta_1 + \nu_2 f_1(\delta_1).$$</p>
+</blockquote>
+<p>其中变量为$\delta_1 \in \mathbb{R}$（即支付资产1的数量）。同理，基于$f_2$（资产2兑换资产1）的套利问题为：
+$$\begin{aligned}
+\text{maximize} \quad &amp; \nu_1 f_2(\delta_2) - \nu_2 \delta_2 \
+\text{subject to} \quad &amp; \delta_2 \geq 0.
+\end{aligned}$$</p>
+<p>由于$f_1$和$f_2$均为凹函数，上述两个问题均属于<strong>单变量凸优化问题</strong>，可通过二分法（bisection）或三分搜索（ternary search）高效求解。最终的套利策略为：比较两个问题的最优目标函数值，选择目标值更大的问题对应的交易向量作为最终解。</p>
+<p>例如，若式(14)的最优解为$\delta_1^\star$（即支付$\delta_1^\star$单位资产1），则原套利问题式(8)的最优交易向量为$\Delta^\star = (-\delta_1^\star,, f_1(\delta_1^\star))$（负号表示“支付”，正号表示“获取”）。</p>
+<blockquote>
+<p>注：对于绝大多数实际市场的交易集合$T$，上述两个套利问题中至多有一个的最优目标值为正（即仅一个方向存在套利空间）。因此，在求解完第一个问题后，若其最优目标值为正，可直接“短路”跳过第二个问题的求解，避免冗余计算。</p>
+</blockquote>
+<p><strong>问题结构分析（Problem Properties）</strong></p>
+<p>上述两个子问题的本质是将原套利问题式(8)的解空间划分为两种互斥情形：</p>
+<ul>
+<li>情形1：最优交易向量$\Delta^\star$满足$\Delta_1^\star \leq 0$（即交易方向为“支付资产1、获取资产2”）；</li>
+<li>情形2：最优交易向量$\Delta^\star$满足$\Delta_2^\star \leq 0$（即交易方向为“支付资产2、获取资产1”）。</li>
+</ul>
+<p>这一划分的合理性可通过以下两点验证：</p>
+<ul>
+<li>若对偶变量$\nu &gt; 0$（即资产具有正的影子价格），则“同时支付两种资产”（$\Delta_1^\star &lt; 0$且$\Delta_2^\star &lt; 0$）的交易严格劣于零交易（不支付任何资产），不可能成为最优解；</li>
+<li>“同时获取两种资产”（$\Delta_1^\star &gt; 0$且$\Delta_2^\star &gt; 0$）意味着市场向交易者“无偿输送资产”，在合理的市场机制下不可能发生。</li>
+</ul>
+<p>因此，求解原套利问题式(8)，等价于求解上述两个单变量凸优化问题。</p>
+<p><strong>最优性条件（Optimality Conditions）</strong></p>
+<p>式(14)所示套利问题的最优性条件可分为以下两种情况：</p>
+<ul>
+<li>
+<p>若满足不等式：
+$$\nu_2 f_1&rsquo;(0) \leq \nu_1, \tag{15}$$
+则最优解为$\delta_1^\star = 0$，即“不进行任何交易”（此时资产1兑换资产2的初始边际收益不足以覆盖成本）；</p>
+</li>
+<li>
+<p>若不满足式(15)，则最优解为：
+$$\delta_1^\star = \sup \left{ \delta \geq 0 ,\middle|, \nu_2 f_1&rsquo;(\delta) \geq \nu_1 \right},$$
+即“支付资产1的数量，需满足‘边际收益不低于边际成本’的最大可能值”。</p>
+</li>
+<li>
+<p>若$f_1&rsquo;$（$f_1$的导数）连续(不仅是半连续（semicontinuous）)，则上述最优解可进一步简化为求解单调函数的根：
+$$\nu_2 f_1&rsquo;(\delta_1^\star) = \nu_1. \tag{16}$$
+若式(16)无解且式(15)不成立，则理论上最优解$\delta_1^\star = \infty$（即“无限支付资产1”）。但在实际市场中，交易集合$T$不包含射线（即市场不存在“无限流动性”），因此最优解$\delta_1^\star$始终为有限值。</p>
+</li>
+</ul>
+<p><strong>无交易条件（No-Trade Condition）</strong></p>
+<p>式(15)提供了一种快速判断“是否需与当前市场进行交易”的方法。具体而言，当且仅当满足以下不等式时，“不进行任何交易”是最优策略：
+$$f_1&rsquo;(0) \leq \frac{\nu_1}{\nu_2} \leq \frac{1}{f_2&rsquo;(0)}.$$
+其中，区间$[f_1&rsquo;(0),, 1/f_2&rsquo;(0)]$可视为该市场的买卖价差（bid-ask spread）。在CFMM机制中，这一价差主要由交易手续费$\gamma$导致。利用该“无交易条件”，可在实践中跳过绝大多数无需交易的市场，大幅减少冗余计算，提升算法效率。</p>
+<p><strong>有界流动性（Bounded Liquidity）</strong></p>
+<p>在部分场景中，我们不仅能判断“是否进行交易”，还能判断“是否需提取市场全部流动性”（下文将明确其定义）。这类市场被称为有界流动性市场（bounded liquidity markets），其定义如下：</p>
+<ul>
+<li>若存在有限值$\delta_1$使得$f_1(\delta_1) = \sup f_1$（即支付有限数量的资产1，即可获取市场能提供的最大数量的资产2），则称该市场在“资产2供给”上具有有界流动性；</li>
+<li>若市场在两种资产的供给上均满足有界流动性，则称该市场为“有界流动性市场”。</li>
+</ul>
+<ol>
+<li>最小支付量与最小支持价格
+定义“获取市场全部可提供资产2所需的最小资产1支付量”为：
+$$\delta_1^- = \inf \left{ \delta_1 \geq 0 ,\middle|, f_1(\delta_1) = \sup f_1 \right},$$
+即支付$\delta_1^-$单位资产1时，既能获取市场全部可提供的资产2，又能使支付的资产1数量最小化。
+相应地，定义市场在“提取全部资产2”时的最小支持价格（minimum supported price）为$f_1$在$\delta_1^-$处的左导数：
+$$f_1^-(\delta_1^-) = \lim_{h \to 0^+} \frac{f_1(\delta_1^-) - f_1(\delta_1^- - h)}{h}.$$</li>
+<li>全额流动性提取条件
+根据一阶最优性条件，若满足：
+$$f_1^-(\delta_1^-) \geq \frac{\nu_1}{\nu_2},$$
+则最优交易策略为“提取市场全部流动性”，即支付$\delta_1^\star = \delta_1^-$单位资产1，获取市场全部可提供的资产2。</li>
+</ol>
+<p>同理，对$f_2$定义$\delta_2^-$（获取全部资产1所需的最小资产2支付量）和$f_2^-(\delta_2^-)$（提取全部资产1时的最小支持价格）后，可得出结论：仅当价格$\nu_1 / \nu_2$落在以下区间内时，才需实际求解式(14)所示的套利问题：
+$$f_1^-(\delta_1^-) &lt; \frac{\nu_1}{\nu_2} &lt; \frac{1}{f_2^-(\delta_2^-)}. \tag{17}$$
+我们将该区间称为<strong>有界流动性市场的活跃区间（active interval）</strong>。（若$f_2^-(\delta_2^-) = 0$，则区间右端点视为$+\infty$。）</p>
+<p><strong>示例：Uniswap v3</strong></p>
+<p>以Uniswap v3为例[Ada+21]，其流动性池由多个有界流动性乘积函数（式(4)）构成，函数形式可表示为：
+$$\varphi(R) = \sqrt{(R_1 + \alpha_k)(R_2 + \beta_k)}, \quad k = 1, \dots, s,$$
+其中参数$\alpha_k, \beta_k &gt; 0$的选取需满足：各子流动性池的活跃区间（式(17)）互不重叠（即任意价格$\nu_1 / \nu_2$至多属于一个子池的活跃区间）。</p>
+<p>由于价格$\nu_1 / \nu_2$仅可能落在一个子池的活跃区间内，求解套利问题时，无需遍历所有子池：</p>
+<ul>
+<li>若价格落在某子池的活跃区间内，则仅需对该子池求解套利问题（通常存在闭式解，即无需迭代搜索）；</li>
+<li>若价格不落在任何子池的活跃区间内，则子池要么“不交易”，要么“提取全部流动性”，均可通过常数时间判断。</li>
+</ul>
+<p>该方法具有通用性：对于任意由“活跃区间互不重叠的有界流动性市场”构成的集合，均可用此方式高效求解套利问题。</p>
+<h1 class="heading-element" id="4实现"><span>4.实现</span>
+  <a href="#4%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>已在CFMMRouter.jl中实现了该算法，这是一个用于解决最优路由问题的Julia [Bez+17]软件包。实现可在 <a href="https://github.com/bcc-research/CFMMRouter.jl" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/bcc-research/CFMMRouter.jl</a> 获取，并包含加权几何平均CFMM和Uniswap v3的实现。在本节中，将为求解器提供一个具体的Julia接口。</p>
+<h1 class="heading-element" id="5-数值结果"><span>5 数值结果</span>
+  <a href="#5-%e6%95%b0%e5%80%bc%e7%bb%93%e6%9e%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>我们将本求解器的性能与商业现成的凸优化求解器 <strong>Mosek</strong> 进行了对比，后者通过 <strong>JuMP</strong> [DHL17; Leg+21] 调用。此外，我们还使用真实链上数据展示了<strong>跨多个市场路由订单</strong>相比仅使用单一市场的优势。我们的代码开源地址为：<br>
+<a href="https://github.com/bcc-research/router-experiments" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/bcc-research/router-experiments</a>。</p>
+<h3 class="heading-element" id="性能对比"><span>性能对比</span>
+  <a href="#%e6%80%a7%e8%83%bd%e5%af%b9%e6%af%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>我们首先将本求解器与广泛使用的高性能商业凸优化求解器 <strong>Mosek</strong> [ApS19] 进行性能对比。实验设置如下：</p>
+<ul>
+<li>生成 $m$ 个兑换市场（swap markets），覆盖一个包含 $2\sqrt{m}$ 种资产的全局资产宇宙；</li>
+<li>每个市场的储备金 $R_i$ 在区间 $[1000, 2000]$ 内均匀随机采样（记为 $R_i \sim \mathcal{U}(1000, 2000)$）；</li>
+<li>每个市场有 50% 概率为<strong>恒定乘积市场</strong>（constant product market），其余为<strong>加权几何平均市场</strong>（weighted geometric mean market），权重为 $(0.8, 0.2)$（此类市场在 Balancer [MM19] 等协议中很常见）；</li>
+<li>为每种资产随机生成“真实价格” $p_i \sim \mathcal{U}(0, 1)$，用于构造套利目标；</li>
+<li>对每个 $m$，本求解器与 Mosek 使用<strong>完全相同的市场与价格参数</strong>；</li>
+<li>Mosek 使用默认配置；</li>
+<li>所有实验均在一台配备 2.3GHz 8 核 Intel i9 处理器的 MacBook Pro 上运行。</li>
+</ul>
+<p><img loading="lazy" src='/posts/202510-aeaortcfmms/image.png' alt="图1 Mosek与CFMMRouter.jl求解时间对比（左图）及套利问题目标函数值结果，虚线表示本方法带来的目标函数值相对提升幅度（右图）" height="468" width="1316"></p>
+<p>如图 1 所示，随着池子数量（及资产种类）的增加，我们的方法在性能上<strong>显著优于 Mosek</strong>，且扩展性更好。</p>
+<blockquote>
+<p><strong>注</strong>：加权几何平均市场对 Mosek 尤其困难，因为它们必须表示为<strong>幂锥约束</strong>（power cone constraints）；而恒定乘积市场可表示为<strong>二阶锥约束</strong>（second-order cone constraints），这对许多求解器而言效率更高。</p>
+</blockquote>
+<p>此外，我们的方法通常能获得<strong>更高的目标函数值</strong>（often by over 50%）。我们认为这一提升源于 Mosek 使用的<strong>内点法</strong>（interior point method）及其数值容差：Mosek 返回的每个市场交易解都严格位于交易集合内部，而我们知道，任何理性交易者都会选择边界上的交易。</p>
+<h3 class="heading-element" id="链上真实数据实际交易效果"><span>链上真实数据：实际交易效果</span>
+  <a href="#%e9%93%be%e4%b8%8a%e7%9c%9f%e5%ae%9e%e6%95%b0%e6%8d%ae%e5%ae%9e%e9%99%85%e4%ba%a4%e6%98%93%e6%95%88%e6%9e%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>我们通过一个具体案例展示路由的有效性：考虑将 <strong>WETH 兑换为 USDC</strong>（即使用“资产篮清算”目标函数出售 WETH 以换取 USDC）。</p>
+<p><img loading="lazy" src='/posts/202510-aeaortcfmms/image-1.png' alt="图2：市场售出ETH的平均价格：路由交易与单池交易对比（左图）以及路由交易与单池交易的剩余清算价值对比（右图）" height="468" width="1390"></p>
+<p>使用某区块末尾的链上真实数据，图 2 显示：随着交易规模增大，<strong>跨多个池路由</strong>所能获得的<strong>平均价格</strong>显著优于仅使用 Uniswap v3 的 USDC-WETH 0.3% 手续费池。</p>
+<p>具体而言，我们路由的订单涉及以下三个池：</p>
+<ul>
+<li>USDC-WETH（0.3% 手续费）；</li>
+<li>WETH-USDT（0.3% 手续费）；</li>
+<li>USDC-USDT（0.01% 手续费）。</li>
+</ul>
+<p>这是最简单的可通过路由获得收益的场景，因为卖方有两条路径可选：</p>
+<ol>
+<li><strong>直接路径</strong>：通过 USDC-WETH 池；</li>
+<li><strong>间接路径</strong>：先通过 WETH-USDT 池将 WETH 换成 USDT，再通过 USDC-USDT 池将 USDT 换成 USDC。</li>
+</ol>
+<p>实验结果表明，随着交易量增加，间接路径的滑点优势愈发明显，路由策略能显著提升成交价格。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-10-04 00:00:00">更新于 2025-10-04&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202510-AEAORTCFMMs/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202510-aeaortcfmms/" data-title="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》" data-hashtags="量化"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202510-aeaortcfmms/" data-hashtag="量化"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202510-aeaortcfmms/" data-title="论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E9%87%8F%E5%8C%96/" class="post-tag" title="标签 - 量化">量化</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/2025100-tgcfmm/" class="post-nav-item" rel="prev" title="论文阅读《The Geometry of Constant Function Market Makers》"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>论文阅读《The Geometry of Constant Function Market Makers》</a><a href="/posts/202510-linearalgebra/" class="post-nav-item" rel="next" title="线性代数课程学习笔记">线性代数课程学习笔记<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#11-常函数做市商constant-function-market-makers-cfmms">1.1 常函数做市商（Constant Function Market Makers, CFMMs）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-对偶分解">2.1 对偶分解</a></li>
+    <li><a href="#22-对偶问题">2.2 对偶问题</a>
+      <ul>
+        <li><a href="#对偶最优性dual-optimality">对偶最优性（Dual Optimality）</a></li>
+      </ul>
+    </li>
+    <li><a href="#23-求解对偶问题">2.3 求解对偶问题</a>
+      <ul>
+        <li><a href="#接口设计interface">接口设计（Interface）</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-一般兑换市场general-swap-markets">3.1 一般兑换市场（General Swap Markets）</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#性能对比">性能对比</a></li>
+        <li><a href="#链上真实数据实际交易效果">链上真实数据：实际交易效果</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/f5fda508cc61bf78dd15baf519b5b4c2.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

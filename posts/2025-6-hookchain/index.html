@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>论文阅读：HookChain - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="TODO 行文风格需要改 标题序号需要改 0.摘要 通过精确结合 IAT Hooking 技术、动态 SSN 解析和间接系统调用，HookChain 以一种仅作用于 Ntdll.dll 的 EDR 的警惕之眼不可见的方式重定向 Windows
+"><meta name="keywords" content='论文'>
+  <meta itemprop="name" content="论文阅读：HookChain">
+  <meta itemprop="description" content="TODO 行文风格需要改 标题序号需要改 0.摘要 通过精确结合 IAT Hooking 技术、动态 SSN 解析和间接系统调用，HookChain 以一种仅作用于 Ntdll.dll 的 EDR 的警惕之眼不可见的方式重定向 Windows">
+  <meta itemprop="datePublished" content="2025-06-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-06-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="12346">
+  <meta itemprop="keywords" content="论文"><meta property="og:url" content="http://localhost:1313/posts/2025-6-hookchain/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="论文阅读：HookChain">
+  <meta property="og:description" content="TODO 行文风格需要改 标题序号需要改 0.摘要 通过精确结合 IAT Hooking 技术、动态 SSN 解析和间接系统调用，HookChain 以一种仅作用于 Ntdll.dll 的 EDR 的警惕之眼不可见的方式重定向 Windows">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-06-02T00:00:00+00:00">
+    <meta property="article:tag" content="论文">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="论文阅读：HookChain">
+  <meta name="twitter:description" content="TODO 行文风格需要改 标题序号需要改 0.摘要 通过精确结合 IAT Hooking 技术、动态 SSN 解析和间接系统调用，HookChain 以一种仅作用于 Ntdll.dll 的 EDR 的警惕之眼不可见的方式重定向 Windows">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/2025-6-hookchain/" title="论文阅读：HookChain - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/2025-6-vm/" title="VMware的配置" /><link rel="next" type="text/html" href="http://localhost:1313/posts/2025-6-%E6%A2%A6/" title="梦" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "论文阅读：HookChain",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/2025-6-hookchain\/"
+    },"genre": "posts","keywords": "论文","wordcount":  12346 ,
+    "url": "http:\/\/localhost:1313\/posts\/2025-6-hookchain\/","datePublished": "2025-06-02T00:00:00+00:00","dateModified": "2025-06-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>论文阅读：HookChain</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-06-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-06-02">2025-06-02</time></span>&nbsp;<span title="12346 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 12400 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 25 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#22-system-service-dispatching">2.2 System Service Dispatching</a></li>
+    <li><a href="#23-image-loader">2.3 Image Loader</a></li>
+    <li><a href="#24-hook">2.4 HOOK</a>
+      <ul>
+        <li><a href="#241-jmp-or-call">2.4.1 JMP or CALL</a></li>
+        <li><a href="#242-iat-hook">2.4.2 IAT HOOK</a></li>
+      </ul>
+    </li>
+    <li><a href="#25-已知的pass方法">2.5 已知的pass方法</a>
+      <ul>
+        <li><a href="#251-ntdlldll-重映射">2.5.1 Ntdll.dll 重映射</a></li>
+        <li><a href="#252-直接系统调用">2.5.2 直接系统调用</a></li>
+        <li><a href="#253-间接系统调用">2.5.3 间接系统调用</a></li>
+        <li><a href="#254-动态解析ssn">2.5.4 动态解析SSN</a></li>
+        <li><a href="#254-动态解析ssn---光环之门-halos-gate">2.5.4 动态解析SSN - 光环之门 Halo’s Gate</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-分析目标">3.1 分析目标</a></li>
+    <li><a href="#32-测试方法和局限性">3.2 测试方法和局限性</a></li>
+    <li><a href="#33-分析要点">3.3 分析要点</a>
+      <ul>
+        <li><a href="#331-ntdll-hook">3.3.1 Ntdll Hook</a></li>
+        <li><a href="#332-iat-hook">3.3.2 IAT Hook</a></li>
+      </ul>
+    </li>
+    <li><a href="#34-结果">3.4 结果</a></li>
+    <li><a href="#35-结果">3.5 结果</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#41-overview">4.1. Overview</a></li>
+    <li><a href="#42-数据结构和表">4.2 数据结构和表</a>
+      <ul>
+        <li><a href="#421-syscall_info">4.2.1 SYSCALL_INFO</a></li>
+        <li><a href="#422-syscall_list">4.2.2 SYSCALL_LIST</a></li>
+        <li><a href="#422-引用和索引">4.2.2 引用和索引</a></li>
+      </ul>
+    </li>
+    <li><a href="#43-填充表">4.3 填充表</a></li>
+    <li><a href="#44-iat">4.4 IAT</a>
+      <ul>
+        <li><a href="#441-预加载-dlls">4.4.1 预加载 DLLs</a></li>
+        <li><a href="#442-iat-hook">4.4.2 IAT HOOK</a></li>
+        <li><a href="#443-执行流">4.4.3 执行流</a></li>
+      </ul>
+    </li>
+    <li><a href="#45-调用栈遥测">4.5 调用栈遥测</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="todo"><span>TODO</span>
+  <a href="#todo" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ol>
+<li>行文风格需要改</li>
+<li>标题序号需要改</li>
+</ol>
+<h1 class="heading-element" id="0摘要"><span>0.摘要</span>
+  <a href="#0%e6%91%98%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>通过精确结合 IAT Hooking 技术、动态 SSN 解析和间接系统调用，HookChain 以一种仅作用于 Ntdll.dll 的 EDR 的警惕之眼不可见的方式重定向 Windows</p>
+<h1 class="heading-element" id="1介绍"><span>1.介绍</span>
+  <a href="#1%e4%bb%8b%e7%bb%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在本研究中，着重阐述 HookChain 为先进的安全规避技术带来的全新视角，即通过巧妙绕过用户模式下 EDR 实施的监控机制，尤其是在 Ntdll.dll 库中的相关机制。对于大多数 EDR 而言，该库是遥测数据收集的关键节点，处于访问操作系统内核（环 0）前的最后一道防线。</p>
+<p>通过一种复杂的方法，该方法将 IAT 挂钩（一种通过操纵导入表进行函数调用拦截的方式）与系统服务号（SSN）的动态解析以及间接系统调用（间接系统调用）相结合，HookChain 能够重定向所有主要 Windows 子系统的执行流，例如 kernel32.dll、kernelbase.dll 和 user32.dll。这意味着，一旦部署，HookChain 可确保在应用程序环境内的所有 API 调用都能透明地执行，完全避免被端点检测与响应（EDR）工具检测到。</p>
+<p>不同之处在于，这种技术的执行无需对要执行的应用程序或恶意软件的源代码进行任何修改，在本研究的制定和发布之时，确保能完全避开大多数终端检测与响应（EDR）系统安装的 Ntdll.dll 监控机制。</p>
+<h1 class="heading-element" id="2"><span>2.</span>
+  <a href="#2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="22-system-service-dispatching"><span>2.2 System Service Dispatching</span>
+  <a href="#22-system-service-dispatching" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>x64中，ntdll.dll 直接调用syscall：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="err">0:002&gt;</span> <span class="nf">u</span> <span class="no">ntdll</span><span class="p">!</span><span class="no">NtReadFile</span>
+</span></span><span class="line"><span class="cl"><span class="nf">ntdll</span><span class="p">!</span><span class="no">NtReadFile</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258d090</span> <span class="mi">4</span><span class="no">c8bd1</span> <span class="no">mov</span> <span class="no">r10</span><span class="p">,</span><span class="no">rcx</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258d093</span> <span class="no">b806000000</span> <span class="no">mov</span> <span class="no">eax</span><span class="p">,</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="na">...</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258d0a2</span> <span class="mi">0</span><span class="no">f05</span> <span class="no">syscall</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258d0a4</span> <span class="no">c3</span> <span class="no">ret</span></span></span></code></pre></div></div><p>并且进入内核之后，系统调用号和三环是一样的：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">lkd</span><span class="err">&gt;</span> <span class="no">uf</span> <span class="no">nt</span><span class="p">!</span><span class="no">ZwReadFile</span>
+</span></span><span class="line"><span class="cl"><span class="nf">nt</span><span class="p">!</span><span class="no">ZwReadFile</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e00</span> <span class="mi">488</span><span class="no">bc4</span> <span class="no">mov</span> <span class="no">rax</span><span class="p">,</span><span class="no">rsp</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e03</span> <span class="no">fa</span> <span class="no">cli</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e04</span> <span class="mi">4883</span><span class="no">ec10</span> <span class="no">sub</span> <span class="no">rsp</span><span class="p">,</span><span class="mi">10</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e08</span> <span class="mi">50</span> <span class="no">push</span> <span class="no">rax</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e09</span> <span class="mi">9</span><span class="no">c</span> <span class="no">pushfq</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e0a</span> <span class="mi">6</span><span class="no">a10</span> <span class="no">push</span> <span class="mi">10</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e0c</span> <span class="mi">488</span><span class="no">d052d880000</span> <span class="no">lea</span> <span class="no">rax</span><span class="p">,[</span><span class="no">nt</span><span class="p">!</span><span class="no">KiServiceLinkage</span> <span class="p">(</span><span class="no">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e802640</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e13</span> <span class="mi">50</span> <span class="no">push</span> <span class="no">rax</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e14</span> <span class="no">b806000000</span> <span class="no">mov</span> <span class="no">eax</span><span class="p">,</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="nf">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e7f9e19</span> <span class="no">e9e2710100</span> <span class="no">jmp</span> <span class="no">nt</span><span class="p">!</span><span class="no">KiServiceInternal</span> <span class="p">(</span><span class="no">fffff806</span><span class="err">`</span><span class="mi">0</span><span class="no">e811000</span><span class="p">)</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>之后就是进入Ntoskrnl中的KiServiceInternal，执行NtReadFile的实际实现</p>
+<h2 class="heading-element" id="23-image-loader"><span>2.3 Image Loader</span>
+  <a href="#23-image-loader" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Image Loader是一段用户模式驻留代码，位于 Ntdll.dll 中，而非内核库中。通过这种方式，可以确保 Ntdll.dll 始终存在于正在运行的进程中（Ntdll.dll 始终会被加载）。</p>
+<p>在应用程序的初始化和加载过程中，**导入地址表（IAT）**会填充应用程序引用的每个函数的当前地址。此过程执行以下步骤：</p>
+<ol>
+<li>加载可执行文件（PE）导入表中引用的每个动态链接库（DLL）。</li>
+<li>检查相关DLL是否已加载到进程内存中：若未加载，则从磁盘读取该DLL并将其映射到内存。</li>
+<li>将DLL映射到内存后，对该DLL重复此过程，以导入其使用的依赖项。</li>
+<li>每个DLL加载完成后，系统会处理导入地址表（IAT），查找需要导入的特定函数。通常，此过程通过函数名执行，但也可能通过索引编号完成。对于每个导入的函数名，加载程序会检查被导入DLL的导出表，并尝试定位目标函数。若未找到目标函数，则会终止此操作。</li>
+</ol>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image.png' alt="alt text" height="509" width="1053"></p>
+<h2 class="heading-element" id="24-hook"><span>2.4 HOOK</span>
+  <a href="#24-hook" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="241-jmp-or-call"><span>2.4.1 JMP or CALL</span>
+  <a href="#241-jmp-or-call" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这种策略通常用于更改ntdll.dll 内原生函数调用的代码</p>
+<p>比如，原本的NtCreateProces是这样：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="err">0:002&gt;</span> <span class="nf">u</span> <span class="no">ntdll</span><span class="p">!</span><span class="no">NtCreateProcess</span>
+</span></span><span class="line"><span class="cl"><span class="nf">ntdll</span><span class="p">!</span><span class="no">NtCreateProcess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e700</span> <span class="mi">4</span><span class="no">c8bd1</span> <span class="no">mov</span> <span class="no">r10</span><span class="p">,</span><span class="no">rcx</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e703</span> <span class="no">b8ba000000</span> <span class="no">mov</span> <span class="no">eax</span><span class="p">,</span><span class="mi">0</span><span class="no">BAh</span>
+</span></span><span class="line"><span class="cl"><span class="na">...</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e712</span> <span class="mi">0</span><span class="no">f05</span> <span class="no">syscall</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e714</span> <span class="no">c3</span> <span class="no">ret</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e715</span> <span class="no">cd2e</span> <span class="no">int</span> <span class="mi">2</span><span class="no">Eh</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e717</span> <span class="no">c3</span> <span class="no">ret</span></span></span></code></pre></div></div><p>如果存在EDR，可以看到第一条指令变为JMP或者CALL：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="err">0:004&gt;</span> <span class="nf">u</span> <span class="no">ntdll</span><span class="p">!</span><span class="no">NtCreateProcess</span>
+</span></span><span class="line"><span class="cl"><span class="nf">ntdll</span><span class="p">!</span><span class="no">NtCreateProcess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">bee700</span> <span class="no">e9f81b1600</span> <span class="no">jmp</span> <span class="mi">00007</span><span class="no">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">d502fd</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">bee705</span> <span class="no">cc</span> <span class="no">int</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">bee706</span> <span class="no">cc</span> <span class="no">int</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">bee707</span> <span class="no">cc</span> <span class="no">int</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="na">...</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">bee712</span> <span class="mi">0</span><span class="no">f05</span> <span class="no">syscall</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">bee714</span> <span class="no">c3</span> <span class="no">ret</span></span></span></code></pre></div></div><p>并且跳转指令（JMP）的目标地址未与任何已知模块（DLL）关联，因此这是在运行时注入的代码:</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="err">0:004&gt;</span> <span class="err">!</span><span class="nf">address</span> <span class="mi">00007</span><span class="no">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">d502fd</span>
+</span></span><span class="line"><span class="cl"><span class="nl">Usage:</span> <span class="err">&lt;</span><span class="nf">unknown</span><span class="err">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Base</span> <span class="no">Address</span><span class="p">:</span> <span class="mi">00007</span><span class="no">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">d50000</span>
+</span></span><span class="line"><span class="cl"><span class="nf">End</span> <span class="no">Address</span><span class="p">:</span> <span class="mi">00007</span><span class="no">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">d53000</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Region</span> <span class="no">Size</span><span class="p">:</span> <span class="mi">00000000</span><span class="err">`</span><span class="mi">00003000</span> <span class="p">(</span> <span class="mi">12</span><span class="no">.000</span> <span class="no">kB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nl">State:</span> <span class="err">00001000</span> <span class="nf">MEM_COMMIT</span>
+</span></span><span class="line"><span class="cl"><span class="nl">Protect:</span> <span class="err">00000020</span> <span class="nf">PAGE_EXECUTE_READ</span>
+</span></span><span class="line"><span class="cl"><span class="nl">Type:</span> <span class="err">00020000</span> <span class="nf">MEM_PRIVATE</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Allocation</span> <span class="no">Base</span><span class="p">:</span> <span class="mi">00007</span><span class="no">fff</span><span class="err">`</span><span class="mi">96</span><span class="no">d50000</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Allocation</span> <span class="no">Protect</span><span class="p">:</span> <span class="mi">00000002</span> <span class="no">PAGE_READONLY</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Content</span> <span class="no">source</span><span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="no">target</span><span class="p">),</span> <span class="no">length</span><span class="p">:</span> <span class="mi">2</span><span class="no">d03</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h3 class="heading-element" id="242-iat-hook"><span>2.4.2 IAT HOOK</span>
+  <a href="#242-iat-hook" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/2025-6-hookchain/image-1.png' alt="alt text" height="493" width="933"></p>
+<p>上图7展示了应用程序的原始执行流程。当应用程序需要进行外部函数调用（引用另一个DLL中的函数）时，它会在导入地址表（IAT）中查找目标函数的地址，然后对该地址执行CALL指令。</p>
+<p>另一方面，从图8中可以观察到，导入地址表（IAT）中的函数地址已被替换为任意地址（拦截函数），该地址可选择性地执行原始函数。</p>
+<p>在由终端检测与响应系统（EDR）执行此拦截的场景中，导入地址表（IAT）中存在的地址将是EDR函数的地址，该函数将执行遥测处理、检查、日志记录以及EDR规划的其他任务。</p>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-2.png' alt="alt text" height="779" width="1120"></p>
+<h2 class="heading-element" id="25-已知的pass方法"><span>2.5 已知的pass方法</span>
+  <a href="#25-%e5%b7%b2%e7%9f%a5%e7%9a%84pass%e6%96%b9%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>关于绕过EDR所实施的HOOK技术，目前已有若干公开披露的可行方法，但通常可归纳为以下几类：<br>
+• 重新映射Ntdll.dll以获取原始代码，或覆盖先前映射内存区域中的函数代码。<br>
+• 直接系统调用（direct syscalls）。</p>
+<p>当前市场上的大部分EDR在用户模式下，均通过使用JMP技术拦截Ntdll.dll中的函数调用来集中设置监控点。因此，迄今为止公开报道的用户模式钩子绕过技术，均围绕Ntdll.dll展开。</p>
+<h3 class="heading-element" id="251-ntdlldll-重映射"><span>2.5.1 Ntdll.dll 重映射</span>
+  <a href="#251-ntdlldll-%e9%87%8d%e6%98%a0%e5%b0%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>该技术有很多中变体，通常是读取磁盘dll的内容，然后覆盖被HOOK的函数的相关区域。</p>
+<p>另一种方法是，在挂起模式下创建一个进程，然后读取这个进程中的Ntdll.dll，由于这个时候进程加载还没有完成，EDR还没有收到注入其Hook dll的回调 ，进程中的ntdll副本完好，没有被hook</p>
+<h3 class="heading-element" id="252-直接系统调用"><span>2.5.2 直接系统调用</span>
+  <a href="#252-%e7%9b%b4%e6%8e%a5%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这个具体原理就不说了，没啥说的。</p>
+<p>优点是可以绕过r3的hook，但还是能被EDR识别出来，比如进程执行的总时间，执行连，就是dll的调用顺序。</p>
+<p>除了可能被识别出来，还有缺点是：</p>
+<ol>
+<li>需要手动映射每个SSN，而且每个版本的SSN可能不一样</li>
+<li>需要付出大量编程工作，将使用Windows子系统DLL的目标代码移植为仅通过直接系统调用（Syscall）使用原生函数。</li>
+<li>现有代码的可移植性较低。因为需要调整应用程序的源代码，使其仅使用如Nt&hellip;和Zw&hellip;等原生调用。</li>
+</ol>
+<h3 class="heading-element" id="253-间接系统调用"><span>2.5.3 间接系统调用</span>
+  <a href="#253-%e9%97%b4%e6%8e%a5%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>上述技术的一种广泛使用的变体是间接系统调用（Indirect Syscall），其原理是修改函数，使其不直接执行SYSCALL指令，而是跳转到Ntdll.dll内存中包含Syscall指令的地址。</p>
+<p>比如可以这样：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="err">0:002&gt;</span> <span class="nf">u</span> <span class="no">ntdll</span><span class="p">!</span><span class="no">NtCreateProcess</span>
+</span></span><span class="line"><span class="cl"><span class="nf">ntdll</span><span class="p">!</span><span class="no">NtCreateProcess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e700</span> <span class="mi">4</span><span class="no">c8bd1</span> <span class="no">mov</span> <span class="no">r10</span><span class="p">,</span><span class="no">rcx</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e703</span> <span class="no">b8ba000000</span> <span class="no">mov</span> <span class="no">eax</span><span class="p">,</span><span class="mi">0</span><span class="no">BAh</span>
+</span></span><span class="line"><span class="cl"><span class="na">...</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e712</span> <span class="mi">0</span><span class="no">f05</span> <span class="no">syscall</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e714</span> <span class="no">c3</span> <span class="no">ret</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e715</span> <span class="no">cd2e</span> <span class="no">int</span> <span class="mi">2</span><span class="no">Eh</span>
+</span></span><span class="line"><span class="cl"><span class="err">00007</span><span class="nf">ffe</span><span class="err">`</span><span class="no">b258e717</span> <span class="no">c3</span> <span class="no">ret</span></span></span></code></pre></div></div><p>可以修改函数的副本，设置EAX之后，执行一条jmp，跳到syscall的地方：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">NtAllocateVirtualMemory</span> <span class="no">PROC</span>
+</span></span><span class="line"><span class="cl"><span class="nf">mov</span> <span class="no">r10</span><span class="p">,</span> <span class="no">rcx</span>
+</span></span><span class="line"><span class="cl"><span class="nf">mov</span> <span class="no">eax</span><span class="p">,</span> <span class="err">&lt;</span><span class="no">SSN</span><span class="err">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nf">JMP</span> <span class="mi">00007</span><span class="no">ffe</span><span class="err">`</span><span class="no">b258e712</span>
+</span></span><span class="line"><span class="cl"><span class="nf">ret</span>
+</span></span><span class="line"><span class="cl"><span class="nf">NtAllocateVirtualMemory</span> <span class="no">ENDP</span></span></span></code></pre></div></div><p>这个微小的改动带来了显著的效果，因为从执行链遥测的角度来看，系统调用指令的调用将不再直接来自应用程序的代码，而是来自Ntdll.dll。</p>
+<h3 class="heading-element" id="254-动态解析ssn"><span>2.5.4 动态解析SSN</span>
+  <a href="#254-%e5%8a%a8%e6%80%81%e8%a7%a3%e6%9e%90ssn" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>2020年12月，@modexpblog在其博客中发表了一篇题为《红队绕过用户模式钩子与系统调用直接调用》的文章。文中详细介绍了如何实现系统调用号（SSN）与其关联函数的动态关联，从而使绕过技术更加可靠，因为它无需在应用程序中内置针对每个Windows版本的固定SSN列表。该技术采用以下流程：</p>
+<ol>
+<li>使用线程环境块（TEB）和进程环境块（PEB）表定位Ntdll.dll的基地址。</li>
+<li>枚举所有以“Zw”开头的函数。在用户模式下，Nt&hellip;和Zw&hellip;函数指向同一地址，因此在此场景中使用Zw或Nt实际并无区别。</li>
+<li>将前一步枚举到的函数的相对虚拟地址（RVA）和名称存储在数组中。在该算法的实现中，作者使用了一种EDR规避技术：不将函数名作为比较键保存和使用，而是通过一种专有算法对ROR（循环右移）进行算术运算来计算哈希值，并将其作为比较键。</li>
+<li>按函数地址对数组进行排序。</li>
+<li>将SSN定义为数组的索引值。</li>
+</ol>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-3.png' alt="alt text" height="584" width="1279"></p>
+<h3 class="heading-element" id="254-动态解析ssn---光环之门-halos-gate"><span>2.5.4 动态解析SSN - 光环之门 Halo’s Gate</span>
+  <a href="#254-%e5%8a%a8%e6%80%81%e8%a7%a3%e6%9e%90ssn---%e5%85%89%e7%8e%af%e4%b9%8b%e9%97%a8-halos-gate" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>过去几年还发布了其他动态分辨率技术，例如 2020 年 6 月发布的地狱之门 [10] 和 Sektor7 的 Reenz0h 于 2021 年 4 月发布的光环之门 [11]。</p>
+<p>通常来说，“Halo之门”执行以下流程：</p>
+<ol>
+<li>在Ntdll.dll中定位目标函数的当前地址。</li>
+<li>读取该函数的字节（当前为32字节），并检查这些字节是否与汇编指令（mov r10, rcx; mov eax, SSN）匹配。</li>
+<li>如果字节不匹配，则说明该函数正被监控（即已设置钩子），但邻近的函数（前后）可能未设置钩子。</li>
+<li>在邻近函数（上下方）中搜索未设置钩子的函数，并计算找到的函数与当前函数的距离，从而获取当前函数的系统调用号（SSN）编码。</li>
+</ol>
+<p>如下图：</p>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-4.png' alt="alt text" height="656" width="1373"></p>
+<p>示例代码片段：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// Quick and dirty fix in case the function has been hooked
+</span></span></span><span class="line"><span class="cl">			<span class="n">WORD</span> <span class="n">cw</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="c1">// check if syscall, in this case we are too far
+</span></span></span><span class="line"><span class="cl">				<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x0f</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="n">cw</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x05</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">					<span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">				<span class="c1">// check if ret, in this case we are also probably too far
+</span></span></span><span class="line"><span class="cl">				<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0xc3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">					<span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">				<span class="c1">// First opcodes should be :
+</span></span></span><span class="line"><span class="cl">				<span class="c1">//    MOV R10, RCX
+</span></span></span><span class="line"><span class="cl">				<span class="c1">//    MOV RCX, &lt;syscall&gt;
+</span></span></span><span class="line"><span class="cl">				<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x4c</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&amp;&amp;</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x8b</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&amp;&amp;</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0xd1</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&amp;&amp;</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0xb8</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&amp;&amp;</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x00</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&amp;&amp;</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">+</span> <span class="n">cw</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x00</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="n">BYTE</span> <span class="n">high</span> <span class="o">=</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">cw</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">					<span class="n">BYTE</span> <span class="n">low</span> <span class="o">=</span> <span class="o">*</span><span class="p">((</span><span class="n">PBYTE</span><span class="p">)</span><span class="n">pFunctionAddress</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">cw</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">					<span class="n">pVxTableEntry</span><span class="o">-&gt;</span><span class="n">wSystemCall</span> <span class="o">=</span> <span class="p">(</span><span class="n">high</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">low</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">					<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h1 class="heading-element" id="3-初步分析"><span>3. 初步分析</span>
+  <a href="#3-%e5%88%9d%e6%ad%a5%e5%88%86%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="31-分析目标"><span>3.1 分析目标</span>
+  <a href="#31-%e5%88%86%e6%9e%90%e7%9b%ae%e6%a0%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>本分析着重对 HookChain 技术进行初步的可行性、有效性及范围验证。针对市场上各种终端检测与响应（EDR）解决方案开展了枚举，详情如下。</p>
+<h2 class="heading-element" id="32-测试方法和局限性"><span>3.2 测试方法和局限性</span>
+  <a href="#32-%e6%b5%8b%e8%af%95%e6%96%b9%e6%b3%95%e5%92%8c%e5%b1%80%e9%99%90%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>为使此枚举在所有平台上具有线性且可靠，采用了以下前提条件：</p>
+<ol>
+<li>所有测试使用唯一且相同的代码。</li>
+<li>应用程序用 C 语言开发，并在 64 位 Windows 环境中使用 GCC 进行编译。</li>
+<li>在枚举过程中不进行更改和 / 或重新编译。在所有测试环境中提供完全相同的可移植可执行文件（EXE）用于执行。所有方案都执行相同的 EXE，因此所有解决方案的行为和哈希值都相同。</li>
+<li>应用程序在开发过程中未对这些解决方案采取任何绕过或规避措施。</li>
+<li>在任何版本的 Windows 系统上以非特权用户身份运行应用程序，即无需本地管理员权限。</li>
+</ol>
+<h2 class="heading-element" id="33-分析要点"><span>3.3 分析要点</span>
+  <a href="#33-%e5%88%86%e6%9e%90%e8%a6%81%e7%82%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>本次分析所开发的artifact（可执行程序）会在应用程序的两个不同点执行钩子存在性验证：</p>
+<ol>
+<li>Ntdll.dll的函数；</li>
+<li>导入地址表（IAT）HOOK。</li>
+</ol>
+<h3 class="heading-element" id="331-ntdll-hook"><span>3.3.1 Ntdll Hook</span>
+  <a href="#331-ntdll-hook" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了验证是否有NTdll Hook</p>
+<ol>
+<li>列出所有名称以 Zw 或 Nt 开头的函数</li>
+<li>检查函数代码中是否存在 JMP 指令；</li>
+</ol>
+<h3 class="heading-element" id="332-iat-hook"><span>3.3.2 IAT Hook</span>
+  <a href="#332-iat-hook" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了验证进程中加载的动态链接库（DLL）的导入地址表（IAT）中是否存在钩子（Hooks），执行了以下步骤：</p>
+<ol>
+<li>列出进程中加载的所有动态链接库；</li>
+<li>检查所有已加载 DLL 的导入地址表（IAT）中是否有对 Ntdll.dll 的导入引用，以及是否使用了名称以 Zw 或 Nt 开头的函数</li>
+<li>检查导入地址表（IAT）中存在的地址是否与 Ntdll 中函数的实际地址不同</li>
+</ol>
+<h2 class="heading-element" id="34-结果"><span>3.4 结果</span>
+  <a href="#34-%e7%bb%93%e6%9e%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>可以在https://github.com/helviojunior/hookchain/tree/main/enum/results_enum这里到找部分EDR的结果</p>
+<p>这是一个示例：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-txt"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="3" style="--fi-max-shown-lines:10;--fi-line-digit:3;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">[+] Listing ntdll Nt/Zw functions
+</span></span><span class="line"><span class="cl">------------------------------------------
+</span></span><span class="line"><span class="cl">NtCreateThreadEx is hooked
+</span></span><span class="line"><span class="cl">NtCreateUserProcess is hooked
+</span></span><span class="line"><span class="cl">NtDuplicateObject is hooked
+</span></span><span class="line"><span class="cl">NtFreeVirtualMemory is hooked
+</span></span><span class="line"><span class="cl">NtLoadDriver is hooked
+</span></span><span class="line"><span class="cl">NtMapUserPhysicalPages is hooked
+</span></span><span class="line"><span class="cl">NtMapViewOfSection is hooked
+</span></span><span class="line"><span class="cl">NtOpenProcess is hooked
+</span></span><span class="line"><span class="cl">NtQuerySystemInformation is hooked
+</span></span><span class="line"><span class="cl">NtQuerySystemInformationEx is hooked
+</span></span><span class="line"><span class="cl">NtQuerySystemTime is hooked
+</span></span><span class="line"><span class="cl">NtQueueApcThread is hooked
+</span></span><span class="line"><span class="cl">NtQueueApcThreadEx is hooked
+</span></span><span class="line"><span class="cl">NtQueueApcThreadEx2 is hooked
+</span></span><span class="line"><span class="cl">NtReadVirtualMemory is hooked
+</span></span><span class="line"><span class="cl">NtResumeThread is hooked
+</span></span><span class="line"><span class="cl">NtSetContextThread is hooked
+</span></span><span class="line"><span class="cl">NtSetInformationProcess is hooked
+</span></span><span class="line"><span class="cl">NtSetInformationThread is hooked
+</span></span><span class="line"><span class="cl">NtTerminateProcess is hooked
+</span></span><span class="line"><span class="cl">NtUnmapViewOfSection is hooked
+</span></span><span class="line"><span class="cl">NtWriteVirtualMemory is hooked
+</span></span><span class="line"><span class="cl">Mapped 478 functions
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[+] Listing loaded modules
+</span></span><span class="line"><span class="cl">------------------------------------------
+</span></span><span class="line"><span class="cl">C:\Users\M4v3r1ck\Desktop\hookchain_finder64.exe is loaded at 0x00007ff770d10000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\SYSTEM32\ntd1l.dll is loaded at 0x0000015158f10000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\kern3l32.dll is loaded at 0x0000015159110000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\SYSTEM32\ntdll.dll is loaded at 0x00007ff9e1290000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\KERNEL32.DLL is loaded at 0x00007ff9e0250000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\KERNELBASE.dll is loaded at 0x00007ff9de950000.
+</span></span><span class="line"><span class="cl">C:\Program Files\SentinelOne\Sentinel Agent 23.3.3.264\InProcessClient64.dll is loaded at 0x00007ff9de4d0000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\ADVAPI32.dll is loaded at 0x00007ff9e0780000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\msvcrt.dll is loaded at 0x00007ff9df9a0000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\sechost.dll is loaded at 0x00007ff9e0530000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\RPCRT4.dll is loaded at 0x00007ff9df2d0000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\bcrypt.dll is loaded at 0x00007ff9decc0000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\SYSTEM32\FLTLIB.DLL is loaded at 0x00007ff9de460000.
+</span></span><span class="line"><span class="cl">C:\WINDOWS\System32\ucrtbase.dll is loaded at 0x00007ff9defb0000.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[+] Listing hooked modules
+</span></span><span class="line"><span class="cl">------------------------------------------
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at KERNEL32.DLL IAT
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtEnumerateKey is hooked to 0x00007ff9e132d610
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtTerminateProcess is hooked to 0x00007ff9e132d550
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtMapUserPhysicalPagesScatter is hooked to 0x00007ff9e132d030
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtDeleteValueKey is hooked to 0x00007ff9e132eaa0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetValueKey is hooked to 0x00007ff9e132dbc0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryInstallUILanguage is hooked to 0x00007ff9e132f9e0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryLicenseValue is hooked to 0x00007ff9e132fa40
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtMapViewOfSection is hooked to 0x00007ff9e132d4d0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtCreateSection is hooked to 0x00007ff9e132d910
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtUnmapViewOfSection is hooked to 0x00007ff9e132d510
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryInformationThread is hooked to 0x00007ff9e132d470
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryEvent is hooked to 0x00007ff9e132da90
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtRaiseHardError is hooked to 0x00007ff9e132fce0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryVolumeInformationFile is hooked to 0x00007ff9e132d8f0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtReplacePartitionUnit is hooked to 0x00007ff9e132fea0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryValueKey is hooked to 0x00007ff9e132d2b0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryInformationToken is hooked to 0x00007ff9e132d3f0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtOpenProcessToken is hooked to 0x00007ff9e132f4e0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtSetInformationThread is hooked to 0x00007ff9e132d170
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtOpenThreadToken is hooked to 0x00007ff9e132d450
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtOpenKey is hooked to 0x00007ff9e132d210
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtIsSystemResumeAutomatic is hooked to 0x00007ff9e132f020
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtInitiatePowerAction is hooked to 0x00007ff9e132f000
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtWaitForSingleObject is hooked to 0x00007ff9e132d050
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtCreateEvent is hooked to 0x00007ff9e132d8d0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtFsControlFile is hooked to 0x00007ff9e132d6f0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtOpenFile is hooked to 0x00007ff9e132d630
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtClose is hooked to 0x00007ff9e132d1b0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryInformationFile is hooked to 0x00007ff9e132d1f0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetInformationFile is hooked to 0x00007ff9e132d4b0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetInformationDebugObject is hooked to 0x00007ff9e13302a0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetSystemInformation is hooked to 0x00007ff9e1330540
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryInformationProcess is hooked to 0x00007ff9e132d2f0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtFindAtom is hooked to 0x00007ff9e132d250
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryInformationAtom is hooked to 0x00007ff9e132f8c0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtAddAtomEx is hooked to 0x00007ff9e132dce0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtDeleteAtom is hooked to 0x00007ff9e132e9c0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtFlushKey is hooked to 0x00007ff9e132ed00
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtCreateKey is hooked to 0x00007ff9e132d370
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtCreateFile is hooked to 0x00007ff9e132da70
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtCreateJobSet is hooked to 0x00007ff9e132e5a0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetInformationJobObject is hooked to 0x00007ff9e13302e0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryInformationJobObject is hooked to 0x00007ff9e132f920
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtCreateJobObject is hooked to 0x00007ff9e132e580
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtAssignProcessToJobObject is hooked to 0x00007ff9e132e1a0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtTerminateJobObject is hooked to 0x00007ff9e13307e0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtOpenJobObject is hooked to 0x00007ff9e132f3c0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetEaFile is hooked to 0x00007ff9e1330220
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetSecurityObject is hooked to 0x00007ff9e13304e0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryEaFile is hooked to 0x00007ff9e132f880
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQuerySecurityObject is hooked to 0x00007ff9e132fb40
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtSetInformationProcess is hooked to 0x00007ff9e132d350
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQuerySection is hooked to 0x00007ff9e132d9f0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtFreeVirtualMemory is hooked to 0x00007ff9e132d390
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtWriteFile is hooked to 0x00007ff9e132d0d0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtEnumerateValueKey is hooked to 0x00007ff9e132d230
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtUnlockFile is hooked to 0x00007ff9e1330940
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtReadFile is hooked to 0x00007ff9e132d090
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtLockFile is hooked to 0x00007ff9e132f120
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtAllocateVirtualMemory is hooked to 0x00007ff9e132d2d0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryVirtualMemory is hooked to 0x00007ff9e132d430
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtProtectVirtualMemory is hooked to 0x00007ff9e132d9d0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtCreateMailslotFile is hooked to 0x00007ff9e132e620
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryDirectoryFile is hooked to 0x00007ff9e132d670
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryWnfStateData is hooked to 0x00007ff9e132fc40
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtPowerInformation is hooked to 0x00007ff9e132dba0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtGetDevicePowerState is hooked to 0x00007ff9e132ee80
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetThreadExecutionState is hooked to 0x00007ff9e13305a0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetSystemEnvironmentValueEx is hooked to 0x00007ff9e1330520
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQuerySystemEnvironmentValueEx is hooked to 0x00007ff9e132fbe0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetVolumeInformationFile is hooked to 0x00007ff9e1330640
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtDeviceIoControlFile is hooked to 0x00007ff9e132d0b0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryAttributesFile is hooked to 0x00007ff9e132d770
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryFullAttributesFile is hooked to 0x00007ff9e132f8a0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtSetTimerResolution is hooked to 0x00007ff9e1330600
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtQueryTimerResolution is hooked to 0x00007ff9e132fc20
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtReadVirtualMemory is hooked to 0x00007ff9e132d7b0
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtWaitForMultipleObjects is hooked to 0x00007ff9e132db20
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtClearEvent is hooked to 0x00007ff9e132d790
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function NtApphelpCacheControl is hooked to 0x00007ff9e132d950
+</span></span><span class="line"><span class="cl">  |-- KERNEL32.DLL IAT to ntdll.dll of function *NtQuerySystemInformation is hooked to 0x00007ff9e132d690
+</span></span><span class="line"><span class="cl">  +-- 81 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at KERNELBASE.dll IAT
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryInformationFile is hooked to 0x00007ff9e132d1f0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQuerySecurityObject is hooked to 0x00007ff9e132fb40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenFile is hooked to 0x00007ff9e132d630
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryWnfStateData is hooked to 0x00007ff9e132fc40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetInformationFile is hooked to 0x00007ff9e132d4b0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtFsControlFile is hooked to 0x00007ff9e132d6f0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryVolumeInformationFile is hooked to 0x00007ff9e132d8f0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateFile is hooked to 0x00007ff9e132da70
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtWaitForSingleObject is hooked to 0x00007ff9e132d050
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtNotifyChangeDirectoryFileEx is hooked to 0x00007ff9e132f2e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCopyFileChunk is hooked to 0x00007ff9e132e420
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtQuerySystemInformation is hooked to 0x00007ff9e132d690
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenKey is hooked to 0x00007ff9e132d210
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryEaFile is hooked to 0x00007ff9e132f880
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtFlushBuffersFile is hooked to 0x00007ff9e132d930
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateEvent is hooked to 0x00007ff9e132d8d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryValueKey is hooked to 0x00007ff9e132d2b0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenMutant is hooked to 0x00007ff9e132f460
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtReleaseMutant is hooked to 0x00007ff9e132d3d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateKeyTransacted is hooked to 0x00007ff9e132e5c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateKey is hooked to 0x00007ff9e132d370
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetValueKey is hooked to 0x00007ff9e132dbc0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryDirectoryFile is hooked to 0x00007ff9e132d670
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtTerminateProcess is hooked to 0x00007ff9e132d550
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetDefaultLocale is hooked to 0x00007ff9e13301c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDeleteValueKey is hooked to 0x00007ff9e132eaa0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtEnumerateValueKey is hooked to 0x00007ff9e132d230
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryInstallUILanguage is hooked to 0x00007ff9e132f9e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtEnumerateKey is hooked to 0x00007ff9e132d610
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtGetNlsSectionPtr is hooked to 0x00007ff9e132ef00
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDeleteKey is hooked to 0x00007ff9e132ea40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateSection is hooked to 0x00007ff9e132d910
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtMapViewOfSection is hooked to 0x00007ff9e132d4d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryDefaultLocale is hooked to 0x00007ff9e132d270
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtNotifyChangeKey is hooked to 0x00007ff9e132f300
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryInformationToken is hooked to 0x00007ff9e132d3f0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryLicenseValue is hooked to 0x00007ff9e132fa40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenSymbolicLinkObject is hooked to 0x00007ff9e132f580
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQuerySymbolicLinkObject is hooked to 0x00007ff9e132fba0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryMultipleValueKey is hooked to 0x00007ff9e132fa60
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenPrivateNamespace is hooked to 0x00007ff9e132f4c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDeletePrivateNamespace is hooked to 0x00007ff9e132ea80
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreatePrivateNamespace is hooked to 0x00007ff9e132e6e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtClose is hooked to 0x00007ff9e132d1b0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryInformationProcess is hooked to 0x00007ff9e132d2f0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtDuplicateObject is hooked to 0x00007ff9e132d750
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtResetEvent is hooked to 0x00007ff9e132ff00
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryEvent is hooked to 0x00007ff9e132da90
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtSetInformationProcess is hooked to 0x00007ff9e132d350
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryKey is hooked to 0x00007ff9e132d290
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtLoadKeyEx is hooked to 0x00007ff9e132f100
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryVirtualMemory is hooked to 0x00007ff9e132d430
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenProcessTokenEx is hooked to 0x00007ff9e132d5d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateWnfStateName is hooked to 0x00007ff9e132e940
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDeleteWnfStateName is hooked to 0x00007ff9e132eae0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetSecurityObject is hooked to 0x00007ff9e13304e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtUnmapViewOfSection is hooked to 0x00007ff9e132d510
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQuerySecurityAttributesToken is hooked to 0x00007ff9e132fb20
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtGetCachedSigningLevel is hooked to 0x00007ff9e132ede0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDeviceIoControlFile is hooked to 0x00007ff9e132d0b0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtReadFile is hooked to 0x00007ff9e132d090
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtWaitForMultipleObjects is hooked to 0x00007ff9e132db20
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetSystemInformation is hooked to 0x00007ff9e1330540
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtYieldExecution is hooked to 0x00007ff9e132d890
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDuplicateToken is hooked to 0x00007ff9e132d810
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAllocateLocallyUniqueId is hooked to 0x00007ff9e132dde0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAccessCheck is hooked to 0x00007ff9e132cfd0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAccessCheckByType is hooked to 0x00007ff9e132dc20
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAccessCheckByTypeResultList is hooked to 0x00007ff9e132dc40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenProcessToken is hooked to 0x00007ff9e132f4e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenThreadToken is hooked to 0x00007ff9e132d450
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetInformationToken is hooked to 0x00007ff9e1330360
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAdjustPrivilegesToken is hooked to 0x00007ff9e132d7f0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAdjustGroupsToken is hooked to 0x00007ff9e132dd40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtPrivilegeCheck is hooked to 0x00007ff9e132f6c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAccessCheckAndAuditAlarm is hooked to 0x00007ff9e132d4f0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAccessCheckByTypeAndAuditAlarm is hooked to 0x00007ff9e132daf0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAccessCheckByTypeResultListAndAuditAlarm is hooked to 0x00007ff9e132dc60
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAccessCheckByTypeResultListAndAuditAlarmByHandle is hooked to 0x00007ff9e132dc80
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenObjectAuditAlarm is hooked to 0x00007ff9e132f480
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtPrivilegeObjectAuditAlarm is hooked to 0x00007ff9e132f6e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCloseObjectAuditAlarm is hooked to 0x00007ff9e132d730
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDeleteObjectAuditAlarm is hooked to 0x00007ff9e132ea60
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtPrivilegedServiceAuditAlarm is hooked to 0x00007ff9e132f700
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtSetInformationThread is hooked to 0x00007ff9e132d170
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtImpersonateAnonymousToken is hooked to 0x00007ff9e132ef60
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtFilterToken is hooked to 0x00007ff9e132ec60
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetCachedSigningLevel is hooked to 0x00007ff9e1330120
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtLockVirtualMemory is hooked to 0x00007ff9e132f180
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtUnlockVirtualMemory is hooked to 0x00007ff9e1330960
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtReadVirtualMemory is hooked to 0x00007ff9e132d7b0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtProtectVirtualMemory is hooked to 0x00007ff9e132d9d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtWriteVirtualMemory is hooked to 0x00007ff9e132d710
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAllocateVirtualMemory is hooked to 0x00007ff9e132d2d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAllocateVirtualMemoryEx is hooked to 0x00007ff9e132de80
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtFreeVirtualMemory is hooked to 0x00007ff9e132d390
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenEvent is hooked to 0x00007ff9e132d7d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtGetWriteWatch is hooked to 0x00007ff9e132ef40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtResetWriteWatch is hooked to 0x00007ff9e132ff20
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetInformationVirtualMemory is hooked to 0x00007ff9e13303c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtAllocateUserPhysicalPages is hooked to 0x00007ff9e132de20
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtFreeUserPhysicalPages is hooked to 0x00007ff9e132ed80
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtMapUserPhysicalPages is hooked to 0x00007ff9e132f240
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenDirectoryObject is hooked to 0x00007ff9e132dad0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryObject is hooked to 0x00007ff9e132d1d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateSymbolicLinkObject is hooked to 0x00007ff9e132e7e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateDirectoryObjectEx is hooked to 0x00007ff9e132e4c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtLoadEnclaveData is hooked to 0x00007ff9e132f0a0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtTerminateEnclave is hooked to 0x00007ff9e13307c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateNamedPipeFile is hooked to 0x00007ff9e132e660
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtWriteFile is hooked to 0x00007ff9e132d0d0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtLockFile is hooked to 0x00007ff9e132f120
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtUnlockFile is hooked to 0x00007ff9e1330940
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCancelIoFile is hooked to 0x00007ff9e132db60
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCancelIoFileEx is hooked to 0x00007ff9e132e200
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCancelSynchronousIoFile is hooked to 0x00007ff9e132e220
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtReadFileScatter is hooked to 0x00007ff9e132d590
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtWriteFileGather is hooked to 0x00007ff9e132d330
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetEvent is hooked to 0x00007ff9e132d190
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtClearEvent is hooked to 0x00007ff9e132d790
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtPulseEvent is hooked to 0x00007ff9e132f780
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateSemaphore is hooked to 0x00007ff9e132e7c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenSemaphore is hooked to 0x00007ff9e132f540
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtReleaseSemaphore is hooked to 0x00007ff9e132d110
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateMutant is hooked to 0x00007ff9e132e640
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateTimer2 is hooked to 0x00007ff9e132e840
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCreateTimer is hooked to 0x00007ff9e132e820
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenTimer is hooked to 0x00007ff9e132f5c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetTimerEx is hooked to 0x00007ff9e13305e0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCancelTimer is hooked to 0x00007ff9e132dbe0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSignalAndWaitForSingleObject is hooked to 0x00007ff9e13306c0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtDelayExecution is hooked to 0x00007ff9e132d650
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtOpenProcess is hooked to 0x00007ff9e132d490
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtCompareObjects is hooked to 0x00007ff9e132e320
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetInformationObject is hooked to 0x00007ff9e132db40
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSetSystemTime is hooked to 0x00007ff9e1330580
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryAuxiliaryCounterFrequency is hooked to 0x00007ff9e132f7a0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtConvertBetweenAuxiliaryCounterAndPerformanceCounter is hooked to 0x00007ff9e132e400
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtCreateThreadEx is hooked to 0x00007ff9e132e800
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtResumeThread is hooked to 0x00007ff9e132da10
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtTerminateThread is hooked to 0x00007ff9e132da30
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtOpenThread is hooked to 0x00007ff9e132f5a0
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtQueryInformationThread is hooked to 0x00007ff9e132d470
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtSuspendThread is hooked to 0x00007ff9e1330780
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function NtGetContextThread is hooked to 0x00007ff9e132ee20
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtSetContextThread is hooked to 0x00007ff9e1330160
+</span></span><span class="line"><span class="cl">  |-- KERNELBASE.dll IAT to ntdll.dll of function *NtQueueApcThreadEx2 is hooked to 0x00007ff9e132fca0
+</span></span><span class="line"><span class="cl">  +-- 147 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at InProcessClient64.dll IAT
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtOpenSection is hooked to 0x00007ff9e132d6b0
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function *NtQueueApcThread is hooked to 0x00007ff9e132d870
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtQueryVirtualMemory is hooked to 0x00007ff9e132d430
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtQueryObject is hooked to 0x00007ff9e132d1d0
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtQuerySection is hooked to 0x00007ff9e132d9f0
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function *NtSetInformationThread is hooked to 0x00007ff9e132d170
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtQueryKey is hooked to 0x00007ff9e132d290
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtCreateFile is hooked to 0x00007ff9e132da70
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtQueryInformationProcess is hooked to 0x00007ff9e132d2f0
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtQueryInformationThread is hooked to 0x00007ff9e132d470
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtCallbackReturn is hooked to 0x00007ff9e132d070
+</span></span><span class="line"><span class="cl">  |-- InProcessClient64.dll IAT to ntdll.dll of function NtGetNextThread is hooked to 0x00007ff9e132eee0
+</span></span><span class="line"><span class="cl">  +-- 12 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at ADVAPI32.dll IAT
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryValueKey is hooked to 0x00007ff9e132d2b0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtClose is hooked to 0x00007ff9e132d1b0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtOpenThreadToken is hooked to 0x00007ff9e132d450
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtOpenProcessToken is hooked to 0x00007ff9e132f4e0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtSetInformationToken is hooked to 0x00007ff9e1330360
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtDuplicateToken is hooked to 0x00007ff9e132d810
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtCompareTokens is hooked to 0x00007ff9e132e360
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtOpenFile is hooked to 0x00007ff9e132d630
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryInformationProcess is hooked to 0x00007ff9e132d2f0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryKey is hooked to 0x00007ff9e132d290
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtDeviceIoControlFile is hooked to 0x00007ff9e132d0b0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function *NtQuerySystemInformation is hooked to 0x00007ff9e132d690
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtCreateKey is hooked to 0x00007ff9e132d370
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtSetValueKey is hooked to 0x00007ff9e132dbc0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtDeleteKey is hooked to 0x00007ff9e132ea40
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtEnumerateKey is hooked to 0x00007ff9e132d610
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryVolumeInformationFile is hooked to 0x00007ff9e132d8f0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtOpenSymbolicLinkObject is hooked to 0x00007ff9e132f580
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQuerySymbolicLinkObject is hooked to 0x00007ff9e132fba0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryInformationFile is hooked to 0x00007ff9e132d1f0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtTraceControl is hooked to 0x00007ff9e1330860
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtRenameKey is hooked to 0x00007ff9e132fe40
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function *NtSetInformationThread is hooked to 0x00007ff9e132d170
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtOpenKey is hooked to 0x00007ff9e132d210
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function *NtQuerySystemTime is hooked to 0x00007ff9e132db10
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtWaitForSingleObject is hooked to 0x00007ff9e132d050
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryInformationThread is hooked to 0x00007ff9e132d470
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQuerySecurityObject is hooked to 0x00007ff9e132fb40
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryPerformanceCounter is hooked to 0x00007ff9e132d5f0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtCreateMutant is hooked to 0x00007ff9e132e640
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtOpenPrivateNamespace is hooked to 0x00007ff9e132f4c0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtCreatePrivateNamespace is hooked to 0x00007ff9e132e6e0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtWaitForMultipleObjects is hooked to 0x00007ff9e132db20
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtCreateFile is hooked to 0x00007ff9e132da70
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtWriteFile is hooked to 0x00007ff9e132d0d0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtReadFile is hooked to 0x00007ff9e132d090
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtAlpcQueryInformation is hooked to 0x00007ff9e132e0e0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryObject is hooked to 0x00007ff9e132d1d0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryMutant is hooked to 0x00007ff9e132fa80
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtReplaceKey is hooked to 0x00007ff9e132fe80
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtSaveKey is hooked to 0x00007ff9e1330040
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtSaveMergedKeys is hooked to 0x00007ff9e1330080
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtQueryInformationToken is hooked to 0x00007ff9e132d3f0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtSetSystemInformation is hooked to 0x00007ff9e1330540
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtOpenKeyEx is hooked to 0x00007ff9e132f3e0
+</span></span><span class="line"><span class="cl">  |-- ADVAPI32.dll IAT to ntdll.dll of function NtSetInformationKey is hooked to 0x00007ff9e1330300
+</span></span><span class="line"><span class="cl">  +-- 46 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at msvcrt.dll IAT
+</span></span><span class="line"><span class="cl">  +-- 0 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at sechost.dll IAT
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtOpenProcessTokenEx is hooked to 0x00007ff9e132d5d0
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtOpenKey is hooked to 0x00007ff9e132d210
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtQueryValueKey is hooked to 0x00007ff9e132d2b0
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function *NtSetInformationThread is hooked to 0x00007ff9e132d170
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtQueryInformationThread is hooked to 0x00007ff9e132d470
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function *NtQueueApcThread is hooked to 0x00007ff9e132d870
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtQueryInformationFile is hooked to 0x00007ff9e132d1f0
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtCancelIoFile is hooked to 0x00007ff9e132db60
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtTraceControl is hooked to 0x00007ff9e1330860
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtSetSystemInformation is hooked to 0x00007ff9e1330540
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtSetIntervalProfile is hooked to 0x00007ff9e1330400
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function *NtQuerySystemInformation is hooked to 0x00007ff9e132d690
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtQueryIntervalProfile is hooked to 0x00007ff9e132fa00
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtWaitForMultipleObjects is hooked to 0x00007ff9e132db20
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtQueryPerformanceCounter is hooked to 0x00007ff9e132d5f0
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtSetEvent is hooked to 0x00007ff9e132d190
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function *NtTerminateProcess is hooked to 0x00007ff9e132d550
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtOpenThreadToken is hooked to 0x00007ff9e132d450
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtClose is hooked to 0x00007ff9e132d1b0
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtQueryInformationToken is hooked to 0x00007ff9e132d3f0
+</span></span><span class="line"><span class="cl">  |-- sechost.dll IAT to ntdll.dll of function NtOpenProcessToken is hooked to 0x00007ff9e132f4e0
+</span></span><span class="line"><span class="cl">  +-- 21 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at RPCRT4.dll IAT
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtQueryValueKey is hooked to 0x00007ff9e132d2b0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtOpenKey is hooked to 0x00007ff9e132d210
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtWaitForAlertByThreadId is hooked to 0x00007ff9e1330a00
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlertThreadByThreadId is hooked to 0x00007ff9e132ddc0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAllocateUuids is hooked to 0x00007ff9e132de60
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAdjustPrivilegesToken is hooked to 0x00007ff9e132d7f0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function *NtQuerySystemTime is hooked to 0x00007ff9e132db10
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtPrivilegeCheck is hooked to 0x00007ff9e132f6c0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcCreateResourceReserve is hooked to 0x00007ff9e132df60
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcCancelMessage is hooked to 0x00007ff9e132dec0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcDeleteSecurityContext is hooked to 0x00007ff9e132e020
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcCreateSecurityContext is hooked to 0x00007ff9e132dfa0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcConnectPortEx is hooked to 0x00007ff9e132df00
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcConnectPort is hooked to 0x00007ff9e132dee0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtCreateSection is hooked to 0x00007ff9e132d910
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtDuplicateToken is hooked to 0x00007ff9e132d810
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtImpersonateAnonymousToken is hooked to 0x00007ff9e132ef60
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcCreateSectionView is hooked to 0x00007ff9e132df80
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcCreatePortSection is hooked to 0x00007ff9e132df40
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAllocateReserveObject is hooked to 0x00007ff9e132de00
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtSetIoCompletionEx is hooked to 0x00007ff9e1330440
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function *NtQueueApcThreadEx is hooked to 0x00007ff9e132fc80
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtOpenThreadToken is hooked to 0x00007ff9e132d450
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtDeleteWnfStateName is hooked to 0x00007ff9e132eae0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtCreateWnfStateName is hooked to 0x00007ff9e132e940
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtQuerySecurityObject is hooked to 0x00007ff9e132fb40
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtOpenDirectoryObject is hooked to 0x00007ff9e132dad0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtDelayExecution is hooked to 0x00007ff9e132d650
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtWaitForSingleObject is hooked to 0x00007ff9e132d050
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtFsControlFile is hooked to 0x00007ff9e132d6f0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtCreateEvent is hooked to 0x00007ff9e132d8d0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtQueryVolumeInformationFile is hooked to 0x00007ff9e132d8f0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcCreatePort is hooked to 0x00007ff9e132df20
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcQueryInformation is hooked to 0x00007ff9e132e0e0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcSendWaitReceivePort is hooked to 0x00007ff9e132e140
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcAcceptConnectPort is hooked to 0x00007ff9e132dea0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcDeletePortSection is hooked to 0x00007ff9e132dfc0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcDeleteSectionView is hooked to 0x00007ff9e132e000
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcDisconnectPort is hooked to 0x00007ff9e132e040
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcQueryInformationMessage is hooked to 0x00007ff9e132e100
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtClose is hooked to 0x00007ff9e132d1b0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtCreateFile is hooked to 0x00007ff9e132da70
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtCreateNamedPipeFile is hooked to 0x00007ff9e132e660
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtWriteFile is hooked to 0x00007ff9e132d0d0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcSetInformation is hooked to 0x00007ff9e132e160
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtReadFile is hooked to 0x00007ff9e132d090
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function *NtQuerySystemInformation is hooked to 0x00007ff9e132d690
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtSetInformationFile is hooked to 0x00007ff9e132d4b0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function *NtSetInformationThread is hooked to 0x00007ff9e132d170
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcOpenSenderThread is hooked to 0x00007ff9e132e0c0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcOpenSenderProcess is hooked to 0x00007ff9e132e0a0
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcImpersonateClientContainerOfPort is hooked to 0x00007ff9e132e060
+</span></span><span class="line"><span class="cl">  |-- RPCRT4.dll IAT to ntdll.dll of function NtAlpcImpersonateClientOfPort is hooked to 0x00007ff9e132e080
+</span></span><span class="line"><span class="cl">  +-- 53 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at bcrypt.dll IAT
+</span></span><span class="line"><span class="cl">  |-- bcrypt.dll IAT to ntdll.dll of function NtOpenKey is hooked to 0x00007ff9e132d210
+</span></span><span class="line"><span class="cl">  |-- bcrypt.dll IAT to ntdll.dll of function NtQueryValueKey is hooked to 0x00007ff9e132d2b0
+</span></span><span class="line"><span class="cl">  |-- bcrypt.dll IAT to ntdll.dll of function NtQueryInformationProcess is hooked to 0x00007ff9e132d2f0
+</span></span><span class="line"><span class="cl">  |-- bcrypt.dll IAT to ntdll.dll of function NtClose is hooked to 0x00007ff9e132d1b0
+</span></span><span class="line"><span class="cl">  |-- bcrypt.dll IAT to ntdll.dll of function NtDeviceIoControlFile is hooked to 0x00007ff9e132d0b0
+</span></span><span class="line"><span class="cl">  |-- bcrypt.dll IAT to ntdll.dll of function NtOpenFile is hooked to 0x00007ff9e132d630
+</span></span><span class="line"><span class="cl">  |-- bcrypt.dll IAT to ntdll.dll of function *NtTerminateProcess is hooked to 0x00007ff9e132d550
+</span></span><span class="line"><span class="cl">  +-- 7 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Checking ntdll.dll at FLTLIB.DLL IAT
+</span></span><span class="line"><span class="cl">  |-- FLTLIB.DLL IAT to ntdll.dll of function NtCreateFile is hooked to 0x00007ff9e132da70
+</span></span><span class="line"><span class="cl">  |-- FLTLIB.DLL IAT to ntdll.dll of function NtDeviceIoControlFile is hooked to 0x00007ff9e132d0b0
+</span></span><span class="line"><span class="cl">  |-- FLTLIB.DLL IAT to ntdll.dll of function NtWaitForSingleObject is hooked to 0x00007ff9e132d050
+</span></span><span class="line"><span class="cl">  |-- FLTLIB.DLL IAT to ntdll.dll of function NtFsControlFile is hooked to 0x00007ff9e132d6f0
+</span></span><span class="line"><span class="cl">  +-- 4 hooked functions.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">------------------------------------------
+</span></span><span class="line"><span class="cl">Completed</span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h2 class="heading-element" id="35-结果"><span>3.5 结果</span>
+  <a href="#35-%e7%bb%93%e6%9e%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>下表展示了 2024 年 3 月 1 日至 3 月 22 日期间进行的枚举结果</p>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-5.png' alt="alt text" height="729" width="718"></p>
+<p>结论：</p>
+<ol>
+<li>94%的被分析EDR解决方案（16个中有15个）在Ntdll.dll之上的子系统层未显示钩子。这意味着，在对应用程序中加载的所有引用Ntdll的DLL进行验证时，仅有一个EDR解决方案在导入地址表（IAT）中显示存在钩子。</li>
+<li>50%的被分析EDR解决方案（16个中有8个）在用户模式下未显示存在钩子。</li>
+</ol>
+<h1 class="heading-element" id="4hookchain"><span>4.HookChain</span>
+  <a href="#4hookchain" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在本次讨论中，我们首先概述并简化介绍本文重点关注的技术——HookChain。随后，我们将从技术层面详细解析HookChain：在4.2节中介绍所使用的数据结构和表格，接着在4.3节阐述填充这些表格的方法。之后，我们会在4.4节详细说明导入地址表（IAT）的挂钩过程，最后在4.5节展示功能测试以及HookChain植入在调用栈中的隐蔽性。</p>
+<h2 class="heading-element" id="41-overview"><span>4.1. Overview</span>
+  <a href="#41-overview" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>一般来说，HookChain技术基于以下流程：</p>
+<ol>
+<li>使用前文提到的系统调用号（SSN）动态映射技术之一，例如Halo’s gate。</li>
+<li>映射某些基础函数以便在后续步骤中使用，例如：<br>
+a. NtAllocateReserveObject<br>
+b. NtAllocateVirtualMemory<br>
+c. NtQueryInformationProcess<br>
+d. NtProtectVirtualMemory<br>
+e. NtReadVirtualMemory<br>
+f. NtWriteVirtualMemory</li>
+<li>创建并填充一个数组，每个数组项包含以下内容：<br>
+a. 系统调用号（SSN）<br>
+b. Ntdll.dll中的函数地址<br>
+c. 该函数在Ntdll.dll中最近的SYSCALL指令的内存地址</li>
+<li>预加载其他DLL（如果已知正在运行的应用程序将动态加载并使用当前进程中尚未加载的其他DLL），并验证待加载的DLL是否会调用Ntdll.dll的函数。</li>
+<li>使用间接系统调用（Indirect Syscall）结合步骤2中映射的函数，对所有已加载DLL的导出表和导入表结构进行读取、枚举和处理。</li>
+<li>修改关键DLL的导入地址表（IAT），这些DLL包括kernel32、kernelbase、bcrypt、bcryptPrimitives、gdi32、mswsock、netutils和urlmon等调用Ntdll.dll的组件。此操作旨在将IAT中原生Nt/Zw调用的目标地址修改为应用程序的内部函数。这样一来，当诸如kernel32之类的子系统DLL调用Ntdll.dll中的函数时，实际执行的将是HookChain植入的代码，从而实现本文2.3.2节所述的IAT挂钩。</li>
+</ol>
+<p>在采取这些操作之后，API 和子系统将以常规方式继续使用，因为流量转移和规避层已经实施，无需进一步操作。因此，对 Ntdll.dll 的调用将通过我们应用程序的内部函数执行，但对于正在执行的 PE（可移植可执行文件）来说是透明的，因为它将继续使用子系统 API，如图 14 所示。</p>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-6.png' alt="alt text" height="690" width="1158"></p>
+<p>这种方法能够绕过所有在 Ntdll.dll 上执行的用户模式挂钩，因为所有执行控制都在应用程序自身内部。与这里介绍的其他技术相比，具有以下优点：</p>
+<ol>
+<li>对于遥测技术的规则，被事件数据记录器识别的概率降低，比如：
+<ol>
+<li>流程执行的总时间</li>
+<li>执行链</li>
+</ol>
+</li>
+<li>便携性
+<ol>
+<li>无需对现有代码/应用程序的执行进行任何工作和/或修改，因为拦截过程对正在运行的应用程序具有广泛的透明性。</li>
+</ol>
+</li>
+</ol>
+<h2 class="heading-element" id="42-数据结构和表"><span>4.2 数据结构和表</span>
+  <a href="#42-%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e5%92%8c%e8%a1%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="421-syscall_info"><span>4.2.1 SYSCALL_INFO</span>
+  <a href="#421-syscall_info" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如4.1中说的，需要创建填充一个数组,其中记录了执行过程中将会用到的各种信息：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_SYSCALL_INFO</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">DWORD64</span> <span class="n">dwSsn</span><span class="p">;</span> <span class="c1">// 系统调用号
+</span></span></span><span class="line"><span class="cl">    <span class="n">PVOID</span> <span class="n">pAddress</span><span class="p">;</span><span class="c1">//用于存储Ntdll内函数的VA
+</span></span></span><span class="line"><span class="cl">    <span class="n">PVOID</span> <span class="n">pSyscallRet</span><span class="p">;</span><span class="c1">//用于存储NTdll内syscall执行的VA地址
+</span></span></span><span class="line"><span class="cl">    <span class="n">PVOID</span> <span class="n">pStubFunction</span><span class="p">;</span><span class="c1">//HookChain 拦截（植入）函数的地址存储字段，该地址是所有对相关函数的调用都将指向的目标。换句话说，这是将在导入地址表（IAT）中分配的地址，用于替换 Ntdll 函数的虚拟地址。
+</span></span></span><span class="line"><span class="cl">    <span class="n">DWORD64</span> <span class="n">dwHash</span><span class="p">;</span><span class="c1">// 函数的hash值
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">SYSCALL_INFO</span><span class="p">,</span> <span class="o">*</span> <span class="n">PSYSCALL_INFO</span><span class="p">;</span></span></span></code></pre></div></div><h3 class="heading-element" id="422-syscall_list"><span>4.2.2 SYSCALL_LIST</span>
+  <a href="#422-syscall_list" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#define MAX_ENTRIES 512
+</span></span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_SYSCALL_LIST</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">DWORD64</span> <span class="n">Count</span><span class="p">;</span><span class="c1">// 表中当前的数量
+</span></span></span><span class="line"><span class="cl">    <span class="n">SYSCALL_INFO</span> <span class="n">Entries</span><span class="p">[</span><span class="n">MAX_ENTRIES</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">SYSCALL_LIST</span><span class="p">,</span> <span class="o">*</span> <span class="n">PSYSCALL_LIST</span><span class="p">;</span></span></span></code></pre></div></div><h3 class="heading-element" id="422-引用和索引"><span>4.2.2 引用和索引</span>
+  <a href="#422-%e5%bc%95%e7%94%a8%e5%92%8c%e7%b4%a2%e5%bc%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>下一个数据结构实际上是一个指向我们应用程序 <code>.data</code> 段的指针，在汇编中定义如下：</p>
+<p>qIdx0 - qIdx5：变量，用于存储初始进程和操作所需的原生函数信息在数组中的位置。这些变量的名称以 0 到 5 的值结尾，存储以下函数的索引：0 - ZwOpenProcess，1 - ZwProtectVirtualMemory，2 - ZwReadVirtualMemory，3 - ZwWriteVirtualMemory，4 - ZwAllocateVirtualMemory，5 - ZwDelayExecution。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-asm"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="na">.data</span>
+</span></span><span class="line"><span class="cl"><span class="nf">qTableAddr</span> <span class="no">QWORD</span> <span class="mi">0</span><span class="no">h</span>         <span class="c1"># 存储 SYSCALL_LIST 表
+</span></span></span><span class="line"><span class="cl"><span class="nf">qListEntrySize</span> <span class="no">QWORD</span> <span class="mi">28</span><span class="no">h</span>    <span class="c1"># 该变量包含 SYSCALL_LIST-&gt;Entries 中每个条目的大小（以字节为单位）
+</span></span></span><span class="line"><span class="cl"><span class="nf">qStubEntrySize</span> <span class="no">QWORD</span> <span class="mi">14</span><span class="no">h</span>    <span class="c1"># 包含 HookChain 使用的每个拦截函数大小（以字节为单位）的变量。本文后面将提供有关这些函数及其使用方法的更多详细信息
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">qIdx0</span> <span class="no">QWORD</span> <span class="mi">0</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl"><span class="nf">qIdx1</span> <span class="no">QWORD</span> <span class="mi">0</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl"><span class="nf">qIdx2</span> <span class="no">QWORD</span> <span class="mi">0</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl"><span class="nf">qIdx3</span> <span class="no">QWORD</span> <span class="mi">0</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl"><span class="nf">qIdx4</span> <span class="no">QWORD</span> <span class="mi">0</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl"><span class="nf">qIdx5</span> <span class="no">QWORD</span> <span class="mi">0</span><span class="no">h</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h2 class="heading-element" id="43-填充表"><span>4.3 填充表</span>
+  <a href="#43-%e5%a1%ab%e5%85%85%e8%a1%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">static</span> <span class="n">SYSCALL_LIST</span> <span class="n">SyscallList</span><span class="p">;</span></span></span></code></pre></div></div><p>步骤如下：</p>
+<ol>
+<li>使用TEB和PEB定位Ntdll的地址</li>
+<li>枚举所有名称以 “Zw” 或 “Nt” 开头的函数</li>
+<li>检查所讨论的函数是否为将通过间接系统调用无条件使用的函数之一。如果是，则在数组 SyscallList.Entries 中添加一个新条目，并在变量 qIdx0 - qIdx5 中保存该函数在数组中的位置。以下是函数列表：
+<ul>
+<li>NtAllocateReserveObject</li>
+<li>NtAllocateVirtualMemory</li>
+<li>NtQueryInformationProcess</li>
+<li>NtProtectVirtualMemory</li>
+<li>NtReadVirtualMemory</li>
+<li>NtWriteVirtualMemory</li>
+</ul>
+</li>
+<li>检查所讨论的函数代码中是否存在 JMP 指令，该指令表明存在 EDR 应用的钩子。如果存在，则在数组 SyscallList.Entries 中添加一个新条目。</li>
+</ol>
+<p>在这个过程结束时，数组将填充所有具有 EDR 挂钩的 Nt/Zw 函数， 以及qIdx0-qIdx5这几个未来会用的函数</p>
+<p>在步骤3和4中，通过 “光环之门” 技术中使用的校验算法获取 SSN。</p>
+<p>对应代码中的：<code>GetSSN</code> 和<code>GetNextSyscallInstruction</code></p>
+<h2 class="heading-element" id="44-iat"><span>4.4 IAT</span>
+  <a href="#44-iat" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>接下来修改一家在DLL的IAT。</p>
+<p>然而，如果我们此时执行该过程，随后加载另一个动态库且该新库的导入地址表（IAT）中包含对Ntdll的引用，我们将不得不再次执行操作该DLL的IAT的过程。为避免这种重复处理，建议在执行IAT挂钩之前加载必要的库。</p>
+<h3 class="heading-element" id="441-预加载-dlls"><span>4.4.1 预加载 DLLs</span>
+  <a href="#441-%e9%a2%84%e5%8a%a0%e8%bd%bd-dlls" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>嘶，，这块没咋看懂？</p>
+<h3 class="heading-element" id="442-iat-hook"><span>4.4.2 IAT HOOK</span>
+  <a href="#442-iat-hook" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 class="heading-element" id="443-执行流"><span>4.4.3 执行流</span>
+  <a href="#443-%e6%89%a7%e8%a1%8c%e6%b5%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>完成上述步骤后，HookChain 植入所需的所有程序即已确定，从这一刻起，对 Windows 子系统的所有调用将不会在 Ntdll.dll 层面受到 EDR 的拦截和监控。
+通过这种方式，让我们更深入地了解 HookChain 植入完成后应用程序的执行流程。</p>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-7.png' alt="alt text" height="804" width="1435"></p>
+<p>图16详细展示了HookChain植入后函数调用的执行流程，具体说明如下：</p>
+<ol>
+<li>以应用程序通过Kernel32.dll API/子系统中的CreateProcessW函数创建新进程为例。</li>
+<li>由于该特定函数实现在Kernelbase.dll中，kernel32.dll仅将执行流程重定向至kernelbase。</li>
+<li>在kernelbase DLL的CreateProcessW代码中，经过一些参数检查后，代码将执行属于Ntdll.dll的ZwCreateUserProcess函数。</li>
+<li>因此，CreateProcessW代码会在内核基（kernelbase）的导入地址表（IAT）中查找地址——该位置原本存储Ntdll.dll中ZwCreateUserProcess函数的地址，但在HookChain植入后，IAT中的此位置将替换为HookChain植入函数的地址。</li>
+<li>在获取已部署函数的地址后，CreateProcessW代码将调用（CALL）该地址，而非Ntdll.dll中ZwCreateUserProcess函数的地址，从而转向HookChain部署的函数。</li>
+<li>每个HookChain拦截函数均使用特定名称/索引创建，在我们的示例场景中函数名为Fnc0002，因此SyscallList.Entries数组中的对应索引为0x0002。通过这种方式，HookChain代码将在表（数组SyscallList.Entries[0x0002]）中查找先前存储的信息，如系统调用号（SSN）和Ntdll中系统调用指令的地址。</li>
+<li>掌握所有必要信息后，HookChain代码会重现Ntdll中函数的执行逻辑（mov r10, rcx; mov eax, SSN），并随后将执行流程转发至包含系统调用指令的Ntdll地址。</li>
+<li>在当前流程的栈顶位置，将包含返回地址——该地址为kernelbase的CreateProcessW执行CALL操作时插入栈中的下一条指令的地址。随后，Ntdll执行系统调用指令。当内核返回时，流程将导向CreateProcessW函数内的相应返回地址。</li>
+</ol>
+<p>注意：HookChain 的运行并不需要使用 CreateProcessW 函数或任何类似的分支机制。所提供的图表仅展示了 HookChain 植入后的函数调用过程。</p>
+<h2 class="heading-element" id="45-调用栈遥测"><span>4.5 调用栈遥测</span>
+  <a href="#45-%e8%b0%83%e7%94%a8%e6%a0%88%e9%81%a5%e6%b5%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>使用 HookChain 的优点之一是，即使这并非其主要目的，它也不会改变调用的调用栈（从 EDR 的角度来看）。通过这种方式，本测试旨在可视化并理解 HookChain 植入前后函数的调用栈。因此，测试代码执行 3 个操作：</p>
+<ol>
+<li>使用 CreateProcessW API 启动 Notepad.exe 进程。此过程在 HookChain 植入之前执行。</li>
+<li>所有HookChain植入操作均已执行。</li>
+<li>使用 CreateProcessW API 启动一个新的 Notepad.exe 进程。由于此时 HookChain 已经完成了所有的植入和绕过操作，Ntdll.dll 中的原始 ZwCreateUserProcess 函数将不会被执行。</li>
+</ol>
+<p><strong>这里有好多图，我就不加了，后面再加</strong></p>
+<p>结果：调用栈跟踪遥测未发生变化，以至于 HOOK 可能不会被内核层的EDR检查发现。</p>
+<h1 class="heading-element" id="5-hookchain--testes"><span>5. HOOKCHAIN – TESTES</span>
+  <a href="#5-hookchain--testes" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在这些测试中，选取了 14 款终端检测与响应（EDR）产品，截至 2023 年 12 月 31 日，其中 9 款产品被纳入 Gartner&rsquo;s Magic Quadrant [15]。</p>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-8.png' alt="alt text" height="951" width="1391"></p>
+<p>在上述图片中，Gartner&rsquo;s Magic Quadrant中的被测产品以绿色高亮显示，而灰色标记的产品无法进行测试。<br>
+此外，还测试了4款未列入Gartner象限的产品，分别是：Acronis、Cylance、Elastic和MalwareBytes。<br>
+针对这些测试，按如下描述准备了两个版本的HookChain：</p>
+<p><img loading="lazy" src='/posts/2025-6-hookchain/image-9.png' alt="alt text" height="732" width="1168"></p>
+<p>绿色表示无警报和拦截
+黄色表示部分执行(未成功)且无报警，或者执行(成功)但有报警
+红色表示执行因受阻和警报而失败（大概率是因为R0的作用）</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-06-02 00:00:00">更新于 2025-06-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/2025-6-HookChain/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/2025-6-hookchain/" data-title="论文阅读：HookChain" data-hashtags="论文"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/2025-6-hookchain/" data-hashtag="论文"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/2025-6-hookchain/" data-title="论文阅读：HookChain"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87/" class="post-tag" title="标签 - 论文">论文</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/2025-6-vm/" class="post-nav-item" rel="prev" title="VMware的配置"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>VMware的配置</a><a href="/posts/2025-6-%E6%A2%A6/" class="post-nav-item" rel="next" title="梦">梦<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#22-system-service-dispatching">2.2 System Service Dispatching</a></li>
+    <li><a href="#23-image-loader">2.3 Image Loader</a></li>
+    <li><a href="#24-hook">2.4 HOOK</a>
+      <ul>
+        <li><a href="#241-jmp-or-call">2.4.1 JMP or CALL</a></li>
+        <li><a href="#242-iat-hook">2.4.2 IAT HOOK</a></li>
+      </ul>
+    </li>
+    <li><a href="#25-已知的pass方法">2.5 已知的pass方法</a>
+      <ul>
+        <li><a href="#251-ntdlldll-重映射">2.5.1 Ntdll.dll 重映射</a></li>
+        <li><a href="#252-直接系统调用">2.5.2 直接系统调用</a></li>
+        <li><a href="#253-间接系统调用">2.5.3 间接系统调用</a></li>
+        <li><a href="#254-动态解析ssn">2.5.4 动态解析SSN</a></li>
+        <li><a href="#254-动态解析ssn---光环之门-halos-gate">2.5.4 动态解析SSN - 光环之门 Halo’s Gate</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-分析目标">3.1 分析目标</a></li>
+    <li><a href="#32-测试方法和局限性">3.2 测试方法和局限性</a></li>
+    <li><a href="#33-分析要点">3.3 分析要点</a>
+      <ul>
+        <li><a href="#331-ntdll-hook">3.3.1 Ntdll Hook</a></li>
+        <li><a href="#332-iat-hook">3.3.2 IAT Hook</a></li>
+      </ul>
+    </li>
+    <li><a href="#34-结果">3.4 结果</a></li>
+    <li><a href="#35-结果">3.5 结果</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#41-overview">4.1. Overview</a></li>
+    <li><a href="#42-数据结构和表">4.2 数据结构和表</a>
+      <ul>
+        <li><a href="#421-syscall_info">4.2.1 SYSCALL_INFO</a></li>
+        <li><a href="#422-syscall_list">4.2.2 SYSCALL_LIST</a></li>
+        <li><a href="#422-引用和索引">4.2.2 引用和索引</a></li>
+      </ul>
+    </li>
+    <li><a href="#43-填充表">4.3 填充表</a></li>
+    <li><a href="#44-iat">4.4 IAT</a>
+      <ul>
+        <li><a href="#441-预加载-dlls">4.4.1 预加载 DLLs</a></li>
+        <li><a href="#442-iat-hook">4.4.2 IAT HOOK</a></li>
+        <li><a href="#443-执行流">4.4.3 执行流</a></li>
+      </ul>
+    </li>
+    <li><a href="#45-调用栈遥测">4.5 调用栈遥测</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/8e59161c6934083500723340defac4d8.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

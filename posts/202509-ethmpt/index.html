@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>以太坊之详解默克尔压缩前缀树 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="1. 基础数据结构 在深入以太坊状态树的实现之前，有必要先理解其底层数据结构：Merkle Patricia Trie（MPT） —— 一种结合了前缀树（Trie）、压缩前缀树（Patricia Trie） 和默克尔树（Merkle Tree） 特性的混合结构。它不仅是高效键值存储的载体，也是以太坊实现“状态可验证性”和“轻节点同步”的核心。
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="以太坊之详解默克尔压缩前缀树">
+  <meta itemprop="description" content="1. 基础数据结构 在深入以太坊状态树的实现之前，有必要先理解其底层数据结构：Merkle Patricia Trie（MPT） —— 一种结合了前缀树（Trie）、压缩前缀树（Patricia Trie） 和默克尔树（Merkle Tree） 特性的混合结构。它不仅是高效键值存储的载体，也是以太坊实现“状态可验证性”和“轻节点同步”的核心。">
+  <meta itemprop="datePublished" content="2025-09-17T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-17T00:00:00+00:00">
+  <meta itemprop="wordCount" content="10563">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-ethmpt/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="以太坊之详解默克尔压缩前缀树">
+  <meta property="og:description" content="1. 基础数据结构 在深入以太坊状态树的实现之前，有必要先理解其底层数据结构：Merkle Patricia Trie（MPT） —— 一种结合了前缀树（Trie）、压缩前缀树（Patricia Trie） 和默克尔树（Merkle Tree） 特性的混合结构。它不仅是高效键值存储的载体，也是以太坊实现“状态可验证性”和“轻节点同步”的核心。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-17T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="以太坊之详解默克尔压缩前缀树">
+  <meta name="twitter:description" content="1. 基础数据结构 在深入以太坊状态树的实现之前，有必要先理解其底层数据结构：Merkle Patricia Trie（MPT） —— 一种结合了前缀树（Trie）、压缩前缀树（Patricia Trie） 和默克尔树（Merkle Tree） 特性的混合结构。它不仅是高效键值存储的载体，也是以太坊实现“状态可验证性”和“轻节点同步”的核心。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-ethmpt/" title="以太坊之详解默克尔压缩前缀树 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-ethpool/" title="以太坊详解之交易池" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-ethpos/" title="以太坊 PoS 共识机制与 Engine API 源码阅读" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "以太坊之详解默克尔压缩前缀树",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-ethmpt\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  10563 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-ethmpt\/","datePublished": "2025-09-17T00:00:00+00:00","dateModified": "2025-09-17T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>以太坊之详解默克尔压缩前缀树</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-17 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-17">2025-09-17</time></span>&nbsp;<span title="10563 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 10600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 22 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#11-前缀树trie">1.1 前缀树（Trie）</a></li>
+    <li><a href="#12-压缩前缀树patricia-trie--radix-trie">1.2 压缩前缀树（Patricia Trie / Radix Trie）</a>
+      <ul>
+        <li><a href="#为什么-patricia-trie-仍不够">为什么 Patricia Trie 仍不够？</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-默克尔树merkle-tree">1.3 默克尔树（Merkle Tree）</a></li>
+    <li><a href="#14-以太坊的改进merkle-patricia-triempt">1.4 以太坊的改进：Merkle Patricia Trie（MPT）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-核心数据结构">2.1 核心数据结构</a>
+      <ul>
+        <li><a href="#211-核心数据结构">2.1.1 核心数据结构</a></li>
+        <li><a href="#212-十六进制前缀编码hex-prefix-encoding">2.1.2 十六进制前缀编码（Hex-Prefix Encoding）</a></li>
+      </ul>
+    </li>
+    <li><a href="#22-trie-结构">2.2 Trie 结构</a></li>
+    <li><a href="#23-核心操作一get">2.3 核心操作一：Get</a></li>
+    <li><a href="#24-核心操作二insert-插入更新">2.4 核心操作二：Insert (插入/更新)</a>
+      <ul>
+        <li><a href="#详解一个插入示例">详解：一个插入示例</a>
+          <ul>
+            <li><a href="#总结变化前后对比"><strong>总结：变化前后对比</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#25-核心操作三delete-删除">2.5 核心操作三：Delete (删除)</a></li>
+    <li><a href="#26-哈希与持久化从内存到数据库">2.6 哈希与持久化：从内存到数据库</a>
+      <ul>
+        <li><a href="#261-节点的哈希">2.6.1 节点的哈希</a></li>
+        <li><a href="#262-commit-操作提交变更">2.6.2 <code>Commit</code> 操作：提交变更</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="1-基础数据结构"><span>1. 基础数据结构</span>
+  <a href="#1-%e5%9f%ba%e7%a1%80%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在深入以太坊状态树的实现之前，有必要先理解其底层数据结构：<strong>Merkle Patricia Trie（MPT）</strong> —— 一种结合了<strong>前缀树（Trie）</strong>、<strong>压缩前缀树（Patricia Trie）</strong> 和<strong>默克尔树（Merkle Tree）</strong> 特性的混合结构。它不仅是高效键值存储的载体，也是以太坊实现“状态可验证性”和“轻节点同步”的核心。</p>
+<h2 class="heading-element" id="11-前缀树trie"><span>1.1 前缀树（Trie）</span>
+  <a href="#11-%e5%89%8d%e7%bc%80%e6%a0%91trie" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Trie，又称字典树或前缀树，是一种有序树结构，常用于存储关联数组，其中键通常是字符串。与二叉查找树不同，Trie 的键并非直接存储在节点中，而是通过节点在树中的路径隐式表达 —— 每个节点代表一个字符，从根节点到某节点的路径拼接起来即为该节点所代表的键。</p>
+<p><img loading="lazy" src='/posts/202509-ethmpt/image.png' alt="Trie 示例图" height="235" width="250"></p>
+<blockquote>
+<p>上图展示了一个保存 8 个键的 Trie 结构：&ldquo;A&rdquo;, &ldquo;to&rdquo;, &ldquo;tea&rdquo;, &ldquo;ted&rdquo;, &ldquo;ten&rdquo;, &ldquo;i&rdquo;, &ldquo;in&rdquo;, &ldquo;inn&rdquo;。<br>
+图中，键标注在节点路径上（实际实现中通常不显式存储），值标注在叶子节点下方。只有部分节点（通常是叶子或具有值的中间节点）才关联具体值。</p>
+</blockquote>
+<p>Trie 的优势在于支持高效的前缀匹配和动态插入/删除，但缺点也很明显：<strong>空间浪费严重</strong>。例如，若键很长且无公共前缀，树会变得非常深且稀疏。</p>
+<h2 class="heading-element" id="12-压缩前缀树patricia-trie--radix-trie"><span>1.2 压缩前缀树（Patricia Trie / Radix Trie）</span>
+  <a href="#12-%e5%8e%8b%e7%bc%a9%e5%89%8d%e7%bc%80%e6%a0%91patricia-trie--radix-trie" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>为了解决标准 Trie 的空间低效问题，<strong>Patricia Trie（Practical Algorithm To Retrieve Information Coded In Alphanumeric）</strong> 应运而生，也称 <strong>Radix Trie</strong> 或<strong>压缩前缀树</strong>。</p>
+<p>其核心思想是：<strong>合并路径上无分叉的连续节点</strong>，从而压缩树的深度和节点数量。每个节点可以代表一个字符（r=256）或一个比特位（r=2），甚至多个字节 —— 取决于基数（radix）的选择。</p>
+<p><img loading="lazy" src='/posts/202509-ethmpt/image-1.png' alt="压缩前缀树示例1" height="200" width="250"><br>
+<img loading="lazy" src='/posts/202509-ethmpt/image-2.png' alt="压缩前缀树示例2" height="488" width="976"></p>
+<blockquote>
+<p>图中存储的键值对示例：</p>
+<ul>
+<li><code>6c0a5c71ec20bq3w</code> → 5</li>
+<li><code>6c0a5c71ec20CX7j</code> → 27</li>
+<li><code>6c0a5c71781a1FXq</code> → 18</li>
+<li><code>6c0a5c71781a9Dog</code> → 64</li>
+<li><code>6c0a8f743b95zUfe</code> → 30</li>
+<li><code>6c0a8f743b95jx5R</code> → 2</li>
+<li><code>6c0a8f740d16y03G</code> → 43</li>
+<li><code>6c0a8f740d16vcc1</code> → 48</li>
+</ul>
+</blockquote>
+<h3 class="heading-element" id="为什么-patricia-trie-仍不够"><span>为什么 Patricia Trie 仍不够？</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88-patricia-trie-%e4%bb%8d%e4%b8%8d%e5%a4%9f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在以太坊中，参与树构建的键通常是 <strong>32 字节的哈希值（如 Keccak256）</strong>，转换为十六进制字符串后长度为 64。这意味着：</p>
+<ul>
+<li>树的最大深度可达 64（若按字符逐层展开）；</li>
+<li>每个节点需存储路径、子节点指针、值等元数据；</li>
+<li>大量路径节点无实际分叉，却仍需独立存储；</li>
+<li>频繁的状态更新会导致大量节点写入，IO 和存储开销巨大。</li>
+</ul>
+<p>因此，直接使用 Patricia Trie 无法满足以太坊对<strong>高效更新、快速验证、轻量同步</strong>的需求。</p>
+<h2 class="heading-element" id="13-默克尔树merkle-tree"><span>1.3 默克尔树（Merkle Tree）</span>
+  <a href="#13-%e9%bb%98%e5%85%8b%e5%b0%94%e6%a0%91merkle-tree" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>默克尔树（Merkle Tree），也常被称为哈希树（Hash Tree）。它的核心目的不是高效地存储和查找数据，而是<strong>为大规模数据提供一个高效、安全的完整性验证方法</strong>。</p>
+<p>默克尔树的结构通常是二叉树（或多叉树），其特点如下：</p>
+<ul>
+<li><strong>叶子节点</strong>：存储数据块的哈希值。</li>
+<li><strong>非叶子节点</strong>：存储其所有子节点哈希值的哈希值。</li>
+<li><strong>根节点</strong>：最终计算出的顶部哈希，称为默克尔根（Merkle Root）。</li>
+</ul>
+<p><img loading="lazy" src='/posts/202509-ethmpt/image-3.png' alt="Merkle Tree 示例图" height="815" width="1280"></p>
+<p><em>图4：默克尔树的构建过程</em></p>
+<p>构建过程是自底向上的：</p>
+<ol>
+<li>将底层的数据块（如 L1, L2, L3, L4）分别进行哈希计算，得到叶子节点 <code>Hash 0-0</code>, <code>Hash 0-1</code>, <code>Hash 1-0</code>, <code>Hash 1-1</code>。</li>
+<li>将相邻的叶子节点两两配对，计算它们的父节点的哈希值。例如，<code>Hash 0 = Hash(Hash 0-0 + Hash 0-1)</code>。</li>
+<li>重复这个过程，直到计算出唯一的根哈希 <code>Top Hash</code>。</li>
+</ol>
+<p>默克尔树具有以下关键特性：</p>
+<ol>
+<li><strong>高效的数据完整性验证</strong>：要验证整个数据集是否被篡改，只需要比较新计算出的默克尔根与可信的旧默克尔根是否一致即可。这比逐一比较所有数据块要快得多。</li>
+<li><strong>高效的部分数据验证（默克尔证明）</strong>：这是默克尔树最强大的功能。如果我们想向别人证明某个数据块（如 L1）确实存在于原始数据集中，我们不需要发送整个数据集。我们只需要发送 L1 本身，以及从 L1 到根节点的路径上所有“兄弟”节点的哈希（在这个例子中是 <code>Hash 0-1</code> 和 <code>Hash 1</code>）。接收方可以用这些信息独立地重新计算出根哈希，并与已知的根哈希进行比对。这个验证过程所需的数据量（称为默克尔证明，Merkle Proof）非常小，与数据集的总大小无关，只与树的深度对数相关。</li>
+<li><strong>快速定位不一致的数据</strong>：如果根哈希不匹配，可以通过逐层向下比较哈希值，快速定位到被篡改的数据块。</li>
+</ol>
+<p>这个“默克尔证明”的特性对于区块链（尤其是轻节点）来说是革命性的。轻节点不需要下载所有区块数据，它只需存储区块头（其中包含默克尔根），就可以通过默克尔证明来验证某笔交易是否真实存在于某个区块中。</p>
+<h2 class="heading-element" id="14-以太坊的改进merkle-patricia-triempt"><span>1.4 以太坊的改进：Merkle Patricia Trie（MPT）</span>
+  <a href="#14-%e4%bb%a5%e5%a4%aa%e5%9d%8a%e7%9a%84%e6%94%b9%e8%bf%9bmerkle-patricia-triempt" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>以太坊没有直接使用上述任一结构，而是创造性地将三者融合，构建了 <strong>Merkle Patricia Trie（MPT）</strong>：</p>
+<p>以太坊的目标是创建一个既能高效存储和检索键值对，又能提供强大加密学证明的数据结构。</p>
+<ul>
+<li>只用 <strong>Radix Trie</strong>？可以高效地存取数据，但无法为数据提供加密学证明。没法生成一个代表整个数据集状态的、唯一的、可验证的“指纹”。</li>
+<li>只用 <strong>Merkle Tree</strong>？可以验证数据，但它的结构不利于高效地查找、更新或删除单个键值对。</li>
+</ul>
+<p>以太坊的解决方案是：<strong>将二者合二为一，创造出默克尔帕特里夏树（Merkle Patricia Trie）</strong>。</p>
+<p>MPT 本质上是一个 <strong>Radix Trie</strong>，但它增加了 <strong>Merkle Tree</strong> 的特性：</p>
+<ol>
+<li><strong>路径即键，节点存值</strong>：它遵循 Radix Trie 的规则，通过路径来表示键，并通过压缩来节省空间。</li>
+<li><strong>节点间通过哈希链接</strong>：在 MPT 中，一个父节点并不直接存储指向其子节点的内存指针，而是存储<strong>子节点的哈希值</strong>。</li>
+<li><strong>根哈希代表全局状态</strong>：对树中所有节点进行类似的哈希计算，最终在根节点会得到一个唯一的哈希值。这个哈希就是我们常听到的<strong>状态根（State Root）</strong>、<strong>交易根（Transactions Root）<strong>或</strong>收据根（Receipts Root）</strong>。</li>
+</ol>
+<p>通过这种方式，MPT 完美地结合了三者的优点：</p>
+<ul>
+<li><strong>Trie</strong> 的键值映射能力。</li>
+<li><strong>Radix Trie</strong> 的空间效率。</li>
+<li><strong>Merkle Tree</strong> 的加密学验证能力。</li>
+</ul>
+<p>树中任何数据的微小变动，都会导致其父节点的哈希改变，这种改变会一直向上传播，最终形成一个完全不同的根哈希。这使得以太坊的整个状态（所有账户的余额、代码、存储等）都可以被一个仅有32字节的哈希值所代表和担保。同时，利用默克尔证明的原理，任何人都可以高效地验证状态树中的一小部分信息（例如，“A账户的余额确实是100 ETH”），而无需同步整个状态数据库。</p>
+<h1 class="heading-element" id="2-源码阅读深入以太坊-merkle-patricia-trie-的实现"><span>2. 源码阅读：深入以太坊 Merkle Patricia Trie 的实现</span>
+  <a href="#2-%e6%ba%90%e7%a0%81%e9%98%85%e8%af%bb%e6%b7%b1%e5%85%a5%e4%bb%a5%e5%a4%aa%e5%9d%8a-merkle-patricia-trie-%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>理解了 Merkle Patricia Trie (MPT) 的核心概念之后，接下来看源码，看看这些抽象概念是如何具体实现的。MPT 实现主要位于 <code>trie</code> 或 <code>core/state/trie</code> 包中。</p>
+<h2 class="heading-element" id="21-核心数据结构"><span>2.1 核心数据结构</span>
+  <a href="#21-%e6%a0%b8%e5%bf%83%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="211-核心数据结构"><span>2.1.1 核心数据结构</span>
+  <a href="#211-%e6%a0%b8%e5%bf%83%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p>分支节点<code>fullNode</code>:</p>
+<ul>
+<li>核心是 <code>Children [17]node</code>，表示一个<strong>分支节点</strong>（Branch Node）。
+<ul>
+<li><strong><code>Children[0]</code> 到 <code>Children[15]</code></strong>：对应十六进制的 0 到 F。每个元素指向一个子节点。当遍历 MPT 路径时，每一位十六进制字符决定了接下来进入哪个子节点。</li>
+<li><strong><code>Children[16]</code></strong>：这个特殊的槽位用于存储<strong>当前分支节点自身可能携带的值</strong>。换句话说，如果一个键值对的键路径恰好走到了这个 fullNode 就结束了，那么这个键对应的值就存放在这里。（后面代码部分会贴示例）</li>
+</ul>
+</li>
+<li><strong><code>flags nodeFlag</code></strong>: 用于标记节点状态，如是否为脏节点（dirty）、是否已哈希、缓存代数等，服务于节点缓存与持久化机制。</li>
+</ul>
+</li>
+<li>
+<p>扩展节点或叶子节点 <code>shortNode</code>：</p>
+<ul>
+<li><strong><code>Key []byte</code></strong>: 存储这个节点的<strong>路径段</strong>。这个 <code>Key</code> 并不是原始的哈希值键的一部分，而是经过<strong>十六进制前缀（Hex-Prefix, HP）编码</strong>后的路径片段。</li>
+<li><strong><code>Val node</code></strong>:
+<ul>
+<li>如果 <code>shortNode</code> 是一个<strong>扩展节点</strong>（Extension Node），<code>Val</code> 会指向它的下一个子节点（可能是一个 <code>fullNode</code>, <code>shortNode</code> 或者 <code>hashNode</code>）。它的作用是压缩一条公共前缀路径。</li>
+<li>如果 <code>shortNode</code> 是一个<strong>叶子节点</strong>（Leaf Node），<code>Val</code> 直接存储了该路径对应的值，（一个 valueNode，也就是 <code>[]byte</code>）。这个值是经过 RLP 编码的。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>hashNode</code> (哈希节点)：</p>
+<ul>
+<li>代表一个已经持久化到数据库的子节点，或者一个通过其哈希值引用的节点。当访问它时，需要从数据库中加载其真实内容。这是 Merkle Tree 特性的核心体现：节点不再直接存储子节点，而是存储子节点的哈希，从而形成加密学上的链接。</li>
+</ul>
+</li>
+<li>
+<p><code>valueNode</code> (值节点)：</p>
+<ul>
+<li>同样是一个 <code>[]byte</code>。它存储的是键值对中，具体键对应的值。在 MPT 中，所有的值都是原始的字节数组。</li>
+</ul>
+</li>
+</ul>
+<p><code>hashNode</code> 和 <code>valueNode</code> 均为底层数据类型，不包含子结构，前者用于引用，后者用于存储最终值。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// trie/node.go</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">type</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">fullNode</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Children</span><span class="w"> </span><span class="p">[</span><span class="mi">17</span><span class="p">]</span><span class="nx">node</span><span class="w"> </span><span class="c1">// Actual trie node data to encode/decode (needs custom encoder)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">flags</span><span class="w">    </span><span class="nx">nodeFlag</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">shortNode</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Key</span><span class="w">   </span><span class="p">[]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Val</span><span class="w">   </span><span class="nx">node</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">flags</span><span class="w"> </span><span class="nx">nodeFlag</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">hashNode</span><span class="w">  </span><span class="p">[]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">valueNode</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// fullnodeEncoder is a type used exclusively for encoding fullNode.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Briefly instantiating a fullnodeEncoder and initializing with</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// existing slices is less memory intense than using the fullNode type.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">fullnodeEncoder</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Children</span><span class="w"> </span><span class="p">[</span><span class="mi">17</span><span class="p">][]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// extNodeEncoder is a type used exclusively for encoding extension node.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Briefly instantiating a extNodeEncoder and initializing with existing</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// slices is less memory intense than using the shortNode type.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">extNodeEncoder</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Key</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Val</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// leafNodeEncoder is a type used exclusively for encoding leaf node.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">leafNodeEncoder</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Key</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">Val</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h3 class="heading-element" id="212-十六进制前缀编码hex-prefix-encoding"><span>2.1.2 十六进制前缀编码（Hex-Prefix Encoding）</span>
+  <a href="#212-%e5%8d%81%e5%85%ad%e8%bf%9b%e5%88%b6%e5%89%8d%e7%bc%80%e7%bc%96%e7%a0%81hex-prefix-encoding" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在 <code>shortNode</code> 中，它的 Key 字段是经过“十六进制前缀编码”的。需要这个编码的原因是 <code>shortNode</code> 既可以表示扩展节点，也可以表示叶子节点，所以需要一种方式来进行区分。同时，路径的长度可能是奇数或偶数，也需要区分。十六进制前缀编码也称为HP编码。通过在路径前添加一个四位元（nibble）的前缀来同时解决这两个问题。</p>
+<p>原始路径被看作是一系列的四位元（nibbles）。</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">路径长度</th>
+            <th style="text-align: left">节点类型</th>
+            <th style="text-align: left">前缀 (二进制)</th>
+            <th style="text-align: left">前缀 (十六进制)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left">偶数</td>
+            <td style="text-align: left">扩展节点</td>
+            <td style="text-align: left">0000</td>
+            <td style="text-align: left">0x0</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">奇数</td>
+            <td style="text-align: left">扩展节点</td>
+            <td style="text-align: left">0001</td>
+            <td style="text-align: left">0x1</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">偶数</td>
+            <td style="text-align: left">叶子节点</td>
+            <td style="text-align: left">0010</td>
+            <td style="text-align: left">0x2</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">奇数</td>
+            <td style="text-align: left">叶子节点</td>
+            <td style="text-align: left">0011</td>
+            <td style="text-align: left">0x3</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>HP 编码的核心是为原始路径（<code>nibbles</code> 数组）添加一个<strong>单字节的前缀</strong>。这个前缀字节由两部分组成：</p>
+<ul>
+<li><strong>高4位 (High Nibble)</strong>: 包含上表所示的标志位（<code>0x0</code>, <code>0x1</code>, <code>0x2</code>, <code>0x3</code>）。</li>
+<li><strong>低4位 (Low Nibble)</strong>: 根据路径长度的奇偶性而定。</li>
+</ul>
+<p><strong>组合规则如下：</strong></p>
+<ol>
+<li>
+<p><strong>如果路径的 <code>nibble</code> 数量是奇数</strong>：</p>
+<ul>
+<li>将标志 <code>nibble</code>（<code>0x1</code> 或 <code>0x3</code>）作为前缀字节的<strong>高4位</strong>。</li>
+<li>将原始路径的<strong>第一个 <code>nibble</code>作为前缀字节的低4位</strong>。</li>
+<li>将这个合成的前缀字节与<strong>剩余的路径字节</strong>拼接起来。</li>
+<li><strong>示例 (奇数叶子节点, 路径 <code>12345</code>)</strong>:
+<ul>
+<li>标志 <code>nibble</code>: <code>0x3</code></li>
+<li>路径 <code>nibbles</code>: <code>[1, 2, 3, 4, 5]</code></li>
+<li>第一个字节: <code>0x3</code> 和 <code>0x1</code> 合并 -&gt; <code>0x31</code></li>
+<li>剩余路径: <code>[2, 3, 4, 5]</code> -&gt; <code>0x23</code>, <code>0x45</code></li>
+<li>最终编码: <code>0x312345</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>如果路径的 <code>nibble</code> 数量是偶数</strong>：</p>
+<ul>
+<li>将标志 <code>nibble</code>（<code>0x0</code> 或 <code>0x2</code>）作为前缀字节的<strong>高4位</strong>。</li>
+<li>用一个 <code>0x0</code> 的 <code>nibble</code> 作为<strong>填充物</strong>，放在前缀字节的<strong>低4位</strong>。</li>
+<li>将这个合成的前缀字节与<strong>完整的原始路径字节</strong>拼接起来。</li>
+<li><strong>示例 (偶数扩展节点, 路径 <code>1234</code>)</strong>:
+<ul>
+<li>标志 <code>nibble</code>: <code>0x0</code></li>
+<li>路径 <code>nibbles</code>: <code>[1, 2, 3, 4]</code></li>
+<li>第一个字节: <code>0x0</code> 和 <code>0x0</code> (填充) 合并 -&gt; <code>0x00</code></li>
+<li>完整路径: <code>[1, 2, 3, 4]</code> -&gt; <code>0x12</code>, <code>0x34</code></li>
+<li>最终编码: <code>0x001234</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>这种编码方式非常巧妙，仅通过第一个字节就能解码出节点类型和路径的奇偶性，为后续的遍历和解析提供了必要信息。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// trie/encoding.go</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">hexToCompact</span><span class="p">(</span><span class="nx">hex</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">terminator</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">byte</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nf">hasTerm</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">terminator</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">hex</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">hex</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">buf</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">terminator</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="c1">// the flag byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">hex</span><span class="p">)</span><span class="o">&amp;</span><span class="mi">1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="c1">// odd flag</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="nx">hex</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="c1">// first nibble is contained in the first byte</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">hex</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">hex</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nf">decodeNibbles</span><span class="p">(</span><span class="nx">hex</span><span class="p">,</span><span class="w"> </span><span class="nx">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">buf</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h2 class="heading-element" id="22-trie-结构"><span>2.2 Trie 结构</span>
+  <a href="#22-trie-%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><code>Trie</code> 结构体是与 MPT 交互的入口点。它封装了根节点、数据库连接以及用于管理状态和缓存的各种标志。<code>Get</code>, <code>Update</code>, <code>Delete</code> 等方法，都是定义在 <code>Trie</code> 类型上的。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// trie/trie.go</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">type</span><span class="w"> </span><span class="nx">Trie</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">root</span><span class="w">  </span><span class="nx">node</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">owner</span><span class="w"> </span><span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Flag whether the commit operation is already performed. If so the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// trie is not usable(latest states is invisible).</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">committed</span><span class="w"> </span><span class="kt">bool</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Keep track of the number leaves which have been inserted since the last</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// hashing operation. This number will not directly map to the number of</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// actually unhashed nodes.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">unhashed</span><span class="w"> </span><span class="kt">int</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// uncommitted is the number of updates since last commit.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">uncommitted</span><span class="w"> </span><span class="kt">int</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// reader is the handler trie can retrieve nodes from.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">reader</span><span class="w"> </span><span class="o">*</span><span class="nx">Reader</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Various tracers for capturing the modifications to trie</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">opTracer</span><span class="w">       </span><span class="o">*</span><span class="nx">opTracer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">prevalueTracer</span><span class="w"> </span><span class="o">*</span><span class="nx">PrevalueTracer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>几个关键字段：</p>
+<ul>
+<li><code>root node</code>: 这是 Trie 的根节点。所有的查找、插入、删除操作都从这里开始。<code>root</code> 的哈希值就是整个 Trie 的 Merkle Root，代表了整个键值对集合的状态快照。</li>
+<li><code>reader *Reader</code>: 这是与底层数据库交互的接口。当遍历过程中遇到一个 <code>hashNode</code> 时，Trie 会通过这个 <code>reader</code> 从数据库（如 LevelDB）中加载出完整的节点数据。这是实现**懒加载（Lazy Loading）**的关键，Trie 不需要一次性把所有节点都加载到内存中。</li>
+<li><code>owner common.Hash</code>: 当 MPT 用于存储账户状态时，<code>owner</code> 可以是账户地址的哈希。它主要用于数据库内部的命名空间或日志记录，以区分不同的 Trie。</li>
+<li><code>committed, unhashed, uncommitted</code>: 这些字段主要用于状态管理和性能优化。它们帮助 Trie 跟踪哪些节点是“脏”的（即被修改过但尚未写入数据库），并决定何时需要重新计算哈希并向数据库提交更新。</li>
+</ul>
+<h2 class="heading-element" id="23-核心操作一get"><span>2.3 核心操作一：Get</span>
+  <a href="#23-%e6%a0%b8%e5%bf%83%e6%93%8d%e4%bd%9c%e4%b8%80get" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><code>Get</code> 方法是与 Trie 交互最基本的方式。它的逻辑很纯粹：给定一个 <code>key</code>，顺着 <code>root</code> 节点一路向下查找，直到找到对应的值或者确认 <code>key</code> 不存在。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">Trie</span><span class="p">)</span><span class="w"> </span><span class="nf">Get</span><span class="p">(</span><span class="nx">key</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Short circuit if the trie is already committed and not usable.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">committed</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">ErrCommitted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 从 root 节点开始，key 转换为 nibbles 路径，从第 0 个位置开始查找</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">newroot</span><span class="p">,</span><span class="w"> </span><span class="nx">didResolve</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nf">keybytesToHex</span><span class="p">(</span><span class="nx">key</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">didResolve</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">t</span><span class="p">.</span><span class="nx">root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">newroot</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>公开的 <code>Trie.Get(key []byte) ([]byte, error)</code> 方法其实是一个入口，其核心逻辑委托给了内部的 <code>trie.get(node, key, pos)</code> 方法来递归执行。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">Trie</span><span class="p">)</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="nx">origNode</span><span class="w"> </span><span class="nx">node</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">value</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nx">newnode</span><span class="w"> </span><span class="nx">node</span><span class="p">,</span><span class="w"> </span><span class="nx">didResolve</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">(</span><span class="nx">origNode</span><span class="p">).(</span><span class="kd">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="kc">nil</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">valueNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="o">*</span><span class="nx">shortNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">bytes</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">key</span><span class="p">[</span><span class="nx">pos</span><span class="p">:],</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// key not found in trie</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">newnode</span><span class="p">,</span><span class="w"> </span><span class="nx">didResolve</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Val</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">didResolve</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">n</span><span class="p">.</span><span class="nx">Val</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">newnode</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">didResolve</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="o">*</span><span class="nx">fullNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">newnode</span><span class="p">,</span><span class="w"> </span><span class="nx">didResolve</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">key</span><span class="p">[</span><span class="nx">pos</span><span class="p">]],</span><span class="w"> </span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">didResolve</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">key</span><span class="p">[</span><span class="nx">pos</span><span class="p">]]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">newnode</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">didResolve</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">hashNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">child</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">resolveAndTrack</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">[:</span><span class="nx">pos</span><span class="p">])</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">newnode</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">newnode</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">default</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nb">panic</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%T: invalid node: %v&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">origNode</span><span class="p">,</span><span class="w"> </span><span class="nx">origNode</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>下面我们来拆解 <code>trie.get</code> 的递归查找过程，整个过程是一个大型的 <code>switch</code> 语句，根据当前节点的类型进行不同的处理。</p>
+<ul>
+<li>
+<p><strong><code>case nil</code></strong>:
+这是递归的终点。如果在路径上遇到一个 <code>nil</code> 节点，说明查找的键不存在，函数直接返回 <code>nil</code>。</p>
+</li>
+<li>
+<p><strong><code>case valueNode</code></strong>:
+这也是一个递归的终点。如果直接遇到了一个 <code>valueNode</code>，说明它就是与当前路径完全匹配的最终值。函数直接返回这个值。这种情况通常发生在 <code>shortNode</code>（叶子节点）的 <code>Val</code> 指向一个 <code>valueNode</code> 后，在下一层递归中匹配到。</p>
+</li>
+<li>
+<p><strong><code>case *shortNode</code></strong>:
+这是处理路径压缩的关键。</p>
+<ol>
+<li><code>if !bytes.HasPrefix(key[pos:], n.Key)</code>:
+首先，检查当前剩余的查找路径 <code>key[pos:]</code> 是否以该 <code>shortNode</code> 的路径 <code>n.Key</code> 作为前缀。如果不是，说明路径在此处分叉，键不存在，返回 <code>nil</code>。</li>
+<li><code>t.get(n.Val, key, pos+len(n.Key))</code>:
+如果前缀匹配成功，说明已经走过了 <code>shortNode</code> 所代表的路径段。接下来，需要深入到它的子节点 <code>n.Val</code> 中继续查找。因此，函数进行递归调用，并将查找位置 <code>pos</code> 向前推进 <code>shortNode</code> 路径的长度。</li>
+</ol>
+</li>
+<li>
+<p><strong><code>case *fullNode</code></strong>:
+这是处理路径分支的地方。</p>
+<ol>
+<li><code>t.get(n.Children[key[pos]], key, pos+1)</code>:
+逻辑非常直接：从当前查找路径 <code>key</code> 中取出下一个 nibble，即 <code>key[pos]</code>。这个 nibble 的值（0-15）正好对应 <code>Children</code> 数组的索引。然后，以 <code>Children</code> 数组中该索引位置的子节点为起点，继续递归查找，同时将查找位置 <code>pos</code> 向前移动一位。</li>
+</ol>
+</li>
+<li>
+<p><strong><code>case hashNode</code></strong>:
+这是实现懒加载的核心。</p>
+<ol>
+<li><code>child, err := t.resolveAndTrack(n, key[:pos])</code>:
+当遇到一个 <code>hashNode</code> 时，它只是一个指向数据库中完整节点的“指针”。函数会调用 <code>resolveAndTrack</code>，根据哈希值 <code>n</code> 从数据库中加载出完整的节点数据（一个 <code>shortNode</code> 或 <code>fullNode</code>）。</li>
+<li><code>t.get(child, key, pos)</code>:
+一旦节点被成功加载到内存，<code>get</code> 函数就会在这个新的、完整的 <code>child</code> 节点上重新开始查找过程，参数和位置 <code>pos</code> 保持不变。</li>
+</ol>
+</li>
+</ul>
+<p>最后，代码中的 <code>if err == nil &amp;&amp; didResolve</code> 逻辑，用于在懒加载 (<code>resolve</code>) 发生后，将内存中的 <code>hashNode</code> 替换为新加载的完整节点。这是一种缓存优化，避免了对同一个 <code>hashNode</code> 的重复数据库读取。</p>
+<h2 class="heading-element" id="24-核心操作二insert-插入更新"><span>2.4 核心操作二：Insert (插入/更新)</span>
+  <a href="#24-%e6%a0%b8%e5%bf%83%e6%93%8d%e4%bd%9c%e4%ba%8cinsert-%e6%8f%92%e5%85%a5%e6%9b%b4%e6%96%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><code>insert</code> 函数负责向Trie中添加或更新一个键值对。这个过程最复杂的地方在于如何处理路径冲突，这通常需要 <strong>拆分（split）</strong> 现有节点来创造新的分支。</p>
+<p>接下来看 <code>insert</code> 函数在遇到不同节点类型时的递归逻辑：</p>
+<ul>
+<li>
+<p><strong><code>case nil</code></strong>:
+这是最简单的情况。如果在遍历时遇到一个 <code>nil</code> 节点，意味着这里是一个“空位”，可以直接插入。系统会创建一个新的 <code>shortNode</code>（叶子节点），其 <code>Key</code> 是剩余的路径，<code>Val</code> 是要存储的值。</p>
+</li>
+<li>
+<p><strong><code>case *fullNode</code></strong>:
+遇到分支节点时，逻辑很直接。根据当前 <code>key</code> 的第一个 <code>nibble</code>，选择 <code>Children</code> 数组中对应的分支，然后将剩余的 <code>key</code> 传入，对该分支进行递归 <code>insert</code>。</p>
+</li>
+<li>
+<p><strong><code>case hashNode</code></strong>:
+和 <code>get</code> 操作一样，遇到 <code>hashNode</code> 时，首先会调用 <code>resolve</code> 将其从数据库中加载为完整的节点，然后在加载出的新节点上重新执行 <code>insert</code> 操作。</p>
+</li>
+<li>
+<p><strong><code>case *shortNode</code></strong>:
+这是 <code>insert</code> 操作中最核心、最复杂的逻辑。当插入路径与一个 <code>shortNode</code> 发生交集时：</p>
+<ol>
+<li><strong>计算共同前缀</strong>：首先，计算要插入的 <code>key</code> 和当前 <code>shortNode.Key</code> 之间的共同前缀长度 <code>matchlen</code>。</li>
+<li><strong>完全匹配 (<code>matchlen == len(n.Key)</code>)</strong>：
+如果 <code>shortNode</code> 的路径就是要插入 <code>key</code> 的前缀，说明路径方向正确，只需对 <code>shortNode</code> 的子节点 <code>n.Val</code> 继续进行递归 <code>insert</code>。</li>
+<li><strong>部分匹配 (<code>matchlen &lt; len(n.Key)</code>)</strong>：
+这是最关键的情况：路径在此处发生<strong>分叉</strong>。原有的 <code>shortNode</code> 必须被拆分，以容纳新的路径分支。
+<ul>
+<li>创建一个新的 <code>fullNode</code>（分支节点）来替代原来的 <code>shortNode</code>。</li>
+<li>原 <code>shortNode</code> 剩余的路径（<code>n.Key[matchlen+1:]</code>）及其值 <code>n.Val</code>，会被插入到新 <code>fullNode</code> 的一个槽位中。</li>
+<li>要插入的 <code>key</code> 剩余的路径（<code>key[matchlen+1:]</code>）及其 <code>value</code>，会被插入到新 <code>fullNode</code> 的另一个槽位中。</li>
+<li>最后，如果共同前缀 <code>matchlen</code> 大于0，会创建一个新的 <code>shortNode</code>，其 <code>Key</code> 是这个共同前缀，其 <code>Val</code> 指向刚刚创建的那个 <code>fullNode</code>。这个新的 <code>shortNode</code> 会取代原来节点的位置。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<p>这个“拆分-替换”的过程是MPT能够动态适应任意键值对集合的关键。</p>
+<p>完整实现：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">Trie</span><span class="p">)</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="nx">node</span><span class="p">,</span><span class="w"> </span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="nx">node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">node</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">v</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">n</span><span class="p">.(</span><span class="nx">valueNode</span><span class="p">);</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="p">!</span><span class="nx">bytes</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">.(</span><span class="nx">valueNode</span><span class="p">)),</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">n</span><span class="p">.(</span><span class="kd">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="o">*</span><span class="nx">shortNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">matchlen</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nf">prefixLen</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// If the whole key matches, keep this short node as is</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// and only update the value.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">matchlen</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">dirty</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Val</span><span class="p">,</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">[:</span><span class="nx">matchlen</span><span class="p">]</span><span class="o">...</span><span class="p">),</span><span class="w"> </span><span class="nx">key</span><span class="p">[</span><span class="nx">matchlen</span><span class="p">:],</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">dirty</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shortNode</span><span class="p">{</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Otherwise branch out at the index where they differ.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">branch</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">fullNode</span><span class="p">{</span><span class="nx">flags</span><span class="p">:</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">branch</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">[</span><span class="nx">matchlen</span><span class="p">]],</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">[:</span><span class="nx">matchlen</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">...</span><span class="p">),</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">[</span><span class="nx">matchlen</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Val</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">branch</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">key</span><span class="p">[</span><span class="nx">matchlen</span><span class="p">]],</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">[:</span><span class="nx">matchlen</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">...</span><span class="p">),</span><span class="w"> </span><span class="nx">key</span><span class="p">[</span><span class="nx">matchlen</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Replace this shortNode with the branch if it occurs at index 0.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">matchlen</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">branch</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// New branch node is created as a child of the original short node.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Track the newly inserted node in the tracer. The node identifier</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// passed is the path from the root node.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">t</span><span class="p">.</span><span class="nx">opTracer</span><span class="p">.</span><span class="nf">onInsert</span><span class="p">(</span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">[:</span><span class="nx">matchlen</span><span class="p">]</span><span class="o">...</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Replace it with a short node leading up to the branch.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shortNode</span><span class="p">{</span><span class="nx">key</span><span class="p">[:</span><span class="nx">matchlen</span><span class="p">],</span><span class="w"> </span><span class="nx">branch</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="o">*</span><span class="nx">fullNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">dirty</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="w"> </span><span class="nx">key</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">dirty</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">n</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">nn</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="kc">nil</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// New short node is created and track it in the tracer. The node identifier</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// passed is the path from the root node. Note the valueNode won&#39;t be tracked</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// since it&#39;s always embedded in its parent.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">t</span><span class="p">.</span><span class="nx">opTracer</span><span class="p">.</span><span class="nf">onInsert</span><span class="p">(</span><span class="nx">prefix</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shortNode</span><span class="p">{</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">hashNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// We&#39;ve hit a part of the trie that isn&#39;t loaded yet. Load</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// the node and insert into it. This leaves all child nodes on</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// the path to the value in the trie.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">rn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">resolveAndTrack</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">prefix</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">dirty</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="nx">rn</span><span class="p">,</span><span class="w"> </span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">dirty</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">rn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">default</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nb">panic</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%T: invalid node: %v&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h3 class="heading-element" id="详解一个插入示例"><span>详解：一个插入示例</span>
+  <a href="#%e8%af%a6%e8%a7%a3%e4%b8%80%e4%b8%aa%e6%8f%92%e5%85%a5%e7%a4%ba%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这里主要写<code>shortNode</code>部分：</p>
+<p><code>shortNode</code> 的处理是 <code>insert</code> 操作中最核心、最能体现Trie压缩思想的部分。当插入的新路径与一个已存在的 <code>shortNode</code> 路径发生交集时，Trie必须进行 <strong>拆分</strong> 来创造新的分支。</p>
+<p>假设Trie中目前只有一个键值对：</p>
+<ul>
+<li><strong>键</strong>: <code>&quot;cat&quot;</code> (其 <code>nibbles</code> 序列为 <code>[6, 3, 6, 1, 7, 4]</code>)</li>
+<li><strong>值</strong>: <code>value_A</code></li>
+</ul>
+<p>此时，Trie的结构是（为简化，假设这是根节点）：
+<code>root</code> -&gt; <code>shortNode{ Key: [6, 3, 6, 1, 7, 4], Val: value_A }</code> (这是一个叶子节点)</p>
+<p>现在，我们要插入一个新的键值对：</p>
+<ul>
+<li><strong>键</strong>: <code>&quot;car&quot;</code> (其 <code>nibbles</code> 序列为 <code>[6, 3, 6, 1, 7, 2]</code>)</li>
+<li><strong>值</strong>: <code>value_B</code></li>
+</ul>
+<p><code>insert</code> 函数会执行以下步骤：</p>
+<ol>
+<li>
+<p><strong>计算共同前缀</strong>：
+比较新键的路径 <code>[6, 3, 6, 1, 7, 2]</code> 和当前 <code>shortNode</code> 的路径 <code>[6, 3, 6, 1, 7, 4]</code>。</p>
+<ul>
+<li>它们的共同前缀是 <code>[6, 3, 6, 1, 7]</code>。共同前缀长度 <code>matchlen</code> 为 5。</li>
+<li>在第 6 个 <code>nibble</code> 处 (<code>4</code> vs <code>2</code>)，路径出现分歧。</li>
+</ul>
+</li>
+<li>
+<p><strong>创建分支节点 (<code>fullNode</code>)</strong>：
+由于路径在此处分叉，系统必须创建一个新的 <code>fullNode</code> 作为“交叉路口”。</p>
+</li>
+<li>
+<p><strong>拆分和重组</strong>：
+原来的叶子节点 (<code>shortNode</code>) 将被<strong>一个新的扩展节点 (<code>shortNode</code>)</strong> 和一个<strong>新的分支节点 (<code>fullNode</code>)</strong> 的组合所取代。</p>
+<ul>
+<li>
+<p><strong>新的父节点 (扩展节点)</strong>：
+这个节点代表了共同的路径。</p>
+<ul>
+<li><code>Key</code>: <code>[6, 3, 6, 1, 7]</code> (共同前缀)</li>
+<li><code>Val</code>: 指向下面新创建的 <code>fullNode</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>新的 <code>fullNode</code> (分支节点)</strong>：
+这个节点是新的“交叉路口”，它自身没有路径。</p>
+<ul>
+<li>对于原来的键 <code>&quot;cat&quot;</code>，分叉后的下一个 <code>nibble</code> 是 <code>4</code>。原始路径的剩余部分 (<code>n.Key[matchlen+1:]</code>) 是空的，所以它的值 <code>value_A</code> 会被直接插入到 <code>Children</code> 数组的第 <code>4</code> 个槽位。更准确地说，<code>Children[4]</code> 会指向一个 <code>valueNode</code>，其内容为 <code>value_A</code>。</li>
+<li>对于新的键 <code>&quot;car&quot;</code>，分叉后的下一个 <code>nibble</code> 是 <code>2</code>。新路径的剩余部分也是空的，所以它的值 <code>value_B</code> 会被插入到 <code>Children</code> 数组的第 <code>2</code> 个槽位。<code>Children[2]</code> 会指向一个 <code>valueNode</code>，其内容为 <code>value_B</code>。</li>
+<li>其他 <code>Children</code> 槽位都为 <code>nil</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 class="heading-element" id="总结变化前后对比"><span><strong>总结：变化前后对比</strong></span>
+  <a href="#%e6%80%bb%e7%bb%93%e5%8f%98%e5%8c%96%e5%89%8d%e5%90%8e%e5%af%b9%e6%af%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>插入前:</strong></p>
+<pre tabindex="0"><code>root -&gt; shortNode{ Key: [6, 3, 6, 1, 7, 4], Val: value_A, Type: Leaf }</code></pre><p><strong>插入后:</strong></p>
+<pre tabindex="0"><code>root -&gt; shortNode{ Key: [6, 3, 6, 1, 7], Val: ptr_to_fullNode, Type: Extension }
+                      |
+                      |
+                      V
+                  fullNode{
+                      Children: [
+                          nil, nil,
+                          ptr_to_value_B,  // index 2
+                          nil,
+                          ptr_to_value_A,  // index 4
+                          nil, ..., nil   // other 15 slots are nil
+                      ]
+                  }</code></pre><p>通过这个“拆分-重组”的过程，Trie能够在不重复存储共同前缀的情况下，高效地管理两条不同的路径。这正是默克尔帕特里夏树（Merkle Patricia Trie）空间效率高的根本原因。</p>
+<h2 class="heading-element" id="25-核心操作三delete-删除"><span>2.5 核心操作三：Delete (删除)</span>
+  <a href="#25-%e6%a0%b8%e5%bf%83%e6%93%8d%e4%bd%9c%e4%b8%89delete-%e5%88%a0%e9%99%a4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>删除操作可以看作是插入的逆过程。当一个键值对被删除后，Trie需要进行 <strong>简化（simplify）</strong> 和 <strong>合并（merge）</strong> 操作，以保持其最高效的压缩形态。</p>
+<p><code>delete</code> 的核心逻辑是：在递归删除路径上的节点后，返回时检查当前节点是否需要简化。</p>
+<ul>
+<li>
+<p><strong><code>case *shortNode</code></strong>:</p>
+<ul>
+<li><strong>路径不匹配</strong>：如果要删除的 <code>key</code> 与 <code>shortNode.Key</code> 不匹配，说明该 <code>key</code> 不存在，直接返回。</li>
+<li><strong>完全匹配</strong>：如果要删除的 <code>key</code> 与 <code>shortNode</code> 的路径和值都匹配，则直接删除该节点（返回 <code>nil</code>）。</li>
+<li><strong>部分匹配</strong>：如果 <code>shortNode.Key</code> 只是 <code>key</code> 的一部分，则对子节点 <code>n.Val</code> 递归调用 <code>delete</code>。
+<ul>
+<li><strong>合并子节点</strong>：在子节点删除完成后，如果子节点变成了一个只含有一条路径的 <code>shortNode</code>，那么父子两个 <code>shortNode</code> 就应该<strong>合并</strong>成一个，避免出现 <code>shortNode</code> 嵌套 <code>shortNode</code> 的冗余结构。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>case *fullNode</code></strong>:</p>
+<ul>
+<li>首先，根据 <code>key</code> 的下一个 <code>nibble</code> 找到对应的子节点，并对其递归调用 <code>delete</code>。</li>
+<li><strong>检查简化</strong>：在子节点被删除后，需要检查当前的 <code>fullNode</code>。如果它只剩下一个非空的子节点，那么多达16路的分支就不再有意义了。
+<ul>
+<li>此时，这个 <code>fullNode</code> 必须被<strong>简化</strong>为一个 <code>shortNode</code>。新的 <code>shortNode</code> 会包含剩下的那个唯一子节点的路径和值，从而大大压缩树的结构。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>case hashNode</code> / <code>case nil</code></strong>:</p>
+<ul>
+<li>与 <code>insert</code> 类似，<code>hashNode</code> 需要先从数据库加载再执行删除。<code>nil</code> 则表示路径不存在，直接返回。</li>
+</ul>
+</li>
+</ul>
+<p>总而言之，删除操作通过递归地简化和合并节点，确保Trie在删除数据后依然保持最小和最优的结构。</p>
+<p>完整实现：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="3" style="--fi-max-shown-lines:10;--fi-line-digit:3;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">Trie</span><span class="p">)</span><span class="w"> </span><span class="nb">delete</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="nx">node</span><span class="p">,</span><span class="w"> </span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">node</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">n</span><span class="p">.(</span><span class="kd">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="o">*</span><span class="nx">shortNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">matchlen</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nf">prefixLen</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">matchlen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="c1">// don&#39;t replace n on mismatch</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">matchlen</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// The matched short node is deleted entirely and track</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// it in the deletion set. The same the valueNode doesn&#39;t</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// need to be tracked at all since it&#39;s always embedded.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">t</span><span class="p">.</span><span class="nx">opTracer</span><span class="p">.</span><span class="nf">onDelete</span><span class="p">(</span><span class="nx">prefix</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="c1">// remove n entirely for whole matches</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// The key is longer than n.Key. Remove the remaining suffix</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// from the subtrie. Child can never be nil here since the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// subtrie must contain at least two other values with keys</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// longer than n.Key.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">dirty</span><span class="p">,</span><span class="w"> </span><span class="nx">child</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nb">delete</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Val</span><span class="p">,</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">)]</span><span class="o">...</span><span class="p">),</span><span class="w"> </span><span class="nx">key</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">):])</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">dirty</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">switch</span><span class="w"> </span><span class="nx">child</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">child</span><span class="p">.(</span><span class="kd">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">case</span><span class="w"> </span><span class="o">*</span><span class="nx">shortNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// The child shortNode is merged into its parent, track</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// is deleted as well.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">t</span><span class="p">.</span><span class="nx">opTracer</span><span class="p">.</span><span class="nf">onDelete</span><span class="p">(</span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="o">...</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// Deleting from the subtrie reduced it to another</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// short node. Merge the nodes to avoid creating a</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// shortNode{..., shortNode{...}}. Use concat (which</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// always creates a new slice) instead of append to</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// avoid modifying n.Key since it might be shared with</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// other nodes.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shortNode</span><span class="p">{</span><span class="nx">slices</span><span class="p">.</span><span class="nf">Concat</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">,</span><span class="w"> </span><span class="nx">child</span><span class="p">.</span><span class="nx">Key</span><span class="p">),</span><span class="w"> </span><span class="nx">child</span><span class="p">.</span><span class="nx">Val</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">default</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shortNode</span><span class="p">{</span><span class="nx">n</span><span class="p">.</span><span class="nx">Key</span><span class="p">,</span><span class="w"> </span><span class="nx">child</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="o">*</span><span class="nx">fullNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">dirty</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nb">delete</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="w"> </span><span class="nx">key</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">dirty</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">n</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">nn</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Because n is a full node, it must&#39;ve contained at least two children</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// before the delete operation. If the new child value is non-nil, n still</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// has at least two children after the deletion, and cannot be reduced to</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// a short node.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">nn</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Reduction:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Check how many non-nil entries are left after deleting and</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// reduce the full node to a short node if only one entry is</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// left. Since n must&#39;ve contained at least two children</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// before deletion (otherwise it would not be a full node) n</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// can never be reduced to nil.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">		// When the loop is done, pos contains the index of the single</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// value that is left in n or -2 if n contains at least two</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// values.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">pos</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="p">,</span><span class="w"> </span><span class="nx">cld</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="nx">cld</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="k">if</span><span class="w"> </span><span class="nx">pos</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="nx">pos</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">i</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="nx">pos</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="k">break</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">pos</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="nx">pos</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="c1">// If the remaining entry is a short node, it replaces</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="c1">// n and its key gets the missing nibble tacked to the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="c1">// front. This avoids creating an invalid</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="c1">// shortNode{..., shortNode{...}}.  Since the entry</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="c1">// might not be loaded yet, resolve it just for this</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="c1">// check.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="nx">cnode</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">resolve</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">pos</span><span class="p">],</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nb">byte</span><span class="p">(</span><span class="nx">pos</span><span class="p">)))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="k">if</span><span class="w"> </span><span class="nx">cnode</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">cnode</span><span class="p">.(</span><span class="o">*</span><span class="nx">shortNode</span><span class="p">);</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="c1">// Replace the entire full node with the short node.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="c1">// Mark the original short node as deleted since the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="c1">// value is embedded into the parent now.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="nx">t</span><span class="p">.</span><span class="nx">opTracer</span><span class="p">.</span><span class="nf">onDelete</span><span class="p">(</span><span class="nb">append</span><span class="p">(</span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nb">byte</span><span class="p">(</span><span class="nx">pos</span><span class="p">)))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="nx">k</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">append</span><span class="p">([]</span><span class="kt">byte</span><span class="p">{</span><span class="nb">byte</span><span class="p">(</span><span class="nx">pos</span><span class="p">)},</span><span class="w"> </span><span class="nx">cnode</span><span class="p">.</span><span class="nx">Key</span><span class="o">...</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shortNode</span><span class="p">{</span><span class="nx">k</span><span class="p">,</span><span class="w"> </span><span class="nx">cnode</span><span class="p">.</span><span class="nx">Val</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// Otherwise, n is replaced by a one-nibble short node</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">// containing the child.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">shortNode</span><span class="p">{[]</span><span class="kt">byte</span><span class="p">{</span><span class="nb">byte</span><span class="p">(</span><span class="nx">pos</span><span class="p">)},</span><span class="w"> </span><span class="nx">n</span><span class="p">.</span><span class="nx">Children</span><span class="p">[</span><span class="nx">pos</span><span class="p">],</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">newFlag</span><span class="p">()},</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// n still contains at least two values and cannot be reduced.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">valueNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="kc">nil</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">hashNode</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// We&#39;ve hit a part of the trie that isn&#39;t loaded yet. Load</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// the node and delete from it. This leaves all child nodes on</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// the path to the value in the trie.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">rn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">resolveAndTrack</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">prefix</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">dirty</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nb">delete</span><span class="p">(</span><span class="nx">rn</span><span class="p">,</span><span class="w"> </span><span class="nx">prefix</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!</span><span class="nx">dirty</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">rn</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">nn</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">default</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nb">panic</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%T: invalid node: %v (%v)&#34;</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">key</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h2 class="heading-element" id="26-哈希与持久化从内存到数据库"><span>2.6 哈希与持久化：从内存到数据库</span>
+  <a href="#26-%e5%93%88%e5%b8%8c%e4%b8%8e%e6%8c%81%e4%b9%85%e5%8c%96%e4%bb%8e%e5%86%85%e5%ad%98%e5%88%b0%e6%95%b0%e6%8d%ae%e5%ba%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>到目前为止，<code>get</code>、<code>insert</code>和<code>delete</code>操作都还停留在内存层面。如果程序关闭，所有的修改都会丢失。Trie的“默克尔（Merkle）”特性，正是通过<strong>哈希（Hashing）</strong> 和 **持久化（Persistence）**来确保数据完整性和永久性的。</p>
+<p>这个过程的核心思想是：自底向上地计算每个节点的哈希值，最终得到一个唯一的<strong>根哈希（Merkle Root）</strong> ，它代表了整个Trie在某一时刻的完整状态快照。</p>
+<h3 class="heading-element" id="261-节点的哈希"><span>2.6.1 节点的哈希</span>
+  <a href="#261-%e8%8a%82%e7%82%b9%e7%9a%84%e5%93%88%e5%b8%8c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Trie中的每一个节点（<code>fullNode</code>, <code>shortNode</code>）都可以被序列化和哈希。具体过程如下：</p>
+<ol>
+<li>
+<p><strong>序列化 (RLP编码)</strong>：
+节点的内容首先会被<strong>RLP (Recursive Length Prefix)</strong> 编码成一个字节数组。RLP是以太坊中用于序列化对象的主要编码方式。</p>
+<ul>
+<li>对于<code>fullNode</code>，它的17个子节点（的哈希或内容）会被编码成一个列表。</li>
+<li>对于<code>shortNode</code>，它的<code>Key</code>（经过HP编码）和<code>Val</code>会被编码成一个包含两个元素的列表。</li>
+</ul>
+</li>
+<li>
+<p><strong>计算哈希</strong>：
+序列化后的字节数组会通过<strong>Keccak-256</strong>哈希算法计算出一个32字节的哈希值。</p>
+</li>
+</ol>
+<p>这个哈希值就是该节点在数据库中的“身份证”。当一个父节点需要引用子节点时，它存储的不是子节点的完整内容，而是这个哈希值（也就是我们之前看到的<code>hashNode</code>）。</p>
+<h3 class="heading-element" id="262-commit-操作提交变更"><span>2.6.2 <code>Commit</code> 操作：提交变更</span>
+  <a href="#262-commit-%e6%93%8d%e4%bd%9c%e6%8f%90%e4%ba%a4%e5%8f%98%e6%9b%b4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><code>Commit</code> 函数是固化Trie所有变更的最终入口。其核心职责是计算出最终的默克尔根哈希，并准备好所有需要写入数据库的节点数据。</p>
+<p><code>Commit</code> 的执行流程可分解为以下几个关键步骤：</p>
+<ol>
+<li>
+<p><strong>处理空Trie</strong>：
+函数首先通过 <code>if t.root == nil</code> 检查Trie是否为空。空Trie有两种可能：它一直为空，或者其所有节点都恰好被删除了。代码会处理这两种情况，并返回以太坊中预定义的空根哈希 <code>types.EmptyRootHash</code>。</p>
+</li>
+<li>
+<p><strong>预计算根哈希</strong>：
+<code>rootHash := t.Hash()</code> 是一个关键的预处理步骤。该方法会自底向上地递归遍历所有“脏”节点（被修改过的节点），并计算出它们的哈希值。此步骤执行完毕后，内存中所有节点的哈希都已是最新状态，<code>rootHash</code> 变量此时已是最终的默克尔根。</p>
+</li>
+<li>
+<p><strong>检查空提交</strong>：
+<code>if hashedNode, dirty := t.root.cache(); !dirty</code> 是一项重要的优化。它检查根节点本身是否是脏的。如果根节点的状态未变，意味着整个Trie没有任何需要持久化的修改（例如，可能只进行了一些读操作）。在这种情况下，<code>Commit</code> 过程可以提前结束，避免不必要的工作。</p>
+</li>
+<li>
+<p><strong>创建 <code>NodeSet</code> 收集变更</strong>：
+若Trie确实发生了变更，代码会创建一个 <code>trienode.NewNodeSet</code> 对象。它的作用类似于一个“数据集”，用于收集所有被修改或删除的节点信息，为最终写入数据库做准备。</p>
+</li>
+<li>
+<p><strong>委托给 <code>committer</code> 执行</strong>：
+<code>Commit</code> 函数本身并不直接执行繁重的节点收集工作，而是将任务委托给一个临时的 <code>committer</code> 对象。<code>t.root = newCommitter(...).Commit(t.root, ...)</code> 这一行是整个过程的核心，它启动了实际的提交过程。这是一种将复杂逻辑模块化的清晰设计。</p>
+</li>
+<li>
+<p><strong><code>committer</code> 的工作</strong>：
+<code>committer</code> 会最后一次遍历Trie，收集所有脏节点的RLP编码数据，并将它们添加到 <code>NodeSet</code> 中。这个 <code>NodeSet</code> 就是最终要交给数据库层进行写入的完整产物。为了提高性能，当变更数量较多时（<code>t.uncommitted &gt; 100</code>），<code>committer</code> 甚至可以并行处理此过程。</p>
+</li>
+<li>
+<p><strong>收尾</strong>：
+当 <code>committer</code> 完成工作后，内存中的Trie状态被标记为“已提交”（<code>t.committed = true</code>），<code>uncommitted</code> 计数器被清零。函数最后返回计算出的根哈希和包含所有待写入数据的 <code>NodeSet</code>。</p>
+</li>
+</ol>
+<p>当整个过程递归回到根节点并完成哈希计算后，我们就得到了最终的<strong>Merkle Root</strong>。这个根哈希是对整个Trie当前所有键值对的一个简短、安全、可验证的加密承诺。任何对Trie内容的微小改动，都会导致根哈希发生巨大变化。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-go"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">Trie</span><span class="p">)</span><span class="w"> </span><span class="nf">Commit</span><span class="p">(</span><span class="nx">collectLeaf</span><span class="w"> </span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="nx">trienode</span><span class="p">.</span><span class="nx">NodeSet</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">defer</span><span class="w"> </span><span class="kd">func</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">t</span><span class="p">.</span><span class="nx">committed</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Trie is empty and can be classified into two types of situations:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// (a) The trie was empty and no update happens =&gt; return nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// (b) The trie was non-empty and all nodes are dropped =&gt; return</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">//     the node set includes all deleted nodes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">paths</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">deletedNodes</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">paths</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">types</span><span class="p">.</span><span class="nx">EmptyRootHash</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="c1">// case (a)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">nodes</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">trienode</span><span class="p">.</span><span class="nf">NewNodeSet</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">owner</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">paths</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nx">nodes</span><span class="p">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="nx">trienode</span><span class="p">.</span><span class="nf">NewDeletedWithPrev</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">prevalueTracer</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">path</span><span class="p">)))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">types</span><span class="p">.</span><span class="nx">EmptyRootHash</span><span class="p">,</span><span class="w"> </span><span class="nx">nodes</span><span class="w"> </span><span class="c1">// case (b)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Derive the hash for all dirty nodes first. We hold the assumption</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// in the following procedure that all nodes are hashed.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">rootHash</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">Hash</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// Do a quick check if we really need to commit. This can happen e.g.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// if we load a trie for reading storage values, but don&#39;t write to it.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">hashedNode</span><span class="p">,</span><span class="w"> </span><span class="nx">dirty</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">root</span><span class="p">.</span><span class="nf">cache</span><span class="p">();</span><span class="w"> </span><span class="p">!</span><span class="nx">dirty</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// Replace the root node with the origin hash in order to</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="c1">// ensure all resolved nodes are dropped after the commit.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">t</span><span class="p">.</span><span class="nx">root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">hashedNode</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">rootHash</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">nodes</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">trienode</span><span class="p">.</span><span class="nf">NewNodeSet</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">owner</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nf">deletedNodes</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nx">nodes</span><span class="p">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="nx">trienode</span><span class="p">.</span><span class="nf">NewDeletedWithPrev</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">prevalueTracer</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">path</span><span class="p">)))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// If the number of changes is below 100, we let one thread handle it</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">t</span><span class="p">.</span><span class="nx">root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">newCommitter</span><span class="p">(</span><span class="nx">nodes</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">prevalueTracer</span><span class="p">,</span><span class="w"> </span><span class="nx">collectLeaf</span><span class="p">).</span><span class="nf">Commit</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">uncommitted</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nx">t</span><span class="p">.</span><span class="nx">uncommitted</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">rootHash</span><span class="p">,</span><span class="w"> </span><span class="nx">nodes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-17 00:00:00">更新于 2025-09-17&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-ETHMPT/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-ethmpt/" data-title="以太坊之详解默克尔压缩前缀树" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-ethmpt/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-ethmpt/" data-title="以太坊之详解默克尔压缩前缀树"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-ethpool/" class="post-nav-item" rel="prev" title="以太坊详解之交易池"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>以太坊详解之交易池</a><a href="/posts/202509-ethpos/" class="post-nav-item" rel="next" title="以太坊 PoS 共识机制与 Engine API 源码阅读">以太坊 PoS 共识机制与 Engine API 源码阅读<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#11-前缀树trie">1.1 前缀树（Trie）</a></li>
+    <li><a href="#12-压缩前缀树patricia-trie--radix-trie">1.2 压缩前缀树（Patricia Trie / Radix Trie）</a>
+      <ul>
+        <li><a href="#为什么-patricia-trie-仍不够">为什么 Patricia Trie 仍不够？</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-默克尔树merkle-tree">1.3 默克尔树（Merkle Tree）</a></li>
+    <li><a href="#14-以太坊的改进merkle-patricia-triempt">1.4 以太坊的改进：Merkle Patricia Trie（MPT）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-核心数据结构">2.1 核心数据结构</a>
+      <ul>
+        <li><a href="#211-核心数据结构">2.1.1 核心数据结构</a></li>
+        <li><a href="#212-十六进制前缀编码hex-prefix-encoding">2.1.2 十六进制前缀编码（Hex-Prefix Encoding）</a></li>
+      </ul>
+    </li>
+    <li><a href="#22-trie-结构">2.2 Trie 结构</a></li>
+    <li><a href="#23-核心操作一get">2.3 核心操作一：Get</a></li>
+    <li><a href="#24-核心操作二insert-插入更新">2.4 核心操作二：Insert (插入/更新)</a>
+      <ul>
+        <li><a href="#详解一个插入示例">详解：一个插入示例</a>
+          <ul>
+            <li><a href="#总结变化前后对比"><strong>总结：变化前后对比</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#25-核心操作三delete-删除">2.5 核心操作三：Delete (删除)</a></li>
+    <li><a href="#26-哈希与持久化从内存到数据库">2.6 哈希与持久化：从内存到数据库</a>
+      <ul>
+        <li><a href="#261-节点的哈希">2.6.1 节点的哈希</a></li>
+        <li><a href="#262-commit-操作提交变更">2.6.2 <code>Commit</code> 操作：提交变更</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/4f759afd828160c3d4552c84f9aa741e.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

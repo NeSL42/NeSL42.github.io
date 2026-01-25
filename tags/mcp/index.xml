@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MCP - 标签 - 敬渊&#39;s Blog</title>
+    <link>http://localhost:1313/tags/mcp/</link>
+    <description>敬渊&#39;s Blog</description>
+    <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 19 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/mcp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LLM MCP记录</title>
+      <link>http://localhost:1313/posts/202503-mcp/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/202503-mcp/</guid>
+      <category domain="http://localhost:1313/categories/technology/">Technology</category>
+      <description>&lt;p&gt;最近 MCP 很火啊，但是生态还不是很完善，等等看几个月之后的 MCP 是什么情况吧。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

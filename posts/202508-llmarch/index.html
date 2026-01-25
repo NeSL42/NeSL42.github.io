@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>大型LLM架构对比 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content=" 从DeepSeek-V3到Kimi K2：现代LLM架构设计一览 塞巴斯蒂安·拉斯卡博士 | 2025年7月19日
+"><meta name="keywords" content='tips'>
+  <meta itemprop="name" content="大型LLM架构对比">
+  <meta itemprop="description" content="从DeepSeek-V3到Kimi K2：现代LLM架构设计一览 塞巴斯蒂安·拉斯卡博士 | 2025年7月19日">
+  <meta itemprop="datePublished" content="2025-08-24T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-24T00:00:00+00:00">
+  <meta itemprop="wordCount" content="12570">
+  <meta itemprop="keywords" content="Tips"><meta property="og:url" content="http://localhost:1313/posts/202508-llmarch/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="大型LLM架构对比">
+  <meta property="og:description" content="从DeepSeek-V3到Kimi K2：现代LLM架构设计一览 塞巴斯蒂安·拉斯卡博士 | 2025年7月19日">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-24T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-24T00:00:00+00:00">
+    <meta property="article:tag" content="Tips">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="大型LLM架构对比">
+  <meta name="twitter:description" content="从DeepSeek-V3到Kimi K2：现代LLM架构设计一览 塞巴斯蒂安·拉斯卡博士 | 2025年7月19日">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202508-llmarch/" title="大型LLM架构对比 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202508-claude/" title="Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202508-tao/" title="Lex Fridman播客:陶哲轩：数学、物理学中最难的问题以及人工智能的未来" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "大型LLM架构对比",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202508-llmarch\/"
+    },"genre": "posts","keywords": "tips","wordcount":  12570 ,
+    "url": "http:\/\/localhost:1313\/posts\/202508-llmarch\/","datePublished": "2025-08-24T00:00:00+00:00","dateModified": "2025-08-24T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>大型LLM架构对比</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-24 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-24">2025-08-24</time></span>&nbsp;<span title="12570 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 12600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 26 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#从deepseek-v3到kimi-k2现代llm架构设计一览">从DeepSeek-V3到Kimi K2：现代LLM架构设计一览</a>
+      <ul>
+        <li><a href="#1-deepseek-v3r1">1. DeepSeek V3/R1</a>
+          <ul>
+            <li><a href="#11-多头潜在注意力mla">1.1 多头潜在注意力（MLA）</a></li>
+            <li><a href="#12-专家混合moe">1.2 专家混合（MoE）</a></li>
+            <li><a href="#13-deepseek-总结">1.3 DeepSeek 总结</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-olmo-2">2. OLMo 2</a>
+          <ul>
+            <li><a href="#21-归一化层放置">2.1 归一化层放置</a></li>
+            <li><a href="#22-qk-norm">2.2 QK-Norm</a></li>
+            <li><a href="#23-olmo-2-总结">2.3 OLMo 2 总结</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-gemma-3">3. Gemma 3</a>
+          <ul>
+            <li><a href="#31-滑动窗口注意力">3.1 滑动窗口注意力</a></li>
+            <li><a href="#32-gemma-3中的归一化层放置">3.2 Gemma 3中的归一化层放置</a></li>
+            <li><a href="#33-gemma-3-总结">3.3 Gemma 3 总结</a></li>
+            <li><a href="#34-额外gemma-3n">3.4 额外：Gemma 3n</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-mistral-small-31">4. Mistral Small 3.1</a></li>
+        <li><a href="#5-llama-4">5. Llama 4</a></li>
+        <li><a href="#6-qwen3">6. Qwen3</a>
+          <ul>
+            <li><a href="#61-qwen3-密集型">6.1 Qwen3 (密集型)</a></li>
+            <li><a href="#62-qwen3-moe">6.2 Qwen3 (MoE)</a></li>
+          </ul>
+        </li>
+        <li><a href="#7-smollm3">7. SmolLM3</a>
+          <ul>
+            <li><a href="#71-无位置嵌入-nope">7.1 无位置嵌入 (NoPE)</a></li>
+          </ul>
+        </li>
+        <li><a href="#8-kimi-2">8. Kimi 2</a></li>
+        <li><a href="#9-gpt-oss">9. GPT-OSS</a>
+          <ul>
+            <li><a href="#91-宽度与深度">9.1 宽度与深度</a></li>
+            <li><a href="#92-少数大型专家与众多小型专家">9.2 少数大型专家与众多小型专家</a></li>
+            <li><a href="#93-注意力偏差和注意力汇attention-sinks">9.3 注意力偏差和注意力汇（Attention Sinks）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element"><span></span>
+  <a href="#" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="从deepseek-v3到kimi-k2现代llm架构设计一览"><span>从DeepSeek-V3到Kimi K2：现代LLM架构设计一览</span>
+  <a href="#%e4%bb%8edeepseek-v3%e5%88%b0kimi-k2%e7%8e%b0%e4%bb%a3llm%e6%9e%b6%e6%9e%84%e8%ae%be%e8%ae%a1%e4%b8%80%e8%a7%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><strong>塞巴斯蒂安·拉斯卡博士</strong> | 2025年7月19日</p>
+<p>GPT架构首次开发至今已有七年。乍一看，若回溯到GPT-2（2019年）并展望DeepSeek-V3和Llama 4（2024-2025年），人们可能会惊讶于这些模型在结构上的相似性。</p>
+<p>当然，位置嵌入已经从绝对位置编码演变为旋转位置编码（RoPE），多头注意力（Multi-Head Attention, MHA）已在很大程度上被分组查询注意力（Grouped-Query Attention, GQA）取代，更高效的SwiGLU也替代了GELU等激活函数。但除了这些细微的改进，我们是否真的看到了开创性的变革，还是仅仅在修饰相同的架构基础？</p>
+<p>“比较LLM以确定哪些关键要素有助于其良好（或不佳）性能是出了名的挑战：数据集、训练技术和超参数差异很大，而且往往没有详细记录。”</p>
+<p>然而，我认为审查架构本身的结构变化，以了解LLM开发者在2025年都在忙些什么，仍然具有重要价值。（其中一部分如图1所示。）</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/4ae4aa85-3e22-486c-9bd9-27edc4acbf8b_3000x2093.jpeg' alt="图1：本文涵盖的架构子集。" height="2093" width="3000"></p>
+<p>因此，本文将不再讨论基准性能或训练算法，而是专注于定义当今旗舰开放模型的架构发展。</p>
+<p>（您可能还记得，<a href="https://magazine.sebastianraschka.com/p/understanding-multimodal-llms" target="_blank" rel="external nofollow noopener noreferrer">我曾写过关于多模态LLM的文章</a>；在本文中，我将重点关注近期模型的文本能力，将多模态能力的讨论留待下次。）</p>
+<h3 class="heading-element" id="1-deepseek-v3r1"><span>1. DeepSeek V3/R1</span>
+  <a href="#1-deepseek-v3r1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>正如您现在可能已经多次听到的那样，<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="external nofollow noopener noreferrer">DeepSeek R1</a> 在2025年1月发布时引起了巨大反响。DeepSeek R1是一个基于2024年12月推出的<a href="https://arxiv.org/abs/2412.19437" target="_blank" rel="external nofollow noopener noreferrer">DeepSeek V3架构</a>构建的推理模型。</p>
+<p>虽然我这里关注的是2025年发布的架构，但我认为纳入DeepSeek V3是合理的，因为它在DeepSeek R1于2025年推出后才获得广泛关注和采用。</p>
+<p>如果您对DeepSeek R1的具体训练感兴趣，您可能还会发现我今年早些时候的文章有所帮助：
+<a href="https://magazine.sebastianraschka.com/p/understanding-reasoning-llms" target="_blank" rel="external nofollow noopener noreferrer">理解推理LLM - Sebastian Raschka博士</a></p>
+<p>在本节中，我将重点介绍DeepSeek V3中引入的两个关键架构技术，它们提高了计算效率并使其与其他LLM区分开来：</p>
+<ul>
+<li>多头潜在注意力（Multi-head Latent Attention, MLA）</li>
+<li>专家混合（Mixture-of-Experts, MoE）</li>
+</ul>
+<h4 class="heading-element" id="11-多头潜在注意力mla"><span>1.1 多头潜在注意力（MLA）</span>
+  <a href="#11-%e5%a4%9a%e5%a4%b4%e6%bd%9c%e5%9c%a8%e6%b3%a8%e6%84%8f%e5%8a%9bmla" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在讨论多头潜在注意力（MLA）之前，让我们先简要回顾一下其动机。为此，我们从分组查询注意力（GQA）开始，它近年来已成为替代多头注意力（MHA）的新标准，具有更高的计算和参数效率。</p>
+<p>所以，这里是GQA的简要总结。与MHA中每个注意力头都有自己的键和值集合不同，为了减少内存使用，GQA将多个注意力头分组以共享相同的键和值投影。</p>
+<p>例如，如图2所示，如果有2个键值组和4个注意力头，那么头1和头2可能共享一组键和值，而头3和头4共享另一组。这减少了键和值计算的总次数，从而降低了内存使用并提高了效率（根据消融研究，对建模性能没有显著影响）。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/647caf83-cd3d-46f8-8bd0-0946bd896ea1_1023x474.png' alt="图2：MHA和GQA的比较。这里，组大小为2，其中一对键值在2个查询中共享。" height="474" width="1023"></p>
+<p>因此，GQA的核心思想是通过在多个查询头之间共享键和值头来减少它们的数量。这（1）降低了模型的参数计数，（2）减少了推理时键和值张量的内存带宽使用，因为需要存储和从KV缓存中检索的键和值更少。</p>
+<p>（如果您好奇GQA在代码中如何实现，请参阅我的<a href="https://github.com/rasbt/LLMs-from-scratch/blob/main/ch05/07_gpt_to_llama/converting-llama2-to-llama3.ipynb" target="_blank" rel="external nofollow noopener noreferrer">GPT-2到Llama 3转换指南</a>，其中有不带KV缓存的版本，以及带KV缓存的变体<a href="https://github.com/rasbt/LLMs-from-scratch/blob/main/pkg/llms_from_scratch/llama3.py" target="_blank" rel="external nofollow noopener noreferrer">此处</a>。）</p>
+<p>虽然GQA主要是为了提高MHA计算效率的权宜之计，但消融研究（例如<a href="https://arxiv.org/abs/2305.13245" target="_blank" rel="external nofollow noopener noreferrer">原始GQA论文</a>和<a href="https://arxiv.org/abs/2307.09288" target="_blank" rel="external nofollow noopener noreferrer">Llama 2论文</a>中的研究）表明，它在LLM建模性能方面与标准MHA相当。</p>
+<p>现在，多头潜在注意力（MLA）提供了一种不同的内存节省策略，它与KV缓存配合得特别好。与GQA共享键和值头不同，MLA在将键和值张量存储到KV缓存之前，将其压缩到低维空间。</p>
+<p>在推理时，这些压缩后的张量在使用前被重新投影回其原始大小，如图3所示。这增加了一次矩阵乘法，但减少了内存使用。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/eb9a75be-2848-4b99-af3d-4c48bdd0181a_1550x858.png' alt="图3：MLA（用于DeepSeek V3和R1)与常规MHA的比较。" height="858" width="1550"></p>
+<p>（顺便提一下，查询也会被压缩，但只在训练期间，而非推理期间。）</p>
+<p>另外，MLA并非DeepSeek V3中的新概念，其<a href="https://arxiv.org/abs/2405.04434" target="_blank" rel="external nofollow noopener noreferrer">DeepSeek-V2前身</a>也使用了（甚至引入了）它。此外，V2论文中包含了一些有趣的消融研究，这可能解释了DeepSeek团队选择MLA而非GQA的原因（见图4）。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/2b7e646a-16c1-4245-9a3f-55a41f3070c2_903x856.jpeg' alt="图4：DeepSeek-V2论文中的标注表格，https://arxiv.org/abs/2405.04434" height="856" width="903"></p>
+<p>如图4所示，GQA的性能似乎比MHA差，而MLA在建模性能方面优于MHA，这很可能是DeepSeek团队选择MLA而非GQA的原因。（如果能看到MLA和GQA之间“每token KV缓存”的节省比较也会很有趣！）</p>
+<p>在进入下一个架构组件之前，总结一下本节：MLA是一个巧妙的技巧，可以在减少KV缓存内存使用的同时，在建模性能方面甚至略优于MHA。</p>
+<h4 class="heading-element" id="12-专家混合moe"><span>1.2 专家混合（MoE）</span>
+  <a href="#12-%e4%b8%93%e5%ae%b6%e6%b7%b7%e5%90%88moe" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>DeepSeek中另一个值得强调的主要架构组件是其对专家混合（MoE）层的应用。虽然MoE并非DeepSeek发明，但它在今年卷土重来，我们稍后将介绍的许多架构也采用了它。</p>
+<p>您可能已经熟悉MoE，但快速回顾一下可能会有所帮助。</p>
+<p>MoE的核心思想是用多个专家层替换Transformer块中的每个前馈模块，其中每个专家层也是一个前馈模块。这意味着我们用多个前馈块替换了一个单一的前馈块，如图5所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/4efdd493-d8c8-4038-ad24-20d6db86eae8_1600x1009.jpeg' alt="图5：DeepSeek V3/R1中专家混合（MoE）模块（右）与带有标准前馈块的LLM（左)的示意图。" height="1009" width="1600"></p>
+<p>Transformer块内的前馈块（在图中显示为深灰色块）通常包含模型总参数的大量部分。（请注意，Transformer块，从而前馈块，在LLM中重复多次；在DeepSeek-V3中，重复了61次。）</p>
+<p>因此，用<strong>多个</strong>前馈块替换<strong>一个</strong>前馈块（如在MoE设置中）会大幅增加模型的总参数计数。然而，关键的技巧是我们不会为每个token使用（“激活”）所有专家。相反，一个路由器会为每个token只选择一小组专家。（由于时间关系，或者说文章篇幅限制，我将在以后更详细地介绍路由器。）</p>
+<p>因为每次只有少数专家处于活跃状态，所以MoE模块通常被称为<strong>稀疏</strong>的，与始终使用完整参数集的<strong>密集</strong>模块形成对比。然而，通过MoE增加的大量总参数增加了LLM的容量，这意味着它可以在训练期间吸收更多的知识。但是，稀疏性保持了推理效率，因为我们不会同时使用所有参数。</p>
+<p>例如，DeepSeek-V3每个MoE模块有256个专家，总共有6710亿个参数。但在推理时，每次只有9个专家处于活跃状态（1个共享专家加上8个由路由器选择的专家）。这意味着每个推理步骤只使用370亿个参数，而不是全部6710亿个。</p>
+<p>DeepSeek-V3的MoE设计的一个显著特点是使用了共享专家。这个专家总是为每个token活跃。这个想法并不新鲜，它在<a href="https://arxiv.org/abs/2401.06066" target="_blank" rel="external nofollow noopener noreferrer">DeepSeek 2024 MoE</a>和<a href="https://arxiv.org/abs/2201.05596" target="_blank" rel="external nofollow noopener noreferrer">2022 DeepSpeedMoE论文</a>中就已经引入了。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/3d93c441-a6d2-4257-bd80-2d3590c4001c_1039x569.jpeg' alt="图6：来自“DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models”，https://arxiv.org/abs/2401.06066的标注图。" height="569" width="1039"></p>
+<p><a href="https://arxiv.org/abs/2201.05596" target="_blank" rel="external nofollow noopener noreferrer">DeepSpeedMoE论文</a>中首次指出，拥有共享专家有助于提升整体建模性能，相比没有共享专家的情况。这可能是因为常见或重复的模式不必被多个独立专家学习，从而为它们留出更多的空间来学习更专业的模式。</p>
+<h4 class="heading-element" id="13-deepseek-总结"><span>1.3 DeepSeek 总结</span>
+  <a href="#13-deepseek-%e6%80%bb%e7%bb%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>总而言之，DeepSeek-V3是一个拥有6710亿参数的庞大模型，发布时其性能超越了其他开源模型，包括4050亿参数的Llama 3。尽管参数量更大，但由于其专家混合（MoE）架构，它在推理时效率更高，每个token仅激活一小部分（仅370亿）参数。</p>
+<p>另一个关键的显著特征是DeepSeek-V3使用了多头潜在注意力（MLA）而不是分组查询注意力（GQA）。MLA和GQA都是标准多头注意力（MHA）的推理高效替代方案，尤其是在使用KV缓存时。虽然MLA实现起来更复杂，但DeepSeek-V2论文中的一项研究表明，它比GQA提供了更好的建模性能。</p>
+<hr>
+<h3 class="heading-element" id="2-olmo-2"><span>2. OLMo 2</span>
+  <a href="#2-olmo-2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>非营利组织艾伦人工智能研究所的OLMo系列模型因其训练数据和代码的透明度以及相对详细的技术报告而引人注目。</p>
+<p>虽然您可能不会在任何基准测试或排行榜上找到OLMo模型名列前茅，但它们非常简洁，更重要的是，由于其透明度，它们是开发LLM的绝佳蓝图。</p>
+<p>而且，虽然OLMo模型因其透明度而受欢迎，但它们也并非一无是处。事实上，在1月份发布时（在Llama 4、Gemma 3和Qwen 3之前），<a href="https://arxiv.org/abs/2501.00656" target="_blank" rel="external nofollow noopener noreferrer">OLMo 2</a>模型位于计算性能的帕累托前沿，如图7所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/bb5c7281-eded-4319-9ae2-7b07478a86b2_1027x823.jpeg' alt="图7：不同LLM的建模基准性能（越高越好）与预训练成本（FLOPs；越低越好)。这是OLMo 2论文中的标注图，https://arxiv.org/abs/2501.00656" height="823" width="1027"></p>
+<p>正如本文前面提到的，我旨在只关注LLM架构细节（而非训练或数据），以保持文章长度适中。那么，OLMo2中有什么有趣的架构设计选择呢？它主要归结为<strong>归一化</strong>：RMSNorm层的放置以及QK-norm的添加，我将在下面讨论。</p>
+<p>另外值得一提的是，OLMo 2仍然使用传统的多头注意力（MHA），而不是MLA或GQA。</p>
+<h4 class="heading-element" id="21-归一化层放置"><span>2.1 归一化层放置</span>
+  <a href="#21-%e5%bd%92%e4%b8%80%e5%8c%96%e5%b1%82%e6%94%be%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>总体而言，OLMo 2在很大程度上遵循了原始GPT模型的架构，类似于其他当代LLM。然而，也有一些值得注意的偏差。让我们从归一化层开始。</p>
+<p>与Llama、Gemma以及大多数其他LLM类似，OLMo 2从LayerNorm切换到了RMSNorm。</p>
+<p>但由于RMSNorm已是老生常谈（它基本上是LayerNorm的简化版本，可训练参数更少），我将略过RMSNorm与LayerNorm的讨论。（好奇的读者可以在我的<a href="https://github.com/rasbt/LLMs-from-scratch/blob/main/ch05/07_gpt_to_llama/converting-gpt-to-llama2.ipynb" target="_blank" rel="external nofollow noopener noreferrer">GPT-2到Llama转换指南</a>中找到RMSNorm的代码实现。）</p>
+<p>然而，值得讨论的是RMSNorm层的放置。原始Transformer（来自“ <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="external nofollow noopener noreferrer">Attention is all you need</a> ”论文）将Transformer块中的两个归一化层分别放置在注意力模块和前馈模块之<strong>后</strong>。</p>
+<p>这也被称为Post-LN或Post-Norm。</p>
+<p>GPT和大多数其他LLM将归一化层放置在注意力和前馈模块<strong>之前</strong>，这被称为Pre-LN或Pre-Norm。Post-Norm和Pre-Norm的比较如下图所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/61a4560f-d97f-4c78-a7a3-765babb45bec_1444x789.png' alt="图8：Post-Norm、Pre-Norm和OLMo 2的Post-Norm变体比较。" height="789" width="1444"></p>
+<p>在<a href="https://arxiv.org/abs/2002.04745" target="_blank" rel="external nofollow noopener noreferrer">2020年，Xiong等人</a>表明Pre-LN在初始化时能够产生更良好的梯度。此外，研究人员提到Pre-LN即使在没有仔细学习率预热的情况下也能很好地工作，而学习率预热对Post-LN来说是至关重要的工具。</p>
+<p>现在，我之所以提到这一点，是因为OLMo 2采用了Post-LN的一种形式（但使用RMSNorm而不是LayerNorm，所以我称之为<strong>Post-Norm</strong>）。</p>
+<p>在OLMo 2中，归一化层不是放置在注意力层和前馈层之前，而是放置在之后，如图所示。然而，请注意，与原始的Transformer架构不同，归一化层仍然在残差连接（跳跃连接）内部。</p>
+<p>那么，他们为什么要改变归一化层的位置呢？<strong>原因是它有助于训练稳定性，如下图所示。</strong></p>
+<p><img loading="lazy" src='/posts/202508-llmarch/186190ec-2ae5-430d-b0d4-a63486e0f3fb_1289x407.jpeg' alt="图9：展示了Pre-Norm（如GPT-2、Llama 3和许多其他模型)与OLMo 2的Post-Norm变体训练稳定性的图表。这是OLMo 2论文中的标注图，https://arxiv.org/abs/2501.00656" height="407" width="1289"></p>
+<p>不幸的是，这张图显示了重排序与QK-Norm的结果，QK-Norm是一个独立的概念。因此，很难判断归一化层重排序本身的贡献有多大。</p>
+<h4 class="heading-element" id="22-qk-norm"><span>2.2 QK-Norm</span>
+  <a href="#22-qk-norm" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>既然前一节已经提到了QK-norm，而我们稍后将讨论的其他LLM，如Gemma 2和Gemma 3也使用QK-norm，那么让我们简要讨论一下它是什么。</p>
+<p>QK-Norm本质上是另一个RMSNorm层。它放置在多头注意力（MHA）模块内部，并在应用RoPE之前应用于查询（q）和键（k）。为了说明这一点，下面是我为<a href="https://github.com/rasbt/LLMs-from-scratch/tree/main/ch05/11_qwen3" target="_blank" rel="external nofollow noopener noreferrer">Qwen3从头实现</a>编写的分组查询注意力（GQA）层的摘录（GQA中的QK-norm应用类似于OLMo中的MHA）：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GroupedQueryAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="p">,</span> <span class="n">d_in</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">num_kv_groups</span><span class="p">,</span> <span class="n">head_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span>
+</span></span><span class="line"><span class="cl">    <span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">qk_norm</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="o">=</span> <span class="n">RMSNorm</span><span class="p">(</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="o">=</span> <span class="n">RMSNorm</span><span class="p">(</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">b</span><span class="p">,</span> <span class="n">num_tokens</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Apply projections</span>
+</span></span><span class="line"><span class="cl">        <span class="n">queries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_query</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_key</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Optional normalization</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">queries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Apply RoPE</span>
+</span></span><span class="line"><span class="cl">        <span class="n">queries</span> <span class="o">=</span> <span class="n">apply_rope</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">keys</span> <span class="o">=</span> <span class="n">apply_rope</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Expand K and V to match number of heads</span>
+</span></span><span class="line"><span class="cl">        <span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_size</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_size</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Attention</span>
+</span></span><span class="line"><span class="cl">        <span class="n">attn_scores</span> <span class="o">=</span> <span class="n">queries</span> <span class="o">@</span> <span class="n">keys</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># ...</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>如前所述，QK-Norm与Post-Norm一起稳定了训练。值得注意的是，QK-Norm并非OLMo 2发明，它起源于<a href="https://arxiv.org/abs/2302.05442" target="_blank" rel="external nofollow noopener noreferrer">2023年Scaling Vision Transformers论文</a>。</p>
+<h4 class="heading-element" id="23-olmo-2-总结"><span>2.3 OLMo 2 总结</span>
+  <a href="#23-olmo-2-%e6%80%bb%e7%bb%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>简而言之，OLMo 2值得注意的架构设计决策主要在于RMSNorm的放置：RMSNorm放置在注意力模块和前馈模块之<strong>后</strong>而不是之前（一种Post-Norm变体），以及在注意力机制内部为查询和键添加RMSNorm（QK-Norm），这两者共同帮助稳定了训练损失。</p>
+<p>下图进一步并排比较了OLMo 2和Llama 3；可以看出，除了OLMo 2仍然使用传统的MHA而不是GQA之外，这两种架构在其他方面相对相似。（然而，<a href="https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct" target="_blank" rel="external nofollow noopener noreferrer">OLMo 2团队在3个月后发布了一个使用GQA的32B变体</a>）。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/7fa42974-cfae-45cc-9cd9-fc1d9607d386_1329x737.png' alt="图10：Llama 3和OLMo 2之间的架构比较。" height="737" width="1329"></p>
+<hr>
+<h3 class="heading-element" id="3-gemma-3"><span>3. Gemma 3</span>
+  <a href="#3-gemma-3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Google的Gemma模型一直表现出色，我认为与其他热门模型（如Llama系列）相比，它们有点被低估了。</p>
+<p>Gemma的一个显著特点是其较大的词汇量（以便更好地支持多种语言），以及更侧重于27B大小（而不是8B或70B）。但请注意，Gemma 2也有较小尺寸：1B、4B和12B。</p>
+<p>27B大小达到了一个非常好的平衡点：它比8B模型更强大，但又不像70B模型那样资源密集，而且在我的Mac Mini上本地运行良好。</p>
+<p>那么，<a href="https://arxiv.org/abs/2503.19786" target="_blank" rel="external nofollow noopener noreferrer">Gemma 3</a>还有哪些有趣之处呢？如前所述，Deepseek-V3/R1等其他模型采用专家混合（MoE）架构，以在给定模型大小下减少推理时的内存需求。（MoE方法也被我们稍后将讨论的几个其他模型使用。）</p>
+<p>Gemma 3采用了一种不同的“技巧”来降低计算成本，即滑动窗口注意力。</p>
+<h4 class="heading-element" id="31-滑动窗口注意力"><span>3.1 滑动窗口注意力</span>
+  <a href="#31-%e6%bb%91%e5%8a%a8%e7%aa%97%e5%8f%a3%e6%b3%a8%e6%84%8f%e5%8a%9b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>通过滑动窗口注意力（最初在<a href="https://arxiv.org/abs/2004.05150" target="_blank" rel="external nofollow noopener noreferrer">2020年的LongFormer论文</a>中引入，并且<a href="http://arxiv.org/abs/2408.00118" target="_blank" rel="external nofollow noopener noreferrer">Gemma 2</a>也已使用），Gemma 3团队成功地大幅减少了KV缓存中的内存需求，如下图所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/b5363ce6-0ec8-49e6-b296-9836c248e159_665x302.jpeg' alt="图11：来自Gemma 3论文（https://arxiv.org/abs/2503.19786)的标注图，展示了通过滑动窗口注意力节省的KV缓存内存。" height="302" width="665"></p>
+<p>那么，什么是滑动窗口注意力？如果我们将常规自注意力视为一种<strong>全局</strong>注意力机制，因为每个序列元素都可以访问所有其他序列元素，那么我们就可以将滑动窗口注意力视为<strong>局部</strong>注意力，因为我们在这里限制了当前查询位置周围的上下文大小。这在下图中有所说明。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/f32c2d74-ec34-43ef-86bc-bcce832426b3_1600x792.jpeg' alt="图12：常规注意力（左）与滑动窗口注意力（右)的比较。" height="792" width="1600"></p>
+<p>请注意，滑动窗口注意力可以与多头注意力和分组查询注意力一起使用；Gemma 3使用分组查询注意力。</p>
+<p>如上所述，滑动窗口注意力也被称为<strong>局部</strong>注意力，因为局部窗口围绕并随着当前查询位置移动。相比之下，常规注意力是<strong>全局</strong>的，因为每个token都可以访问所有token。</p>
+<p>现在，如上简要提及，Gemma 2的前身架构也曾使用过滑动窗口注意力。Gemma 3的不同之处在于它们调整了全局（常规）注意力与局部（滑动）注意力之间的比例。</p>
+<p>例如，Gemma 2使用混合注意力机制，以1:1的比例结合了滑动窗口（局部）和全局注意力。每个token可以关注周围的4k tokens窗口。</p>
+<p>Gemma 2每隔一层使用滑动窗口注意力，而Gemma 3现在采用5:1的比例，这意味着每5个滑动窗口（局部）注意力层只有1个完整的注意力层；此外，滑动窗口大小从4096（Gemma 2）缩小到仅1024（Gemma 3）。这使得模型更专注于高效的局部计算。</p>
+<p>根据他们的消融研究，滑动窗口注意力对建模性能的影响很小，如下图所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/788a5023-1ba3-4372-89cd-4ebeff132255_1600x477.png' alt="图13：来自Gemma 3论文（https://arxiv.org/abs/2503.19786)的标注图，显示滑动窗口注意力对LLM生成的输出困惑度影响甚微。" height="477" width="1600"></p>
+<p>虽然滑动窗口注意力是Gemma 3最显著的架构特征，但我还想简要回顾一下归一化层的放置，作为前面OLMo 2部分的后续。</p>
+<h4 class="heading-element" id="32-gemma-3中的归一化层放置"><span>3.2 Gemma 3中的归一化层放置</span>
+  <a href="#32-gemma-3%e4%b8%ad%e7%9a%84%e5%bd%92%e4%b8%80%e5%8c%96%e5%b1%82%e6%94%be%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>一个小的但有趣的细节是，Gemma 3在其分组查询注意力模块周围同时使用了Pre-Norm和Post-Norm设置的RMSNorm。</p>
+<p>这与Gemma 2相似但仍值得强调，因为它不同于（1）原始Transformer（“Attention is all you need”）中使用的Post-Norm，（2）GPT-2普及并在之后许多其他架构中使用的Pre-Norm，以及（3）我们之前看到的OLMo 2中的Post-Norm风格。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/752ec4b7-2720-44f8-958b-0ca85b3a96f1_1068x855.png' alt="图14：OLMo2和Gemma 3之间的架构比较；请注意Gemma 3中额外的归一化层。" height="855" width="1068"></p>
+<p>我认为这种归一化层放置是一种相对直观的方法，因为它兼顾了Pre-Norm和Post-Norm的优点。在我看来，额外的归一化总归是好的。在最坏的情况下，如果额外的归一化是多余的，这会通过冗余增加一些效率低下。不过，在实践中，由于RMSNorm在大局中相对廉价，这应该不会产生任何明显影响。</p>
+<h4 class="heading-element" id="33-gemma-3-总结"><span>3.3 Gemma 3 总结</span>
+  <a href="#33-gemma-3-%e6%80%bb%e7%bb%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Gemma 3是一个表现出色的开源LLM，在我看来，它在开源社区中有点被低估了。最有趣的部分是使用滑动窗口注意力来提高效率（未来将其与MoE结合会很有趣）。</p>
+<p>此外，Gemma 3的归一化层放置方式也很独特，将RMSNorm层放置在注意力和前馈模块之前和之后。</p>
+<h4 class="heading-element" id="34-额外gemma-3n"><span>3.4 额外：Gemma 3n</span>
+  <a href="#34-%e9%a2%9d%e5%a4%96gemma-3n" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Gemma 3发布几个月后，Google发布了<a href="https://developers.googleblog.com/en/introducing-gemma-3n/" target="_blank" rel="external nofollow noopener noreferrer">Gemma 3n</a>，这是一个为小型设备效率而优化的Gemma 3模型，目标是在手机上运行。</p>
+<p>Gemma 3n为了实现更高效率的改变之一是所谓的“逐层嵌入（Per-Layer Embedding, PLE）参数层”。其核心思想是只在GPU内存中保留模型参数的一个子集。然后，文本、音频和视觉模态等token层特定的嵌入会按需从CPU或SSD流式传输。</p>
+<p>下图说明了PLE内存节省，列出了标准Gemma 3模型的54.4亿参数。这很可能指的是Gemma 3的40亿参数变体。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/b05999d6-88ca-4739-8b0b-266b48da288b_662x483.png' alt="图15：来自Google Gemma 3n博客（https://developers.googleblog.com/en/introducing-gemma-3n/)的标注图，说明了PLE内存节省。" height="483" width="662"></p>
+<p>54.4亿和40亿参数的差异是因为Google在报告LLM参数数量时有一种有趣的方式。他们经常排除嵌入参数以使模型看起来更小，除非在这种情况下，为了让模型看起来更大而包含它们是很方便的。这并非Google独有，这种方法已成为该领域的常见做法。</p>
+<p>另一个有趣的技巧是<a href="https://arxiv.org/abs/2310.07707" target="_blank" rel="external nofollow noopener noreferrer">MatFormer</a>概念（Matryoshka Transformer的缩写）。例如，Gemma 3n使用一个共享的LLM（Transformer）架构，可以被切分成更小、可独立使用的模型。每个切片都被训练成可以独立运行，所以在推理时，我们只需要运行所需的部分（而不是整个大模型）。</p>
+<h3 class="heading-element" id="4-mistral-small-31"><span>4. Mistral Small 3.1</span>
+  <a href="#4-mistral-small-31" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://mistral.ai/news/mistral-small-3-1" target="_blank" rel="external nofollow noopener noreferrer">Mistral Small 3.1 24B</a>于3月发布，紧随Gemma 3之后，值得注意的是，它在多个基准测试（数学除外）中超越了Gemma 3 27B，同时速度更快。</p>
+<p>Mistral Small 3.1 推理延迟低于 Gemma 3 的原因可能在于其定制的tokenizer，以及KV缓存和层数的缩减。否则，它是一个标准架构，如下图所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/a861f68d-c50c-471c-bae1-2308c135bb54_1460x793.png' alt="图16：Gemma 3 27B和Mistral 3.1 Small 24B的架构比较。" height="793" width="1460"></p>
+<p>有趣的是，早期的Mistral模型采用了滑动窗口注意力，但似乎在Mistral Small 3.1 中放弃了它。因此，由于Mistral使用常规的分组查询注意力而不是Gemma 3 中带滑动窗口的分组查询注意力，也许通过使用更多优化的代码（例如 FlashAttention）可以进一步节省推理计算。例如，我推测滑动窗口注意力虽然减少了内存使用，但不一定减少推理延迟，而这正是Mistral Small 3.1 所关注的。</p>
+<hr>
+<h3 class="heading-element" id="5-llama-4"><span>5. Llama 4</span>
+  <a href="#5-llama-4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>本文前面关于专家混合（MoE）的广泛介绍再次派上用场。<a href="https://ai.meta.com/blog/llama-4-multimodal-intelligence/" target="_blank" rel="external nofollow noopener noreferrer">Llama 4</a>也采用了MoE方法，并且遵循一个相对标准的架构，与DeepSeek-V3非常相似，如下图所示。（Llama 4包含原生多模态支持，类似于Gemma和Mistral等模型。然而，由于本文侧重于语言建模，我们只关注文本模型。）</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/17518ff9-1f60-4aca-b654-034dabe20626_1600x823.jpeg' alt="图17：DeepSeek V3 (6710亿参数) 和 Llama 4 Maverick (4000亿参数) 的架构比较。" height="823" width="1600"></p>
+<p>虽然Llama 4 Maverick架构整体上与DeepSeek-V3非常相似，但仍有一些值得强调的有趣区别。</p>
+<p>首先，Llama 4像其前辈一样使用了分组查询注意力，而DeepSeek-V3使用了我们在本文开头讨论的多头潜在注意力。DeepSeek-V3和Llama 4 Maverick都是非常大的架构，DeepSeek-V3的总参数量大约比Llama 4 Maverick大68%。然而，DeepSeek-V3拥有370亿活跃参数，是Llama 4 Maverick（170亿）活跃参数的两倍多。</p>
+<p>Llama 4 Maverick 使用了更经典的 MoE 设置，专家数量更少但规模更大（2 个活跃专家，每个隐藏层大小为 8,192），而 DeepSeek-V3 则使用 9 个活跃专家，每个隐藏层大小为 2,048。此外，DeepSeek 在每个 Transformer 块中都使用 MoE 层（除了前 3 个），而 Llama 4 则在每隔一个 Transformer 块中交替使用 MoE 和密集模块。</p>
+<p>鉴于架构之间存在许多细微差异，很难确定它们对最终模型性能的确切影响。然而，主要的收获是MoE架构在2025年获得了显著的普及。</p>
+<hr>
+<h3 class="heading-element" id="6-qwen3"><span>6. Qwen3</span>
+  <a href="#6-qwen3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Qwen 团队始终如一地提供高质量的开源 LLM。我曾共同指导 NeurIPS 2023 上的 LLM 效率挑战赛，记得所有获奖的顶级解决方案都基于 Qwen2。</p>
+<p>现在，Qwen3是另一个热门模型系列，在其规模类别中位居排行榜前列。它有7个密集模型：0.6B、1.7B、4B、8B、14B和32B。还有2个MoE模型：30B-A3B和235B-A22B。</p>
+<p>（顺便说一下，“Qwen3”中缺失的空格并非笔误；我只是尽量保留Qwen开发者选择的原始拼写。）</p>
+<h4 class="heading-element" id="61-qwen3-密集型"><span>6.1 Qwen3 (密集型)</span>
+  <a href="#61-qwen3-%e5%af%86%e9%9b%86%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>我们先讨论密集型模型架构。截至本文撰写之时，0.6B模型可能是目前最小的下一代开源模型。根据我的个人经验，考虑到其小巧的尺寸，它表现得非常好。如果您打算在本地运行它，它具有出色的每秒token吞吐量和较低的内存占用。更重要的是，由于其小巧的尺寸，它也易于在本地训练（用于教育目的）。</p>
+<p>因此，Qwen3 0.6B在大多数情况下已经取代了我的Llama 3 1B。这两种架构的比较如下图所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/5185aaf2-0130-42c3-8705-2b58c17e6c66_1331x807.png' alt="图18：Qwen3 0.6B与Llama 3 1B的架构比较；请注意Qwen3是层数更多的深层架构，而Llama 3是注意力头数更多的宽层架构。" height="807" width="1331"></p>
+<p>如果您对没有人为LLM库依赖的人类可读的Qwen3实现感兴趣，我最近<a href="https://github.com/rasbt/LLMs-from-scratch/tree/main/ch05/11_qwen3" target="_blank" rel="external nofollow noopener noreferrer">从零开始实现了Qwen3（纯PyTorch）</a>。</p>
+<p>上图中显示的计算性能数据基于我在A100 GPU上运行的从零开始的PyTorch实现。可以看出，Qwen3的内存占用更小，因为它整体架构更小，并且使用了更小的隐藏层和更少的注意力头。然而，它使用的Transformer块比Llama 3更多，这导致运行时更慢（每秒token生成速度更低）。</p>
+<h4 class="heading-element" id="62-qwen3-moe"><span>6.2 Qwen3 (MoE)</span>
+  <a href="#62-qwen3-moe" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>如前所述，Qwen3也有两种MoE变体：30B-A3B和235B-A22B。为什么一些架构，比如Qwen3，同时存在常规（密集）和MoE（稀疏）变体呢？</p>
+<p>正如本文开头所述，MoE变体有助于降低大型基础模型的推理成本。提供密集和MoE版本使用户可以根据自己的目标和约束条件灵活选择。</p>
+<p>密集模型通常更直接，易于微调、部署和在各种硬件上进行优化。</p>
+<p>另一方面，MoE模型则针对扩展推理进行了优化。例如，在固定推理预算下，它们可以实现更高的整体模型容量（即在训练期间由于规模更大而吸收的知识），而无需按比例增加推理成本。</p>
+<p>通过发布这两种类型，Qwen3系列可以支持更广泛的使用场景：密集模型适用于稳健性、简单性和微调，而MoE模型适用于大规模高效服务。</p>
+<p>为了结束本节，让我们来看看Qwen3 235B-A22B（请注意，A22B代表“220亿活跃参数”）与DeepSeek-V3的比较，后者活跃参数几乎是其两倍（370亿）。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/102089a8-f0b5-4c1d-aeda-752ccb015d4b_1467x750.png' alt="图19：DeepSeek-V3和Qwen3 235B-A22B之间的架构比较。" height="750" width="1467"></p>
+<p>如上图所示，DeepSeek-V3和Qwen3 235B-A22B的架构惊人地相似。然而，值得注意的是，Qwen3模型不再使用共享专家（早期Qwen模型，如<a href="https://qwenlm.github.io/blog/qwen2.5-max/" target="_blank" rel="external nofollow noopener noreferrer">Qwen2.5-MoE</a>确实使用了共享专家）。</p>
+<p>不幸的是，Qwen3团队没有透露他们放弃共享专家的任何原因。如果我不得不猜测，也许在他们将专家数量从2个（在Qwen2.5-MoE中）增加到8个（在Qwen3中）时，这对于他们的设置来说并不是训练稳定性的必要条件。然后他们能够通过只使用8个而不是8+1个专家来节省额外的计算/内存成本。（然而，这并不能解释为什么DeepSeek-V3仍然保留了共享专家。）</p>
+<p><strong>更新。</strong> <a href="https://x.com/JustinLin610/status/1947364862184853626" target="_blank" rel="external nofollow noopener noreferrer">Junyang Lin</a>，Qwen3的开发者之一，回应如下：</p>
+<blockquote>
+<p>当时我们没有发现共享专家有足够显著的改进，并且担心共享专家会影响推理优化。老实说，这个问题没有直接的答案。</p>
+</blockquote>
+<hr>
+<h3 class="heading-element" id="7-smollm3"><span>7. SmolLM3</span>
+  <a href="#7-smollm3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://huggingface.co/blog/smollm3" target="_blank" rel="external nofollow noopener noreferrer">SmolLM3</a>或许不像本文涵盖的其他LLM那么受欢迎，但我认为它仍然是一个有趣的模型，因为它在相对较小且方便的30亿参数模型大小下提供了非常好的建模性能，介于Qwen3的1.7B和4B模型之间，如下图所示。</p>
+<p>此外，它还分享了许多训练细节，类似于OLMo，这很少见且总是令人赞赏！</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/ebfdfd6e-6aee-4894-8a57-307a25bc2c0a_743x519.jpeg' alt="图20：SmolLM3发布公告（https://huggingface.co/blog/smollm3)中的标注图，比较了SmolLM3与Qwen3 1.7B和4B以及Llama 3 3B和Gemma 3 4B的胜率。" height="519" width="743"></p>
+<p>如下图所示的架构比较，SmolLM3架构看起来相当标准。然而，最有趣的方面可能是它使用了NoPE（无位置嵌入）。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/ed76de6d-bc7a-4e75-8fc5-9efa626d8d92_1431x777.png' alt="图21：Qwen3 4B和SmolLM3 3B的并排架构比较。" height="777" width="1431"></p>
+<h4 class="heading-element" id="71-无位置嵌入-nope"><span>7.1 无位置嵌入 (NoPE)</span>
+  <a href="#71-%e6%97%a0%e4%bd%8d%e7%bd%ae%e5%b5%8c%e5%85%a5-nope" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在LLM语境中，NoPE是一个较旧的理念，可以追溯到2023年的一篇论文（<a href="https://arxiv.org/abs/2305.19466" target="_blank" rel="external nofollow noopener noreferrer">位置编码对Transformer长度泛化的影响</a>），旨在移除显式的位置信息注入（例如通过早期GPT架构中的经典绝对位置嵌入层或现今的RoPE）。</p>
+<p>在基于Transformer的LLM中，位置编码通常是必要的，因为自注意力机制独立于顺序处理token。绝对位置嵌入通过添加一个额外的嵌入层来为token嵌入添加信息来解决这个问题。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/d79f412c-269f-4236-9cbe-81f1a5944ae1_1190x548.jpeg' alt="图22：修改自我的《从零开始构建大型语言模型》书籍（https://www.amazon.com/Build-Large-Language-Model-Scratch/dp/1633437167)的图示，说明了绝对位置嵌入。" height="548" width="1190"></p>
+<p>另一方面，RoPE通过旋转查询和键向量相对于其token位置来解决这个问题。</p>
+<p>然而，在NoPE层中，根本没有添加任何此类位置信号：不固定、不学习、不相对。什么都没有。</p>
+<p>即使没有位置嵌入，模型仍然知道哪些token在其前面，这要归功于因果注意力掩码。这个掩码阻止了每个token关注未来的token。因此，位置<strong>t</strong>上的token只能看到位置**≤t**上的token，这保留了自回归顺序。</p>
+<p>因此，虽然没有明确添加位置信息，但模型的结构中仍然隐含着方向感，并且LLM在常规的基于梯度下降的训练中，如果发现这对优化目标有利，就可以学习利用它。（更多信息请查阅NoPE论文中的定理。）</p>
+<p>所以，总的来说，<a href="https://arxiv.org/abs/2305.19466" target="_blank" rel="external nofollow noopener noreferrer">NoPE论文</a>不仅发现不需要位置信息注入，而且还发现NoPE具有更好的长度泛化能力，这意味着LLM在序列长度增加时回答性能下降得更少，如下图所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/d7a57872-2af0-465b-ab5f-2caecc0aac8f_1364x800.jpeg' alt="图23：来自NoPE论文（https://arxiv.org/abs/2305.19466)的标注图，显示NoPE具有更好的长度泛化能力。" height="800" width="1364"></p>
+<p>请注意，上述实验是使用大约1亿参数的相对较小的GPT风格模型和相对较小的上下文大小进行的。这些发现能多大程度上推广到更大、更现代的LLM尚不清楚。</p>
+<p>因此，SmolLM3团队可能只在每第四层“应用”了NoPE（或者更确切地说是省略了RoPE）。</p>
+<hr>
+<h3 class="heading-element" id="8-kimi-2"><span>8. Kimi 2</span>
+  <a href="#8-kimi-2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://moonshotai.github.io/Kimi-K2/" target="_blank" rel="external nofollow noopener noreferrer">Kimi 2</a> 最近在人工智能社区引起了巨大轰动，因为它是一个性能卓越的开源模型。根据基准测试，它的性能与Google的Gemini、Anthropic的Claude和OpenAI的ChatGPT等最优秀的专有模型不相上下。</p>
+<p>一个值得注意的方面是它使用了一种相对较新的<a href="https://github.com/KellerJordan/Muon" target="_blank" rel="external nofollow noopener noreferrer">Muon</a>优化器变体，而非AdamW。据我所知，这是Muon首次用于如此规模的生产模型（<a href="https://arxiv.org/abs/2502.16982" target="_blank" rel="external nofollow noopener noreferrer">此前</a>只展示了其扩展到16B的能力）。这带来了非常好的训练损失曲线，这可能有助于将该模型推向上述基准测试的榜首。</p>
+<p>虽然人们评论损失异常平滑（因为没有突增），但我认为并不能说它“异常”平滑（例如，参见下图中OLMo 2的损失曲线；此外，梯度的L2范数可能是一个更好的衡量训练稳定性的指标）。然而，真正值得注意的是损失曲线的衰减程度。</p>
+<p>然而，正如本文引言中提到的，训练方法是另一个值得讨论的话题。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/78d5d4e4-7dc4-49ab-87be-a885ba78447e_759x684.jpeg' alt="图24：来自Kimi K2发布博客文章（https://moonshotai.github.io/Kimi-K2/）和OLMo 2论文（https://arxiv.org/abs/2305.19466)的标注图。" height="684" width="759"></p>
+<p>该模型本身有1万亿参数，这确实令人印象深刻。</p>
+<p>截至本文撰写之时，它可能是这一代最大的LLM（考虑到Llama 4 Behemoth尚未发布、专有LLM不计算在内，以及Google的1.6万亿<a href="https://arxiv.org/abs/2101.03961" target="_blank" rel="external nofollow noopener noreferrer">Switch Transformer</a>是来自不同一代的编码器-解码器架构）。</p>
+<p>它也算是回到了原点，因为Kimi 2使用了我们本文开头介绍的DeepSeek-V3架构，只是他们将其做得更大了，如下图所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/b721c5ef-057b-405b-9293-f11e161d9230_1599x816.png' alt="图25：DeepSeek V3和Kimi K2的架构比较。" height="816" width="1599"></p>
+<p>如上图所示，Kimi 2基本上与DeepSeek V3相同，只是它在MoE模块中使用了更多的专家，并在多头潜在注意力（MLA）模块中使用了更少的头。</p>
+<p>Kimi 2并非横空出世。早期在<a href="https://arxiv.org/abs/2501.12599" target="_blank" rel="external nofollow noopener noreferrer">“Kimi k1.5: Scaling Reinforcement Learning with LLMs”</a>论文中讨论的Kimi 1.5模型也令人印象深刻。然而，它不幸的是，DeepSeek R1模型论文恰好在1月22日同一天发布。而且，据我所知，Kimi 1.5的权重从未公开分享过。</p>
+<p>因此，Kimi K2团队很可能吸取了这些教训，在DeepSeek R2发布之前，将Kimi K2作为开源模型发布。截至本文撰写之时，Kimi K2是最令人印象深刻的开源模型。</p>
+<hr>
+<h3 class="heading-element" id="9-gpt-oss"><span>9. GPT-OSS</span>
+  <a href="#9-gpt-oss" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在撰写本文大约一周后，OpenAI <a href="https://openai.com/index/introducing-gpt-oss/" target="_blank" rel="external nofollow noopener noreferrer">发布</a>了gpt-oss-120b和gpt-oss-20b，这是他们自2019年GPT-2以来的首批开源模型。由于OpenAI的开源模型备受期待，我更新了这篇文章以包含它们。本节将保持简短，但我已撰写了另一篇更详细的文章专门介绍gpt-oss模型：
+<a href="https://magazine.sebastianraschka.com/p/from-gpt-2-to-gpt-oss-analyzing-the" target="_blank" rel="external nofollow noopener noreferrer">从GPT-2到gpt-oss：分析架构进步 - Sebastian Raschka博士</a></p>
+<p>在总结有趣的细节之前，让我们先大致了解一下gpt-oss-20b和gpt-oss-120b这两个模型，如图26所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/2d438dde-c0f6-4e99-a0a8-b41e11366a27_1631x788.jpeg' alt="图26：两个gpt-oss模型的架构概览。" height="703" width="1456"></p>
+<p>从图26可以看出，该架构包含了我们之前讨论过的其他架构中所有熟悉的组件。例如，图27将较小的gpt-oss架构与Qwen3 30B-A3B并列，后者也是一个MoE模型，活跃参数数量相似（gpt-oss有3.6B活跃参数，Qwen3 30B-A3B有3.3B）。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/c79215d3-891e-431f-af20-8e2a3fa4be10_1552x799.png' alt="图27：gpt-oss和Qwen3的架构比较。" height="799" width="1552"></p>
+<p>图27中未显示的一个方面是，gpt-oss使用滑动窗口注意力（类似于Gemma 3，但在每隔一层使用，而不是采用5:1的比例）。</p>
+<h4 class="heading-element" id="91-宽度与深度"><span>9.1 宽度与深度</span>
+  <a href="#91-%e5%ae%bd%e5%ba%a6%e4%b8%8e%e6%b7%b1%e5%ba%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>图27显示gpt-oss和Qwen3使用了相似的组件。但如果我们仔细观察这两个模型，我们会发现Qwen3是一个深得多的架构，拥有48个Transformer块而不是24个。</p>
+<p>另一方面，gpt-oss是一个宽得多的架构：</p>
+<ul>
+<li>嵌入维度为2880而不是2048</li>
+<li>中间专家（前馈）投影维度也为2880而不是768</li>
+</ul>
+<p>值得注意的是，gpt-oss使用的注意力头是两倍，但这并没有直接增加模型的宽度。宽度由嵌入维度决定。</p>
+<p>在参数数量固定的情况下，哪种方法更有优势呢？根据经验法则，更深的模型具有更大的灵活性，但由于梯度爆炸和消失（RMSNorm和快捷连接旨在缓解这些问题）导致的稳定性问题，训练起来可能更困难。</p>
+<p>更宽的架构的优势在于推理速度更快（每秒 token 吞吐量更高），因为并行化程度更高，但内存成本也更高。</p>
+<p>在建模性能方面，不幸的是，我不知道有任何好的“同类比较”（其中参数大小和数据集保持不变），除了一项在<a href="https://arxiv.org/abs/2408.00118" target="_blank" rel="external nofollow noopener noreferrer">Gemma 2论文（表9）</a>中进行的消融研究，该研究发现对于9B参数架构，更宽的设置略优于更深的设置。在4个基准测试中，更宽的模型平均得分52.0，更深的模型平均得分50.8。</p>
+<h4 class="heading-element" id="92-少数大型专家与众多小型专家"><span>9.2 少数大型专家与众多小型专家</span>
+  <a href="#92-%e5%b0%91%e6%95%b0%e5%a4%a7%e5%9e%8b%e4%b8%93%e5%ae%b6%e4%b8%8e%e4%bc%97%e5%a4%9a%e5%b0%8f%e5%9e%8b%e4%b8%93%e5%ae%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>如上图27所示，gpt-oss的专家数量出人意料地少（32个而不是128个），并且每个token只使用4个而不是8个活跃专家。然而，每个专家都比Qwen3中的专家大得多。</p>
+<p>这很有趣，因为最近的趋势和发展表明，更多、更小的专家（在总参数大小不变的情况下）是有益的。这种改变在DeepSeekMoE论文的图28中得到了很好的说明。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/019ead67-6811-4c9d-af7b-4e6b2563ea68_1046x565.jpeg' alt="图28：来自“DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models”，https://arxiv.org/abs/2401.06066的标注图。" height="565" width="1046"></p>
+<p>值得注意的是，与DeepSeek的模型不同，gpt-oss和Qwen3都没有使用共享专家。</p>
+<h4 class="heading-element" id="93-注意力偏差和注意力汇attention-sinks"><span>9.3 注意力偏差和注意力汇（Attention Sinks）</span>
+  <a href="#93-%e6%b3%a8%e6%84%8f%e5%8a%9b%e5%81%8f%e5%b7%ae%e5%92%8c%e6%b3%a8%e6%84%8f%e5%8a%9b%e6%b1%87attention-sinks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>gpt-oss和Qwen3都使用分组查询注意力。主要区别在于gpt-oss通过滑动窗口注意力在每第二层限制上下文大小，如前所述。</p>
+<p>然而，有一个有趣的细节引起了我的注意。gpt-oss似乎使用了注意力权重中的偏差单元，如下图29所示。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/15ddb1b6-1540-4889-86c5-c54f5918562e_1221x352.jpeg' alt="图29：gpt-oss模型在注意力层使用偏差单元。代码示例见此。" height="352" width="1221"></p>
+<p>我自从GPT-2时代以来就没见过这些偏差单元被使用，它们通常被认为是多余的。事实上，我发现一篇最近的论文从数学上表明，这至少对于键变换（<code>k_proj</code>）是成立的。此外，实验结果表明，无论有无偏差单元，差异都很小（见图30）。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/2fa2e161-ba61-43ab-a17b-5e6eab448699_307x151.jpeg' alt="图30：来自https://arxiv.org/pdf/2302.08626的表格，显示模型从头开始训练时使用和不使用偏差单元的平均测试损失。" height="151" width="307"></p>
+<p>您可能还注意到的另一个细节是图30代码截图中的<code>sinks</code>定义。在通用模型中，注意力汇是放置在序列开头以稳定注意力的特殊“始终被关注”的token，这在长上下文场景中特别有用。即，如果上下文变得非常长，开头这个特殊的被关注token仍然会被关注，并且它可以学习存储一些关于整个序列的普遍有用的信息。（我认为它最初是在<a href="https://arxiv.org/abs/2309.17453" target="_blank" rel="external nofollow noopener noreferrer">“Attention Sinks：具有注意力汇的高效流式语言模型”</a>这篇论文中提出的。）</p>
+<p>在 gpt-oss 实现中，<strong>注意力汇</strong>并不是输入序列中实际的 token。相反，它们是学习到的每个头的偏差 logits，被附加到注意力分数中（图31）。目标与上述注意力汇相同，但无需修改 tokenized 输入。</p>
+<p><img loading="lazy" src='/posts/202508-llmarch/389b83da-f588-4e54-93ca-716d60d7f087_1064x754.jpeg' alt="图31：gpt-oss中注意力汇的使用；基于此处的Hugging Face代码。" height="754" width="1064"></p>
+<p>有关gpt-oss以及它与GPT-2的比较的更多信息，请参阅我的另一篇gpt-oss文章：
+<a href="https://magazine.sebastianraschka.com/p/from-gpt-2-to-gpt-oss-analyzing-the" target="_blank" rel="external nofollow noopener noreferrer">从GPT-2到gpt-oss：分析架构进步 - Sebastian Raschka博士</a></p>
+<p>这么多年过去了，LLM的发布依然令人兴奋，我很期待看到接下来会发生什么！</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-08-24 00:00:00">更新于 2025-08-24&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202508-LLMArch/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202508-llmarch/" data-title="大型LLM架构对比" data-hashtags="tips"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202508-llmarch/" data-hashtag="tips"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202508-llmarch/" data-title="大型LLM架构对比"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/tips/" class="post-tag" title="标签 - Tips">Tips</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202508-claude/" class="post-nav-item" rel="prev" title="Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析</a><a href="/posts/202508-tao/" class="post-nav-item" rel="next" title="Lex Fridman播客:陶哲轩：数学、物理学中最难的问题以及人工智能的未来">Lex Fridman播客:陶哲轩：数学、物理学中最难的问题以及人工智能的未来<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#从deepseek-v3到kimi-k2现代llm架构设计一览">从DeepSeek-V3到Kimi K2：现代LLM架构设计一览</a>
+      <ul>
+        <li><a href="#1-deepseek-v3r1">1. DeepSeek V3/R1</a>
+          <ul>
+            <li><a href="#11-多头潜在注意力mla">1.1 多头潜在注意力（MLA）</a></li>
+            <li><a href="#12-专家混合moe">1.2 专家混合（MoE）</a></li>
+            <li><a href="#13-deepseek-总结">1.3 DeepSeek 总结</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-olmo-2">2. OLMo 2</a>
+          <ul>
+            <li><a href="#21-归一化层放置">2.1 归一化层放置</a></li>
+            <li><a href="#22-qk-norm">2.2 QK-Norm</a></li>
+            <li><a href="#23-olmo-2-总结">2.3 OLMo 2 总结</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-gemma-3">3. Gemma 3</a>
+          <ul>
+            <li><a href="#31-滑动窗口注意力">3.1 滑动窗口注意力</a></li>
+            <li><a href="#32-gemma-3中的归一化层放置">3.2 Gemma 3中的归一化层放置</a></li>
+            <li><a href="#33-gemma-3-总结">3.3 Gemma 3 总结</a></li>
+            <li><a href="#34-额外gemma-3n">3.4 额外：Gemma 3n</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-mistral-small-31">4. Mistral Small 3.1</a></li>
+        <li><a href="#5-llama-4">5. Llama 4</a></li>
+        <li><a href="#6-qwen3">6. Qwen3</a>
+          <ul>
+            <li><a href="#61-qwen3-密集型">6.1 Qwen3 (密集型)</a></li>
+            <li><a href="#62-qwen3-moe">6.2 Qwen3 (MoE)</a></li>
+          </ul>
+        </li>
+        <li><a href="#7-smollm3">7. SmolLM3</a>
+          <ul>
+            <li><a href="#71-无位置嵌入-nope">7.1 无位置嵌入 (NoPE)</a></li>
+          </ul>
+        </li>
+        <li><a href="#8-kimi-2">8. Kimi 2</a></li>
+        <li><a href="#9-gpt-oss">9. GPT-OSS</a>
+          <ul>
+            <li><a href="#91-宽度与深度">9.1 宽度与深度</a></li>
+            <li><a href="#92-少数大型专家与众多小型专家">9.2 少数大型专家与众多小型专家</a></li>
+            <li><a href="#93-注意力偏差和注意力汇attention-sinks">9.3 注意力偏差和注意力汇（Attention Sinks）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/6034bbdc93cda2c4525bf4e2bf3b38a0.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

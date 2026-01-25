@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Function Calling 与 MCP 协议 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="以下是根据您提供的图片内容生成的 Markdown 格式文本：
+Function Calling 与 MCP 协议 | 深究 MCP 协议的设计 一、Function Calling 2.1 要解决的问题 传统聊天大模型只会说话,没有工具调用能力,这使得大模型:
+"><meta name="keywords" content='tips'>
+  <meta itemprop="name" content="Function Calling 与 MCP 协议">
+  <meta itemprop="description" content="以下是根据您提供的图片内容生成的 Markdown 格式文本：
+Function Calling 与 MCP 协议 | 深究 MCP 协议的设计 一、Function Calling 2.1 要解决的问题 传统聊天大模型只会说话,没有工具调用能力,这使得大模型:">
+  <meta itemprop="datePublished" content="2025-08-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-23T00:00:00+00:00">
+  <meta itemprop="wordCount" content="6119">
+  <meta itemprop="keywords" content="Tips"><meta property="og:url" content="http://localhost:1313/posts/202508-functincallmcp/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="Function Calling 与 MCP 协议">
+  <meta property="og:description" content="以下是根据您提供的图片内容生成的 Markdown 格式文本：
+Function Calling 与 MCP 协议 | 深究 MCP 协议的设计 一、Function Calling 2.1 要解决的问题 传统聊天大模型只会说话,没有工具调用能力,这使得大模型:">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-23T00:00:00+00:00">
+    <meta property="article:tag" content="Tips">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Function Calling 与 MCP 协议">
+  <meta name="twitter:description" content="以下是根据您提供的图片内容生成的 Markdown 格式文本：
+Function Calling 与 MCP 协议 | 深究 MCP 协议的设计 一、Function Calling 2.1 要解决的问题 传统聊天大模型只会说话,没有工具调用能力,这使得大模型:">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202508-functincallmcp/" title="Function Calling 与 MCP 协议 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202508-ringsign/" title="环签论文阅读《How to Leak a Secret》" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202508-claude/" title="Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Function Calling 与 MCP 协议",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202508-functincallmcp\/"
+    },"genre": "posts","keywords": "tips","wordcount":  6119 ,
+    "url": "http:\/\/localhost:1313\/posts\/202508-functincallmcp\/","datePublished": "2025-08-23T00:00:00+00:00","dateModified": "2025-08-23T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Function Calling 与 MCP 协议</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-23 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-23">2025-08-23</time></span>&nbsp;<span title="6119 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 6200 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 13 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#一function-calling">一、Function Calling</a>
+      <ul>
+        <li><a href="#21-要解决的问题">2.1 要解决的问题</a></li>
+        <li><a href="#22-如何解决问题">2.2 如何解决问题</a>
+          <ul>
+            <li><a href="#传统方案">传统方案</a></li>
+            <li><a href="#存在的问题">存在的问题</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#function-calling-方案">Function Calling 方案</a>
+      <ul>
+        <li><a href="#function-calling-是什么">Function Calling 是什么</a></li>
+      </ul>
+    </li>
+    <li><a href="#基于提示词的-function-calling">基于提示词的 Function Calling</a>
+      <ul>
+        <li><a href="#工作流程">工作流程</a>
+          <ul>
+            <li><a href="#system-prompt-示例">System Prompt 示例</a></li>
+            <li><a href="#用户提问示例">用户提问示例</a></li>
+            <li><a href="#模型回复示例">模型回复示例</a></li>
+            <li><a href="#存在的问题-1">存在的问题</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#基于-api-的-function-calling">基于 API 的 Function Calling</a>
+      <ul>
+        <li><a href="#工作流程-1">工作流程</a>
+          <ul>
+            <li><a href="#接口入参">接口入参</a></li>
+            <li><a href="#调用指令示例-openai-function-calling">调用指令示例 (OpenAI Function Calling)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#存在的问题-2">存在的问题</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#31-要解决的问题">3.1 要解决的问题</a></li>
+        <li><a href="#32-如何解决问题">3.2 如何解决问题</a>
+          <ul>
+            <li><a href="#从问题出发">从问题出发</a></li>
+            <li><a href="#从目标出发">从目标出发</a></li>
+            <li><a href="#--当前的非理想状态是什么">-&gt; 当前的非理想状态是什么?</a></li>
+            <li><a href="#--从非理想状态到理想状态必须满足什么条件">-&gt; 从非理想状态到理想状态必须满足什么条件?</a></li>
+            <li><a href="#从问题到技术需求">从问题到技术需求</a></li>
+          </ul>
+        </li>
+        <li><a href="#技术方案思路">技术方案思路</a></li>
+        <li><a href="#系统架构设计">系统架构设计</a></li>
+        <li><a href="#33-mcp-协议是什么">3.3 MCP 协议是什么</a></li>
+        <li><a href="#34-mcp-核心架构">3.4 MCP 核心架构</a></li>
+        <li><a href="#35-mcp-的传输协议">3.5 MCP 的传输协议</a>
+          <ul>
+            <li><a href="#stdio-传输">Stdio 传输</a></li>
+            <li><a href="#没有用管道">没有用管道：</a></li>
+            <li><a href="#用了管道-stido-传输">用了管道 (Stido 传输)</a></li>
+          </ul>
+        </li>
+        <li><a href="#http--sse-传输-旧方案202410">HTTP + SSE 传输 (旧方案,2024.10)</a>
+          <ul>
+            <li><a href="#why-notifications-matter">Why Notifications Matter</a></li>
+          </ul>
+        </li>
+        <li><a href="#streamable-http-传输-新方案202503">Streamable HTTP 传输 (新方案,2025.03)</a></li>
+        <li><a href="#必须选用以上传输协议吗">必须选用以上传输协议吗?</a></li>
+        <li><a href="#36-回顾技术方案最终是怎么实现的">3.6 回顾:技术方案最终是怎么实现的</a>
+          <ul>
+            <li><a href="#stdio-方式接入配置">Stdio 方式接入配置</a></li>
+            <li><a href="#sse-方式接入配置">SSE 方式接入配置</a></li>
+          </ul>
+        </li>
+        <li><a href="#37-mcp-工作流程">3.7 MCP 工作流程</a></li>
+        <li><a href="#38-whats-more">3.8 What&rsquo;s More?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>以下是根据您提供的图片内容生成的 Markdown 格式文本：</p>
+<h1 class="heading-element" id="function-calling-与-mcp-协议--深究-mcp-协议的设计"><span>Function Calling 与 MCP 协议 | 深究 MCP 协议的设计</span>
+  <a href="#function-calling-%e4%b8%8e-mcp-%e5%8d%8f%e8%ae%ae--%e6%b7%b1%e7%a9%b6-mcp-%e5%8d%8f%e8%ae%ae%e7%9a%84%e8%ae%be%e8%ae%a1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="一function-calling"><span>一、Function Calling</span>
+  <a href="#%e4%b8%80function-calling" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="21-要解决的问题"><span>2.1 要解决的问题</span>
+  <a href="#21-%e8%a6%81%e8%a7%a3%e5%86%b3%e7%9a%84%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>传统聊天大模型只会说话,没有工具调用能力,这使得大模型:</p>
+<ol>
+<li><strong>无法感知环境</strong>: 无法与外部数据源交互,如通过 API 查询网页、查看用户本地文件、访问远程数据库等等</li>
+<li><strong>无法改变环境</strong>: 无法帮用户实际执行任务,如跑代码、发邮件、上传作业等</li>
+</ol>
+<h3 class="heading-element" id="22-如何解决问题"><span>2.2 如何解决问题</span>
+  <a href="#22-%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>后端 + LLM</p>
+<h4 class="heading-element" id="传统方案"><span>传统方案</span>
+  <a href="#%e4%bc%a0%e7%bb%9f%e6%96%b9%e6%a1%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>工作流程</p>
+<p><img loading="lazy" src='/posts/202508-functincallmcp/image.png' alt="Hard Code 方案" height="902" width="1404"></p>
+<h4 class="heading-element" id="存在的问题"><span>存在的问题</span>
+  <a href="#%e5%ad%98%e5%9c%a8%e7%9a%84%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
+<li>
+<p>是否调用工具、调用什么工具由后端负责判断,逻辑复杂且容易误判。</p>
+<p>💡 AI 这么智能,为什么不让它来帮我判断?</p>
+</li>
+<li>
+<p>调用工具的参数由后端负责构建,难度很大。</p>
+<p>💡 AI 这么智能,为什么不让它来帮我生成参数?</p>
+</li>
+</ol>
+<h2 class="heading-element" id="function-calling-方案"><span>Function Calling 方案</span>
+  <a href="#function-calling-%e6%96%b9%e6%a1%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="function-calling-是什么"><span>Function Calling 是什么</span>
+  <a href="#function-calling-%e6%98%af%e4%bb%80%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>广义的 Function Calling</strong> 是指让大模型能够调用外部工具的一种技术实现: 先向大模型提供可用函数的列表及说明,由大模型在对话过程中智能判断是否需要调用函数,并自动生成调用所需的参数,最终用文字返回符合约定格式的函数调用请求。</p>
+<p><strong>狭义的 Function Calling</strong> 特指大模型提供商在模型内部与 API 层面做了支持的一种能力,它最早由 OpenAI 引入:</p>
+<ul>
+<li><strong>在模型层面</strong>: 模型提供商需对大模型进行特别优化,使其具备根据上下文正确选择合适函数、生成有效参数的能力(比如有监督微调、强化学习)。</li>
+<li><strong>在 API 层面</strong>: 模型提供商需额外开放对 Function Calling 的支持 (比如 GPT API 中提供了一个 <code>functions</code> 参数)。</li>
+</ul>
+<h2 class="heading-element" id="基于提示词的-function-calling"><span>基于提示词的 Function Calling</span>
+  <a href="#%e5%9f%ba%e4%ba%8e%e6%8f%90%e7%a4%ba%e8%af%8d%e7%9a%84-function-calling" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="工作流程"><span>工作流程</span>
+  <a href="#%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/202508-functincallmcp/image-1.png' alt="基于提示词的 Function Calling 工作流程" height="897" width="1402"></p>
+<h4 class="heading-element" id="system-prompt-示例"><span>System Prompt 示例</span>
+  <a href="#system-prompt-%e7%a4%ba%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><pre tabindex="0"><code># 你的角色
+你是一个函数调用助手,我将提供多个函数的定义信息,包括函数名称、作用、参数及参数类型。
+
+# 你的任务
+- 根据用户的输入,判断是否需要调用某个函数
+- 如果需要,请**严格按照以下格式**输出函数调用指令:
+ \```json
+{ &#34;name&#34;: &#34;函数名&#34;, &#34;arguments&#34;: { &#34;参数名&#34;:&#34;参数值&#34; } }
+ \```
+
+# 函数定义信息
+1. **get_weather**
+- 作用:查询指定城市的天气情况
+- 参数:
+  - `city` (string): 城市名称
+2. **get_time**
+- 作用:查询指定城市的当前时间
+- 参数:
+  - `city` (string): 城市名称</code></pre><h4 class="heading-element" id="用户提问示例"><span>用户提问示例</span>
+  <a href="#%e7%94%a8%e6%88%b7%e6%8f%90%e9%97%ae%e7%a4%ba%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><pre tabindex="0"><code>“广州的天气怎么样?”</code></pre><h4 class="heading-element" id="模型回复示例"><span>模型回复示例</span>
+  <a href="#%e6%a8%a1%e5%9e%8b%e5%9b%9e%e5%a4%8d%e7%a4%ba%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><pre tabindex="0"><code>{ &#34;name&#34;: &#34;get_weather&#34;, &#34;arguments&#34;: { &#34;city&#34;:&#34;广州&#34; } }</code></pre><h4 class="heading-element" id="存在的问题-1"><span>存在的问题</span>
+  <a href="#%e5%ad%98%e5%9c%a8%e7%9a%84%e9%97%ae%e9%a2%98-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
+<li>
+<p><strong>输出格式不稳定</strong>。如调用指令中存在多余自然语言。</p>
+</li>
+<li>
+<p><strong>容易出现幻觉</strong>。模型可能编造并不存在的函数名或参数。</p>
+<p>💡 大模型提供商能否对模型进行微调、强化学习,提升大模型在这一方面的能力?</p>
+</li>
+<li>
+<p><strong>对开发者依赖度高</strong>。函数描述、调用指令格式、提示词逻辑完全由开发者设计。</p>
+<p>💡 函数描述、调用指令格式能否由大模型提供商来指定? 系统提示词中的“说明与规则”逻辑能否由大模型提供商来兜底?</p>
+</li>
+<li>
+<p><strong>上下文冗长,Token 消耗大</strong>。为确保调用逻辑正确,往往需要在 system prompt 中加入大量说明与规则。</p>
+</li>
+</ol>
+<h2 class="heading-element" id="基于-api-的-function-calling"><span>基于 API 的 Function Calling</span>
+  <a href="#%e5%9f%ba%e4%ba%8e-api-%e7%9a%84-function-calling" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="工作流程-1"><span>工作流程</span>
+  <a href="#%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/202508-functincallmcp/image-2.png' alt="基于 API 的 Function Calling 工作流程" height="894" width="1402"></p>
+<ol>
+<li>
+<p><strong>用户发起提问</strong></p>
+<p>用户通过自然语言提出问题,例如:“广州今天天气如何?适合出门吗?”</p>
+</li>
+<li>
+<p><strong>后端第一次向大模型 API 发起请求,获取函数调用指令</strong></p>
+<p>后端向大模型 API 传入用户原始输入、<strong>函数描述</strong>和其他上下文信息,获取调用指令。函数描述包括函数名称、用途说明、参数结构等。</p>
+<h4 class="heading-element" id="接口入参"><span>接口入参</span>
+  <a href="#%e6%8e%a5%e5%8f%a3%e5%85%a5%e5%8f%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><json-viewer value="&#34;{\n  \&#34;messages\&#34;: [\n    {\n      \&#34;role\&#34;: \&#34;system\&#34;,\n      \&#34;content\&#34;: \&#34;你是一个助手,可以根据用户的请求调用工具来获取信息。\&#34;\n    },\n    {\n      \&#34;role\&#34;: \&#34;user\&#34;,\n      \&#34;content\&#34;: \&#34;广州今天天气如何?适合出门吗?\&#34;\n    }\n  ],\n  \&#34;functions\&#34;: [\n    {\n      \&#34;name\&#34;: \&#34;getWeather\&#34;,\n      \&#34;description\&#34;:\&#34;获取指定城市的天气\&#34;,\n      \&#34;parameters\&#34;: {\n        \&#34;type\&#34;: \&#34;object\&#34;,\n        \&#34;properties\&#34;: {\n          \&#34;location\&#34;: {\n            \&#34;type\&#34;: \&#34;string\&#34;,\n            \&#34;description\&#34;:\&#34;城市名称,比如北京\&#34;\n          },\n          \&#34;date\&#34;: {\n            \&#34;type\&#34;: \&#34;string\&#34;,\n            \&#34;description\&#34;:\&#34;日期,比如 2025-08-07\&#34;\n          }\n        },\n        \&#34;required\&#34;: [\&#34;location\&#34;, \&#34;date\&#34;]\n      }\n    }\n  ]\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer></li>
+<li>
+<p><strong>模型生成调用指令</strong></p>
+<p>模型会智能判断是否需要调用函数,选择合适的函数,并基于上下文自动生成结构化的<strong>调用指令</strong> (函数名 + 参数),例如:</p>
+<h4 class="heading-element" id="调用指令示例-openai-function-calling"><span>调用指令示例 (OpenAI Function Calling)</span>
+  <a href="#%e8%b0%83%e7%94%a8%e6%8c%87%e4%bb%a4%e7%a4%ba%e4%be%8b-openai-function-calling" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><json-viewer value="&#34;{\n  \&#34;function_call\&#34;: {\n    \&#34;name\&#34;: \&#34;getWeather\&#34;,\n    \&#34;arguments\&#34;: {\n      \&#34;location\&#34;: \&#34;Guangzhou\&#34;,\n      \&#34;date\&#34;: \&#34;2025-07-17\&#34;\n    }\n  }\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer></li>
+<li>
+<p><strong>后端解析调用指令,并执行实际的函数调用</strong></p>
+<p>后端接收到模型返回的调用指令后,解析调用指令,得到函数名称和参数,执行对应的方法(如调用天气查询函数),并获取结果。</p>
+</li>
+<li>
+<p><strong>后端第二次向大模型 API 发起请求,将刚才的调用结果和其他上下文信息一起传给模型,生成最终的回复</strong></p>
+<p>后端将函数执行结果+其他上下文信息(包括用户原始输入)传给模型,模型判断此时已有足够的信息回答问题,不再需要调用函数了,于是直接生成最终结果,例如:“广州今天35度,暴雨,建议在室内活动”。</p>
+</li>
+</ol>
+<h2 class="heading-element" id="存在的问题-2"><span>存在的问题</span>
+  <a href="#%e5%ad%98%e5%9c%a8%e7%9a%84%e9%97%ae%e9%a2%98-2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ol>
+<li>后端应用适配不同大模型时存在大量冗余开发</li>
+<li>可选模型有限</li>
+</ol>
+<h1 class="heading-element" id="二mcp-协议"><span>二、MCP 协议</span>
+  <a href="#%e4%ba%8cmcp-%e5%8d%8f%e8%ae%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="31-要解决的问题"><span>3.1 要解决的问题</span>
+  <a href="#31-%e8%a6%81%e8%a7%a3%e5%86%b3%e7%9a%84%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>
+<p><strong>工具接入的冗余开发问题</strong></p>
+<p>AI 应用接入他人开发的新工具需完整 copy 代码和函数描述,接入几个就要 copy 几次。</p>
+</li>
+<li>
+<p><strong>工具复用困难</strong></p>
+<p>环境问题导致 copy 的代码不一定能跑;很多企业不提供可供 copy 的源码;跨语言的代码 copy 了没用。</p>
+</li>
+</ol>
+<h3 class="heading-element" id="32-如何解决问题"><span>3.2 如何解决问题</span>
+  <a href="#32-%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>💡 如果是你会怎么解决以上问题?(假设现在完全没有 MCP 协议)</p>
+<h4 class="heading-element" id="从问题出发"><span>从问题出发</span>
+  <a href="#%e4%bb%8e%e9%97%ae%e9%a2%98%e5%87%ba%e5%8f%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>-&gt; 冗余开发、复用困难问题基本都是由 copy 代码带来的,怎么才能用上别人的方法,但又不用 copy 别人的代码?</p>
+<ul>
+<li>思路一:导包式接入,AI 应用开发者将工具代码拉到本地调用。
+<ul>
+<li>🚫 可行吗? 跨语言调用问题无法解决</li>
+<li>跨语言问题是客观无解的吗? -&gt; 能否本地另起一个进程运行该语言的执行环境,工具代码原封不动运行在对应语言环境中,AI 应用再通过进程间通信(如管道、套接字)获取标准化的返回结果?</li>
+</ul>
+</li>
+<li>✅ 所以可行吗? -&gt; 并且,这种接入方式更适合被称为“本地服务式接入”</li>
+<li>思路二:远程服务式接入,工具开发者将工具独立部署,封装成标准化API,约好统一的请求/响应格式,AI 应用开发者只需按规定传入参数并解析返回值即可,不需要关心工具的实现语言、运行环境、内部逻辑。
+<ul>
+<li>✅ 可行吗?</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="从目标出发"><span>从目标出发</span>
+  <a href="#%e4%bb%8e%e7%9b%ae%e6%a0%87%e5%87%ba%e5%8f%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>-&gt; 接入工具、复用工具对开发者来说最理想的方式是什么?</p>
+<ul>
+<li>开发者只需添加一条配置(如工具的唯一标识或访问地址)就可以接入自己/别人的工具</li>
+</ul>
+<h4 class="heading-element" id="--当前的非理想状态是什么"><span>-&gt; 当前的非理想状态是什么?</span>
+  <a href="#--%e5%bd%93%e5%89%8d%e7%9a%84%e9%9d%9e%e7%90%86%e6%83%b3%e7%8a%b6%e6%80%81%e6%98%af%e4%bb%80%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>当前每新增一个工具,开发者需要在链路中做两处人工适配:
+<ul>
+<li>a. 补充工具描述</li>
+<li>b. 补充工具代码</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="--从非理想状态到理想状态必须满足什么条件"><span>-&gt; 从非理想状态到理想状态必须满足什么条件?</span>
+  <a href="#--%e4%bb%8e%e9%9d%9e%e7%90%86%e6%83%b3%e7%8a%b6%e6%80%81%e5%88%b0%e7%90%86%e6%83%b3%e7%8a%b6%e6%80%81%e5%bf%85%e9%a1%bb%e6%bb%a1%e8%b6%b3%e4%bb%80%e4%b9%88%e6%9d%a1%e4%bb%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>要让“配置替代人工适配”,必须满足以下两点:
+<ul>
+<li>O 新增配置后,AI 应用后端要能根据配置自动获取工具的描述信息</li>
+<li>O 新增配置后,AI 应用后端要能根据配置自动定位工具调用入口并执行调用</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="从问题到技术需求"><span>从问题到技术需求</span>
+  <a href="#%e4%bb%8e%e9%97%ae%e9%a2%98%e5%88%b0%e6%8a%80%e6%9c%af%e9%9c%80%e6%b1%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>-&gt; 本地服务式接入场景</p>
+<ul>
+<li>如何在任意 AI 应用中通过一条标准化配置:
+<ul>
+<li>O 拉取任意工具的包到本地,并在本地起一个进程,将工具作为一个服务运行起来(只要工具开发者有提供对应的包)</li>
+<li>O 自动获取工具的描述信息、自动完成调用过程(通过本地进程间通信)</li>
+</ul>
+</li>
+</ul>
+<p>-&gt; 远程服务式接入场景</p>
+<ul>
+<li>如何在任意 AI 应用中通过一条标准化配置:
+<ul>
+<li>O 访问任意工具的远程服务(只要工具开发者有对外提供服务)</li>
+<li>O 自动获取工具的描述信息、自动完成调用过程(通过远程服务调用)</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="技术方案思路"><span>技术方案思路</span>
+  <a href="#%e6%8a%80%e6%9c%af%e6%96%b9%e6%a1%88%e6%80%9d%e8%b7%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>工具与 AI 应用必须解耦合。</li>
+<li>工具与 AI 应用之间的交互必须标准化。
+a. AI 应用和工具服务的通信协议需要统一 (本地进程间的通信协议/远程服务调用的协议)
+b. AI 应用和工具服务的接口定义需要统一 (需要提供哪些接口、接口需包含哪些参数)
+c. AI 应用和工具服务的数据交换格式需要统一 (接口的请求 / 响应格式等)
+d. AI 应用接入工具的配置内容需要进行标准化定义
+e. 所有工具服务必须提供标准化的接入方式,以支持通过标准化配置即可加载工具
+f. 所有 AI 应用内部需实现标准化的工具加载调用逻辑,以支持通过标准化配置即可加载工具</li>
+</ol>
+<h3 class="heading-element" id="系统架构设计"><span>系统架构设计</span>
+  <a href="#%e7%b3%bb%e7%bb%9f%e6%9e%b6%e6%9e%84%e8%ae%be%e8%ae%a1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/202508-functincallmcp/image-3.png' alt="MCP 协议的雏型架构" height="806" width="1402"></p>
+<h3 class="heading-element" id="33-mcp-协议是什么"><span>3.3 MCP 协议是什么</span>
+  <a href="#33-mcp-%e5%8d%8f%e8%ae%ae%e6%98%af%e4%bb%80%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p><strong>诞生</strong>:</p>
+<p>2024 年 11 月由 Anthropic (一家美国人工智能初创公司) 提出, <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="external nofollow noopener noreferrer">官方文档</a>。</p>
+</li>
+<li>
+<p><strong>定义</strong>:</p>
+<blockquote>
+<p>MCP is an open protocol that standardizes how applications provide context to large language models (LLMs). Think of MCP like a USB-C port for AI applications. Just as USB-C provides a standardized way to connect your devices to various peripherals and accessories, MCP provides a standardized way to connect AI models to different data sources and tools. MCP enables you build agents and complex workflows on top of LLMs and connects your models with the world. [1]</p>
+</blockquote>
+<p>MCP 是一个开放协议,用于标准化应用程序向大语言模型 (LLM) 提供上下文的方式。你可以把 MCP 想象成 AI 应用的 USB-C 接口——正如 USB-C 提供了一种将设备连接到各种外设和配件的标准化方式一样,MCP 提供了一种将 AI 模型连接到不同数据源和工具的标准化方式。借助 MCP,你可以在 LLM 之上构建智能体和复杂工作流,并将你的模型与外部世界相连接。</p>
+</li>
+<li>
+<p><strong>如何理解</strong>:</p>
+<ul>
+<li>应用程序:集成了 LLM 的具体应用。包括各家大模型的在线对话网站、集成了大模型的 IDE (如 Claude desktop)、各种 Agent (比如 Cursor 就是一个 Agent)、以及其他接入了大模型的普通应用。</li>
+<li>上下文:指的是模型在决策时可访问的所有信息,如当前用户输入、历史对话信息、外部工具 (tool) 信息、外部数据源 (resource) 信息、提示词 (prompt) 信息等等 (这里重点只讲工具)。</li>
+</ul>
+</li>
+</ul>
+<p>💡 和传统 API 的区别?</p>
+<h3 class="heading-element" id="34-mcp-核心架构"><span>3.4 MCP 核心架构</span>
+  <a href="#34-mcp-%e6%a0%b8%e5%bf%83%e6%9e%b6%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><blockquote>
+<p>MCP follows a client-server architecture where an MCP host - an AI application like Claude Code or Claude Desktop - establishes connections to one or more MCP servers. The MCP host accomplishes this by creating one MCP client for each MCP server. Each MCP client maintains a dedicated one-to-one connection with its corresponding MCP server.The key participants in the MCP architecture are:</p>
+<ul>
+<li>MCP Host: The AI application that coordinates and manages one or multiple MCP clients</li>
+<li>MCP Client: A component that maintains a connection to an MCP server and obtains context from an MCP server for the MCP host to use</li>
+<li>MCP Server: A program that provides context to MCP clients</li>
+</ul>
+<p>For example: Visual Studio Code acts as an MCP host. When Visual Studio Code establishes a connection to an MCP server, such as the Sentry MCP server, the Visual Studio Code runtime instantiates an MCP client object that maintains the connection to the Sentry MCP server. When Visual Studio Code subsequently connects to another MCP server, such as the local filesystem server, the Visual Studio Code runtime instantiates an additional MCP client object to maintain this connection, hence maintaining a one-to-one relationship of MCP clients to MCP servers.Note that MCP server refers to the program that serves context data, regardless of where it runs. MCP servers can execute locally or remotely. For example, when Claude Desktop launches the filesystem server, the server runs locally on the same machine because it uses the STDIO transport. This is commonly referred to as a &ldquo;local” MCP server. The officialSentry MCP server runs on the Sentry platform, and uses the Streamable HTTP transport. This is commonly referred to as a “remote” MCP server. [2]</p>
+</blockquote>
+<p>MCP 遵循客户端-服务器架构,其中 MCP Host——Claude Code 或 Claude Desktop 等 AI 应用程序———与一个或多个 MCP Server 建立连接。MCP 主机通过为每个 MCP Server 创建一个 MCP Client 来实现这一目标。每个 MCP Client 都与相应的 MCP Server 保持专用的一对一连接。MCP 架构的主要组成者是:</p>
+<ul>
+<li><strong>MCP Host</strong>:协调和管理一个或多个 MCP Server 的人工智能应用程序</li>
+<li><strong>MCP Client</strong>:一个组件,用于维护与 MCP 服务器的连接,并从 MCP 服务器获取上下文,供 MCP 主机使用</li>
+<li><strong>MCP Server</strong>:一个为 MCP Client 提供上下文的程序</li>
+</ul>
+<p>例如:Visual Studio Code 充当 MCP 主机。当 Visual Studio Code 建立与 MCP 服务器 (如 Sentry MCP 服务器) 的连接时,Visual Studio Code 运行时实例化了维护与 Sentry MCP 服务器连接的 MCP 客户端对象。当 Visual Studio Code 随后连接到另一个 MCP 服务器时,例如本地文件系统服务器,Visual Studio Code 运行时实例化一个额外的 MCP 客户端对象来维护此连接,从而保持 MCP 客户端与 MCP 服务器的一对一关系。</p>
+<p><img loading="lazy" src='/posts/202508-functincallmcp/image-4.png' alt="MCP Host (AI Application) Architecture" height="544" width="1229"></p>
+<h3 class="heading-element" id="35-mcp-的传输协议"><span>3.5 MCP 的传输协议</span>
+  <a href="#35-mcp-%e7%9a%84%e4%bc%a0%e8%be%93%e5%8d%8f%e8%ae%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><blockquote>
+<p>MCP supports two transport mechanisms:</p>
+<ul>
+<li><strong>Stdio transport</strong>: Uses standard input/output streams for direct process communication between local processes on the same machine, providing optimal performance with no network overhead.</li>
+<li><strong>Streamable HTTP transport</strong>: Uses HTTP POST for client-to-server messages with optional Server-Sent Events for streaming capabilities. This transport enables remote server communication and supports standard HTTP authentication methods including bearer tokens, API keys, and custom headers. MCP recommends using OAuth to obtain authentication tokens.</li>
+</ul>
+<p>The transport layer abstracts communication details from the protocol layer, enabling the same JSON-RPC 2.0 message format across all transport mechanisms. [3]</p>
+</blockquote>
+<h4 class="heading-element" id="stdio-传输"><span>Stdio 传输</span>
+  <a href="#stdio-%e4%bc%a0%e8%be%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Stdio 传输本质上是本地进程间通信 (IPC) 的一种形式,它最常用的底层机制就是管道 (pipe)。</p>
+<ol>
+<li>
+<p>什么是 stdio?</p>
+<ul>
+<li><code>stdio</code> (standard I/O) 是进程的标准输入/输出接口。每个进程启动时,操作系统会给它分配 三个文件描述符:</li>
+</ul>
+<pre tabindex="0"><code>0 -&gt; stdin (标准输入,默认是键盘)
+1 -&gt; stdout (标准输出,默认是屏幕)
+2 -&gt; stderr (标准错误输出,默认是屏幕)</code></pre><ul>
+<li>程序里的 <code>printf</code>、<code>scanf</code>、<code>cin</code>、<code>cout</code>、<code>read</code>、<code>write</code> 都是通过这些接口和外界交换数据的。</li>
+</ul>
+</li>
+<li>
+<p>什么是管道 (pipe)?</p>
+<ul>
+<li>管道是操作系统内核提供的一种进程间通信 (IPC) 机制,它允许一个进程的输出直接作为另一个进程的输入,实现数据在两个进程之间的流动。</li>
+</ul>
+</li>
+<li>
+<p>总结:什么是 Stdio 传输?</p>
+<ul>
+<li>所谓 Stdio 传输,就是通过标准输入和标准输出这两个数据流来传输数据、通过管道来连接两个进程的标准输入/输出接口,使得一个进程的输出直接传给另一个进程输入,实现进程间数据传输 (本质上是一个基于字节流的全双工通信通道)</li>
+<li><code>stdio</code> 是接口,管道是连接这接口的通道。</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>
+<p><strong>举例</strong>:</p>
+<h4 class="heading-element" id="没有用管道"><span>没有用管道：</span>
+  <a href="#%e6%b2%a1%e6%9c%89%e7%94%a8%e7%ae%a1%e9%81%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>没有用管道：</p>
+<pre tabindex="0"><code>ps aux
+
+[键盘] -&gt; shell -&gt; ps (stdin) -&gt; ps(stdout) -&gt; [屏幕]</code></pre><h4 class="heading-element" id="用了管道-stido-传输"><span>用了管道 (Stido 传输)</span>
+  <a href="#%e7%94%a8%e4%ba%86%e7%ae%a1%e9%81%93-stido-%e4%bc%a0%e8%be%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><pre tabindex="0"><code>ps aux | grep python
+
+# ps 和 grep 在执行时都会各自成为一个独立的进程
+# ps aux 列出进程 -&gt; grep python 过滤后留下包含 &#34;python&#34; 的进程
+# 管道 | 把 ps aux 的 stdout 作为 grep python 的 stdin
+[键盘] -&gt; shell -&gt; ps (stdin) -&gt; ps(stdout) -&gt; grep(stdin) -&gt; grep(stdout) -&gt; 屏幕</code></pre></li>
+</ul>
+<p>💡 为什么在这么多本地进程间通信的方式中选了 Stdio 传输?</p>
+<h3 class="heading-element" id="http--sse-传输-旧方案202410"><span>HTTP + SSE 传输 (旧方案,2024.10)</span>
+  <a href="#http--sse-%e4%bc%a0%e8%be%93-%e6%97%a7%e6%96%b9%e6%a1%88202410" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>客户端通过 HTTP POST 向服务端发请求,服务端通过 SSE 通道返回响应结果。</p>
+<ul>
+<li><strong>SSE</strong> (Server-Sent Events 服务器发送事件),是一种服务器单向推送数据给客户端的技术,基于 HTTP 协议。</li>
+<li><strong>基本原理</strong>
+<ul>
+<li>客户端先向服务端发起一个普通的 HTTP 请求。</li>
+<li>服务端保持这个连接不断开,以 <code>text/event-stream</code> 作为响应类型,源源不断地往里写数据。</li>
+<li>客户端收到数据后会触发相应的事件回调 (比如浏览器前端实时更新界面)。</li>
+</ul>
+</li>
+<li><strong>和普通 HTTP 的核心差异</strong>
+<ul>
+<li>支持服务端主动、流式地推送消息</li>
+</ul>
+</li>
+</ul>
+<p>💡 为什么在这么多远程服务调用的协议中选了 HTTP + SSE?</p>
+<ul>
+<li><strong>服务端推送的必要性</strong>: MCP Server 中的工具发生了更新,需要主动向 MCP Client 推送通知</li>
+</ul>
+<h4 class="heading-element" id="why-notifications-matter"><span>Why Notifications Matter</span>
+  <a href="#why-notifications-matter" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><blockquote>
+<p>This notification system is crucial for several reasons:</p>
+<ol>
+<li>Dynamic Environments: Tools may come and go based on server state, external dependencies, or user permissions</li>
+<li>Efficiency: Clients don&rsquo;t need to poll for changes; they&rsquo;re notified when updates occur</li>
+<li>Consistency: Ensures clients always have accurate information about available server capabilities</li>
+<li>Real-time Collaboration: Enables responsive AI applications that can adapt to changing contexts</li>
+</ol>
+<p>This notification pattern extends beyond tools to other MCP primitives, enabling comprehensive real-time synchronization between clients and servers. [4]</p>
+</blockquote>
+<h3 class="heading-element" id="streamable-http-传输-新方案202503"><span>Streamable HTTP 传输 (新方案,2025.03)</span>
+  <a href="#streamable-http-%e4%bc%a0%e8%be%93-%e6%96%b0%e6%96%b9%e6%a1%88202503" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>HTTP + SSE 传输方案的升级版,目前正在逐步取代原有的 HTTP + SSE 传输方案</p>
+<ul>
+<li><strong>Streamable HTTP</strong> 并不是一个标准协议名,而是一个通用描述,指的是基于 HTTP 协议的“可流式传输”技术。它的核心思想是:在一个 HTTP 连接里,服务端可以持续不断地发送数据给客户端,客户端边接收边处理,类似“流”一样。与传统 HTTP 请求响应“一次性完成”不同,Streamable HTTP 保持连接不关闭,数据分片持续传输。常见实现方式包括:
+<ul>
+<li>HTTP/1.1 长连接 + 分块传输编码 (Chunked Transfer Encoding)</li>
+<li>HTTP/2 流式数据</li>
+<li>HTTP/3 QUIC 流式传输</li>
+</ul>
+</li>
+</ul>
+<p>💡 为什么 HTTP + SSE 要升级成 Streamable HTTP ?</p>
+<ul>
+<li><strong>数据格式限制问题</strong>: SSE 的 <code>Content-Type: text/event-stream</code> 只支持文本格式;Streamable HTTP 的 <code>Content-Type</code> 支持任意格式,如 JSON、HTML、二进制等,更适合 AI 场景 (可能要传 JSON + 音频 + 图片)</li>
+<li><strong>跨平台兼容问题</strong>: SSE 支持的客户端主要是浏览器端和少量语言库;而 Streamable HTTP 支持多种客户端。</li>
+<li><strong>性能问题</strong>: SSE 是基于 HTTP/1.1 长连接,Streamable HTTP 可以基于 HTTP/2/3,支持多路复用和双向流。且 HTTP/2/3 的流控制和优先级机制使得高吞吐和低延迟成为可能;SSE 消息只能文本格式,Streamable HTTP 支持其他采用更紧凑的编码方式 (比如二进制分包、压缩等)。</li>
+</ul>
+<h3 class="heading-element" id="必须选用以上传输协议吗"><span>必须选用以上传输协议吗?</span>
+  <a href="#%e5%bf%85%e9%a1%bb%e9%80%89%e7%94%a8%e4%bb%a5%e4%b8%8a%e4%bc%a0%e8%be%93%e5%8d%8f%e8%ae%ae%e5%90%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>——No,因为无论哪种传输方式,都只是把各种工具的不同接入方式统一起来,对外暴露一种协议的接口而已。</p>
+<p><img loading="lazy" src='/posts/202508-functincallmcp/image-5.png' alt="MCP 协议的架构 - HTTP &#43; SSE 和 Stdio" height="798" width="1398"></p>
+<p><img loading="lazy" src='/posts/202508-functincallmcp/image-6.png' alt="MCP Architecture Diagram" height="840" width="1464"></p>
+<h3 class="heading-element" id="36-回顾技术方案最终是怎么实现的"><span>3.6 回顾:技术方案最终是怎么实现的</span>
+  <a href="#36-%e5%9b%9e%e9%a1%be%e6%8a%80%e6%9c%af%e6%96%b9%e6%a1%88%e6%9c%80%e7%bb%88%e6%98%af%e6%80%8e%e4%b9%88%e5%ae%9e%e7%8e%b0%e7%9a%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>
+<p>工具与 AI 应用必须解耦合。
+✅ 客户端 - 服务端架构 (MCP Host、MCP Client、MCP Server)</p>
+</li>
+<li>
+<p>工具与 AI 应用之间的交互必须标准化。</p>
+<p>a. AI 应用和工具服务的通信协议需要统一 (本地进程间的通信协议/远程服务调用的协议)
+✅ 本地:Stdio 传输;远程:HTTP + SSE 或 Streamable HTTP</p>
+<p>b. AI 应用和工具服务的接口定义需要统一 (需要提供哪些接口、接口需包含哪些参数)
+✅ 工具服务需提供的接口:1. <code>tools/list</code> (用于返回方法列表) 2. <code>tools/call</code> (用于执行方法并返回结果。3. <code>notifications/tools/list_changed</code> (服务端主动推送,用于告知客户端方法更新) [5]
+✅ 接口参数定义,见文档。以 <code>tools/list</code> 为例:</p>
+</li>
+</ol>
+<p>To discover available tools, clients send a <code>tools/list</code> request. This operation supports pagination.</p>
+<p>Request:</p>
+<json-viewer value="&#34;{\n  \&#34;jsonrpc\&#34;: \&#34;2.0\&#34;,\n  \&#34;id\&#34;: 1,\n  \&#34;method\&#34;: \&#34;tools/list\&#34;,\n  \&#34;params\&#34;: {\n    \&#34;cursor\&#34;: \&#34;optional-cursor-value\&#34;\n  }\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p>Response:</p>
+<json-viewer value="&#34;{\n  \&#34;jsonrpc\&#34;: \&#34;2.0\&#34;,\n  \&#34;id\&#34;: 1,\n  \&#34;result\&#34;: {\n    \&#34;tools\&#34;: [\n      {\n        \&#34;name\&#34;: \&#34;get_weather\&#34;,\n        \&#34;title\&#34;: \&#34;Weather Information Provider\&#34;,\n        \&#34;description\&#34;: \&#34;Get current weather information for a location\&#34;,\n        \&#34;inputSchema\&#34;: {\n          \&#34;type\&#34;: \&#34;object\&#34;,\n          \&#34;properties\&#34;: {\n            \&#34;location\&#34;: {\n              \&#34;type\&#34;: \&#34;string\&#34;,\n              \&#34;description\&#34;: \&#34;City name or zip code\&#34;\n            }\n          },\n          \&#34;required\&#34;: [\&#34;location\&#34;]\n        }\n      }\n    ],\n    \&#34;nextCursor\&#34;: \&#34;next-page-cursor\&#34;\n  }\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p>c. AI 应用和工具服务的数据交换格式需要统一 (接口的请求 / 响应格式等)</p>
+<p>✅ JSON-RPC 2.0 [6] [7]</p>
+<p>JSON-RPC 2.0 是一种轻量级的远程过程调用 (RPC) 协议, 基于 JSON 格式进行通信, 主要特点是所有消息都是 JSON 格式, 便于解析和跨语言使用。</p>
+<p>d. AI 应用接入工具的配置内容需要进行标准化定义
+以接入高德地图 MCP Server 为例, 参考文档: <a href="https://lbs.amap.com/api/mcp-server/gettingstarted" target="_blank" rel="external nofollow noopener noreferrer">https://lbs.amap.com/api/mcp-server/gettingstarted</a> (来自 ModelScope 的 MCP Server 市场: <a href="https://modelscope.cn/mcp" target="_blank" rel="external nofollow noopener noreferrer">https://modelscope.cn/mcp</a>)
+✅ 本地服务式接入 (基于 Stdio 协议)</p>
+<h4 class="heading-element" id="stdio-方式接入配置"><span>Stdio 方式接入配置</span>
+  <a href="#stdio-%e6%96%b9%e5%bc%8f%e6%8e%a5%e5%85%a5%e9%85%8d%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><json-viewer value="&#34;// 在 mcpServers 配置中新增一个叫 \&#34;amap-maps\&#34;(你自己起名)的 MCP Server\n// 通过 npx -y @amap/amap-maps-mcp-server 命令,运行高德官方提供的 MCP\n// server\n// 运行时的环境变量是 \&#34;AMAP_MAPS_API_KEY\&#34;: \&#34;你申请的 API Key\&#34;\n{\n  \&#34;mcpServers\&#34;: {\n    \&#34;amap-maps\&#34;: {\n      \&#34;command\&#34;: \&#34;npx\&#34;,\n      \&#34;args\&#34;: [\&#34;-y\&#34;, \&#34;@amap/amap-maps-mcp-server\&#34;],\n      \&#34;env\&#34;: {\n        \&#34;AMAP_MAPS_API_KEY\&#34;: \&#34;您在高德官网上申请的key\&#34;\n      }\n    }\n  }\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p>✅ 远程服务式接入 (基于 SSE 协议)</p>
+<h4 class="heading-element" id="sse-方式接入配置"><span>SSE 方式接入配置</span>
+  <a href="#sse-%e6%96%b9%e5%bc%8f%e6%8e%a5%e5%85%a5%e9%85%8d%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><json-viewer value="&#34;{\n  \&#34;mcpServers\&#34;: {\n    \&#34;amap-maps-streamableHTTP\&#34;: {\n      \&#34;url\&#34;: \&#34;https://mcp.amap.com/mcp?key=您在高德官网上申请的key\&#34;\n    }\n  }\n}&#34;" expand-depth="1" boxed copyable="{&#34;copiedText&#34;:&#34;已复制&#34;,&#34;copyText&#34;:&#34;复制&#34;}"></json-viewer><p>e. 所有工具服务必须提供标准化的接入方式, 以支持通过标准化配置即可加载工具
+✅ 遵循 MCP 协议开发 MCP Server, 对外提供标准的接入方式。 <a href="https://modelcontextprotocol.io/docs/sdk" target="_blank" rel="external nofollow noopener noreferrer">多语言 SDK 地址</a>。
+f. 所有 AI 应用内部需实现标准化的工具加载调用逻辑, 以支持通过标准化配置即可加载工具
+✅ 使用官方 SDK, 在 AI 应用后端项目中实例化 MCP Client, 调用 SDK 方法和 Server 交互。</p>
+<h3 class="heading-element" id="37-mcp-工作流程"><span>3.7 MCP 工作流程</span>
+  <a href="#37-mcp-%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/202508-functincallmcp/image-7.png' alt="基于 MCP 协议的 Function Calling 工作流程" height="1102" width="1402"></p>
+<p>💡 值得一提的是,MCP 协议和 Function Calling 之间绝不是“技术递进”的关系。所谓“MCP 协议会取代 Function Calling”的说法,其实是一种不严谨的表达。</p>
+<h3 class="heading-element" id="38-whats-more"><span>3.8 What&rsquo;s More?</span>
+  <a href="#38-whats-more" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>看 MCP 协议官方文档: <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="external nofollow noopener noreferrer">https://modelcontextprotocol.io/docs/getting-started/intro</a>,思考为何这么设计;</li>
+<li>通过官方 SDK,尝试编写一个 MCP Server 并启动服务;初始化一个后端应用,创建 MCP Client,完成 Client - Server 完整交互流程的开发。MCP SDK 地址: <a href="https://modelcontextprotocol.io/docs/sdk" target="_blank" rel="external nofollow noopener noreferrer">https://modelcontextprotocol.io/docs/sdk</a></li>
+<li>找一个开源的支持了 MCP 协议的 Agent 框架,追溯其中涉及到 MCP Client、MCP Server 逻辑的所有代码。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-08-23 00:00:00">更新于 2025-08-23&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202508-FunctinCallMCP/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202508-functincallmcp/" data-title="Function Calling 与 MCP 协议" data-hashtags="tips"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202508-functincallmcp/" data-hashtag="tips"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202508-functincallmcp/" data-title="Function Calling 与 MCP 协议"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/tips/" class="post-tag" title="标签 - Tips">Tips</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202508-ringsign/" class="post-nav-item" rel="prev" title="环签论文阅读《How to Leak a Secret》"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>环签论文阅读《How to Leak a Secret》</a><a href="/posts/202508-claude/" class="post-nav-item" rel="next" title="Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析">Claude Code CLI 认证流程解析 &amp; Claude Code API 深度解析<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#一function-calling">一、Function Calling</a>
+      <ul>
+        <li><a href="#21-要解决的问题">2.1 要解决的问题</a></li>
+        <li><a href="#22-如何解决问题">2.2 如何解决问题</a>
+          <ul>
+            <li><a href="#传统方案">传统方案</a></li>
+            <li><a href="#存在的问题">存在的问题</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#function-calling-方案">Function Calling 方案</a>
+      <ul>
+        <li><a href="#function-calling-是什么">Function Calling 是什么</a></li>
+      </ul>
+    </li>
+    <li><a href="#基于提示词的-function-calling">基于提示词的 Function Calling</a>
+      <ul>
+        <li><a href="#工作流程">工作流程</a>
+          <ul>
+            <li><a href="#system-prompt-示例">System Prompt 示例</a></li>
+            <li><a href="#用户提问示例">用户提问示例</a></li>
+            <li><a href="#模型回复示例">模型回复示例</a></li>
+            <li><a href="#存在的问题-1">存在的问题</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#基于-api-的-function-calling">基于 API 的 Function Calling</a>
+      <ul>
+        <li><a href="#工作流程-1">工作流程</a>
+          <ul>
+            <li><a href="#接口入参">接口入参</a></li>
+            <li><a href="#调用指令示例-openai-function-calling">调用指令示例 (OpenAI Function Calling)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#存在的问题-2">存在的问题</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#31-要解决的问题">3.1 要解决的问题</a></li>
+        <li><a href="#32-如何解决问题">3.2 如何解决问题</a>
+          <ul>
+            <li><a href="#从问题出发">从问题出发</a></li>
+            <li><a href="#从目标出发">从目标出发</a></li>
+            <li><a href="#--当前的非理想状态是什么">-&gt; 当前的非理想状态是什么?</a></li>
+            <li><a href="#--从非理想状态到理想状态必须满足什么条件">-&gt; 从非理想状态到理想状态必须满足什么条件?</a></li>
+            <li><a href="#从问题到技术需求">从问题到技术需求</a></li>
+          </ul>
+        </li>
+        <li><a href="#技术方案思路">技术方案思路</a></li>
+        <li><a href="#系统架构设计">系统架构设计</a></li>
+        <li><a href="#33-mcp-协议是什么">3.3 MCP 协议是什么</a></li>
+        <li><a href="#34-mcp-核心架构">3.4 MCP 核心架构</a></li>
+        <li><a href="#35-mcp-的传输协议">3.5 MCP 的传输协议</a>
+          <ul>
+            <li><a href="#stdio-传输">Stdio 传输</a></li>
+            <li><a href="#没有用管道">没有用管道：</a></li>
+            <li><a href="#用了管道-stido-传输">用了管道 (Stido 传输)</a></li>
+          </ul>
+        </li>
+        <li><a href="#http--sse-传输-旧方案202410">HTTP + SSE 传输 (旧方案,2024.10)</a>
+          <ul>
+            <li><a href="#why-notifications-matter">Why Notifications Matter</a></li>
+          </ul>
+        </li>
+        <li><a href="#streamable-http-传输-新方案202503">Streamable HTTP 传输 (新方案,2025.03)</a></li>
+        <li><a href="#必须选用以上传输协议吗">必须选用以上传输协议吗?</a></li>
+        <li><a href="#36-回顾技术方案最终是怎么实现的">3.6 回顾:技术方案最终是怎么实现的</a>
+          <ul>
+            <li><a href="#stdio-方式接入配置">Stdio 方式接入配置</a></li>
+            <li><a href="#sse-方式接入配置">SSE 方式接入配置</a></li>
+          </ul>
+        </li>
+        <li><a href="#37-mcp-工作流程">3.7 MCP 工作流程</a></li>
+        <li><a href="#38-whats-more">3.8 What&rsquo;s More?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/json-viewer-element/json-viewer-element.umd.js" defer></script><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/3c26b91b3fbbadbdae89b61b8f9cc5b0.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

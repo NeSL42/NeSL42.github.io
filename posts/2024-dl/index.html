@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Deep Learning - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="坟墓里寂静无比，埋葬你的是你所有没说出口的话
+"><meta name="keywords" content='Deep Learn'>
+  <meta itemprop="name" content="Deep Learning">
+  <meta itemprop="description" content="坟墓里寂静无比，埋葬你的是你所有没说出口的话">
+  <meta itemprop="datePublished" content="2024-05-29T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-05-29T00:00:00+00:00">
+  <meta itemprop="wordCount" content="2291">
+  <meta itemprop="keywords" content="Deep Learn"><meta property="og:url" content="http://localhost:1313/posts/2024-dl/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="Deep Learning">
+  <meta property="og:description" content="坟墓里寂静无比，埋葬你的是你所有没说出口的话">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-05-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-05-29T00:00:00+00:00">
+    <meta property="article:tag" content="Deep Learn">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Deep Learning">
+  <meta name="twitter:description" content="坟墓里寂静无比，埋葬你的是你所有没说出口的话">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/2024-dl/" title="Deep Learning - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" title="2023年终总结" /><link rel="next" type="text/html" href="http://localhost:1313/posts/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" title="2024年终总结" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Deep Learning",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/2024-dl\/"
+    },"genre": "posts","keywords": "Deep Learn","wordcount":  2291 ,
+    "url": "http:\/\/localhost:1313\/posts\/2024-dl\/","datePublished": "2024-05-29T00:00:00+00:00","dateModified": "2024-05-29T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Deep Learning</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2024-05-29 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2024-05-29">2024-05-29</time></span>&nbsp;<span title="2291 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 2300 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 5 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1深度学习基础">1.深度学习基础</a>
+      <ul>
+        <li><a href="#线性模型">线性模型</a>
+          <ul>
+            <li><a href="#分段线性曲线">分段线性曲线</a></li>
+            <li><a href="#模型变形">模型变形</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#2深度学习基础">2.深度学习基础</a>
+      <ul>
+        <li><a href="#局部极小值与鞍点">局部极小值与鞍点</a></li>
+        <li><a href="#判断临界值种类的方法">判断临界值种类的方法</a></li>
+        <li><a href="#批量和动量">批量和动量</a></li>
+        <li><a href="#自适应学习率">自适应学习率</a>
+          <ul>
+            <li><a href="#adagrad">AdaGrad</a></li>
+            <li><a href="#rmsprop">RMSProp</a></li>
+            <li><a href="#adam">Adam</a></li>
+          </ul>
+        </li>
+        <li><a href="#学习率优化">学习率优化</a></li>
+        <li><a href="#分类">分类</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p>
+<p>[toc]</p>
+<h2 class="heading-element" id="1深度学习基础"><span>1.深度学习基础</span>
+  <a href="#1%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e5%9f%ba%e7%a1%80" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="线性模型"><span>线性模型</span>
+  <a href="#%e7%ba%bf%e6%80%a7%e6%a8%a1%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>示例 $y = b + wx_1$，损失是函数 $L(b, w)$ ，计算 $y$ 与 $\hat{y} $ 的差距$e$ ，计算Loss： $L = \frac{1}{N} \sum e_n$.</p>
+<p>$e$ 有两种：</p>
+<ul>
+<li>平均绝对误差（Mean Absolute Error，MAE）：$e = |\hat{y} - y|$</li>
+<li>均方误差（Mean Squared Error，MSE）：$e = (\hat{y} - y)^2$</li>
+</ul>
+<p>有一些任务中 $y$ 和 $\hat{y}$ 都是概率分布，这个时候可能会选择<strong>交叉熵</strong>（cross entropy），</p>
+<p>根据不同的 $L$ 画出的等高图：越大越红，越小越蓝，叫做误差表面（error surface）</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240529231730563.png' alt="image-20240529231730563" height="432" width="786"></p>
+<p>接下来是梯度下降（gradient descent）优化$L$：</p>
+<p>$$
+w^1 \leftarrow w^0 - \eta \left. \frac{\partial L}{\partial w} \right|_{w=w^0, b=b^0}
+$$</p>
+<p>$$
+b^1 \leftarrow b^0 - \eta \left. \frac{\partial L}{\partial b} \right|_{w=w^0, b=b^0}
+$$</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240601062927419.png' alt="image-20240601062927419" height="448" width="827"></p>
+<p>全局最小值（global minima），局部最小值（local minima）。</p>
+<h4 class="heading-element" id="分段线性曲线"><span>分段线性曲线</span>
+  <a href="#%e5%88%86%e6%ae%b5%e7%ba%bf%e6%80%a7%e6%9b%b2%e7%ba%bf" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>分段线性曲线（piecewise linear curve）可以看作是一个常数，再加上一堆Hard Sigmoid 函数。Hard Sigmoid 函数的特性是当输入的值，当 $x$ 轴的值小于某一个阈值（某个定值）的时候，大于另外一个定值阈值的时候，中间有一个斜坡。</p>
+<p>可以用 Sigmoid 函数来逼近 Hard Sigmoid：
+$$
+y = c \cdot \frac{1}{1 + e^{-(b + wx_1)}}
+$$
+简化表示：
+$$
+y = c \sigma(b + wx_1)
+$$
+表达整个函数时：</p>
+<p>$$
+y = b + \sum\limits_{i} c_i \sigma(b_i + w_i x_1)
+$$</p>
+<p>$w_{ij}$ 代表在第 $i$ 个 Sigmoid 里面，乘给第 $j$ 个特征的权重：
+$$
+b_1 + w_{11} x_1 + w_{12} x_2 + w_{13} x_3
+$$</p>
+<p>那么括号中的为：
+<div class="fi-raw">
+$$
+r_1 = b_1 + w_{11} x_1 + w_{12} x_2 + w_{13} x_3 
+\\
+r_2 = b_2 + w_{21} x_1 + w_{22} x_2 + w_{23} x_3 
+\\
+r_3 = b_3 + w_{31} x_1 + w_{32} x_2 + w_{33} x_3
+$$
+</div>
+用矩阵表示：</p>
+<div class="fi-raw">
+$$
+\begin{bmatrix} r_1 \\ r_2 \\ r_3 \end{bmatrix} = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix} + \begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \\ w_{31} & w_{32} & w_{33} \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+$$
+</div>
+<p>$$ y = b + \mathbf{c}^T \mathbf{\sigma(b + \mathbf{c}^T \mathbf{a})} $$</p>
+<p>计算$\theta$：</p>
+<p>首先给定$\theta$的值，即某一组 $W $, $ b $, $ c^T $, $ b $的值。记最小的$\theta$为$\theta^*$，计算每一个未知的参数对 $L$ 的微分，得到向量 $g$ :$g = \nabla L(\theta_0)$，$\nabla L$代表梯度</p>
+<div class="fi-raw">
+$$
+g = \begin{bmatrix}
+\left. \frac{\partial L}{\partial \theta_1} \right|_{\theta=\theta_0} \\
+\left. \frac{\partial L}{\partial \theta_2} \right|_{\theta=\theta_0} \\
+\vdots \\
+\end{bmatrix}
+$$
+</div>
+<div class="fi-raw">
+$$
+\begin{bmatrix}
+\theta^1_1 \\
+\theta^2_1 \\
+\vdots
+\end{bmatrix}
+\leftarrow
+\begin{bmatrix}
+\theta^1_0 \\
+\theta^2_0 \\
+\vdots
+\end{bmatrix}
+-
+\eta
+\begin{bmatrix}
+\left. \frac{\partial L}{\partial \theta_1} \right|_{\theta=\theta_0} \\
+\left. \frac{\partial L}{\partial \theta_2} \right|_{\theta=\theta_0} \\
+\vdots \\
+\end{bmatrix}
+$$
+</div>
+<p>即：</p>
+<p>$$
+\theta^1 \leftarrow \theta^0 - \eta g
+$$</p>
+<p>实际使用梯度下降的时候，会把 $N$ 笔数据随机分成一个一个的批量（batch），把所有的批量都看过一次，称为一个回合（epoch）。</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240601013602158.png' alt="image-20240601013602158" height="457" width="762"></p>
+<h4 class="heading-element" id="模型变形"><span>模型变形</span>
+  <a href="#%e6%a8%a1%e5%9e%8b%e5%8f%98%e5%bd%a2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Hard Sigmoid不一定非得是Soft Sigmoid，还可以是两个修正线性单元（Rectified Linear Unit，ReLU）的加总。</p>
+<p>$$
+c \cdot \max(0, b + wx_1)
+$$</p>
+<p>Sigmoid 或 ReLU 称为激活函数（activation function）。
+$$
+y = b + \sum\limits_{i} c_i \sigma(b_i + \sum\limits_jw_{ij} x_j)
+$$</p>
+<p>$$
+y = b + \sum\limits_{2i} c_i max(0,b_i + \sum\limits_jw_{ij} x_j)
+$$</p>
+<p>$$
+训练数据： {(x^1, y^1), (x^2, y^2), \ldots, (x^N, y^N)}
+$$</p>
+<p>$$
+测试数据： x^{N+1}, x^{N+2}, \ldots, x^{N+M}
+$$</p>
+<h2 class="heading-element" id="2深度学习基础"><span>2.深度学习基础</span>
+  <a href="#2%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e5%9f%ba%e7%a1%80" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="局部极小值与鞍点"><span>局部极小值与鞍点</span>
+  <a href="#%e5%b1%80%e9%83%a8%e6%9e%81%e5%b0%8f%e5%80%bc%e4%b8%8e%e9%9e%8d%e7%82%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>局部极小值与鞍点：</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240601125854520.png' alt="image-20240601125854520" height="335" width="711"></p>
+<h3 class="heading-element" id="判断临界值种类的方法"><span>判断临界值种类的方法</span>
+  <a href="#%e5%88%a4%e6%96%ad%e4%b8%b4%e7%95%8c%e5%80%bc%e7%a7%8d%e7%b1%bb%e7%9a%84%e6%96%b9%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>$ \theta&rsquo; $ 附近的 $ L(\theta) $ 可近似为 ：</p>
+<p>$$
+L(\theta) \approx L(\theta&rsquo;) + (\theta - \theta&rsquo;)^T g + \frac{1}{2} (\theta - \theta&rsquo;)^T H (\theta - \theta&rsquo;)
+$$</p>
+<p>上式是泰勒级数近似，$ g_i $ 是向量 $ g $ 的第 $ i $ 个元素，就是 $ L $ 关于 $ \theta $ 的第 $ i $ 个元素的微分，即
+$$
+g_i =  \frac{\partial L(\theta&rsquo;)}{\partial \theta_i}
+$$</p>
+<p>光看 $g$ 还是没有办法完整地描述 $L(\theta)$，第三项跟海森矩阵（Hessian matrix）$H$ 有关，$H$ 里面是 $L$ 的二次微分。它第 $i$ 行，第 $j$ 列的值 $H_{ij}$ 就是把 $\theta$ 的第 $i$ 个元素对 $L(\theta&rsquo;)$ 作微分，再把 $\theta$ 的第 $j$ 个元素对 $\frac{\partial L(\theta&rsquo;)}{\partial \theta_i}$ 作微分后的结果，即
+$$
+H_{ij} = \frac{\partial^2}{\partial \theta_i \partial \theta_j}L(\theta&rsquo;)
+$$</p>
+<p>可以根据$\frac{1}{2} (\theta - \theta&rsquo;)^T H (\theta - \theta&rsquo;)$来判断在 $ \theta&rsquo; $ 附近的误差表面（error surface）到底长什么样子。用向量 $ \mathbf{v} $ 来表示 $ \theta - \theta&rsquo; $，$ (\theta - \theta&rsquo;)^T H (\theta - \theta&rsquo;) $ 可改写为 $ v^T H v $。</p>
+<p>有三种情况：</p>
+<ol>
+<li>1</li>
+<li>12</li>
+<li>3</li>
+</ol>
+<h3 class="heading-element" id="批量和动量"><span>批量和动量</span>
+  <a href="#%e6%89%b9%e9%87%8f%e5%92%8c%e5%8a%a8%e9%87%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>一般梯度下降：</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240601141204194.png' alt="image-20240601141204194" height="362" width="718"></p>
+<p>引入动量：</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240601141228017.png' alt="image-20240601141228017" height="430" width="780"></p>
+<h3 class="heading-element" id="自适应学习率"><span>自适应学习率</span>
+  <a href="#%e8%87%aa%e9%80%82%e5%ba%94%e5%ad%a6%e4%b9%a0%e7%8e%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在训练时，Loss会来回振荡：</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240601141405369.png' alt="image-20240601141405369" height="371" width="460"></p>
+<h4 class="heading-element" id="adagrad"><span>AdaGrad</span>
+  <a href="#adagrad" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>AdaGrad（Adaptive Gradient）是典型的自适应学习率方法，其能够根据梯度大小自动调整学习率。</p>
+<p>梯度下降更新某个参数 $\theta_{t}^{i}$ 的过程为</p>
+<p>$$
+\theta_{t+1}^{i} \leftarrow \theta_{t}^{i} - \eta g_{t}^{i}
+$$</p>
+<p>$\theta_{t}^{i}$在第 $t$ 个迭代的值减掉在第 $t$ 个迭代参数 $i$ 算出来的梯度。</p>
+<p>$$
+g_{t}^{i} = \frac{\partial L}{\partial \theta^{i}} \bigg|_{\theta=\theta_t}
+$$</p>
+<p>$g^t_i$ 代表在第 $t$ 个迭代，即 $\theta = \theta_{t}$ 时，参数 $\theta^{i}$ 对损失 $L$ 的微分，学习率是固定的。</p>
+<p>现在要有一个随着参数定制化的学习率，即把原来学习率 $\eta$ 变成 $\frac \eta {\sigma^i_t}$。</p>
+<p>其中，上标 $i$ 表示参数 $\sigma$ 与参数 $i$ 相关，不同的参数有不同的 $\sigma$；下标 $t$ 表示参数 $\sigma$ 与迭代 $t$ 相关，不同的迭代也会有不同的 $\sigma$。</p>
+<p>参数更新过程：</p>
+<p>$$
+\theta_{1}^{i} \leftarrow \theta_{0}^{i} - \frac \eta {\sigma^i_0}g^i_0
+$$
+其中 $\theta^i_0$ 是初始化参数。而 $\sigma_0^i$ 的计算过程为
+$$
+\sigma_0^i = \sqrt{(g^i_0)^2} = |g^i_0|
+$$
+第二次更新参数过程为：
+$$
+\theta_{2}^{i} \leftarrow \theta_{1}^{i} - \frac \eta {\sigma^i_1}g^i_1
+$$
+其中 $\sigma_{1i}$ 是过去所有计算出来的梯度的平方的平均再开根号，即均方根
+$$
+\sigma_1^i = \sqrt{\frac{1}{2}\left[\left(g^i_0)^2 + (g_1^i\right)^2\right]}
+$$</p>
+<p>第$t + 1$ 次更新参数的时候：
+$$
+\theta_{t+1}^{i} \leftarrow \theta_{t}^{i} - \frac \eta {\sigma^i_t}g^i_t
+$$
+$$
+\sigma_t^i = \sqrt{\frac{1}{t+1}\sum_{k=0}^{t} (g^i_t)^2}
+$$</p>
+<h4 class="heading-element" id="rmsprop"><span>RMSProp</span>
+  <a href="#rmsprop" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>同一个参数的同个方向，学习率也是需要动态调整的，于是就有了RMSprop（Root Mean Squared propagation）</p>
+<p>第一步与Adarad一样：
+$$
+\sigma_0^i = \sqrt{(g^i_0)^2} = |g^i_0|
+$$
+第二步更新过程为</p>
+<p>$$
+\theta_{2}^{i} \leftarrow \theta_{1}^{i} - \frac \eta {\sigma^i_1}g^i_1
+$$</p>
+<p>$$
+\sigma_1^i = \sqrt{\alpha (\sigma_0^i)^2 + (1 - \alpha) (g^i_1)^2}
+$$</p>
+<p>之后亦是如此</p>
+<h4 class="heading-element" id="adam"><span>Adam</span>
+  <a href="#adam" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>最常用的优化的策略或者优化器（optimizer）是Adam（Adaptive moment estimation）</p>
+<p>Adam 可以看作 RMSprop 加上动量</p>
+<h3 class="heading-element" id="学习率优化"><span>学习率优化</span>
+  <a href="#%e5%ad%a6%e4%b9%a0%e7%8e%87%e4%bc%98%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>观察下图：</p>
+<p><img loading="lazy" src='/posts/2024-dl/assets/image-20240601144731168.png' alt="image-20240601144731168" height="378" width="825"></p>
+<p>通过学习率调度（learning rate scheduling）可以解决这个问题。
+$$
+\theta_{t+1}^{i} \leftarrow \theta_{t}^{i} - \frac {\eta_t} {\sigma^i_t} g^i_t
+$$
+学习率调度中最常见的策略是学习率衰减（learning rate decay），也称为学习率退火（learning rate
+annealing）。随着参数的不断更新，让 $\eta$ 越来越小</p>
+<p>除了学习率下降以外，还有另外一个经典的学习率调度的方式———预热。预热的方法是让学习率先变大后变小，至于变到多大、变大的速度、变小的速度是超参数。</p>
+<blockquote>
+<p>如果读者想要学更多有关预热的东西可参考 Adam 的进阶版———RAdam</p>
+<p>LIU L, JIANG H, HE P, et al. On the variance of the adaptive learning rate and beyond [J]. arXiv preprint arXiv:1908.03265, 2019.</p>
+</blockquote>
+<h3 class="heading-element" id="分类"><span>分类</span>
+  <a href="#%e5%88%86%e7%b1%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2024-05-29 00:00:00">更新于 2024-05-29&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/2024-DL/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/2024-dl/" data-title="Deep Learning" data-hashtags="Deep Learn"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/2024-dl/" data-hashtag="Deep Learn"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/2024-dl/" data-title="Deep Learning"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/deep-learn/" class="post-tag" title="标签 - Deep Learn">Deep Learn</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/2023%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" class="post-nav-item" rel="prev" title="2023年终总结"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>2023年终总结</a><a href="/posts/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" class="post-nav-item" rel="next" title="2024年终总结">2024年终总结<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#1深度学习基础">1.深度学习基础</a>
+      <ul>
+        <li><a href="#线性模型">线性模型</a>
+          <ul>
+            <li><a href="#分段线性曲线">分段线性曲线</a></li>
+            <li><a href="#模型变形">模型变形</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#2深度学习基础">2.深度学习基础</a>
+      <ul>
+        <li><a href="#局部极小值与鞍点">局部极小值与鞍点</a></li>
+        <li><a href="#判断临界值种类的方法">判断临界值种类的方法</a></li>
+        <li><a href="#批量和动量">批量和动量</a></li>
+        <li><a href="#自适应学习率">自适应学习率</a>
+          <ul>
+            <li><a href="#adagrad">AdaGrad</a></li>
+            <li><a href="#rmsprop">RMSProp</a></li>
+            <li><a href="#adam">Adam</a></li>
+          </ul>
+        </li>
+        <li><a href="#学习率优化">学习率优化</a></li>
+        <li><a href="#分类">分类</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/4af4be37d22d1e33d6acf0964b77aaab.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

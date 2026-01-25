@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>03.Uniswap V2 手续费机制 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="核心摘要 (Key Takeaways) 流动性增长：Uniswap V2 的千三（0.3%）交易手续费会直接重新注入到流动性池中，导致池子中的资产（X和Y）缓慢增长，进而使总流动性 K 值不断增大。 LP 收益机制：流动性提供者（LP）通过持有 LP Token (Share) 来证明其在池中的份额。当池子总流动性 K 增长时，LP Token 的总份额不变，因此每个 LP Token 所代表的实际资产价值会提升，LP 在撤出流动性时能获得更多资产。 协议手续费 (PROTOCOL_FEE)：Uniswap V2 设计了一种机制，允许协议开发者收取一部分手续费（例如千三的 1/6，即万分之五）。这通过增发新的 LP Token (Share) 给协议方来实现，从而让协议方在不提供流动性的前提下，分享流动性增长带来的收益。 链上状态：尽管 Uniswap V2 设计了协议手续费机制，但目前该功能并未在主网上开启。通过检查 UniswapV2Factory 合约的 feeTo 地址是否为零，可以验证其开启状态。 1. Uniswap V2 手续费机制概览 1.1 基础概念：流动性与 LP Token 恒定乘积做市商 (CPMM)：Uniswap V2 基于 X * Y = K 的公式进行资产交换，其中 X 和 Y 分别代表池中两种资产的数量，K 是一个常数（在无手续费和无流动性增减的情况下）。 流动性 (L)：在 Uniswap V2 中，流动性 L 通常指 sqrt(K)。 公式：$L = \sqrt{K}$ LP Token (Share / LPT)：当用户向 Uniswap 池中提供流动性时，会获得相应数量的 LP Token 作为凭证。这些 Token 代表了用户在池中的份额。 S1：在 T1 时刻，LP Token 的总数量。 1.2 千三手续费 (0.3%) 收取方式：每笔交易都会收取 0.3% 的手续费。这笔费用并不是直接从交易对的另一方扣除，而是从进入池子的 Token 中扣除。 例如，用户用 DX 数量的 X 资产购买 Y 资产，池子实际上只收到 (1 - 0.003) * DX = 0.997 * DX。 归属：这 0.3% 的手续费直接重新注入到流动性池中，而非直接分配给某个用户或地址。 2. 流动性增长的逻辑 2.1 为什么流动性会增长 (K2 &gt; K1)？ 手续费的积累：由于 0.3% 的手续费被重新注入到池子中，池子里的 X 和 Y 资产总量会随着交易量的增加而缓慢增长。 如果用 DX 购买 Y，池子收到 0.997 * DX。这 0.997 * DX 增加了池子里的 X 资产。 如果用 DY 购买 X，池子收到 0.997 * DY。这 0.997 * DY 增加了池子里的 Y 资产。 结果：只要有交易发生，池子中的 X 和 Y 资产总量就会增加，从而导致 K 值（即 X * Y）不断增大。 $K_2 &gt; K_1$ (在不考虑流动性增减的情况下)。 2.2 案例分析：DAI/USDT 池子 为了更好地理解流动性增长和套利机制，我们以 DAI/USDT 稳定币交易对为例：
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="03.Uniswap V2 手续费机制">
+  <meta itemprop="description" content="核心摘要 (Key Takeaways) 流动性增长：Uniswap V2 的千三（0.3%）交易手续费会直接重新注入到流动性池中，导致池子中的资产（X和Y）缓慢增长，进而使总流动性 K 值不断增大。 LP 收益机制：流动性提供者（LP）通过持有 LP Token (Share) 来证明其在池中的份额。当池子总流动性 K 增长时，LP Token 的总份额不变，因此每个 LP Token 所代表的实际资产价值会提升，LP 在撤出流动性时能获得更多资产。 协议手续费 (PROTOCOL_FEE)：Uniswap V2 设计了一种机制，允许协议开发者收取一部分手续费（例如千三的 1/6，即万分之五）。这通过增发新的 LP Token (Share) 给协议方来实现，从而让协议方在不提供流动性的前提下，分享流动性增长带来的收益。 链上状态：尽管 Uniswap V2 设计了协议手续费机制，但目前该功能并未在主网上开启。通过检查 UniswapV2Factory 合约的 feeTo 地址是否为零，可以验证其开启状态。 1. Uniswap V2 手续费机制概览 1.1 基础概念：流动性与 LP Token 恒定乘积做市商 (CPMM)：Uniswap V2 基于 X * Y = K 的公式进行资产交换，其中 X 和 Y 分别代表池中两种资产的数量，K 是一个常数（在无手续费和无流动性增减的情况下）。 流动性 (L)：在 Uniswap V2 中，流动性 L 通常指 sqrt(K)。 公式：$L = \sqrt{K}$ LP Token (Share / LPT)：当用户向 Uniswap 池中提供流动性时，会获得相应数量的 LP Token 作为凭证。这些 Token 代表了用户在池中的份额。 S1：在 T1 时刻，LP Token 的总数量。 1.2 千三手续费 (0.3%) 收取方式：每笔交易都会收取 0.3% 的手续费。这笔费用并不是直接从交易对的另一方扣除，而是从进入池子的 Token 中扣除。 例如，用户用 DX 数量的 X 资产购买 Y 资产，池子实际上只收到 (1 - 0.003) * DX = 0.997 * DX。 归属：这 0.3% 的手续费直接重新注入到流动性池中，而非直接分配给某个用户或地址。 2. 流动性增长的逻辑 2.1 为什么流动性会增长 (K2 &gt; K1)？ 手续费的积累：由于 0.3% 的手续费被重新注入到池子中，池子里的 X 和 Y 资产总量会随着交易量的增加而缓慢增长。 如果用 DX 购买 Y，池子收到 0.997 * DX。这 0.997 * DX 增加了池子里的 X 资产。 如果用 DY 购买 X，池子收到 0.997 * DY。这 0.997 * DY 增加了池子里的 Y 资产。 结果：只要有交易发生，池子中的 X 和 Y 资产总量就会增加，从而导致 K 值（即 X * Y）不断增大。 $K_2 &gt; K_1$ (在不考虑流动性增减的情况下)。 2.2 案例分析：DAI/USDT 池子 为了更好地理解流动性增长和套利机制，我们以 DAI/USDT 稳定币交易对为例：">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="4972">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap03/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="03.Uniswap V2 手续费机制">
+  <meta property="og:description" content="核心摘要 (Key Takeaways) 流动性增长：Uniswap V2 的千三（0.3%）交易手续费会直接重新注入到流动性池中，导致池子中的资产（X和Y）缓慢增长，进而使总流动性 K 值不断增大。 LP 收益机制：流动性提供者（LP）通过持有 LP Token (Share) 来证明其在池中的份额。当池子总流动性 K 增长时，LP Token 的总份额不变，因此每个 LP Token 所代表的实际资产价值会提升，LP 在撤出流动性时能获得更多资产。 协议手续费 (PROTOCOL_FEE)：Uniswap V2 设计了一种机制，允许协议开发者收取一部分手续费（例如千三的 1/6，即万分之五）。这通过增发新的 LP Token (Share) 给协议方来实现，从而让协议方在不提供流动性的前提下，分享流动性增长带来的收益。 链上状态：尽管 Uniswap V2 设计了协议手续费机制，但目前该功能并未在主网上开启。通过检查 UniswapV2Factory 合约的 feeTo 地址是否为零，可以验证其开启状态。 1. Uniswap V2 手续费机制概览 1.1 基础概念：流动性与 LP Token 恒定乘积做市商 (CPMM)：Uniswap V2 基于 X * Y = K 的公式进行资产交换，其中 X 和 Y 分别代表池中两种资产的数量，K 是一个常数（在无手续费和无流动性增减的情况下）。 流动性 (L)：在 Uniswap V2 中，流动性 L 通常指 sqrt(K)。 公式：$L = \sqrt{K}$ LP Token (Share / LPT)：当用户向 Uniswap 池中提供流动性时，会获得相应数量的 LP Token 作为凭证。这些 Token 代表了用户在池中的份额。 S1：在 T1 时刻，LP Token 的总数量。 1.2 千三手续费 (0.3%) 收取方式：每笔交易都会收取 0.3% 的手续费。这笔费用并不是直接从交易对的另一方扣除，而是从进入池子的 Token 中扣除。 例如，用户用 DX 数量的 X 资产购买 Y 资产，池子实际上只收到 (1 - 0.003) * DX = 0.997 * DX。 归属：这 0.3% 的手续费直接重新注入到流动性池中，而非直接分配给某个用户或地址。 2. 流动性增长的逻辑 2.1 为什么流动性会增长 (K2 &gt; K1)？ 手续费的积累：由于 0.3% 的手续费被重新注入到池子中，池子里的 X 和 Y 资产总量会随着交易量的增加而缓慢增长。 如果用 DX 购买 Y，池子收到 0.997 * DX。这 0.997 * DX 增加了池子里的 X 资产。 如果用 DY 购买 X，池子收到 0.997 * DY。这 0.997 * DY 增加了池子里的 Y 资产。 结果：只要有交易发生，池子中的 X 和 Y 资产总量就会增加，从而导致 K 值（即 X * Y）不断增大。 $K_2 &gt; K_1$ (在不考虑流动性增减的情况下)。 2.2 案例分析：DAI/USDT 池子 为了更好地理解流动性增长和套利机制，我们以 DAI/USDT 稳定币交易对为例：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="03.Uniswap V2 手续费机制">
+  <meta name="twitter:description" content="核心摘要 (Key Takeaways) 流动性增长：Uniswap V2 的千三（0.3%）交易手续费会直接重新注入到流动性池中，导致池子中的资产（X和Y）缓慢增长，进而使总流动性 K 值不断增大。 LP 收益机制：流动性提供者（LP）通过持有 LP Token (Share) 来证明其在池中的份额。当池子总流动性 K 增长时，LP Token 的总份额不变，因此每个 LP Token 所代表的实际资产价值会提升，LP 在撤出流动性时能获得更多资产。 协议手续费 (PROTOCOL_FEE)：Uniswap V2 设计了一种机制，允许协议开发者收取一部分手续费（例如千三的 1/6，即万分之五）。这通过增发新的 LP Token (Share) 给协议方来实现，从而让协议方在不提供流动性的前提下，分享流动性增长带来的收益。 链上状态：尽管 Uniswap V2 设计了协议手续费机制，但目前该功能并未在主网上开启。通过检查 UniswapV2Factory 合约的 feeTo 地址是否为零，可以验证其开启状态。 1. Uniswap V2 手续费机制概览 1.1 基础概念：流动性与 LP Token 恒定乘积做市商 (CPMM)：Uniswap V2 基于 X * Y = K 的公式进行资产交换，其中 X 和 Y 分别代表池中两种资产的数量，K 是一个常数（在无手续费和无流动性增减的情况下）。 流动性 (L)：在 Uniswap V2 中，流动性 L 通常指 sqrt(K)。 公式：$L = \sqrt{K}$ LP Token (Share / LPT)：当用户向 Uniswap 池中提供流动性时，会获得相应数量的 LP Token 作为凭证。这些 Token 代表了用户在池中的份额。 S1：在 T1 时刻，LP Token 的总数量。 1.2 千三手续费 (0.3%) 收取方式：每笔交易都会收取 0.3% 的手续费。这笔费用并不是直接从交易对的另一方扣除，而是从进入池子的 Token 中扣除。 例如，用户用 DX 数量的 X 资产购买 Y 资产，池子实际上只收到 (1 - 0.003) * DX = 0.997 * DX。 归属：这 0.3% 的手续费直接重新注入到流动性池中，而非直接分配给某个用户或地址。 2. 流动性增长的逻辑 2.1 为什么流动性会增长 (K2 &gt; K1)？ 手续费的积累：由于 0.3% 的手续费被重新注入到池子中，池子里的 X 和 Y 资产总量会随着交易量的增加而缓慢增长。 如果用 DX 购买 Y，池子收到 0.997 * DX。这 0.997 * DX 增加了池子里的 X 资产。 如果用 DY 购买 X，池子收到 0.997 * DY。这 0.997 * DY 增加了池子里的 Y 资产。 结果：只要有交易发生，池子中的 X 和 Y 资产总量就会增加，从而导致 K 值（即 X * Y）不断增大。 $K_2 &gt; K_1$ (在不考虑流动性增减的情况下)。 2.2 案例分析：DAI/USDT 池子 为了更好地理解流动性增长和套利机制，我们以 DAI/USDT 稳定币交易对为例：">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap03/" title="03.Uniswap V2 手续费机制 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap04/" title="04.Uniswap V2 添加移除流动性" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap02/" title="02.Uniswap V2 swap 操作" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "03.Uniswap V2 手续费机制",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap03\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  4972 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap03\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>03.Uniswap V2 手续费机制</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="4972 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 5000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 10 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#1-uniswap-v2-手续费机制概览">1. Uniswap V2 手续费机制概览</a>
+      <ul>
+        <li><a href="#11-基础概念流动性与-lp-token">1.1 基础概念：流动性与 LP Token</a></li>
+        <li><a href="#12-千三手续费-03">1.2 千三手续费 (0.3%)</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-流动性增长的逻辑">2. 流动性增长的逻辑</a>
+      <ul>
+        <li><a href="#21-为什么流动性会增长-k2--k1">2.1 为什么流动性会增长 (K2 &gt; K1)？</a></li>
+        <li><a href="#22-案例分析daiusdt-池子">2.2 案例分析：DAI/USDT 池子</a></li>
+        <li><a href="#23-可视化流动性增长与套利平衡流程">2.3 可视化：流动性增长与套利平衡流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-lp-如何从手续费中受益">3. LP 如何从手续费中受益</a>
+      <ul>
+        <li><a href="#31-share-价值的提升">3.1 Share 价值的提升</a></li>
+        <li><a href="#32-公平性与实时性">3.2 公平性与实时性</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-uniswap-v2-协议手续费-protocol_fee-机制">4. Uniswap V2 协议手续费 (PROTOCOL_FEE) 机制</a>
+      <ul>
+        <li><a href="#41-项目方的需求">4.1 项目方的需求</a></li>
+        <li><a href="#42-phi-phi-参数">4.2 <code>phi</code> ($\phi$) 参数</a></li>
+        <li><a href="#43-实现方式增发-share">4.3 实现方式：增发 Share</a></li>
+        <li><a href="#44-数学推导sm-的计算">4.4 数学推导：<code>SM</code> 的计算</a></li>
+        <li><a href="#45-可视化协议手续费收取流程">4.5 可视化：协议手续费收取流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-代码实现与链上验证">5. 代码实现与链上验证</a>
+      <ul>
+        <li><a href="#51-mintfee-方法">5.1 <code>mintFee</code> 方法</a></li>
+        <li><a href="#52-feeto-开关">5.2 <code>feeTo</code> 开关</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ul>
+<li><strong>流动性增长</strong>：Uniswap V2 的千三（0.3%）交易手续费会直接重新注入到流动性池中，导致池子中的资产（X和Y）缓慢增长，进而使总流动性 <code>K</code> 值不断增大。</li>
+<li><strong>LP 收益机制</strong>：流动性提供者（LP）通过持有 <strong>LP Token (Share)</strong> 来证明其在池中的份额。当池子总流动性 <code>K</code> 增长时，LP Token 的总份额不变，因此每个 LP Token 所代表的实际资产价值会提升，LP 在撤出流动性时能获得更多资产。</li>
+<li><strong>协议手续费 (PROTOCOL_FEE)</strong>：Uniswap V2 设计了一种机制，允许协议开发者收取一部分手续费（例如千三的 1/6，即万分之五）。这通过<strong>增发新的 LP Token (Share)</strong> 给协议方来实现，从而让协议方在不提供流动性的前提下，分享流动性增长带来的收益。</li>
+<li><strong>链上状态</strong>：尽管 Uniswap V2 设计了协议手续费机制，但目前该功能并未在主网上开启。通过检查 <code>UniswapV2Factory</code> 合约的 <code>feeTo</code> 地址是否为零，可以验证其开启状态。</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="1-uniswap-v2-手续费机制概览"><span>1. Uniswap V2 手续费机制概览</span>
+  <a href="#1-uniswap-v2-%e6%89%8b%e7%bb%ad%e8%b4%b9%e6%9c%ba%e5%88%b6%e6%a6%82%e8%a7%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="11-基础概念流动性与-lp-token"><span>1.1 基础概念：流动性与 LP Token</span>
+  <a href="#11-%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5%e6%b5%81%e5%8a%a8%e6%80%a7%e4%b8%8e-lp-token" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>恒定乘积做市商 (CPMM)</strong>：Uniswap V2 基于 <code>X * Y = K</code> 的公式进行资产交换，其中 <code>X</code> 和 <code>Y</code> 分别代表池中两种资产的数量，<code>K</code> 是一个常数（在无手续费和无流动性增减的情况下）。</li>
+<li><strong>流动性 (L)</strong>：在 Uniswap V2 中，流动性 <code>L</code> 通常指 <code>sqrt(K)</code>。
+<ul>
+<li>公式：$L = \sqrt{K}$</li>
+</ul>
+</li>
+<li><strong>LP Token (Share / LPT)</strong>：当用户向 Uniswap 池中提供流动性时，会获得相应数量的 LP Token 作为凭证。这些 Token 代表了用户在池中的份额。
+<ul>
+<li><code>S1</code>：在 <code>T1</code> 时刻，LP Token 的总数量。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="12-千三手续费-03"><span>1.2 千三手续费 (0.3%)</span>
+  <a href="#12-%e5%8d%83%e4%b8%89%e6%89%8b%e7%bb%ad%e8%b4%b9-03" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>收取方式</strong>：每笔交易都会收取 0.3% 的手续费。这笔费用并不是直接从交易对的另一方扣除，而是从<strong>进入池子的 Token</strong> 中扣除。
+<ul>
+<li>例如，用户用 <code>DX</code> 数量的 X 资产购买 Y 资产，池子实际上只收到 <code>(1 - 0.003) * DX = 0.997 * DX</code>。</li>
+</ul>
+</li>
+<li><strong>归属</strong>：这 0.3% 的手续费<strong>直接重新注入到流动性池中</strong>，而非直接分配给某个用户或地址。</li>
+</ul>
+<h2 class="heading-element" id="2-流动性增长的逻辑"><span>2. 流动性增长的逻辑</span>
+  <a href="#2-%e6%b5%81%e5%8a%a8%e6%80%a7%e5%a2%9e%e9%95%bf%e7%9a%84%e9%80%bb%e8%be%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="21-为什么流动性会增长-k2--k1"><span>2.1 为什么流动性会增长 (K2 &gt; K1)？</span>
+  <a href="#21-%e4%b8%ba%e4%bb%80%e4%b9%88%e6%b5%81%e5%8a%a8%e6%80%a7%e4%bc%9a%e5%a2%9e%e9%95%bf-k2--k1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>手续费的积累</strong>：由于 0.3% 的手续费被重新注入到池子中，池子里的 <code>X</code> 和 <code>Y</code> 资产总量会随着交易量的增加而缓慢增长。
+<ul>
+<li>如果用 <code>DX</code> 购买 Y，池子收到 <code>0.997 * DX</code>。这 <code>0.997 * DX</code> 增加了池子里的 X 资产。</li>
+<li>如果用 <code>DY</code> 购买 X，池子收到 <code>0.997 * DY</code>。这 <code>0.997 * DY</code> 增加了池子里的 Y 资产。</li>
+</ul>
+</li>
+<li><strong>结果</strong>：只要有交易发生，池子中的 <code>X</code> 和 <code>Y</code> 资产总量就会增加，从而导致 <code>K</code> 值（即 <code>X * Y</code>）不断增大。
+<ul>
+<li>$K_2 &gt; K_1$ (在不考虑流动性增减的情况下)。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="22-案例分析daiusdt-池子"><span>2.2 案例分析：DAI/USDT 池子</span>
+  <a href="#22-%e6%a1%88%e4%be%8b%e5%88%86%e6%9e%90daiusdt-%e6%b1%a0%e5%ad%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了更好地理解流动性增长和套利机制，我们以 DAI/USDT 稳定币交易对为例：</p>
+<ul>
+<li><strong>前提</strong>：DAI 和 USDT 都是稳定币，价格始终保持 1 美元。</li>
+<li><strong>初始状态</strong>：池中有 100 DAI 和 100 USDT。
+<ul>
+<li>此时 $K = 100 \times 100 = 10000$</li>
+<li>$L = \sqrt{10000} = 100$</li>
+</ul>
+</li>
+<li><strong>单边交易</strong>：假设用户持续用 DAI 购买 USDT。
+<ul>
+<li>每次交易都会收取 0.3% 的 DAI 手续费并注入池中。</li>
+<li>池中的 DAI 会增加，USDT 会减少（因为被换出）。</li>
+<li>池子可能暂时变为：104 DAI 和 98 USDT。</li>
+</ul>
+</li>
+<li><strong>套利机器人 (Arbitrage Bots) 的作用</strong>：
+<ul>
+<li>当池子变为 104 DAI 和 98 USDT 时，池子内部的 DAI 价格相对于 USDT 变得更便宜（例如 1 DAI &lt; 1 USDT），而 USDT 价格相对于 DAI 变得更贵。</li>
+<li>套利机器人会立即发现这个价格差异：它们会用外部市场价格更低的 USDT 来购买池中相对便宜的 DAI，然后将 DAI 卖出换回 USDT，从而赚取差价。</li>
+<li>套利交易会持续进行，直到池子内部的价格与外部市场价格重新平衡。</li>
+</ul>
+</li>
+<li><strong>最终结果</strong>：经过交易和套利，池子最终会达到一个新的平衡点，例如：101 DAI 和 101 USDT。
+<ul>
+<li>此时 $K = 101 \times 101 = 10201$</li>
+<li>$L = \sqrt{10201} = 101$</li>
+</ul>
+</li>
+<li><strong>结论</strong>：即使经过套利平衡，最终的流动性 <code>L</code>（或 <code>K</code>）仍然会因为手续费的积累而增长（从 100 增长到 101）。</li>
+</ul>
+<h3 class="heading-element" id="23-可视化流动性增长与套利平衡流程"><span>2.3 可视化：流动性增长与套利平衡流程</span>
+  <a href="#23-%e5%8f%af%e8%a7%86%e5%8c%96%e6%b5%81%e5%8a%a8%e6%80%a7%e5%a2%9e%e9%95%bf%e4%b8%8e%e5%a5%97%e5%88%a9%e5%b9%b3%e8%a1%a1%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="diagram-container">
+  <pre class="mermaid">graph TD
+    A[用户发起交易] --> B{收取 0.3% 手续费};
+    B --> C[手续费注入流动性池];
+    C --> D[池中 X/Y 资产总量增加];
+    D --> E[池子总流动性 K 增长];
+    E --> F{池内价格是否偏离市场价?};
+    F -- 是 --> G[套利机器人介入];
+    G --> H[套利交易平衡池内价格];
+    H --> D;
+    F -- 否 --> I[流动性增长稳定];
+    I --> J[LP Token 价值提升];
+    J --> K[LP 撤出时获得更多资产];</pre>
+  <pre class="mermaid-dark">graph TD
+    A[用户发起交易] --> B{收取 0.3% 手续费};
+    B --> C[手续费注入流动性池];
+    C --> D[池中 X/Y 资产总量增加];
+    D --> E[池子总流动性 K 增长];
+    E --> F{池内价格是否偏离市场价?};
+    F -- 是 --> G[套利机器人介入];
+    G --> H[套利交易平衡池内价格];
+    H --> D;
+    F -- 否 --> I[流动性增长稳定];
+    I --> J[LP Token 价值提升];
+    J --> K[LP 撤出时获得更多资产];</pre>
+  <pre class="mermaid-neutral">graph TD
+    A[用户发起交易] --> B{收取 0.3% 手续费};
+    B --> C[手续费注入流动性池];
+    C --> D[池中 X/Y 资产总量增加];
+    D --> E[池子总流动性 K 增长];
+    E --> F{池内价格是否偏离市场价?};
+    F -- 是 --> G[套利机器人介入];
+    G --> H[套利交易平衡池内价格];
+    H --> D;
+    F -- 否 --> I[流动性增长稳定];
+    I --> J[LP Token 价值提升];
+    J --> K[LP 撤出时获得更多资产];</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>graph TD
+    A[用户发起交易] --> B{收取 0.3% 手续费};
+    B --> C[手续费注入流动性池];
+    C --> D[池中 X/Y 资产总量增加];
+    D --> E[池子总流动性 K 增长];
+    E --> F{池内价格是否偏离市场价?};
+    F -- 是 --> G[套利机器人介入];
+    G --> H[套利交易平衡池内价格];
+    H --> D;
+    F -- 否 --> I[流动性增长稳定];
+    I --> J[LP Token 价值提升];
+    J --> K[LP 撤出时获得更多资产];</pre></template>
+</div><p><strong>流程解释</strong>：</p>
+<ol>
+<li>用户进行交易，Uniswap V2 会收取 0.3% 的手续费。</li>
+<li>这笔手续费会被直接添加到流动性池中，导致池子中的 <code>X</code> 和 <code>Y</code> 资产总量增加。</li>
+<li>资产总量的增加使得池子的总流动性 <code>K</code> 值随之增长。</li>
+<li>随着 <code>K</code> 值的增长，池子内部的资产价格可能会与外部市场价格产生偏差。</li>
+<li><strong>套利机器人</strong>会监测到这种价格偏差，并立即进行交易以平衡价格，从而赚取差价。</li>
+<li>套利交易本身也会产生手续费，并进一步注入池中，循环促进 <code>K</code> 的增长。</li>
+<li>当池内价格与市场价格平衡后，<code>K</code> 值达到一个因手续费积累而增长的稳定状态。</li>
+<li>由于 <code>K</code> 增长而 LP Token 数量不变，每个 LP Token 对应的资产价值提升。</li>
+<li>当 LP 决定撤出流动性时，他们将获得比初始投入更多的资产，这就是 LP 从手续费中受益的方式。</li>
+</ol>
+<h2 class="heading-element" id="3-lp-如何从手续费中受益"><span>3. LP 如何从手续费中受益</span>
+  <a href="#3-lp-%e5%a6%82%e4%bd%95%e4%bb%8e%e6%89%8b%e7%bb%ad%e8%b4%b9%e4%b8%ad%e5%8f%97%e7%9b%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="31-share-价值的提升"><span>3.1 Share 价值的提升</span>
+  <a href="#31-share-%e4%bb%b7%e5%80%bc%e7%9a%84%e6%8f%90%e5%8d%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>基本原理</strong>：当流动性池的总流动性 <code>K</code>（或 <code>L</code>）增长时，LP Token 的总数量 <code>S1</code> 保持不变（不考虑新增发或销毁）。</li>
+<li><strong>结果</strong>：这意味着每个 LP Token 所代表的池子份额，以及其背后对应的实际资产数量，都会随之增加。LP 在撤出流动性时，会按照其 LP Token 份额，从更大的资产池中分得更多资产。</li>
+<li><strong>手续费增加的比例</strong>：从 <code>T1</code> 到 <code>T2</code> 时刻，手续费导致流动性增加的比例可以表示为：
+$$
+\text{Fee Increase Ratio} = 1 - \frac{\sqrt{K_1}}{\sqrt{K_2}}
+$$
+其中 $K_1$ 是 <code>T1</code> 时刻的流动性常数，$K_2$ 是 <code>T2</code> 时刻的流动性常数。</li>
+</ul>
+<h3 class="heading-element" id="32-公平性与实时性"><span>3.2 公平性与实时性</span>
+  <a href="#32-%e5%85%ac%e5%b9%b3%e6%80%a7%e4%b8%8e%e5%ae%9e%e6%97%b6%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>公平分配</strong>：LP 收益的分配是公平的，完全基于 LP Token 的持有比例。如果 LP 持有池子 1% 的 LP Token，那么他就能获得 1% 的手续费收益。</li>
+<li><strong>实时性</strong>：LP 可以随时加入或退出流动性池。在他们提供流动性的期间，他们对池子的贡献会通过 LP Token 价值的增长，实时地体现在他们的收益中。</li>
+</ul>
+<h2 class="heading-element" id="4-uniswap-v2-协议手续费-protocol_fee-机制"><span>4. Uniswap V2 协议手续费 (PROTOCOL_FEE) 机制</span>
+  <a href="#4-uniswap-v2-%e5%8d%8f%e8%ae%ae%e6%89%8b%e7%bb%ad%e8%b4%b9-protocol_fee-%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="41-项目方的需求"><span>4.1 项目方的需求</span>
+  <a href="#41-%e9%a1%b9%e7%9b%ae%e6%96%b9%e7%9a%84%e9%9c%80%e6%b1%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>在 Uniswap V1 中，所有手续费都归 LP 所有，协议开发者（Uniswap 团队）自身无法从中直接获利。</li>
+<li>为了激励协议的持续开发和维护，Uniswap V2 引入了协议手续费机制，允许项目方从协议中分得一杯羹。</li>
+</ul>
+<h3 class="heading-element" id="42-phi-phi-参数"><span>4.2 <code>phi</code> ($\phi$) 参数</span>
+  <a href="#42-phi-phi-%e5%8f%82%e6%95%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>定义</strong>：$\phi$ (phi) 代表项目方希望从总手续费中分走的比例。
+<ul>
+<li>例如，如果项目方想分走 0.3% 手续费中的 1/6，那么 $\phi = 1/6$。</li>
+<li>实际收取的协议费率为 $0.3% \times \frac{1}{6} = 0.05%$ (万分之五)。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="43-实现方式增发-share"><span>4.3 实现方式：增发 Share</span>
+  <a href="#43-%e5%ae%9e%e7%8e%b0%e6%96%b9%e5%bc%8f%e5%a2%9e%e5%8f%91-share" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>核心思想</strong>：项目方通常不提供流动性，因此不能直接持有 LP Token 来分享收益。为了让项目方获得收益，Uniswap V2 采取了<strong>增发新的 LP Token (Share)</strong> 给项目方的方式。</li>
+<li><strong>“做大蛋糕，分增量”</strong>：项目方增发 Share 的逻辑是，在流动性池因手续费而变大（蛋糕变大）的同时，从这个“变大的部分”中分走一小块，而不是侵占现有 LP 的初始利益。</li>
+</ul>
+<h3 class="heading-element" id="44-数学推导sm-的计算"><span>4.4 数学推导：<code>SM</code> 的计算</span>
+  <a href="#44-%e6%95%b0%e5%ad%a6%e6%8e%a8%e5%af%bcsm-%e7%9a%84%e8%ae%a1%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>假设：</p>
+<ul>
+<li>$S_1$：<code>T1</code> 时刻 LP 持有的 LP Token 总量。</li>
+<li>$K_1$：<code>T1</code> 时刻池子的流动性常数。</li>
+<li>$K_2$：<code>T2</code> 时刻池子的流动性常数（因手续费积累而增长）。</li>
+<li>$SM$：项目方在 <code>T2</code> 时刻应增发的新 LP Token 数量。</li>
+<li>$\phi$：项目方希望分走的手续费比例。</li>
+</ul>
+<p>协议手续费的计算基于以下公式：
+$$
+\frac{SM}{S_1 + SM} = \phi \cdot \frac{\sqrt{K_2} - \sqrt{K_1}}{\sqrt{K_2}}
+$$
+这个公式的含义是：</p>
+<ul>
+<li>左侧 $\frac{SM}{S_1 + SM}$ 代表项目方增发的 Share 占总 Share 数量的比例。</li>
+<li>右侧 $\frac{\sqrt{K_2} - \sqrt{K_1}}{\sqrt{K_2}}$ 代表从 <code>T1</code> 到 <code>T2</code> 时刻，因手续费积累而导致的流动性（<code>L = sqrt(K)</code>）的增长比例。</li>
+<li>$\phi$ 是项目方从这个增长比例中分走的份额。</li>
+</ul>
+<p>通过对上述公式进行推导，可以求得 <code>SM</code> 的表达式：</p>
+<p><strong>推导过程</strong>：</p>
+<ol>
+<li>初始公式：
+$$
+\frac{SM}{S_1 + SM} = \phi \cdot \frac{\sqrt{K_2} - \sqrt{K_1}}{\sqrt{K_2}}
+$$</li>
+<li>将右侧的 $\frac{\sqrt{K_2} - \sqrt{K_1}}{\sqrt{K_2}}$ 记为 $F_{ratio}$ (手续费导致的流动性增长比例)。
+$$
+\frac{SM}{S_1 + SM} = \phi \cdot F_{ratio}
+$$</li>
+<li>交叉相乘：
+$$
+SM = \phi \cdot F_{ratio} \cdot (S_1 + SM)
+$$</li>
+<li>展开：
+$$
+SM = \phi \cdot F_{ratio} \cdot S_1 + \phi \cdot F_{ratio} \cdot SM
+$$</li>
+<li>将包含 $SM$ 的项移到等式左侧：
+$$
+SM - \phi \cdot F_{ratio} \cdot SM = \phi \cdot F_{ratio} \cdot S_1
+$$</li>
+<li>提取 $SM$：
+$$
+SM \cdot (1 - \phi \cdot F_{ratio}) = \phi \cdot F_{ratio} \cdot S_1
+$$</li>
+<li>解出 $SM$：
+$$
+SM = \frac{\phi \cdot F_{ratio}}{1 - \phi \cdot F_{ratio}} \cdot S_1
+$$</li>
+<li>将 $F_{ratio} = \frac{\sqrt{K_2} - \sqrt{K_1}}{\sqrt{K_2}}$ 代回：
+$$
+SM = \frac{\phi \cdot \frac{\sqrt{K_2} - \sqrt{K_1}}{\sqrt{K_2}}}{1 - \phi \cdot \frac{\sqrt{K_2} - \sqrt{K_1}}{\sqrt{K_2}}} \cdot S_1
+$$</li>
+<li>为了简化，分子分母同乘以 $\sqrt{K_2}$：
+$$
+SM = \frac{\phi \cdot (\sqrt{K_2} - \sqrt{K_1})}{\sqrt{K_2} - \phi \cdot (\sqrt{K_2} - \sqrt{K_1})} \cdot S_1
+$$</li>
+<li>进一步整理分母：
+$$
+\sqrt{K_2} - \phi\sqrt{K_2} + \phi\sqrt{K_1} = (1-\phi)\sqrt{K_2} + \phi\sqrt{K_1}
+$$</li>
+<li>最终得到 $SM$ 的表达式：
+$$
+SM = \frac{\phi \cdot (\sqrt{K_2} - \sqrt{K_1})}{(1-\phi)\sqrt{K_2} + \phi\sqrt{K_1}} \cdot S_1
+$$</li>
+<li>为了得到与白皮书和代码实现一致的形式，我们可以将分子分母同除以 $\phi$：
+$$
+SM = \frac{\frac{\phi}{\phi} \cdot (\sqrt{K_2} - \sqrt{K_1})}{\frac{(1-\phi)}{\phi}\sqrt{K_2} + \frac{\phi}{\phi}\sqrt{K_1}} \cdot S_1
+$$
+$$
+SM = \frac{\sqrt{K_2} - \sqrt{K_1}}{(\frac{1}{\phi} - 1)\sqrt{K_2} + \sqrt{K_1}} \cdot S_1
+$$
+当 Uniswap V2 协议费比例 $\phi = 1/6$ 时，$\frac{1}{\phi} - 1 = \frac{1}{1/6} - 1 = 6 - 1 = 5$。
+因此，最终用于计算的 <code>SM</code> 公式为：
+$$
+SM = \frac{\sqrt{K_2} - \sqrt{K_1}}{5 \cdot \sqrt{K_2} + \sqrt{K_1}} \cdot S_1
+$$
+这个公式与 Uniswap V2 白皮书和代码实现中的逻辑完全一致。</li>
+</ol>
+<h3 class="heading-element" id="45-可视化协议手续费收取流程"><span>4.5 可视化：协议手续费收取流程</span>
+  <a href="#45-%e5%8f%af%e8%a7%86%e5%8c%96%e5%8d%8f%e8%ae%ae%e6%89%8b%e7%bb%ad%e8%b4%b9%e6%94%b6%e5%8f%96%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="diagram-container">
+  <pre class="mermaid">graph TD
+    A[Uniswap V2 团队决定收取协议费] --> B{设置 feeTo 地址 （非零）};
+    B --> C[用户持续进行交易];
+    C --> D[手续费累积，流动性 K 增长];
+    D --> E[调用 mintFee 方法 ，通常由外部触发];
+    E --> F{根据 K 的增长和 phi 计算 SM};
+    F --> G[增发 SM 数量的 LP Token];
+    G --> H[将增发的 LP Token 发送给 feeTo 地址];
+    H --> I[项目方通过 SM 分享流动性增长收益];</pre>
+  <pre class="mermaid-dark">graph TD
+    A[Uniswap V2 团队决定收取协议费] --> B{设置 feeTo 地址 （非零）};
+    B --> C[用户持续进行交易];
+    C --> D[手续费累积，流动性 K 增长];
+    D --> E[调用 mintFee 方法 ，通常由外部触发];
+    E --> F{根据 K 的增长和 phi 计算 SM};
+    F --> G[增发 SM 数量的 LP Token];
+    G --> H[将增发的 LP Token 发送给 feeTo 地址];
+    H --> I[项目方通过 SM 分享流动性增长收益];</pre>
+  <pre class="mermaid-neutral">graph TD
+    A[Uniswap V2 团队决定收取协议费] --> B{设置 feeTo 地址 （非零）};
+    B --> C[用户持续进行交易];
+    C --> D[手续费累积，流动性 K 增长];
+    D --> E[调用 mintFee 方法 ，通常由外部触发];
+    E --> F{根据 K 的增长和 phi 计算 SM};
+    F --> G[增发 SM 数量的 LP Token];
+    G --> H[将增发的 LP Token 发送给 feeTo 地址];
+    H --> I[项目方通过 SM 分享流动性增长收益];</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>graph TD
+    A[Uniswap V2 团队决定收取协议费] --> B{设置 feeTo 地址 （非零）};
+    B --> C[用户持续进行交易];
+    C --> D[手续费累积，流动性 K 增长];
+    D --> E[调用 mintFee 方法 ，通常由外部触发];
+    E --> F{根据 K 的增长和 phi 计算 SM};
+    F --> G[增发 SM 数量的 LP Token];
+    G --> H[将增发的 LP Token 发送给 feeTo 地址];
+    H --> I[项目方通过 SM 分享流动性增长收益];</pre></template>
+</div><p><strong>流程解释</strong>：</p>
+<ol>
+<li>Uniswap V2 团队决定开启协议手续费功能。</li>
+<li>团队通过设置 <code>UniswapV2Factory</code> 合约中的 <code>feeTo</code> 地址为一个非零地址来激活此功能。</li>
+<li>用户继续在 Uniswap V2 池中进行交易。</li>
+<li>交易产生的手续费会不断累积，使得池子的总流动性 <code>K</code> 值持续增长。</li>
+<li>在某个时间点，<code>mintFee</code> 方法会被调用（通常由外部触发，例如在添加/移除流动性时检查并触发）。</li>
+<li><code>mintFee</code> 方法会根据当前池子的流动性 <code>K</code> 值 (<code>K2</code>) 与上次计算协议费时的 <code>K</code> 值 (<code>K1</code>) 的差额，以及预设的协议费比例 <code>phi</code>，计算出应该增发给协议方的 LP Token 数量 <code>SM</code>。</li>
+<li>系统增发 <code>SM</code> 数量的 LP Token。</li>
+<li>这些新发行的 LP Token 会被发送到预设的 <code>feeTo</code> 地址。</li>
+<li>项目方通过持有这些 <code>SM</code> LP Token，可以分享流动性池因手续费积累而带来的增长收益。</li>
+</ol>
+<h2 class="heading-element" id="5-代码实现与链上验证"><span>5. 代码实现与链上验证</span>
+  <a href="#5-%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0%e4%b8%8e%e9%93%be%e4%b8%8a%e9%aa%8c%e8%af%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="51-mintfee-方法"><span>5.1 <code>mintFee</code> 方法</span>
+  <a href="#51-mintfee-%e6%96%b9%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nf">_mintFee</span><span class="p">(</span><span class="kt">uint112</span> <span class="n">_reserve0</span><span class="p">,</span> <span class="kt">uint112</span> <span class="n">_reserve1</span><span class="p">)</span> <span class="k">private</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span> <span class="n">feeOn</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">address</span> <span class="n">feeTo</span> <span class="o">=</span> <span class="n">IUniswapV2Factory</span><span class="p">(</span><span class="n">factory</span><span class="p">).</span><span class="n">feeTo</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">feeOn</span> <span class="o">=</span> <span class="n">feeTo</span> <span class="o">!=</span> <span class="kt">address</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint</span> <span class="n">_kLast</span> <span class="o">=</span> <span class="n">kLast</span><span class="p">;</span> <span class="c1">// gas savings
+</span></span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">feeOn</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">_kLast</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">uint</span> <span class="n">rootK</span> <span class="o">=</span> <span class="n">Math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="kt">uint</span><span class="p">(</span><span class="n">_reserve0</span><span class="p">).</span><span class="n">mul</span><span class="p">(</span><span class="n">_reserve1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">uint</span> <span class="n">rootKLast</span> <span class="o">=</span> <span class="n">Math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">_kLast</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">rootK</span> <span class="o">&gt;</span> <span class="n">rootKLast</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">uint</span> <span class="n">numerator</span> <span class="o">=</span> <span class="n">totalSupply</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">rootK</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">rootKLast</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">uint</span> <span class="n">denominator</span> <span class="o">=</span> <span class="n">rootK</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="n">add</span><span class="p">(</span><span class="n">rootKLast</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">uint</span> <span class="n">liquidity</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">liquidity</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">_mint</span><span class="p">(</span><span class="n">feeTo</span><span class="p">,</span> <span class="n">liquidity</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">_kLast</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">kLast</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><ul>
+<li><strong>位置</strong>：协议手续费的逻辑主要实现在 <code>UniswapV2Pair</code> 合约的 <code>mintFee</code> 方法中。</li>
+<li><strong>功能</strong>：该方法负责计算并增发协议方应得的 LP Token。</li>
+<li><strong>代码逻辑</strong>：
+<ul>
+<li>计算 <code>K2</code> 和 <code>K1</code>（当前和上次的流动性常数）。</li>
+<li>使用上述推导的公式计算 <code>SM</code>（增发数量）。</li>
+<li>如果 <code>SM &gt; 0</code>，则调用 <code>_mint</code> 函数增发 <code>SM</code> 数量的 LP Token，并发送给 <code>feeTo</code> 地址。</li>
+<li>代码中 <code>_mintFee</code> 的分母是 <code>5 * sqrt(K2) + sqrt(K1)</code>，这与白皮书的 $\phi = 1/6$ 时的公式一致。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="52-feeto-开关"><span>5.2 <code>feeTo</code> 开关</span>
+  <a href="#52-feeto-%e5%bc%80%e5%85%b3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>控制机制</strong>：协议手续费的开启与否由 <code>UniswapV2Factory</code> 合约中的 <code>feeTo</code> 地址决定。</li>
+<li><strong>判断逻辑</strong>：
+<ul>
+<li>如果 <code>feeTo</code> 地址为 <code>0x00...00</code> (零地址)，表示协议手续费未开启。</li>
+<li>如果 <code>feeTo</code> 地址不为 <code>0x00...00</code>，表示协议手续费已开启。</li>
+</ul>
+</li>
+<li><strong>代码中的 <code>feeOn</code> 变量</strong>：<code>mintFee</code> 方法内部会检查 <code>feeTo</code> 地址是否为零，并设置一个布尔变量 <code>feeOn</code>。只有当 <code>feeOn</code> 为 <code>true</code> 时，协议手续费的逻辑才会被触发。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap03/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap03/" data-title="03.Uniswap V2 手续费机制" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap03/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap03/" data-title="03.Uniswap V2 手续费机制"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap04/" class="post-nav-item" rel="prev" title="04.Uniswap V2 添加移除流动性"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>04.Uniswap V2 添加移除流动性</a><a href="/posts/202509-uniswap02/" class="post-nav-item" rel="next" title="02.Uniswap V2 Swap 操作">02.Uniswap V2 Swap 操作<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#1-uniswap-v2-手续费机制概览">1. Uniswap V2 手续费机制概览</a>
+      <ul>
+        <li><a href="#11-基础概念流动性与-lp-token">1.1 基础概念：流动性与 LP Token</a></li>
+        <li><a href="#12-千三手续费-03">1.2 千三手续费 (0.3%)</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-流动性增长的逻辑">2. 流动性增长的逻辑</a>
+      <ul>
+        <li><a href="#21-为什么流动性会增长-k2--k1">2.1 为什么流动性会增长 (K2 &gt; K1)？</a></li>
+        <li><a href="#22-案例分析daiusdt-池子">2.2 案例分析：DAI/USDT 池子</a></li>
+        <li><a href="#23-可视化流动性增长与套利平衡流程">2.3 可视化：流动性增长与套利平衡流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-lp-如何从手续费中受益">3. LP 如何从手续费中受益</a>
+      <ul>
+        <li><a href="#31-share-价值的提升">3.1 Share 价值的提升</a></li>
+        <li><a href="#32-公平性与实时性">3.2 公平性与实时性</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-uniswap-v2-协议手续费-protocol_fee-机制">4. Uniswap V2 协议手续费 (PROTOCOL_FEE) 机制</a>
+      <ul>
+        <li><a href="#41-项目方的需求">4.1 项目方的需求</a></li>
+        <li><a href="#42-phi-phi-参数">4.2 <code>phi</code> ($\phi$) 参数</a></li>
+        <li><a href="#43-实现方式增发-share">4.3 实现方式：增发 Share</a></li>
+        <li><a href="#44-数学推导sm-的计算">4.4 数学推导：<code>SM</code> 的计算</a></li>
+        <li><a href="#45-可视化协议手续费收取流程">4.5 可视化：协议手续费收取流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-代码实现与链上验证">5. 代码实现与链上验证</a>
+      <ul>
+        <li><a href="#51-mintfee-方法">5.1 <code>mintFee</code> 方法</a></li>
+        <li><a href="#52-feeto-开关">5.2 <code>feeTo</code> 开关</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/6f75ed3dc330f00cd62c675e33982bbf.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

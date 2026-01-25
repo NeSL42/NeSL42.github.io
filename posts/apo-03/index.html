@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>《高级投资组合优化》阅读笔记-第三章 3.1 矩 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="第三章 基于样本的方法 这章，主要介绍几种用于估算大多数投资组合优化模型所需输入参数的方法：预期收益向量和协方差矩阵。这些方法的主要缺点是：其估算的参数默认假设资产收益的未来表现会与用于估算的样本表现相似。
+"><meta name="keywords" content='量化'>
+  <meta itemprop="name" content="《高级投资组合优化》阅读笔记-第三章 3.1 矩">
+  <meta itemprop="description" content="第三章 基于样本的方法 这章，主要介绍几种用于估算大多数投资组合优化模型所需输入参数的方法：预期收益向量和协方差矩阵。这些方法的主要缺点是：其估算的参数默认假设资产收益的未来表现会与用于估算的样本表现相似。">
+  <meta itemprop="datePublished" content="2025-09-20T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-20T00:00:00+00:00">
+  <meta itemprop="wordCount" content="13051">
+  <meta itemprop="keywords" content="量化"><meta property="og:url" content="http://localhost:1313/posts/apo-03/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="《高级投资组合优化》阅读笔记-第三章 3.1 矩">
+  <meta property="og:description" content="第三章 基于样本的方法 这章，主要介绍几种用于估算大多数投资组合优化模型所需输入参数的方法：预期收益向量和协方差矩阵。这些方法的主要缺点是：其估算的参数默认假设资产收益的未来表现会与用于估算的样本表现相似。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:tag" content="量化">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="《高级投资组合优化》阅读笔记-第三章 3.1 矩">
+  <meta name="twitter:description" content="第三章 基于样本的方法 这章，主要介绍几种用于估算大多数投资组合优化模型所需输入参数的方法：预期收益向量和协方差矩阵。这些方法的主要缺点是：其估算的参数默认假设资产收益的未来表现会与用于估算的样本表现相似。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/apo-03/" title="《高级投资组合优化》阅读笔记-第三章 3.1 矩 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/apo-04/" title="《高级投资组合优化》阅读笔记-第四章" /><link rel="next" type="text/html" href="http://localhost:1313/posts/apo-01/" title="《高级投资组合优化》阅读笔记-第一二章" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "《高级投资组合优化》阅读笔记-第三章 3.1 矩",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/apo-03\/"
+    },"genre": "posts","keywords": "量化","wordcount":  13051 ,
+    "url": "http:\/\/localhost:1313\/posts\/apo-03\/","datePublished": "2025-09-20T00:00:00+00:00","dateModified": "2025-09-20T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>《高级投资组合优化》阅读笔记-第三章 3.1 矩</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-20 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-20">2025-09-20</time></span>&nbsp;<span title="13051 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 13100 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 27 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#31-矩moments">3.1 矩（moments）</a>
+      <ul>
+        <li><a href="#311-原始矩raw-moments">3.1.1 原始矩（Raw Moments）</a>
+          <ul>
+            <li><a href="#1-什么是矩物理类比"><strong>1. 什么是矩：物理类比</strong></a></li>
+            <li><a href="#2-如何计算矩理论与现实"><strong>2. 如何计算矩：理论与现实</strong></a></li>
+            <li><a href="#3-重要的矩及其含义"><strong>3. 重要的矩及其含义</strong></a></li>
+            <li><a href="#4示例">4.<strong>示例</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#312-中心矩-central-moments"><strong>3.1.2 中心矩 (Central Moments)</strong></a>
+          <ul>
+            <li><a href="#1-什么是中心矩"><strong>1. 什么是中心矩</strong></a></li>
+            <li><a href="#2-如何计算中心矩理论与现实"><strong>2. 如何计算中心矩：理论与现实</strong></a></li>
+            <li><a href="#3-重要的中心矩及其含义"><strong>3. 重要的中心矩及其含义</strong></a></li>
+            <li><a href="#4-示例"><strong>4. 示例</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#313-标准化中心矩-standardized-central-moments">3.1.3 标准化中心矩 (Standardized Central Moments)</a>
+          <ul>
+            <li><a href="#1-为什么需要标准化-消除量纲专注形状"><strong>1. 为什么需要“标准化”？—— 消除量纲，专注形状</strong></a></li>
+            <li><a href="#2-标准化矩的定义"><strong>2. 标准化矩的定义</strong></a></li>
+            <li><a href="#3-两个最重要的标准化矩偏度与峰度"><strong>3. 两个最重要的标准化矩：偏度与峰度</strong></a>
+              <ul>
+                <li><a href="#31-偏度-skewness---衡量分布的不对称性"><strong>3.1 偏度 (Skewness) - 衡量分布的“不对称性”</strong></a></li>
+                <li><a href="#32-峰度-kurtosis---衡量分布的尾部厚度"><strong>3.2 峰度 (Kurtosis) - 衡量分布的“尾部厚度”</strong></a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#314-协矩矩阵-comoments-matrices">3.1.4 协矩矩阵 (Comoments Matrices)</a>
+          <ul>
+            <li><a href="#1-核心概念什么是协矩矩阵"><strong>1. 核心概念：什么是协矩矩阵？</strong></a></li>
+            <li><a href="#2-什么是协矩">2. 什么是“协矩”？</a></li>
+            <li><a href="#2-如何计算协矩矩阵-m_"><strong>2. 如何计算：协矩矩阵 $M_k$ 的构建</strong></a></li>
+            <li><a href="#3-核心应用计算投资组合的各阶矩"><strong>3. 核心应用：计算投资组合的各阶矩</strong></a></li>
+            <li><a href="#4-特殊协矩矩阵及其应用"><strong>4. 特殊协矩矩阵及其应用</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#315-线性矩或l矩-linear-moments-or-l-moments">3.1.5 线性矩或L矩 (Linear Moments or L-Moments)</a>
+          <ul>
+            <li><a href="#1-什么是l矩一种更稳健的分布描述方法">1. 什么是L矩：一种更稳健的分布描述方法</a></li>
+            <li><a href="#2-如何计算l矩加权求和的艺术">2. 如何计算L矩：加权求和的艺术</a></li>
+            <li><a href="#3-四个最重要的l矩">3. 四个最重要的L矩</a></li>
+            <li><a href="#4-l矩与中心矩的关系">4. L矩与中心矩的关系</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#32-指数加权移动平均-ewma">3.2 指数加权移动平均 (EWMA)</a>
+      <ul>
+        <li><a href="#1-核心思想权重如何指数衰减">1. 核心思想：权重如何“指数衰减”？</a></li>
+        <li><a href="#2-如何计算-ewma两种等价的公式">2. 如何计算 EWMA：两种等价的公式</a>
+          <ul>
+            <li><a href="#方法一理论定义式-无限历史"><strong>方法一：理论定义式 (无限历史)</strong></a></li>
+            <li><a href="#方法二递归计算式-高效实用"><strong>方法二：递归计算式 (高效实用)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#3-ewma-的应用估计均值和协方差">3. EWMA 的应用：估计均值和协方差</a></li>
+        <li><a href="#4-有限样本的调整">4. 有限样本的调整</a></li>
+      </ul>
+    </li>
+    <li><a href="#33-多元时间序列">3.3 多元时间序列</a>
+      <ul>
+        <li><a href="#331-向量自回归模型-vector-autoregressive-models">3.3.1 向量自回归模型 (Vector Autoregressive Models)</a>
+          <ul>
+            <li><a href="#1-核心思想从我的过去预测我的未来到从我们的过去预测我们的未来">1. 核心思想：从“我”的过去预测“我”的未来，到从“我们”的过去预测“我们”的未来</a></li>
+            <li><a href="#2-varp-模型的数学表达">2. VAR(p) 模型的数学表达</a></li>
+            <li><a href="#3-关于冲击的假设">3. 关于“冲击”的假设</a></li>
+            <li><a href="#4-从动态模型到长期均衡">4. 从动态模型到长期均衡</a></li>
+            <li><a href="#5-模型的长期性质">5. 模型的长期性质</a></li>
+          </ul>
+        </li>
+        <li><a href="#332-向量移动平均模型-vector-moving-average-models">3.3.2 向量移动平均模型 (Vector Moving Average Models)</a>
+          <ul>
+            <li><a href="#1-核心思想冲击的涟漪效应">1. 核心思想：冲击的涟漪效应</a></li>
+            <li><a href="#2-vmaq-模型的数学表达">2. VMA(q) 模型的数学表达</a></li>
+            <li><a href="#3-滞后算子形式与模型含义">3. 滞后算子形式与模型含义</a></li>
+            <li><a href="#4-模型的长期性质">4. 模型的长期性质</a></li>
+          </ul>
+        </li>
+        <li><a href="#333-向量自回归移动平均模型-vector-autoregressive-moving-average-models">3.3.3 向量自回归移动平均模型 (Vector Autoregressive Moving Average Models)</a>
+          <ul>
+            <li><a href="#1-核心思想结合惯性与记忆">1. 核心思想：结合“惯性”与“记忆”</a></li>
+            <li><a href="#2-varmapq-模型的数学表达">2. VARMA(p,q) 模型的数学表达</a></li>
+            <li><a href="#3-滞后算子形式">3. 滞后算子形式</a></li>
+            <li><a href="#4-模型的长期性质-1">4. 模型的长期性质</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="第三章-基于样本的方法"><span>第三章 基于样本的方法</span>
+  <a href="#%e7%ac%ac%e4%b8%89%e7%ab%a0-%e5%9f%ba%e4%ba%8e%e6%a0%b7%e6%9c%ac%e7%9a%84%e6%96%b9%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>这章，主要介绍几种用于估算大多数投资组合优化模型所需输入参数的方法：<strong>预期收益向量</strong>和<strong>协方差矩阵</strong>。这些方法的主要缺点是：其估算的参数默认假设资产收益的未来表现会与用于估算的样本表现相似。</p>
+<h2 class="heading-element" id="31-矩moments"><span>3.1 矩（moments）</span>
+  <a href="#31-%e7%9f%a9moments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>统计学中，矩（moments）是与概率分布形状相关的数值特征。</p>
+<h3 class="heading-element" id="311-原始矩raw-moments"><span>3.1.1 原始矩（Raw Moments）</span>
+  <a href="#311-%e5%8e%9f%e5%a7%8b%e7%9f%a9raw-moments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-什么是矩物理类比"><span><strong>1. 什么是矩：物理类比</strong></span>
+  <a href="#1-%e4%bb%80%e4%b9%88%e6%98%af%e7%9f%a9%e7%89%a9%e7%90%86%e7%b1%bb%e6%af%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>概率论中的“矩”可与物理学中的“力矩”相类比，以帮助理解。</p>
+<p>在物理学中：</p>
+<ul>
+<li><strong>一阶矩（力矩）</strong>：<code>力 × 力臂</code>。描述了“力”对物体<strong>转动效果</strong>的大小。</li>
+<li><strong>二阶矩（转动惯量）</strong>：<code>质量 × (距离)²</code>。描述了物体<strong>抵抗转动</strong>的能力。</li>
+</ul>
+<p>在概率论中，这种思想被借用来描述随机变量的分布特征：</p>
+<ul>
+<li><strong>一阶原点矩</strong>：对所有 <code>(数值 × 概率)</code> 的<strong>求和</strong>。它描述了随机变量取值的<strong>中心位置</strong>，即均值。</li>
+<li><strong>二阶原点矩</strong>：对所有 <code>(数值² × 概率)</code> 的<strong>求和</strong>。它描述了随机变量取值<strong>平方的平均水平</strong>，与方差密切相关。</li>
+<li><strong>k阶原点矩</strong>：对所有 <code>(数值^k × 概率)</code> 的<strong>求和</strong>。它描述了随机变量取值<strong>k次方的平均水平</strong>。</li>
+</ul>
+<p>简单来说：<strong>第 k 阶原点矩就是随机变量 X 的 k 次方的平均值</strong>。</p>
+<h4 class="heading-element" id="2-如何计算矩理论与现实"><span><strong>2. 如何计算矩：理论与现实</strong></span>
+  <a href="#2-%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97%e7%9f%a9%e7%90%86%e8%ae%ba%e4%b8%8e%e7%8e%b0%e5%ae%9e" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>情况一：理论上（已知精确的概率分布）</strong></p>
+<p>如果一个随机变量 $X$ 的精确概率密度函数 $f(x)$ 已知，便可用<strong>积分</strong>来计算其精确的理论值：</p>
+<p>$$\operatorname{E}\left[X^{k}\right] = \int_{-\infty}^{\infty}x^{k}f(x)dx$$</p>
+<ul>
+<li><strong>$x^k$</strong>： 所关心的数值。</li>
+<li><strong>$f(x)dx$</strong>： 该数值对应的“概率权重”。</li>
+<li><strong>$\int$</strong>： 对所有可能的 $x$ 值进行“加权求和”。</li>
+</ul>
+<p><strong>情况二：现实中（只有观测到的数据）</strong></p>
+<p>在现实应用中，通常只有一系列<strong>观测到的数据</strong>（样本），其精确的概率分布未知。此时，采用<strong>求和</strong>的方式来<strong>估算</strong>原点矩：</p>
+<p>$$\operatorname{E}\left[X^{k}\right] = \sum_{i = 1}^{T}p(x_{i})x_{i}^{k}$$</p>
+<p>在最常见的情况下，每个观测值被假设拥有相等的出现概率，即 $p(x_i) = \frac{1}{T}$。此时，公式简化为：</p>
+<p>$$\text{样本的k阶原点矩} = \frac{1}{T} \sum_{i = 1}^{T} x_{i}^{k}$$</p>
+<h4 class="heading-element" id="3-重要的矩及其含义"><span><strong>3. 重要的矩及其含义</strong></span>
+  <a href="#3-%e9%87%8d%e8%a6%81%e7%9a%84%e7%9f%a9%e5%8f%8a%e5%85%b6%e5%90%ab%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>
+<p><strong>一阶原点矩 (均值, Mean)</strong></p>
+<ul>
+<li><strong>定义</strong>: $\mu = \operatorname {E}\left[X\right]$</li>
+<li><strong>意义</strong>: 代表了随机变量分布的<strong>中心位置</strong>或平衡点 。它也是最常用、最重要的矩。</li>
+</ul>
+</li>
+<li>
+<p><strong>二阶原点矩 (方差的基石)</strong></p>
+<ul>
+<li><strong>定义</strong>: $\operatorname{E}[X^2]$</li>
+<li><strong>意义</strong>: 其本身不直接使用，但它是计算<strong>方差 (Variance, $\sigma^2$)</strong> 的关键。方差是衡量数据分散程度（“胖瘦”）的核心指标。</li>
+<li><strong>关键关系</strong>: $\sigma^2 = \operatorname{E}[X^{2}] - (\operatorname{E}[X])^2 = \operatorname{E}[X^{2}] - \mu^2$</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="4示例"><span>4.<strong>示例</strong></span>
+  <a href="#4%e7%a4%ba%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>计算一个样本数据集 <code>{2, 3, 4, 5}</code> 的相关矩：</p>
+<ol>
+<li><strong>一阶原点矩（均值）</strong>:
+$$
+\mu = E[X] = \frac{2+3+4+5}{4} = 3.5
+$$</li>
+<li><strong>二阶原点矩</strong>:
+$$
+E[X^2] = \frac{2^2+3^2+4^2+5^2}{4} = \frac{4+9+16+25}{4} = 13.5
+$$</li>
+<li><strong>方差（利用矩的关系计算）</strong>:
+$$
+\sigma^2 = E[X^2] - \mu^2 = 13.5 - (3.5)^2 = 13.5 - 12.25 = 1.25
+$$</li>
+</ol>
+<h3 class="heading-element" id="312-中心矩-central-moments"><span><strong>3.1.2 中心矩 (Central Moments)</strong></span>
+  <a href="#312-%e4%b8%ad%e5%bf%83%e7%9f%a9-central-moments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-什么是中心矩"><span><strong>1. 什么是中心矩</strong></span>
+  <a href="#1-%e4%bb%80%e4%b9%88%e6%98%af%e4%b8%ad%e5%bf%83%e7%9f%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>与围绕“原点(0)”计算的原始矩不同，中心矩是围绕随机变量的“<strong>中心 (均值 $\mu$)</strong>”来计算的。</p>
+<p>如果说原点矩衡量的是变量在数轴上的绝对位置和分布，那么中心矩衡量的则是变量<strong>相对于其平均水平的分布形态</strong>。</p>
+<ul>
+<li><strong>原点矩</strong>: 杠杆的支点固定在<strong>原点0</strong>。</li>
+<li><strong>中心矩</strong>: 杠杆的支点移动到了分布的<strong>重心 $\mu$</strong>。</li>
+</ul>
+<p>简单来说：<strong>第 k 阶中心矩就是“随机变量与均值的差”的 k 次方的平均值</strong>。</p>
+<h4 class="heading-element" id="2-如何计算中心矩理论与现实"><span><strong>2. 如何计算中心矩：理论与现实</strong></span>
+  <a href="#2-%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97%e4%b8%ad%e5%bf%83%e7%9f%a9%e7%90%86%e8%ae%ba%e4%b8%8e%e7%8e%b0%e5%ae%9e" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>情况一：理论上（已知精确的概率分布）</strong></p>
+<p>如果一个随机变量 $X$ 的精确概率密度函数 $f(x)$ 已知，其 $k$ 阶中心矩的计算公式为：</p>
+<p>$$\operatorname {E}\left[(X - \mu)^{k}\right] = \int_{-\infty}^{\infty}(x - \mu)^{k}f(x)dx$$</p>
+<ul>
+<li><strong>$(x - \mu)^k$</strong>：核心部分，表示数值点到均值的**距离（偏差）**的k次方。</li>
+<li><strong>$f(x)dx$</strong>： 该数值对应的“概率权重”。</li>
+</ul>
+<p><strong>情况二：现实中（只有观测到的数据）</strong></p>
+<p>在现实应用中，当只有一系列样本数据时，其 $k$ 阶样本中心矩的估算公式为：</p>
+<p>$$\operatorname {E}\left[(X - \mu)^{k}\right] = \sum_{i = 1}^{T}p(x_{i})\left(x_{i} - \mu\right)^{k}$$</p>
+<p>在最常见的情况下，即每个观测值概率相等 ($p(x_i) = \frac{1}{T}$)，公式简化为：</p>
+<p>$$\text{样本的k阶中心矩} = \frac{1}{T} \sum_{i = 1}^{T} (x_{i} - \mu)^{k}$$</p>
+<h4 class="heading-element" id="3-重要的中心矩及其含义"><span><strong>3. 重要的中心矩及其含义</strong></span>
+  <a href="#3-%e9%87%8d%e8%a6%81%e7%9a%84%e4%b8%ad%e5%bf%83%e7%9f%a9%e5%8f%8a%e5%85%b6%e5%90%ab%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>中心矩是描述概率分布形状的基石，其中二、三、四阶最为常用。</p>
+<ul>
+<li>
+<p><strong>二阶中心矩 (方差, Variance)</strong></p>
+<ul>
+<li><strong>定义</strong>: $\sigma^2 = \operatorname{E}\left[(X - \mu)^2\right]$</li>
+<li><strong>意义</strong>: 衡量数据围绕均值分散程度的核心指标，即数据的“<strong>胖瘦</strong>”。方差的平方根是<strong>标准差 $\sigma$</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>三阶中心矩 (偏度, Skewness)</strong></p>
+<ul>
+<li><strong>定义</strong>: $\operatorname{E}\left[(X - \mu)^3\right]$</li>
+<li><strong>意义</strong>: 衡量数据分布<strong>不对称性</strong>的指标，即分布的“<strong>歪斜方向</strong>”。
+<ul>
+<li><strong>正偏态 (Positive Skew)</strong>：分布的尾部在右侧更长。</li>
+<li><strong>负偏态 (Negative Skew)</strong>：分布的尾部在左侧更长。</li>
+<li><strong>零偏态</strong>：分布完全对称。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>四阶中心矩 (峰度, Kurtosis)</strong></p>
+<ul>
+<li><strong>定义</strong>: $\operatorname{E}\left[(X - \mu)^4\right]$</li>
+<li><strong>意义</strong>: 衡量数据分布<strong>峰顶的尖锐程度</strong>和<strong>尾部的厚重程度</strong>，常用于判断“<strong>离群值</strong>”的多少。
+<ul>
+<li><strong>高峰态 (Leptokurtic)</strong>：峰顶更尖锐，尾部更厚重（离群值比正态分布多）。</li>
+<li><strong>低峰态 (Platykurtic)</strong>：峰顶更平缓，尾部更轻薄（离群值比正态分布少）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="4-示例"><span><strong>4. 示例</strong></span>
+  <a href="#4-%e7%a4%ba%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>沿用之前的数据集 <code>{2, 3, 4, 5}</code>，其均值为 $\mu = 3.5$。</p>
+<ol>
+<li>
+<p><strong>方差（二阶中心矩）</strong>:
+$$
+\sigma^2 = \frac{1}{4}\left[ (2-3.5)^2 + (3-3.5)^2 + (4-3.5)^2 + (5-3.5)^2 \right]
+$$</p>
+<p>$$
+= \frac{1}{4}\left[ (-1.5)^2 + (-0.5)^2 + (0.5)^2 + (1.5)^2 \right] = \frac{1}{4}[2.25 + 0.25 + 0.25 + 2.25] = \frac{5}{4} = 1.25
+$$
+(该结果与使用原始矩计算出的方差完全一致)</p>
+</li>
+<li>
+<p><strong>三阶中心矩（用于判断偏度）</strong>:
+$$
+E[(X-\mu)^3] = \frac{1}{4}\left[ (-1.5)^3 + (-0.5)^3 + (0.5)^3 + (1.5)^3 \right]
+$$</p>
+<p>$$
+= \frac{1}{4}\left[ -3.375 - 0.125 + 0.125 + 3.375 \right] = 0
+$$
+(结果为0，表明该数据集是<strong>完全对称</strong>的)</p>
+</li>
+</ol>
+<h3 class="heading-element" id="313-标准化中心矩-standardized-central-moments"><span>3.1.3 标准化中心矩 (Standardized Central Moments)</span>
+  <a href="#313-%e6%a0%87%e5%87%86%e5%8c%96%e4%b8%ad%e5%bf%83%e7%9f%a9-standardized-central-moments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-为什么需要标准化-消除量纲专注形状"><span><strong>1. 为什么需要“标准化”？—— 消除量纲，专注形状</strong></span>
+  <a href="#1-%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e6%a0%87%e5%87%86%e5%8c%96-%e6%b6%88%e9%99%a4%e9%87%8f%e7%ba%b2%e4%b8%93%e6%b3%a8%e5%bd%a2%e7%8a%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在比较不同数据集的分布形状时，我们常常会遇到一个问题：<strong>数据的单位或尺度会严重影响矩的数值</strong>。</p>
+<p>例如，衡量身高数据的“离散程度”（二阶中心矩，即方差），用“米”作单位和用“厘米”作单位，算出来的方差值会相差 $100^2 = 10000$ 倍。这使得我们无法直接比较两个不同尺度数据集的分布形状。</p>
+<p><strong>标准化的目的</strong>，就是通过除以标准差（$\sigma$）的相应次方，来<strong>剔除单位和尺度的影响</strong>，得到一个“纯粹”的、无量纲的数值。这个数值只描述分布的<strong>内在形状特征</strong>（如对称性、尾部厚度），而与数据本身的绝对大小无关。</p>
+<p>简单来说：标准化让我们能公平地比较一个身高分布和一个体重分布的“形状”。</p>
+<h4 class="heading-element" id="2-标准化矩的定义"><span><strong>2. 标准化矩的定义</strong></span>
+  <a href="#2-%e6%a0%87%e5%87%86%e5%8c%96%e7%9f%a9%e7%9a%84%e5%ae%9a%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>第 $k$ 阶标准化矩 ($\tilde{\mu}_{k}$) 的计算方法是，将第 $k$ 阶<strong>中心矩</strong> ($\mu_k$) 除以<strong>标准差</strong> ($\sigma$) 的 $k$ 次方。</p>
+<p>$$
+\tilde{\mu}<em>{k} = \frac{\mu</em>{k}}{\sigma^{k}} = \frac{\operatorname{E}[(X-\mu)^k]}{(\sqrt{\operatorname{E}[(X-\mu)^2]})^k}
+$$</p>
+<ul>
+<li><strong>分子 $\mu_k$</strong>: 第 $k$ 阶中心矩，描述了数据相对于均值的分布情况。</li>
+<li><strong>分母 $\sigma^k$</strong>: 标准差的 $k$ 次方，作为一个“标准化因子”，消除了数据自身的尺度和量纲。</li>
+</ul>
+<p>在实际应用中，我们最关心的是三阶和四阶标准化矩，它们有专门的名称：<strong>偏度 (Skewness)</strong> 和 <strong>峰度 (Kurtosis)</strong>。</p>
+<h4 class="heading-element" id="3-两个最重要的标准化矩偏度与峰度"><span><strong>3. 两个最重要的标准化矩：偏度与峰度</strong></span>
+  <a href="#3-%e4%b8%a4%e4%b8%aa%e6%9c%80%e9%87%8d%e8%a6%81%e7%9a%84%e6%a0%87%e5%87%86%e5%8c%96%e7%9f%a9%e5%81%8f%e5%ba%a6%e4%b8%8e%e5%b3%b0%e5%ba%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 class="heading-element" id="31-偏度-skewness---衡量分布的不对称性"><span><strong>3.1 偏度 (Skewness) - 衡量分布的“不对称性”</strong></span>
+  <a href="#31-%e5%81%8f%e5%ba%a6-skewness---%e8%a1%a1%e9%87%8f%e5%88%86%e5%b8%83%e7%9a%84%e4%b8%8d%e5%af%b9%e7%a7%b0%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><ul>
+<li>
+<p><strong>定义</strong>: 第三阶标准化矩，记为 $\tilde{\mu}_{3}$。</p>
+<p>$$
+\text{Skewness} = \tilde{\mu}_{3} = \frac{\operatorname{E}[(X-\mu)^3]}{\sigma^3}
+$$</p>
+</li>
+<li>
+<p><strong>意义</strong>: 描述了数据分布<strong>偏离对称性</strong>的方向和程度。</p>
+</li>
+<li>
+<p><strong>解读</strong>:</p>
+<ul>
+<li>
+<p><strong>$\tilde{\mu}_{3} &gt; 0$ (正偏 / 右偏, Positive Skew)</strong>:</p>
+<ul>
+<li>分布的“尾巴”向右侧长拖。</li>
+<li>数据中存在一些数值非常大的“极端高值”。</li>
+<li>例子：个人收入分布，大多数人收入集中在某个范围内，但少数富豪的极高收入将分布的尾巴向右拉长。</li>
+</ul>
+</li>
+<li>
+<p><strong>$\tilde{\mu}_{3} \approx 0$ (对称, Symmetrical)</strong>:</p>
+<ul>
+<li>分布大致对称，如正态分布（高斯分布）。</li>
+<li>左右两侧的形状基本一致。</li>
+</ul>
+</li>
+<li>
+<p><strong>$\tilde{\mu}_{3} &lt; 0$ (负偏 / 左偏, Negative Skew)</strong>:</p>
+<ul>
+<li>分布的“尾巴”向左侧长拖。</li>
+<li>数据中存在一些数值非常小的“极端低值”。</li>
+<li>例子：一次非常简单的考试的得分分布，大部分学生都得了高分，少数考得极差的学生将分布的尾巴向左拉长。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 class="heading-element" id="32-峰度-kurtosis---衡量分布的尾部厚度"><span><strong>3.2 峰度 (Kurtosis) - 衡量分布的“尾部厚度”</strong></span>
+  <a href="#32-%e5%b3%b0%e5%ba%a6-kurtosis---%e8%a1%a1%e9%87%8f%e5%88%86%e5%b8%83%e7%9a%84%e5%b0%be%e9%83%a8%e5%8e%9a%e5%ba%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><ul>
+<li>
+<p><strong>定义</strong>: 第四阶标准化矩，记为 $\tilde{\mu}_{4}$。</p>
+<p>$$
+\text{Kurtosis} = \tilde{\mu}_{4} = \frac{\operatorname{E}[(X-\mu)^4]}{\sigma^4}
+$$</p>
+</li>
+<li>
+<p><strong>意义</strong>: 描述了数据分布<strong>尾部的厚重程度</strong>，即出现<strong>极端值（离群值）的倾向性</strong>。</p>
+</li>
+<li>
+<p><strong>关键点：超额峰度 (Excess Kurtosis)</strong></p>
+<ul>
+<li>正态分布的峰度计算出来<strong>恰好等于 3</strong>。</li>
+<li>为了方便比较，统计学家费雪（Fisher）提出了<strong>超额峰度</strong>的概念，即<strong>将计算出的峰度值减去 3</strong>。</li>
+<li><strong>超额峰度 = 峰度 - 3</strong></li>
+<li>这样，正态分布就成了一个完美的基准点，其超额峰度为 0。现在大部分统计软件计算的都是超额峰度。</li>
+</ul>
+</li>
+<li>
+<p><strong>解读 (基于超额峰度)</strong>:</p>
+<ul>
+<li>
+<p><strong>$\text{超额峰度} &gt; 0$ (尖峰态, Leptokurtic)</strong>:</p>
+<ul>
+<li>分布的峰部更“尖”，尾部更“厚实”。</li>
+<li>这意味着<strong>出现极端值（离群值）的概率</strong>比正态分布<strong>更高</strong>。</li>
+<li>例子：股票市场的日收益率分布，大部分时间波动很小（尖峰），但偶尔会出现极端的大涨或大跌（厚尾）。</li>
+</ul>
+</li>
+<li>
+<p><strong>$\text{超额峰度} \approx 0$ (正态峰, Mesokurtic)</strong>:</p>
+<ul>
+<li>尾部厚度与正态分布相当。</li>
+</ul>
+</li>
+<li>
+<p><strong>$\text{超额峰度} &lt; 0$ (平峰态, Platykurtic)</strong>:</p>
+<ul>
+<li>分布的峰部更“平缓”，尾部更“薄”。</li>
+<li>这意味着<strong>出现极端值的概率</strong>比正态分布<strong>更低</strong>。</li>
+<li>例子：均匀分布，其取值范围内各数值出现概率相等，没有极端离群值。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="314-协矩矩阵-comoments-matrices"><span>3.1.4 协矩矩阵 (Comoments Matrices)</span>
+  <a href="#314-%e5%8d%8f%e7%9f%a9%e7%9f%a9%e9%98%b5-comoments-matrices" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-核心概念什么是协矩矩阵"><span><strong>1. 核心概念：什么是协矩矩阵？</strong></span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e4%bb%80%e4%b9%88%e6%98%af%e5%8d%8f%e7%9f%a9%e7%9f%a9%e9%98%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在金融分析中，我们不仅关心单个资产的风险与收益特性（如方差、偏度），更关心由多个资产构成的<strong>投资组合（Portfolio）</strong> 的整体特性。协矩矩阵正是用于计算<strong>多个随机变量线性组合（即投资组合）</strong> 的高阶矩的强大工具。</p>
+<ul>
+<li><strong>目的</strong>: 将描述单个资产的“矩”（方差、偏度、峰度）推广到多资产的“协矩”（协方差、协偏度、协峰度）。</li>
+<li><strong>本质</strong>: 它是我们熟悉的<strong>协方差矩阵</strong>向更高阶的自然延伸。</li>
+</ul>
+<blockquote>
+<p>想象一下，你之前学的<strong>原点矩</strong>和<strong>中心矩</strong>（如均值、方差、偏度、峰度）是描述<strong>单个</strong>随机变量（比如一只股票）的特征。</p>
+<ul>
+<li><strong>均值</strong>：这只股票的平均收益率。</li>
+<li><strong>方差</strong>：这只股票的收益率波动有多大。</li>
+<li><strong>偏度</strong>：这只股票的收益率分布是左偏（常出现小跌）还是右偏（常出现小涨）。</li>
+<li><strong>峰度</strong>：这只股票的收益率出现极端大涨大跌（尾部风险）的可能性有多高。
+但现在问题来了：当你把<strong>多只股票</strong>组合在一起形成一个投资组合时，这个<strong>组合</strong>的矩（比如组合的方差、偏度、峰度）该怎么计算？</li>
+</ul>
+<p>你可能会想：“直接把每只股票的方差平均一下不就得了？”——<strong>这是错误的</strong>。因为股票之间会有关联（协方差），组合的风险并不是个体风险的简单加总。这就是<strong>协矩矩阵</strong>要解决的问题。</p>
+</blockquote>
+<p><strong>协矩矩阵的核心目的，就是计算一个投资组合的高阶矩（方差、偏度、峰度等）。</strong></p>
+<h4 class="heading-element" id="2-什么是协矩"><span>2. 什么是“协矩”？</span>
+  <a href="#2-%e4%bb%80%e4%b9%88%e6%98%af%e5%8d%8f%e7%9f%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>“协”指的是变量间“协同”、“关联”的统计关系。所以：</p>
+<ul>
+<li><strong>协方差矩阵</strong> (<code>M₂</code>) 其实就是 <strong>二阶中心协矩矩阵</strong>。它描述了任意两只资产之间的协同波动关系。</li>
+<li><strong>协偏度矩阵</strong> (<code>M₃</code>) 是 <strong>三阶中心协矩矩阵</strong>。它描述了三个变量之间的协同偏斜关系。比如，资产A大涨时，资产B和C同时大跌的关联特性。</li>
+<li><strong>协峰度矩阵</strong> (<code>M₄</code>) 是 <strong>四阶中心协矩矩阵</strong>。它描述了四个变量之间产生协同极端走势的可能性。</li>
+</ul>
+<p>这些矩阵(<code>M₂</code>, <code>M₃</code>, <code>M₄</code> &hellip; <code>Mₖ</code>)就是接下来公式里那些看起来复杂的东西，它们是由所有单个资产的收益率数据<code>R</code>计算出来的。可以把它们看作是预先计算好的“原料”或“数据库”，里面存储了所有资产之间不同阶次的相互作用关系。</p>
+<h4 class="heading-element" id="2-如何计算协矩矩阵-m_"><span><strong>2. 如何计算：协矩矩阵 $M_k$ 的构建</strong></span>
+  <a href="#2-%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97%e5%8d%8f%e7%9f%a9%e7%9f%a9%e9%98%b5-m_" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>协矩矩阵 $M_k$ 是基于<strong>中心化收益率矩阵 $Z$</strong> 计算的，其中 $Z = R - \mu^{\prime}$，即原始收益率矩阵 $R$ 的每一列减去其各自的时间序列均值。</p>
+<p><strong>A. 具体公式</strong></p>
+<p>根据 Cajas (2022) 提出的矩阵公式，前几阶协矩矩阵计算如下：</p>
+<ul>
+<li><strong>二阶协矩 (协方差矩阵, $M_2$)</strong>:
+$$M_{2}=\frac{1}{T}\left[Z^{\prime}Z\right]$$</li>
+<li><strong>三阶协矩 (协偏度矩阵, $M_3$)</strong>:
+$$M_{3}=\frac{1}{T}\left[Z^{\prime}\left((Z\otimes{\bf1}<em>{n}^{\prime})\odot({\bf1}</em>{n}^{\prime}\otimes Z)\right)\right]$$</li>
+<li><strong>四阶协矩 (协峰度矩阵, $M_4$)</strong>:
+$$M_{4}=\frac{1}{T}\left[Z^{\prime}\left((Z\otimes{\bf1}<em>{n}^{\prime})\odot({\bf1}</em>{n}^{\prime}\otimes Z\otimes{\bf1}<em>{n}^{\prime})\odot({\bf1}</em>{n}^{\prime}\otimes{\bf1}_{n}^{\prime}\otimes Z)\right)\right]$$</li>
+</ul>
+<blockquote>
+<p><strong>符号解释</strong>:</p>
+<ul>
+<li>$Z$: $T \times n$ 的中心化收益率矩阵。</li>
+<li>$T$: 时间序列的观测数量。</li>
+<li>$n$: 资产数量。</li>
+<li>$\mathbf{1}_{n}$: $n \times 1$ 的全1列向量。</li>
+<li>$\otimes$: <strong>克罗内克积 (Kronecker Product)</strong>，将矩阵进行分块扩展。</li>
+<li>$\odot$: <strong>哈达玛积 (Hadamard Product)</strong>，同尺寸矩阵的逐元素相乘。</li>
+</ul>
+</blockquote>
+<p><strong>B. 通用公式</strong></p>
+<p>对于任意 $k$ 阶协矩矩阵，其通用计算范式为：
+$$M_{k} = \frac{1}{T}\left[Z^{\prime}\left(\bigodot_{i = 1}^{k - 1}W_{i}^{k - 1}\right)\right]$$
+其中辅助矩阵 $W_i^s$ 是一个由 $s$ 个矩阵通过克罗内克积构成的矩阵，其中只有第 $i$ 个位置是 $Z$，其余位置都是全1矩阵 $\mathbf{1}<em>{n}^{\prime}$。
+$$
+\begin{array}{r}{W</em>{i}^{s} = \mathbf{1}<em>{n}^{\prime}\otimes \mathbf{1}</em>{n}^{\prime}\otimes \ldots \otimes \underbrace{Z}<em>{\mathrm{position} i}\otimes \ldots \otimes \mathbf{1}</em>{n}^{\prime}\otimes \mathbf{1}_{n}^{\prime}}\ {s\mathrm{elements}} \end{array}
+$$</p>
+<h4 class="heading-element" id="3-核心应用计算投资组合的各阶矩"><span><strong>3. 核心应用：计算投资组合的各阶矩</strong></span>
+  <a href="#3-%e6%a0%b8%e5%bf%83%e5%ba%94%e7%94%a8%e8%ae%a1%e7%ae%97%e6%8a%95%e8%b5%84%e7%bb%84%e5%90%88%e7%9a%84%e5%90%84%e9%98%b6%e7%9f%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>计算出协矩矩阵 $M_k$ 后，其主要用途是结合投资组合的<strong>权重向量 $x$</strong> ($n \times 1$ 向量)，来计算整个投资组合的整体矩 $\mu_k$。</p>
+<p><strong>方法一：标准公式 (Standard Formula, 式 3.8)</strong></p>
+<p>这是最直观的表达方式。
+$$\mu_{k} = x^{\prime}M_{k}\underbrace{(x\otimes&hellip;\otimes x)}_{k - 1\ \text{times}}$$
+具体展开为：</p>
+<ul>
+<li>$\mu_{1} = x^{\prime}M_{1}$</li>
+<li>$\mu_{2} = x^{\prime}M_{2}x$</li>
+<li>$\mu_{3} = x^{\prime}M_{3}(x\otimes x)$</li>
+<li>$\mu_{4} = x^{\prime}M_{4}(x\otimes x\otimes x)$</li>
+</ul>
+<p><strong>方法二：向量化公式 (Vectorized Formula, 式 3.9)</strong></p>
+<p>通过使用向量化算子 <code>vec(.)</code>，可以将矩阵乘法转换为向量内积，这在某些数学证明和计算中更方便。
+$$\mu_{k} = \mathrm{vec}(M_{k})^{\prime}(\underbrace{x\otimes\ldots\otimes x}_{k\ \text{times}})$$</p>
+<p><strong>方法三：降维向量化公式 (Reduced Vectorized Formula, 式 3.10)</strong></p>
+<p>当 $M_k$ 内部存在对称性和冗余时，可以使用特殊的“消除矩阵” $L_k$ 和“求和矩阵” $S_k$ 来<strong>减少计算中涉及的参数数量</strong>，提高计算效率。
+$$\mu_{k} = [S_{k}\mathrm{vec}(M_{k})]^{\prime}[L_{k}\underbrace{(x\otimes\ldots\otimes x)}_{k\ \text{times}}]$$</p>
+<h4 class="heading-element" id="4-特殊协矩矩阵及其应用"><span><strong>4. 特殊协矩矩阵及其应用</strong></span>
+  <a href="#4-%e7%89%b9%e6%ae%8a%e5%8d%8f%e7%9f%a9%e7%9f%a9%e9%98%b5%e5%8f%8a%e5%85%b6%e5%ba%94%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>A. 平方协矩矩阵 (Squared Comoments Matrices, $\Sigma_{2k}$)</strong></p>
+<p>这类矩阵专门用于处理<strong>偶数阶矩</strong>（如方差、峰度），其目的是将投资组合的偶数阶矩表示为一个<strong>二次型 (Quadratic Form)</strong>。</p>
+<ul>
+<li><strong>定义</strong>: $\Sigma_{2k}$ 是一个 $n^k \times n^k$ 的对称矩阵，可以看作是 $M_{2k}$ 的一种“堆叠”版本。</li>
+<li><strong>计算 (式 3.7)</strong>:
+<ul>
+<li>$\Sigma_{2} = M_2 = \frac{1}{T}\left[Z^{\prime}Z\right]$</li>
+<li>$\Sigma_{4} = \frac{1}{T}\left[\left((Z\otimes{\bf 1}<em>{n}^{\prime})\odot({\bf 1}</em>{n}^{\prime}\otimes Z)\right)^{\prime}\left((Z\otimes{\bf 1}<em>{n}^{\prime})\odot({\bf 1}</em>{n}^{\prime}\otimes Z)\right)\right]$</li>
+</ul>
+</li>
+<li><strong>应用 (二次型表达)</strong>:
+$$\mu_{2k} = (\underbrace{x\otimes\ldots\otimes x}<em>{k\mathrm{~times}})^{\prime}\Sigma</em>{2k}(\underbrace{x\otimes\ldots\otimes x}<em>{k\mathrm{~times}})$$
+例如，峰度可以写作 $\mu</em>{4} = (x\otimes x)^{\prime}\Sigma_{4}(x\otimes x)$。这种形式在投资组合优化问题中非常有用。</li>
+</ul>
+<p><strong>B. 半协矩矩阵 (Semi Comoments Matrices)</strong></p>
+<p>在风险管理中，投资者更关心亏损（下行风险）。半协矩矩阵正是为了<strong>分离上行和下行风险</strong>而设计的。</p>
+<ul>
+<li><strong>计算</strong>: 方法与标准协矩矩阵完全相同，仅需在第一步修改中心化收益率矩阵 $Z$：
+<ul>
+<li><strong>下半协矩 (Lower Semi-comoments)</strong>: 只使用收益率低于均值（即亏损）的数据，只关注亏损。令 $Z = \min (R - \mu &lsquo;, 0) = \min (C_{T}R, 0)$。</li>
+<li><strong>上半协矩 (Upper Semi-comoments)</strong>: 只使用收益率高于均值（即盈利）的数据，只关注盈利。令 $Z = \max (R - \mu &lsquo;, 0) = \max (C_{T}R, 0)$ 。</li>
+</ul>
+</li>
+</ul>
+<p><strong>C. 峰度计算的替代公式 (Alternative Kurtosis Formulas)</strong></p>
+<p>原文最后提供了两个专门用于计算投资组合峰度 $\mu_4$ 的高效公式，它们利用了张量积的对称性，结合 $L_2$ 和 $S_2$ 矩阵来进一步<strong>减少参数数量</strong>。</p>
+<ul>
+<li><strong>公式 3.12</strong>: $\mu_{4} = [(S_{2}\otimes S_{2})\mathrm{vec}(M_{4})]^{\prime}[(L_{2}\otimes L_{2})(x\otimes x\otimes x\otimes x)]$</li>
+<li><strong>公式 3.13</strong>: $\mu_{4} = [L_{2}(x\otimes x)]^{\prime}\left[S_{2}\Sigma_{4}S_{2}^{\prime}\right][L_{2}(x\otimes x)]$</li>
+</ul>
+<h3 class="heading-element" id="315-线性矩或l矩-linear-moments-or-l-moments"><span>3.1.5 线性矩或L矩 (Linear Moments or L-Moments)</span>
+  <a href="#315-%e7%ba%bf%e6%80%a7%e7%9f%a9%e6%88%96l%e7%9f%a9-linear-moments-or-l-moments" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-什么是l矩一种更稳健的分布描述方法"><span>1. 什么是L矩：一种更稳健的分布描述方法</span>
+  <a href="#1-%e4%bb%80%e4%b9%88%e6%98%afl%e7%9f%a9%e4%b8%80%e7%a7%8d%e6%9b%b4%e7%a8%b3%e5%81%a5%e7%9a%84%e5%88%86%e5%b8%83%e6%8f%8f%e8%bf%b0%e6%96%b9%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>L矩是描述概率分布形状（如中心位置、离散程度、偏斜度等）的另一种方法，可以看作是传统中心矩（均值、方差、偏度、峰度）的替代方案。</p>
+<p>其核心思想基于两个关键概念：</p>
+<ol>
+<li><strong>顺序统计量 (Order Statistics)</strong>：在计算前，必须先将数据集<strong>从</strong>小到大排序。</li>
+<li><strong>线性组合 (Linear Combination)</strong>：L矩是通过对这些<strong>排好序的</strong>数据进行加权求和来计算的。</li>
+</ol>
+<p><strong>与传统矩的核心区别与优势：</strong></p>
+<ul>
+<li><strong>传统矩</strong>：使用数据的<strong>幂</strong>（如 $x^2, x^3$）进行计算。这种方法对数据集中的极端值（异常值）<strong>非常敏感</strong>，一个很大的异常值在平方或立方后会不成比例地影响最终结果。</li>
+<li><strong>L矩</strong>：只使用数据的<strong>线性</strong>组合（即加权平均）。这使得L矩对异常值的存在<strong>更加稳健 (Robust)</strong>，其计算结果不会被少数几个极端值严重扭曲。</li>
+</ul>
+<p>简单来说，L矩提供了一种与传统矩功能相似但更不容易受极端值影响的工具，尤其适用于金融等可能出现“肥尾”现象的数据。</p>
+<h4 class="heading-element" id="2-如何计算l矩加权求和的艺术"><span>2. 如何计算L矩：加权求和的艺术</span>
+  <a href="#2-%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97l%e7%9f%a9%e5%8a%a0%e6%9d%83%e6%b1%82%e5%92%8c%e7%9a%84%e8%89%ba%e6%9c%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>计算L矩的第一步永远是<strong>将样本数据排序</strong>。假设我们有一个大小为 $T$ 的样本，排序后得到：
+$$y_{[1]} &lt; y_{[2]} &lt; \dots &lt; y_{[i]} &lt; \dots &lt; y_{[T]}$$
+其中 $y_{[i]}$ 是第 $i$ 小的数据点。</p>
+<p>第 $k$ 阶L矩 ($\lambda_k$) 的一般形式可以理解为一个对排序后数据的加权平均值：</p>
+<p>$$
+\lambda_{k}=\binom{T}{k}^{-1}\sum_{1\leq i_{1}&lt;i_{2}&lt;\cdots&lt;i_{k}\leq n}\frac{1}{k}\sum_{j=0}^{k - 1}(-1)^{j}\binom{k - 1}{j}y_{[i_{k - j}]} \tag{3.14}
+$$</p>
+<p>$$\lambda_{k} = \sum_{i = 1}^{T}w_{i}^{k}y_{[i]}$$
+这个公式的含义是，为了计算第 $k$ 阶L矩，每一个排好序的数据点 $y_{[i]}$ 都会被赋予一个特定的权重 $w_{i}^{k}$，然后将它们相乘后求和。这些权重的计算方式比较复杂（如原文公式3.16所示），但其最终目的都是为了衡量分布的不同特征。</p>
+<h4 class="heading-element" id="3-四个最重要的l矩"><span>3. 四个最重要的L矩</span>
+  <a href="#3-%e5%9b%9b%e4%b8%aa%e6%9c%80%e9%87%8d%e8%a6%81%e7%9a%84l%e7%9f%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>对于一个已排序的样本，前四阶L矩的具体计算公式如下，它们分别对应传统矩中的均值、方差、偏度和峰度。</p>
+<ul>
+<li>
+<p><strong>一阶L矩 ($\lambda_1$)：L-位置 (L-location)</strong></p>
+<ul>
+<li><strong>公式</strong>: $$\lambda_{1}=\binom{T}{1}^{-1}\sum_{i=1}^{T}y_{[i]} = \frac{1}{T}\sum_{i=1}^{T}y_{[i]}$$</li>
+<li><strong>意义</strong>: 它衡量的就是分布的<strong>中心位置</strong>，其计算结果与<strong>样本均值 (Mean)</strong> 完全相同。</li>
+</ul>
+</li>
+<li>
+<p><strong>二阶L矩 ($\lambda_2$)：L-尺度 (L-scale)</strong></p>
+<ul>
+<li><strong>公式</strong>: $$\lambda_{2}=\frac{1}{2}\binom{T}{2}^{-1}\sum_{i=1}^{T}\left[\binom{i-1}{1}-\binom{T-i}{1}\right]y_{[i]}$$</li>
+<li><strong>意义</strong>: 衡量数据的<strong>离散程度</strong>，是方差或标准差的稳健替代品。</li>
+</ul>
+</li>
+<li>
+<p><strong>三阶L矩 ($\lambda_3$)：L-偏度 (L-skewness)</strong></p>
+<ul>
+<li><strong>公式</strong>: $$\lambda_{3}=\frac{1}{3}\binom{T}{3}^{-1}\sum_{i=1}^{T}\Big[\binom{i-1}{2}-2\binom{i-1}{1}\binom{T-i}{1}+\binom{T-i}{2}\Big]y_{[i]}$$</li>
+<li><strong>意义</strong>: 衡量分布的<strong>不对称性</strong>，是偏度 (Skewness) 的稳健替代品。</li>
+</ul>
+</li>
+<li>
+<p><strong>四阶L矩 ($\lambda_4$)：L-峰度 (L-kurtosis)</strong></p>
+<ul>
+<li><strong>公式</strong>: $$\lambda_{4}=\frac{1}{4}\binom{T}{4}^{-1}\sum_{i=1}^{T}\Big[\binom{i-1}{3}-3\binom{i-1}{2}\binom{T-i}{1}+3\binom{i-1}{1}\binom{T-i}{2}-\binom{T-i}{3}\Big]y_{[i]}$$</li>
+<li><strong>意义</strong>: 衡量分布<strong>尾部的厚重程度</strong>，是峰度 (Kurtosis) 的稳健替代品。</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="4-l矩与中心矩的关系"><span>4. L矩与中心矩的关系</span>
+  <a href="#4-l%e7%9f%a9%e4%b8%8e%e4%b8%ad%e5%bf%83%e7%9f%a9%e7%9a%84%e5%85%b3%e7%b3%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>尽管计算方法不同，L矩和中心矩通常是用来描述同一分布的不同方面。在金融时间序列等应用场景中，这两种矩之间常常存在着<strong>正相关关系</strong>。这意味着，当一个分布的中心矩（如方差）较高时，其对应的L矩（L-尺度）通常也较高。</p>
+<p>下图（Fig. 3.1）直观地展示了这种关系，图中显示了某资产（APA）的中心矩和L矩之间的散点图，可以清晰地看到一个正向的线性趋势。</p>
+<p><img loading="lazy" src='/posts/apo-03/image.png' alt="alt text" height="609" width="919"></p>
+<p><strong>Fig. 3.1</strong> APA的中心矩与L矩的相关性</p>
+<p>这组散点图展示了APA（某一研究对象，可能是资产、数据集等）的中心矩和对应的L矩之间的相关关系：</p>
+<ul>
+<li><strong>Square Root Variance vs L - Variance</strong>：图中显示“平方根方差（Square Root Variance）”和“L - 方差（L - Variance）”呈现出较强的线性正相关趋势，随着平方根方差的增大，L - 方差也大致按比例增大，说明二者在方差维度上具有较好的关联性。</li>
+<li><strong>Cube Root Skewness vs L - Skewness</strong>：“立方根偏度（Cube Root Skewness）”和“L - 偏度（L - Skewness）”同样存在正相关关系，不过数据点的分布相对更分散一些，但整体上随着立方根偏度的增加，L - 偏度也有上升的趋势，反映出偏度维度上二者的关联。</li>
+<li><strong>Fourth Root Kurtosis vs L - Kurtosis</strong>：“四次方根峰度（Fourth Root Kurtosis）”与“L - 峰度（L - Kurtosis）”也表现为正相关，数据点从左下方到右上方分布，表明在峰度维度上，中心矩和L矩也存在一定的关联。</li>
+</ul>
+<p><img loading="lazy" src='/posts/apo-03/image-1.png' alt="alt text" height="1075" width="922">
+<strong>Fig. 3.2</strong> APA的滚动窗口中心矩和L矩</p>
+<p>这组图是基于滚动窗口（随着时间推移，不断更新窗口内的数据来计算统计量）计算的中心矩和L矩的时间序列变化：</p>
+<ul>
+<li><strong>APA returns</strong>：展示了APA回报的时间序列，回报在不同时间点有波动，存在正负变化，反映了研究对象在这段时间内的收益波动情况。</li>
+<li><strong>Rolling Square Root Variance - L - Variance</strong>：“滚动平方根方差（Rolling Square Root Variance）”和“L - 方差（L - Variance）”的时间序列走势较为相似，整体都有从高到低的变化趋势，说明在滚动计算的情况下，方差和L - 方差的变化规律较为一致。</li>
+<li><strong>Rolling Cube Root Skewness - L - Skewness</strong>：“滚动立方根偏度（Rolling Cube Root Skewness）”和“L - 偏度（L - Skewness）”的时间序列在不同时间段有不同的波动，不过整体上二者的变化趋势存在一定的同步性，体现了偏度和L - 偏度在滚动计算时的变化关联。</li>
+<li><strong>Rolling Fourth Root Kurtosis - L - Kurtosis</strong>：“滚动四次方根峰度（Rolling Fourth Root Kurtosis）”与“L - 峰度（L - Kurtosis）”的时间序列走势也较为接近，随着时间推移，都有明显的下降等变化，反映出峰度和L - 峰度在滚动窗口下的变化规律具有一致性。</li>
+</ul>
+<h2 class="heading-element" id="32-指数加权移动平均-ewma"><span>3.2 指数加权移动平均 (EWMA)</span>
+  <a href="#32-%e6%8c%87%e6%95%b0%e5%8a%a0%e6%9d%83%e7%a7%bb%e5%8a%a8%e5%b9%b3%e5%9d%87-ewma" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>指数加权移动平均（Exponentially Weighted Moving Average, EWMA）是一种重要的时间序列预测方法。它通过对历史数据进行加权平均来预测下一个时间点的值，其核心思想是：<strong>越近的数据越重要，权重越大；越远的数据越不重要，权重越小</strong>。权重的下降（衰减）遵循指数规律。</p>
+<h3 class="heading-element" id="1-核心思想权重如何指数衰减"><span>1. 核心思想：权重如何“指数衰减”？</span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3%e6%9d%83%e9%87%8d%e5%a6%82%e4%bd%95%e6%8c%87%e6%95%b0%e8%a1%b0%e5%87%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>想象一下预测明天的股票价格。你自然会觉得昨天和前天的价格比一年前的价格更有参考价值。EWMA 正是这种直觉的数学化表达。</p>
+<p>它为每一个历史数据点 $x_{t-j}$ 分配一个权重，这个权重由一个关键参数——<strong>平滑因子 (smoothing factor) $\lambda$</strong> (取值范围为 $0 \le \lambda &lt; 1$)——来控制。</p>
+<ul>
+<li><strong>权重</strong>：距离现在为 $j$ 个时间步的数据点，其权重与 $\lambda^j$ 成正比。</li>
+<li><strong>衰减</strong>：因为 $\lambda$ 是一个小于1的正数，所以当 $j$ 增大时（即数据越久远），$\lambda^j$ 会迅速趋近于零。</li>
+</ul>
+<p><strong>平滑因子 $\lambda$ 的角色：</strong></p>
+<p>$\lambda$ 决定了“记忆”的长短，或者说对历史数据的遗忘速度。</p>
+<ul>
+<li><strong>当 $\lambda$ 趋近于 1 (例如 0.95)</strong>：
+<ul>
+<li>衰减<strong>慢</strong>，权重曲线平缓。</li>
+<li>模型会考虑非常久远的历史数据，<strong>记忆性强</strong>。</li>
+<li>输出结果更<strong>平滑</strong>，不易受短期噪声影响，但对趋势变化的反应较<strong>慢</strong>。</li>
+</ul>
+</li>
+<li><strong>当 $\lambda$ 趋近于 0 (例如 0.1)</strong>：
+<ul>
+<li>衰减<strong>快</strong>，权重曲线陡峭。</li>
+<li>模型主要依赖最近的几个数据点，<strong>记忆性短</strong>。</li>
+<li>输出结果波动性更大，但能非常<strong>迅速</strong>地捕捉到近期的变化。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="2-如何计算-ewma两种等价的公式"><span>2. 如何计算 EWMA：两种等价的公式</span>
+  <a href="#2-%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97-ewma%e4%b8%a4%e7%a7%8d%e7%ad%89%e4%bb%b7%e7%9a%84%e5%85%ac%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="方法一理论定义式-无限历史"><span><strong>方法一：理论定义式 (无限历史)</strong></span>
+  <a href="#%e6%96%b9%e6%b3%95%e4%b8%80%e7%90%86%e8%ae%ba%e5%ae%9a%e4%b9%89%e5%bc%8f-%e6%97%a0%e9%99%90%e5%8e%86%e5%8f%b2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>EWMA 的数学定义是对所有历史数据进行加权求和：</p>
+<p>$$\hat{x}<em>{t + 1} = (1 - \lambda)\sum</em>{j = 0}^{\infty}\lambda^{j}x_{t - j} \tag{3.17}$$</p>
+<ul>
+<li><strong>$x_{t-j}$</strong>: 过去的数据点（当 j=0 时，为当前数据 $x_t$）。</li>
+<li><strong>$\lambda^j$</strong>: 权重随时间衰减的核心部分。</li>
+<li><strong>$(1-\lambda)$</strong>: <strong>归一化因子</strong>。根据数学公式，所有权重的无限求和 $\sum_{j=0}^{\infty}\lambda^{j}$ 恰好等于 $\frac{1}{1-\lambda}$。因此，乘以 $(1-\lambda)$ 可以保证所有权重加起来正好等于 1。</li>
+</ul>
+<h4 class="heading-element" id="方法二递归计算式-高效实用"><span><strong>方法二：递归计算式 (高效实用)</strong></span>
+  <a href="#%e6%96%b9%e6%b3%95%e4%ba%8c%e9%80%92%e5%bd%92%e8%ae%a1%e7%ae%97%e5%bc%8f-%e9%ab%98%e6%95%88%e5%ae%9e%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在实际应用中，对无穷序列求和是不可能的。幸运的是，上述公式可以转化为一个极其简洁高效的递归形式：</p>
+<p>$$\hat{x}_{t + 1} = \lambda \hat{x}_t + (1 - \lambda)x_t \tag{3.19}$$</p>
+<ul>
+<li><strong>$\hat{x}_{t+1}$</strong>: 对<strong>下一个</strong>时间点的预测值。</li>
+<li><strong>$\hat{x}_t$</strong>: 对<strong>当前</strong>时间点的预测值（它本身已包含了 $t$ 之前的所有历史信息）。</li>
+<li><strong>$x_t$</strong>: <strong>当前</strong>时间点的实际观测值。</li>
+</ul>
+<p>这个公式的含义可以理解为：<strong>新的预测 = $\lambda$ 成的旧预测 + $(1-\lambda)$ 成的新信息</strong>。它巧妙地将所有历史信息压缩在了上一个预测值 $\hat{x}_t$ 中，每次更新只需一步，极大简化了计算。</p>
+<blockquote>
+<p><strong>实践提示</strong>：在很多软件库（如 Python 的 Pandas）中，常使用参数 <code>alpha</code> ($\alpha$)。它与 $\lambda$ 的关系是 $\alpha = 1 - \lambda$。因此，一个小的 <code>alpha</code> 值等价于一个大的 $\lambda$ 值，都代表着更强的平滑效果（更慢的衰减）。</p>
+</blockquote>
+<h3 class="heading-element" id="3-ewma-的应用估计均值和协方差"><span>3. EWMA 的应用：估计均值和协方差</span>
+  <a href="#3-ewma-%e7%9a%84%e5%ba%94%e7%94%a8%e4%bc%b0%e8%ae%a1%e5%9d%87%e5%80%bc%e5%92%8c%e5%8d%8f%e6%96%b9%e5%b7%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>EWMA 的强大之处在于，这种递归更新的思想可以推广到更复杂的统计量，尤其在金融领域，常用于动态估计随时间变化的<strong>均值向量</strong>和<strong>协方差矩阵</strong>。</p>
+<ul>
+<li>
+<p><strong>EWMA 均值 ($\mu_{\mathrm{ewma}}$)</strong>:
+$$
+\mu_{\mathrm{ewma}, t+1} = \lambda \hat{\mu}<em>{t} + (1 - \lambda)r</em>{t}
+$$
+其中，$r_t$ 是当前时刻的资产回报向量，$\hat{\mu}_t$ 是上一时刻估计的均值向量。</p>
+</li>
+<li>
+<p><strong>EWMA 协方差 ($\Sigma_{\mathrm{ewma}}$)</strong>:
+$$
+\Sigma_{\mathrm{ewma}, t+1} = \lambda \hat{\Sigma}<em>{t} + (1 - \lambda)\epsilon</em>{t}\epsilon_{t}^{\prime}
+$$
+其中，$\hat{\Sigma}_t$ 是上一时刻估计的协方差矩阵，$\epsilon_t = r_t - \hat{\mu}_t$ 是当前回报的“意外”部分。</p>
+</li>
+</ul>
+<h3 class="heading-element" id="4-有限样本的调整"><span>4. 有限样本的调整</span>
+  <a href="#4-%e6%9c%89%e9%99%90%e6%a0%b7%e6%9c%ac%e7%9a%84%e8%b0%83%e6%95%b4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>当只有有限的 $T$ 个观测数据时，理论公式的权重之和并不严格为 1。为了修正这个偏差，需要对权重进行归一化，得到适用于有限样本的“完整公式”：</p>
+<p>$$\hat{x}<em>{t + 1} = \frac{1 - \lambda}{1 - \lambda^T} \sum</em>{j = 0}^{T} \lambda^j x_{t - j} \tag{3.21}$$</p>
+<p><strong>关键结论</strong>：当观测数据量 $T$ 很大时，分母 $(1 - \lambda^T)$ 会非常接近 1，此时该“完整公式”的计算结果与“递归公式”几乎完全相同。因此，在绝大多数应用场景中，简洁高效的<strong>递归公式</strong>是首选。</p>
+<h2 class="heading-element" id="33-多元时间序列"><span>3.3 多元时间序列</span>
+  <a href="#33-%e5%a4%9a%e5%85%83%e6%97%b6%e9%97%b4%e5%ba%8f%e5%88%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>向量自回归（VAR）、向量移动平均（VMA）和带移动平均的向量自回归（VARMA）模型是AR、MA和ARMA模型在多元情况下的推广。这些模型能够捕捉多个时间序列之间的线性相互依赖关系，并且不需要像联立方程模型那样了解不同变量之间存在的关系；它们只需要为每个变量建立一个方程即可。</p>
+<h3 class="heading-element" id="331-向量自回归模型-vector-autoregressive-models"><span>3.3.1 向量自回归模型 (Vector Autoregressive Models)</span>
+  <a href="#331-%e5%90%91%e9%87%8f%e8%87%aa%e5%9b%9e%e5%bd%92%e6%a8%a1%e5%9e%8b-vector-autoregressive-models" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>向量自回归 (VAR) 模型是一种用来分析和预测多个相关时间序列变量的强大工具。不同于一次只分析一个变量的模型，VAR模型可以同时捕捉一组变量之间的动态关系。</p>
+<h4 class="heading-element" id="1-核心思想从我的过去预测我的未来到从我们的过去预测我们的未来"><span>1. 核心思想：从“我”的过去预测“我”的未来，到从“我们”的过去预测“我们”的未来</span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3%e4%bb%8e%e6%88%91%e7%9a%84%e8%bf%87%e5%8e%bb%e9%a2%84%e6%b5%8b%e6%88%91%e7%9a%84%e6%9c%aa%e6%9d%a5%e5%88%b0%e4%bb%8e%e6%88%91%e4%bb%ac%e7%9a%84%e8%bf%87%e5%8e%bb%e9%a2%84%e6%b5%8b%e6%88%91%e4%bb%ac%e7%9a%84%e6%9c%aa%e6%9d%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>想象一下预测天气。只用今天的气温来预测明天的气温是一个简单的<strong>自回归 (AR)</strong> 模型。但实际上，明天的气温不仅受今天气温的影响，还可能受今天湿度、风速等因素的影响。</p>
+<p><strong>向量自回归 (VAR)</strong> 模型正是将这种思想扩展到了多个变量。它假设一个系统中所有变量的未来值，都可以用这个系统中所有变量的过去值来预测。</p>
+<ul>
+<li><strong>向量 (Vector)</strong>: 代表我们将多个变量 (例如：GDP、利率、通货-膨胀率) 作为一个整体 (向量) 来进行建模。</li>
+<li><strong>自回归 (Autoregressive)</strong>: 代表模型使用变量<strong>自身</strong>的<strong>过去</strong>值来进行预测。</li>
+<li><strong>阶数 p (Order p)</strong>: 代表模型使用了过去多少期的数据。一个 $\mathrm{VAR}(p)$ 模型会使用直到 $p$ 期之前的所有历史数据。</li>
+</ul>
+<h4 class="heading-element" id="2-varp-模型的数学表达"><span>2. VAR(p) 模型的数学表达</span>
+  <a href="#2-varp-%e6%a8%a1%e5%9e%8b%e7%9a%84%e6%95%b0%e5%ad%a6%e8%a1%a8%e8%be%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>一个包含 $n$ 个变量的 $p$ 阶 VAR 模型可以用一个简洁的矩阵方程来表示：</p>
+<p>$$y_{t} = c + A_{1}y_{t - 1} + \ldots +A_{p}y_{t - p} + \epsilon_{t}$$</p>
+<ul>
+<li>$y_t$: 一个 $n \times 1$ 的<strong>向量</strong>，包含了在时间点 $t$ 时所有 $n$ 个变量的观测值。</li>
+<li>$c$: 一个 $n \times 1$ 的<strong>截距向量</strong>，代表每个变量的基准水平。</li>
+<li>$A_1, \ldots, A_p$: 一系列 $n \times n$ 的<strong>系数矩阵</strong>。这是 VAR 模型的核心，矩阵中的每个元素都描述了一个变量的过去值对另一个变量当前值的影响力。</li>
+<li>$y_{t-1}, \ldots, y_{t-p}$: 包含了所有变量在过去 $p$ 个时间点的观测值的<strong>滞后向量</strong>。</li>
+<li>$\epsilon_t$: 一个 $n \times 1$ 的<strong>误差向量</strong>，代表了在时间点 $t$ 发生的、无法被模型历史信息所解释的“新息”或“冲击”(shock)。</li>
+</ul>
+<h4 class="heading-element" id="3-关于冲击的假设"><span>3. 关于“冲击”的假设</span>
+  <a href="#3-%e5%85%b3%e4%ba%8e%e5%86%b2%e5%87%bb%e7%9a%84%e5%81%87%e8%ae%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>模型对误差项（或称冲击）$\epsilon_t$ 有三个关键假设：</p>
+<ol>
+<li><strong>均值为零</strong>: $\mathrm{E}[\epsilon_{t}] = 0$
+<ul>
+<li><strong>含义</strong>: 平均而言，随机冲击不大也不小，没有系统性的预测偏差。</li>
+</ul>
+</li>
+<li><strong>同期相关，但方差稳定</strong>: $\mathrm{E}[\epsilon_{t}\epsilon_{t}^{\prime}] = \Sigma_{\epsilon}$
+<ul>
+<li><strong>含义</strong>: 在<strong>同一时间点</strong> $t$，一个变量受到的冲击可能会与另一个变量受到的冲击相关。这些同期相关性被包含在协方差矩阵 $\Sigma_{\epsilon}$ 中。</li>
+</ul>
+</li>
+<li><strong>跨期不相关</strong>: $\mathrm{E}[\epsilon_{t}\epsilon_{s}^{\prime}] = 0$, 对于所有 $t \neq s$
+<ul>
+<li><strong>含义</strong>: 今天的冲击和昨天的冲击之间没有关联。<strong>需要特别注意的是，这个假设仅针对不可预测的“冲击”$\epsilon_t$</strong>。变量 $y_t$ 本身通过模型结构，其过去值和现在值是高度相关的，这正是模型所要描述的动态过程。</li>
+</ul>
+</li>
+</ol>
+<h4 class="heading-element" id="4-从动态模型到长期均衡"><span>4. 从动态模型到长期均衡</span>
+  <a href="#4-%e4%bb%8e%e5%8a%a8%e6%80%81%e6%a8%a1%e5%9e%8b%e5%88%b0%e9%95%bf%e6%9c%9f%e5%9d%87%e8%a1%a1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>为了求解模型的长期性质（如均值），我们可以使用<strong>滞后算子 (Lag Operator) $L$</strong> 进行代数变换，其中 $Ly_t = y_{t-1}$。这个过程清晰地展示了如何从一个动态关系中找到其静态的均衡点。</p>
+<ol>
+<li>原始模型:
+$$
+y_{t}=c+A_{1}y_{t-1}+\ldots+A_{p}y_{t-p}+\epsilon_{t}
+$$</li>
+<li>用滞后算子改写:
+$$
+y_{t}=c+\left(A_{1}L+\ldots+A_{p}L^{p}\right)y_{t}+\epsilon_{t}
+$$</li>
+<li>将包含 $y_t$ 的项移到左边:
+$$
+\left(I-A_{1}L-\ldots-A_{p}L^{p}\right)y_{t}=c+\epsilon_{t}
+$$</li>
+<li>求解 $y_t$:
+$$
+y_{t}=\left(I-A_{1}L-\ldots-A_{p}L^{p}\right)^{-1}\left(c+\epsilon_{t}\right)
+$$
+这个最终形式表达了 $y_t$ 是所有历史冲击和常数项的函数。</li>
+</ol>
+<p>这个形式上的“解”具有非常深刻的数学和经济学含义，它表达了：<strong>当前的经济状态 $y_t$，是由所有历史冲击 $(c + \epsilon_t, \epsilon_{t-1}, \epsilon_{t-2}, &hellip;)$ 通过系统 $[I - A_1L - &hellip; - A_pL^p]^{-1}$ 不断传导和叠加而形成的。</strong></p>
+<h4 class="heading-element" id="5-模型的长期性质"><span>5. 模型的长期性质</span>
+  <a href="#5-%e6%a8%a1%e5%9e%8b%e7%9a%84%e9%95%bf%e6%9c%9f%e6%80%a7%e8%b4%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>所有关于长期性质的讨论都有一个重要前提：<strong>VAR系统是平稳的 (Stationary)</strong>。这意味着冲击的影响会随时间逐渐消失，系统最终会回归其长期均值。</p>
+<ul>
+<li>
+<p><strong>长期均值向量 ($\mu$)</strong>:
+对上式两边取数学期望 $\mathrm{E}[\cdot]$，并利用 $\mathrm{E}[\epsilon_t]=0$（冲击的均值为零）和 $\mathrm{E}[y_t]=\mu$（长期均值），可以得到：
+$$
+\mu = (I_{n} - A_{1} - \dots -A_{p})^{-1}c
+$$
+<strong>含义</strong>: 这是模型在稳定状态下，各个变量将围绕其波动的长期平均水平或均衡点。它完全由模型的“结构”——截距 $c$ 和系数矩阵 $A_1, \ldots, A_p$——决定。</p>
+</li>
+<li>
+<p><strong>协方差矩阵分析</strong>:
+在VAR模型中有两个必须严格区分的协方差矩阵：</p>
+<ol>
+<li>
+<p><strong>扰动项的协方差矩阵 ($\Sigma_{\epsilon}$)</strong>:</p>
+<ul>
+<li><strong>定义</strong>: $\Sigma_{\epsilon} = \mathrm{E}[\epsilon_{t}\epsilon_{t}^{\prime}]$</li>
+<li><strong>含义</strong>: 它度量的是模型中不可预测的**“新息”或“冲击”** 🌊 的波动性，以及这些冲击在同一时刻（同期）的相关性。</li>
+<li><strong>重要性</strong>: 在实证分析中，$\Sigma_{\epsilon}$ 是我们重点关注和估计的对象。它揭示了系统外部冲击的结构，是进行<strong>脉冲响应分析</strong>和<strong>方差分解</strong>的基础。</li>
+</ul>
+</li>
+<li>
+<p><strong>变量本身的长期协方差矩阵 ($\Sigma_y$)</strong>:</p>
+<ul>
+<li><strong>定义</strong>: $\Sigma_y = \mathrm{E}\left[(y_{t} - \mu) (y_{t} - \mu)^{\prime}\right]$</li>
+<li><strong>含义</strong>: 它衡量的是变量 $y_t$ <strong>自身</strong>在长期均衡状态下的总波动性及变量间的总相关性。$y_t$ 的波动不仅来源于当期冲击 $\epsilon_t$，还<strong>累积了所有历史冲击</strong>通过系数矩阵 $A_j$ 不断传导和叠加的影响。</li>
+<li><strong>类比</strong>: 如果说 $\Sigma_{\epsilon}$ 描述的是投入湖中的<strong>石子</strong>本身的特性，那么 $\Sigma_y$ 描述的就是由这颗石子以及所有先前的石子共同产生的<strong>最终水面波纹</strong>的特性。因此，$\Sigma_y$ 通常远比 $\Sigma_{\epsilon}$ 更大、更复杂。</li>
+<li><strong>计算</strong>: $\Sigma_y$ 的计算需要求解专门的矩阵方程（如李雅普诺夫方程），并非一个简单的等式。因此，任何形如 <code>Σ_y = Σ_ε</code> 的表述都是不正确的。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 class="heading-element" id="332-向量移动平均模型-vector-moving-average-models"><span>3.3.2 向量移动平均模型 (Vector Moving Average Models)</span>
+  <a href="#332-%e5%90%91%e9%87%8f%e7%a7%bb%e5%8a%a8%e5%b9%b3%e5%9d%87%e6%a8%a1%e5%9e%8b-vector-moving-average-models" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>向量移动平均 (VMA) 模型是分析多变量时间序列的另一个核心工具。它提供了一个与VAR模型互补的视角：VAR关注变量自身的<strong>惯性</strong>（用过去值预测未来），而VMA则关注外部<strong>冲击</strong>的<strong>持续效应</strong>（用过去的预测误差解释当前值）。</p>
+<h4 class="heading-element" id="1-核心思想冲击的涟漪效应"><span>1. 核心思想：冲击的涟漪效应</span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3%e5%86%b2%e5%87%bb%e7%9a%84%e6%b6%9f%e6%bc%aa%e6%95%88%e5%ba%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>让我们回到平静湖面的比喻。</p>
+<ul>
+<li><strong>VAR 模型</strong>关心的是<strong>波纹本身</strong>的传播规律：“一个波纹会引起下一个波纹”。它用 $y_{t-1}$ 来预测 $y_t$。</li>
+<li><strong>VMA 模型</strong>则关心的是<strong>最初那颗石子</strong>所激起的涟漪会持续多久：“今天的波纹是现在这颗石子，加上昨天那颗石子，再加上前天那颗石子共同作用的结果”。它用过去的“冲击” $\epsilon_{t-1}, \epsilon_{t-2}, \ldots$ 来预测 $y_t$。</li>
+</ul>
+<p>简单来说，VMA 模型认为，一个系统的当前状态，是其基准水平（一个常数）、当前的随机冲击、以及过去一系列冲击的<strong>滞后效应</strong>共同决定的。</p>
+<ul>
+<li><strong>向量 (Vector)</strong>: 代表我们同时建模多个变量。</li>
+<li><strong>移动平均 (Moving Average)</strong>: 模型是当前和过去若干期<strong>冲击（误差项）</strong> 的加权平均。“移动”体现在我们总是用最近 $q$ 期的冲击来进行解释。</li>
+<li><strong>阶数 q (Order q)</strong>: 代表模型考虑了过去多少期的冲击。一个 $\mathrm{VMA}(q)$ 模型会使用直到 $q$ 期之前的冲击。</li>
+</ul>
+<h4 class="heading-element" id="2-vmaq-模型的数学表达"><span>2. VMA(q) 模型的数学表达</span>
+  <a href="#2-vmaq-%e6%a8%a1%e5%9e%8b%e7%9a%84%e6%95%b0%e5%ad%a6%e8%a1%a8%e8%be%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>一个包含 $n$ 个变量的 $q$ 阶 VMA 模型的矩阵形式如下：</p>
+<p>$$y_{t} = c + B_{1}\epsilon_{t - 1} + \ldots +B_{q}\epsilon_{t - q} + \epsilon_{t} \tag{3.27}$$</p>
+<ul>
+<li>$y_t$: 一个 $n \times 1$ 的向量，包含了在时间点 $t$ 时所有 $n$ 个变量的观测值。</li>
+<li>$c$: 一个 $n \times 1$ 的截距向量，代表每个变量的基准水平或长期均值。</li>
+<li>$B_1, \ldots, B_q$: 一系列 $n \times n$ 的系数矩阵。这是VMA模型的核心，矩阵中的每个元素 $b_{i,j}^k$ 度量了第 $j$ 个变量在 $t-k$ 期受到的冲击，对第 $i$ 个变量在 $t$ 期值的影响力度。这些矩阵直接对应<strong>脉冲响应函数</strong>。</li>
+<li>$\epsilon_{t-1}, \ldots, \epsilon_{t-q}$: 过去 $q$ 期的冲击（误差）向量。</li>
+<li>$\epsilon_t$: 当期的冲击向量，代表全新的、无法预测的“新闻”。</li>
+</ul>
+<p><strong>关于误差项 $\epsilon_t$ 的假设与VAR模型完全相同</strong>：</p>
+<ol>
+<li>$\mathrm{E}[\epsilon_{t}] = 0$ （均值为零）</li>
+<li>$\mathrm{E}[\epsilon_{t}\epsilon_{t}^{\prime}] = \Sigma_{\epsilon}$ （同期相关）</li>
+<li>$\mathrm{E}[\epsilon_{t}\epsilon_{s}^{\prime}] = 0, \forall s \neq t$ （跨期不相关）</li>
+</ol>
+<h4 class="heading-element" id="3-滞后算子形式与模型含义"><span>3. 滞后算子形式与模型含义</span>
+  <a href="#3-%e6%bb%9e%e5%90%8e%e7%ae%97%e5%ad%90%e5%bd%a2%e5%bc%8f%e4%b8%8e%e6%a8%a1%e5%9e%8b%e5%90%ab%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>使用滞后算子 $L$ ($L \epsilon_t = \epsilon_{t-1}$)，VMA模型可以表示为非常简洁的形式：
+$$
+y_t = c + (I + B_1L + \ldots +B_qL^q)\epsilon_t \tag{3.29}
+$$
+这个形式深刻地表明：<strong>当前的经济状态 $y_t$，可以看作是所有当期及历史冲击 $\epsilon_t, \epsilon_{t-1}, &hellip;, \epsilon_{t-q}$ 通过系统 $(I + B_1L + \ldots +B_qL^q)$ 过滤后形成的线性组合。</strong> 系数矩阵 $B_j$ 清晰地刻画了各个历史冲击对当前状态的贡献力度和模式。</p>
+<h4 class="heading-element" id="4-模型的长期性质"><span>4. 模型的长期性质</span>
+  <a href="#4-%e6%a8%a1%e5%9e%8b%e7%9a%84%e9%95%bf%e6%9c%9f%e6%80%a7%e8%b4%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>基于模型表达式和误差项的假设，我们可以推导出系统的长期性质。</p>
+<ul>
+<li>
+<p><strong>长期均值向量 ($\mu$)</strong>:
+对模型两边取期望，并利用 $\mathrm{E}[\epsilon_t] = 0$：
+$$
+\mathrm{E}[y_t] = c + B_1 \mathrm{E}[\epsilon_{t-1}] + \ldots + B_q \mathrm{E}[\epsilon_{t-q}] + \mathrm{E}[\epsilon_t] = c
+$$
+<strong>因此，截距向量 $c$ 就是变量的长期均值向量</strong>： $\mu_{\mathrm{VMA}(q)} = c$。这意味着，尽管短期内系统会因各种冲击而波动，但长期来看，这些冲击的影响会相互抵消，系统将回归到其固有的均值水平 $c$。</p>
+</li>
+<li>
+<p><strong>长期协方差矩阵 ($\Sigma_y$)</strong>:
+变量 $y_t$ 的协方差矩阵需要计算 $\mathrm{E}[(y_t - c)(y_t - c)&rsquo;]$。将 $y_t - c = B_1\epsilon_{t-1} + \ldots +B_q\epsilon_{t-q} + \epsilon_t$ 代入后，利用冲击无自相关的性质，所有不同期冲击的交叉项期望均为零。最终结果为：</p>
+<p>$$
+{\Sigma_{\mathrm{VMA}(p)} = \mathrm{E}\left[(y_t - \mathrm{E}[y_t])(y_t - \mathrm{E}[y_t])&rsquo;\right] = \Sigma_{\epsilon} + \sum_{j = 1}^{q}B_j\Sigma_{\epsilon}B_j&rsquo;}
+$$
+<strong>含义</strong>: 这个公式清晰地展示了变量 $y_t$ 总波动性的来源。</p>
+<ol>
+<li><strong>$\Sigma_{\epsilon}$</strong>: 这是由<strong>当前冲击</strong> $\epsilon_t$ 直接贡献的波动性。</li>
+<li><strong>$\sum_{j = 1}^{q}B_j\Sigma_{\epsilon}B_j&rsquo;$</strong>: 这是由<strong>过去 $q$ 个冲击</strong>的“涟漪效应”贡献的波动性之和。每一项 $B_j\Sigma_{\epsilon}B_j&rsquo;$ 都表示第 $j$ 期前的冲击（其原始波动性为 $\Sigma_{\epsilon}$）经过系数矩阵 $B_j$ 的传导和变换后，对当前 $y_t$ 波动性的贡献。</li>
+</ol>
+<p>这个公式在结构上是清晰且正确的，它明确地将当前波动性分解为了当前冲击和历史冲击两部分贡献的总和。</p>
+</li>
+</ul>
+<h3 class="heading-element" id="333-向量自回归移动平均模型-vector-autoregressive-moving-average-models"><span>3.3.3 向量自回归移动平均模型 (Vector Autoregressive Moving Average Models)</span>
+  <a href="#333-%e5%90%91%e9%87%8f%e8%87%aa%e5%9b%9e%e5%bd%92%e7%a7%bb%e5%8a%a8%e5%b9%b3%e5%9d%87%e6%a8%a1%e5%9e%8b-vector-autoregressive-moving-average-models" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>向量自回归移动平均 (VARMA) 模型是 VAR 和 VMA 模型的综合与推广。它结合了二者的特点，认为系统的当前状态既受到其自身过去值的影响（自回归部分），也受到历史冲击的影响（移动平均部分）。这使得 VARMA 模型能够更灵活、更通用地描述多变量时间序列的动态规律。</p>
+<h4 class="heading-element" id="1-核心思想结合惯性与记忆"><span>1. 核心思想：结合“惯性”与“记忆”</span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3%e7%bb%93%e5%90%88%e6%83%af%e6%80%a7%e4%b8%8e%e8%ae%b0%e5%bf%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>VARMA模型的基本思想非常直观：<strong>一个系统的当前状态，既受其自身过去状态的持续影响，也受过去随机冲击的滞后效应影响。</strong></p>
+<ul>
+<li><strong>VAR部分</strong>: 捕捉了系统的“动量”或“惯性”。例如，经济增长昨天很高，今天可能也倾向于较高。</li>
+<li><strong>VMA部分</strong>: 捕捉了系统对“意外”或“冲击”的“记忆”。例如，上个月的供应链冲击，其负面影响可能持续到今天。</li>
+</ul>
+<p>简单来说，<strong>VARMA = VAR + VMA</strong>。它提供了一个更完整的画面，认为 $y_t$ 是由 $y_{t-p}$ (过去的值) 和 $\epsilon_{t-q}$ (过去的冲击) 共同决定的。</p>
+<h4 class="heading-element" id="2-varmapq-模型的数学表达"><span>2. VARMA(p,q) 模型的数学表达</span>
+  <a href="#2-varmapq-%e6%a8%a1%e5%9e%8b%e7%9a%84%e6%95%b0%e5%ad%a6%e8%a1%a8%e8%be%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>这个模型的方程就是将VAR(p)和VMA(q)的方程简单地加在一起：</p>
+<p>$$y_{t} = c + \underbrace{A_{1}y_{t - 1} + \ldots +A_{p}y_{t - p}}<em>{\text{VAR(p) 部分：系统的惯性}} + \underbrace{B</em>{1}\epsilon_{t - 1} + \ldots +B_{q}\epsilon_{t - q} + \epsilon_{t}}_{\text{VMA(q) 部分：冲击的记忆与当前冲击}}$$</p>
+<p>其中：</p>
+<ul>
+<li>所有变量的定义（$y_t, c, A_j, B_j, \epsilon_t$）都与我们在VAR和VMA模型中学习到的一致。</li>
+<li><strong>阶数 (p, q)</strong>: $p$ 指的是自回归部分的滞后阶数（惯性持续多久），而 $q$ 指的是移动平均部分的滞后阶数（对冲击的记忆持续多久）。</li>
+</ul>
+<p><strong>关于误差项 $\epsilon_t$ 的假设与前两种模型完全一致</strong>：均值为零、同期相关、跨期不相关。</p>
+<h4 class="heading-element" id="3-滞后算子形式"><span>3. 滞后算子形式</span>
+  <a href="#3-%e6%bb%9e%e5%90%8e%e7%ae%97%e5%ad%90%e5%bd%a2%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>使用滞后算子 $L$，VARMA 模型可以表示为非常紧凑的形式：</p>
+<p>$$
+\begin{aligned}
+y_t &amp;= c + (A_1L + \ldots + A_pL^p)y_t + (I + B_1L + \ldots + B_qL^q)\epsilon_t \
+(I - A_1L - \ldots - A_pL^p)y_t &amp;= c + (I + B_1L + \ldots + B_qL^q)\epsilon_t \
+y_t &amp;= (I - A_1L - \ldots - A_pL^p)^{-1} \left[ c + (I + B_1L + \ldots + B_qL^q)\epsilon_t \right]
+\end{aligned}
+$$</p>
+<p>这个最终的表达式是模型最深刻的刻画。它表明，<strong>当前的观测值 $y_t$ 可以理解为常数项和所有历史冲击序列，经过一个复杂的线性滤波器 $(I - A_1L - \ldots - A_pL^p)^{-1}(I + B_1L + \ldots + B_qL^q)$ 变换后的结果。</strong></p>
+<h4 class="heading-element" id="4-模型的长期性质-1"><span>4. 模型的长期性质</span>
+  <a href="#4-%e6%a8%a1%e5%9e%8b%e7%9a%84%e9%95%bf%e6%9c%9f%e6%80%a7%e8%b4%a8-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>
+<p><strong>长期均值向量 ($\mu$)</strong>:
+对模型两边取期望，所有冲击项 $\epsilon$ 的期望为零，因此有：
+$$
+\mu = c + A_1\mu + \ldots + A_p\mu
+$$
+求解这个关于 $\mu$ 的方程，即可得到：
+$$
+\mu_{\mathrm{VARMA}(p,q)} = (I_{n} - A_{1} - \dots -A_{p})^{-1}c \tag{3.33}
+$$
+<strong>结论</strong>：VARMA 模型的长期均值<strong>只取决于截距项 $c$ 和自回归系数矩阵 $A_j$</strong>，与移动平均部分 $B_j$ 无关。这与 VAR 模型的结论一致。</p>
+</li>
+<li>
+<p><strong>长期协方差矩阵 ($\Sigma_y$)</strong>:
+计算 VARMA 模型的协方差矩阵 $\Sigma_y = \mathrm{E}[(y_t - \mu)(y_t - \mu)&rsquo;]$ 在理论上非常复杂。一个标准且强大的技巧是将 VARMA(p, q) 模型<strong>等价地转换为一个 VAR(1) 模型</strong>（通过状态空间扩充，如公式 3.34, 3.35 所示）。</p>
+<p>这个 VAR(1) 表示法的形式为：
+$$
+Y_t = C + \mathcal{A} Y_{t-1} + E_t
+$$
+其中 $Y_t$ 是一个将 $y_t$ 及其滞后项、以及 $\epsilon_t$ 及其滞后项全部堆叠在一起构成的<strong>状态向量</strong>，其维度远大于 $n$。$\mathcal{A}$ 是一个由原 VARMA 模型所有系数矩阵 $A_j$ 和 $B_j$ 构成的<strong>大矩阵</strong>。</p>
+<p>一旦转化为 VAR(1) 形式，其协方差矩阵 $\Gamma_Y(0) = \mathrm{E}[Y_t Y_t&rsquo;]$ 就可以通过求解一个特殊的方程（李雅普诺夫方程）得到：
+$$
+\Gamma_Y(0) = \mathcal{A} \Gamma_Y(0) \mathcal{A}&rsquo; + \Sigma_E \tag{3.36}
+$$
+其中 $\Sigma_E$ 是转换后新扰动项 $E_t$ 的协方差矩阵。通过向量化算子 $\mathrm{vec}(\cdot)$，这个方程可以解出：
+$$
+\mathrm{vec}(\Gamma_Y(0)) = (I - \mathcal{A} \otimes \mathcal{A})^{-1} \mathrm{vec}(\Sigma_E) \tag{3.37}
+$$
+最终，我们所需要的 $n$ 个原始变量 $y_t$ 的协方差矩阵 $\Sigma_y$，就是这个巨大矩阵 $\Gamma_Y(0)$ 的<strong>左上角的 $n \times n$ 子块</strong>：
+$$
+\Sigma_{\mathrm{VARMA}(p,q)} = \Gamma_Y(0)[1:n, 1:n] \tag{3.38}
+$$</p>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-20 00:00:00">更新于 2025-09-20&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/APO-03/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/apo-03/" data-title="《高级投资组合优化》阅读笔记-第三章 3.1 矩" data-hashtags="量化"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/apo-03/" data-hashtag="量化"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/apo-03/" data-title="《高级投资组合优化》阅读笔记-第三章 3.1 矩"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E9%87%8F%E5%8C%96/" class="post-tag" title="标签 - 量化">量化</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/apo-04/" class="post-nav-item" rel="prev" title="《高级投资组合优化》阅读笔记-第四章"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>《高级投资组合优化》阅读笔记-第四章</a><a href="/posts/apo-01/" class="post-nav-item" rel="next" title="《高级投资组合优化》阅读笔记-第一二章">《高级投资组合优化》阅读笔记-第一二章<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#31-矩moments">3.1 矩（moments）</a>
+      <ul>
+        <li><a href="#311-原始矩raw-moments">3.1.1 原始矩（Raw Moments）</a>
+          <ul>
+            <li><a href="#1-什么是矩物理类比"><strong>1. 什么是矩：物理类比</strong></a></li>
+            <li><a href="#2-如何计算矩理论与现实"><strong>2. 如何计算矩：理论与现实</strong></a></li>
+            <li><a href="#3-重要的矩及其含义"><strong>3. 重要的矩及其含义</strong></a></li>
+            <li><a href="#4示例">4.<strong>示例</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#312-中心矩-central-moments"><strong>3.1.2 中心矩 (Central Moments)</strong></a>
+          <ul>
+            <li><a href="#1-什么是中心矩"><strong>1. 什么是中心矩</strong></a></li>
+            <li><a href="#2-如何计算中心矩理论与现实"><strong>2. 如何计算中心矩：理论与现实</strong></a></li>
+            <li><a href="#3-重要的中心矩及其含义"><strong>3. 重要的中心矩及其含义</strong></a></li>
+            <li><a href="#4-示例"><strong>4. 示例</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#313-标准化中心矩-standardized-central-moments">3.1.3 标准化中心矩 (Standardized Central Moments)</a>
+          <ul>
+            <li><a href="#1-为什么需要标准化-消除量纲专注形状"><strong>1. 为什么需要“标准化”？—— 消除量纲，专注形状</strong></a></li>
+            <li><a href="#2-标准化矩的定义"><strong>2. 标准化矩的定义</strong></a></li>
+            <li><a href="#3-两个最重要的标准化矩偏度与峰度"><strong>3. 两个最重要的标准化矩：偏度与峰度</strong></a>
+              <ul>
+                <li><a href="#31-偏度-skewness---衡量分布的不对称性"><strong>3.1 偏度 (Skewness) - 衡量分布的“不对称性”</strong></a></li>
+                <li><a href="#32-峰度-kurtosis---衡量分布的尾部厚度"><strong>3.2 峰度 (Kurtosis) - 衡量分布的“尾部厚度”</strong></a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#314-协矩矩阵-comoments-matrices">3.1.4 协矩矩阵 (Comoments Matrices)</a>
+          <ul>
+            <li><a href="#1-核心概念什么是协矩矩阵"><strong>1. 核心概念：什么是协矩矩阵？</strong></a></li>
+            <li><a href="#2-什么是协矩">2. 什么是“协矩”？</a></li>
+            <li><a href="#2-如何计算协矩矩阵-m_"><strong>2. 如何计算：协矩矩阵 $M_k$ 的构建</strong></a></li>
+            <li><a href="#3-核心应用计算投资组合的各阶矩"><strong>3. 核心应用：计算投资组合的各阶矩</strong></a></li>
+            <li><a href="#4-特殊协矩矩阵及其应用"><strong>4. 特殊协矩矩阵及其应用</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#315-线性矩或l矩-linear-moments-or-l-moments">3.1.5 线性矩或L矩 (Linear Moments or L-Moments)</a>
+          <ul>
+            <li><a href="#1-什么是l矩一种更稳健的分布描述方法">1. 什么是L矩：一种更稳健的分布描述方法</a></li>
+            <li><a href="#2-如何计算l矩加权求和的艺术">2. 如何计算L矩：加权求和的艺术</a></li>
+            <li><a href="#3-四个最重要的l矩">3. 四个最重要的L矩</a></li>
+            <li><a href="#4-l矩与中心矩的关系">4. L矩与中心矩的关系</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#32-指数加权移动平均-ewma">3.2 指数加权移动平均 (EWMA)</a>
+      <ul>
+        <li><a href="#1-核心思想权重如何指数衰减">1. 核心思想：权重如何“指数衰减”？</a></li>
+        <li><a href="#2-如何计算-ewma两种等价的公式">2. 如何计算 EWMA：两种等价的公式</a>
+          <ul>
+            <li><a href="#方法一理论定义式-无限历史"><strong>方法一：理论定义式 (无限历史)</strong></a></li>
+            <li><a href="#方法二递归计算式-高效实用"><strong>方法二：递归计算式 (高效实用)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#3-ewma-的应用估计均值和协方差">3. EWMA 的应用：估计均值和协方差</a></li>
+        <li><a href="#4-有限样本的调整">4. 有限样本的调整</a></li>
+      </ul>
+    </li>
+    <li><a href="#33-多元时间序列">3.3 多元时间序列</a>
+      <ul>
+        <li><a href="#331-向量自回归模型-vector-autoregressive-models">3.3.1 向量自回归模型 (Vector Autoregressive Models)</a>
+          <ul>
+            <li><a href="#1-核心思想从我的过去预测我的未来到从我们的过去预测我们的未来">1. 核心思想：从“我”的过去预测“我”的未来，到从“我们”的过去预测“我们”的未来</a></li>
+            <li><a href="#2-varp-模型的数学表达">2. VAR(p) 模型的数学表达</a></li>
+            <li><a href="#3-关于冲击的假设">3. 关于“冲击”的假设</a></li>
+            <li><a href="#4-从动态模型到长期均衡">4. 从动态模型到长期均衡</a></li>
+            <li><a href="#5-模型的长期性质">5. 模型的长期性质</a></li>
+          </ul>
+        </li>
+        <li><a href="#332-向量移动平均模型-vector-moving-average-models">3.3.2 向量移动平均模型 (Vector Moving Average Models)</a>
+          <ul>
+            <li><a href="#1-核心思想冲击的涟漪效应">1. 核心思想：冲击的涟漪效应</a></li>
+            <li><a href="#2-vmaq-模型的数学表达">2. VMA(q) 模型的数学表达</a></li>
+            <li><a href="#3-滞后算子形式与模型含义">3. 滞后算子形式与模型含义</a></li>
+            <li><a href="#4-模型的长期性质">4. 模型的长期性质</a></li>
+          </ul>
+        </li>
+        <li><a href="#333-向量自回归移动平均模型-vector-autoregressive-moving-average-models">3.3.3 向量自回归移动平均模型 (Vector Autoregressive Moving Average Models)</a>
+          <ul>
+            <li><a href="#1-核心思想结合惯性与记忆">1. 核心思想：结合“惯性”与“记忆”</a></li>
+            <li><a href="#2-varmapq-模型的数学表达">2. VARMA(p,q) 模型的数学表达</a></li>
+            <li><a href="#3-滞后算子形式">3. 滞后算子形式</a></li>
+            <li><a href="#4-模型的长期性质-1">4. 模型的长期性质</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/e88fe8462c0e5f66082aa793fb7b4def.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

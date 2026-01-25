@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Windows内核(十)——消息机制 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="[toc]
+1.消息队列 消息队列 本质上是一种数据结构，先进先出。
+"><meta name="keywords" content='Win32'>
+  <meta itemprop="name" content="Windows内核(十)——消息机制">
+  <meta itemprop="description" content="[toc]
+1.消息队列 消息队列 本质上是一种数据结构，先进先出。">
+  <meta itemprop="datePublished" content="2023-03-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2023-03-07T00:00:00+00:00">
+  <meta itemprop="wordCount" content="3703">
+  <meta itemprop="keywords" content="Win32"><meta property="og:url" content="http://localhost:1313/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="Windows内核(十)——消息机制">
+  <meta property="og:description" content="[toc]
+1.消息队列 消息队列 本质上是一种数据结构，先进先出。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-03-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-03-07T00:00:00+00:00">
+    <meta property="article:tag" content="Win32">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Windows内核(十)——消息机制">
+  <meta name="twitter:description" content="[toc]
+1.消息队列 消息队列 本质上是一种数据结构，先进先出。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/" title="Windows内核(十)——消息机制 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/2023-3-winkernel%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="Windows内核(九)——内存管理" /><link rel="next" type="text/html" href="http://localhost:1313/posts/2023-3-winkernel%E8%B0%83%E8%AF%95/" title="Windows内核(十一)——软件调试" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Windows内核(十)——消息机制",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6\/"
+    },"genre": "posts","keywords": "Win32","wordcount":  3703 ,
+    "url": "http:\/\/localhost:1313\/posts\/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6\/","datePublished": "2023-03-07T00:00:00+00:00","dateModified": "2023-03-07T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Windows内核(十)——消息机制</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2023-03-07 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2023-03-07">2023-03-07</time></span>&nbsp;<span title="3703 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3800 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 8 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1消息队列">1.消息队列</a>
+      <ul>
+        <li><a href="#消息队列">消息队列</a></li>
+        <li><a href="#消息队列在哪">消息队列在哪</a>
+          <ul>
+            <li><a href="#linux专用进程">Linux：专用进程</a></li>
+            <li><a href="#windowsgui线程">Windows：GUI线程</a></li>
+            <li><a href="#win32thread">Win32Thread</a></li>
+          </ul>
+        </li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#2窗口与线程">2.窗口与线程</a>
+      <ul>
+        <li><a href="#消息去处">消息去处</a></li>
+        <li><a href="#窗口对象">窗口对象</a></li>
+      </ul>
+    </li>
+    <li><a href="#3消息的接收和分发">3.消息的接收和分发</a>
+      <ul>
+        <li><a href="#消息队列-1">消息队列</a></li>
+        <li><a href="#消息的接收">消息的接收</a>
+          <ul>
+            <li><a href="#getmessage">GetMessage</a></li>
+            <li><a href="#同步与异步">同步与异步</a></li>
+          </ul>
+        </li>
+        <li><a href="#消息的分发">消息的分发</a>
+          <ul>
+            <li><a href="#dispatchmessage">DispatchMessage</a></li>
+            <li><a href="#translatemessage">TranslateMessage</a></li>
+          </ul>
+        </li>
+        <li><a href="#总结-1">总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#4内核回调机制">4.内核回调机制</a>
+      <ul>
+        <li><a href="#keusermodecallback">KeUserModeCallback</a></li>
+        <li><a href="#在od中查看回调函数地址表">在OD中查看回调函数地址表</a></li>
+        <li><a href="#总结-2">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>[toc]</p>
+<h2 class="heading-element" id="1消息队列"><span>1.消息队列</span>
+  <a href="#1%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="消息队列"><span>消息队列</span>
+  <a href="#%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>本质上是一种数据结构，先进先出。</p>
+<h3 class="heading-element" id="消息队列在哪"><span>消息队列在哪</span>
+  <a href="#%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97%e5%9c%a8%e5%93%aa" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="linux专用进程"><span>Linux：专用进程</span>
+  <a href="#linux%e4%b8%93%e7%94%a8%e8%bf%9b%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
+<li>使用专用进程捕获所有消息</li>
+<li>判断消息所属进程，进行分发，将消息分配到目标进程的消息队列中</li>
+</ol>
+<p><img loading="lazy" src='/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/image-20230304145550736.png' alt="image-20230304145550736" height="408" width="663"></p>
+<h4 class="heading-element" id="windowsgui线程"><span>Windows：GUI线程</span>
+  <a href="#windowsgui%e7%ba%bf%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>KTHREAD结构体：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">kd</span><span class="o">&gt;</span> <span class="n">dt</span> <span class="n">_KTHREAD</span>
+</span></span><span class="line"><span class="cl"><span class="n">ntdll</span><span class="o">!</span><span class="n">_KTHREAD</span>
+</span></span><span class="line"><span class="cl">   <span class="p">...</span>
+</span></span><span class="line"><span class="cl">   <span class="o">+</span><span class="mh">0x130</span> <span class="n">Win32Thread</span>	<span class="c1">//若当前程序为控制台程序且无使用任何图形界面相关API，该成员为空
+</span></span></span><span class="line"><span class="cl">   						<span class="c1">//若当前程序使用了图形界面相关的API，该成员指向一个结构体，该结构体包含了消息队列
+</span></span></span><span class="line"><span class="cl">   <span class="p">...</span></span></span></code></pre></div></div><p><strong>GUI</strong>：微软提供的与图形界面相关的API，称为GUI
+<strong>GDI</strong>：自定义的用于图形界面相关的API，称为GDI</p>
+<p><strong>GUI线程</strong>：</p>
+<ol>
+<li>当线程刚创建的时候，都是普通线程：
+<code>Thread.ServiceTable</code>指向<code>KeServiceDescriptorTable</code></li>
+<li>当线程第一次调用<code>Win32k.sys</code>（调用号大于0x100）时，会调用一个函数，将当前线程转换成GUI线程：<code>PsConvertToGuiThread</code>
+主要做几件事：
+<ol>
+<li>扩充内核栈，必须换成64KB的大内核栈，因为普通内核栈只有12KB大小</li>
+<li>创建一个包含消息队列的结构体，并挂到KTHREAD上</li>
+<li>将<code>Thread.ServiceTable</code>指向<code>KeServiceDescriptorTableShadow</code>（只有当调用GUI时，才会指向<code>SSDTShadow</code>）</li>
+<li>把需要的内存数据映射到本进程空间</li>
+</ol>
+</li>
+</ol>
+<h4 class="heading-element" id="win32thread"><span>Win32Thread</span>
+  <a href="#win32thread" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>位于KTHREAD，若当前程序使用了图形界面相关的API，该成员指向一个结构体，其中包含了当前线程的消息队列：<strong>THREADINFO</strong></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">//FROM ReactOS v0.4.13
+</span></span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_THREADINFO</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="n">_USER_MESSAGE_QUEUE</span><span class="o">*</span> <span class="n">MessageQueue</span><span class="p">;</span>	<span class="c1">//消息队列
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">THREADINFO</span><span class="p">;</span></span></span></code></pre></div></div><h3 class="heading-element" id="总结"><span>总结</span>
+  <a href="#%e6%80%bb%e7%bb%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>消息队列存储在<strong>0环</strong>,通过<strong>KTHREAD.Win32Thread</strong>可以找到</li>
+<li>并不是所有线程都要消息队列，只有GUI线程才有消息队列</li>
+<li>一个GUI线程对应1个消息队列</li>
+</ol>
+<h2 class="heading-element" id="2窗口与线程"><span>2.窗口与线程</span>
+  <a href="#2%e7%aa%97%e5%8f%a3%e4%b8%8e%e7%ba%bf%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="消息去处"><span>消息去处</span>
+  <a href="#%e6%b6%88%e6%81%af%e5%8e%bb%e5%a4%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>当我们使用鼠标某个窗口进行点击与滑动时，都会产生一个消息，消息会进入当前窗口对应线程的消息队列中</li>
+<li>当我们编写程序时，并不会去特地启动两个线程去监控鼠标和键盘，<code>w32k.sys</code>负责了这个事情</li>
+</ol>
+<blockquote>
+<p>当初始化<strong>w32k.sys</strong>这个模块时，会调用一个叫做<strong>InitInputImpl</strong>的函数
+这个函数会启动两个线程，分别用来监控鼠标和键盘，这两个线程都是0环的线程
+平时我们的电脑遭遇“死机”时，常常是屏幕动不了，鼠标还能动，这正式由于鼠标是有一个独立的线程在监控它的行动</p>
+</blockquote>
+<p>当调用<code>CreateWindow</code>时，该函数实际上是一个宏，<code>CreateWindowA</code>实际对应<code>CreateWindowExA</code>函数，<code>CreateWindowW</code>对应<code>CreateWindowExW</code>函数。</p>
+<p>最终窗口在0环被画出（由w32k.sys实现）</p>
+<h3 class="heading-element" id="窗口对象"><span>窗口对象</span>
+  <a href="#%e7%aa%97%e5%8f%a3%e5%af%b9%e8%b1%a1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>每个窗口对应一个<code>WINDOW_OBJECT</code>结构体，位于0环，包含当前窗口所有信息</li>
+<li>除了大窗口之外，窗口中的每个控件也都是一个窗口，也分别对应一个<code>WINDOW_OBJECT</code>结构体</li>
+<li>一个窗口内包含着许多个窗口，按钮，对话框也都属于窗口，属于同一个线程</li>
+<li>一个线程可以包含多个窗口，但每个窗口只能属于一个线程</li>
+</ol>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">//FROM ReactOS v3.12
+</span></span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_WINDOW_OBJECT</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	<span class="n">PWND</span> <span class="n">Wnd</span><span class="p">;</span>			<span class="c1">//包含大量窗口信息
+</span></span></span><span class="line"><span class="cl">	<span class="n">PTHREADINFO</span> <span class="n">pti</span><span class="p">;</span>	<span class="c1">//线程
+</span></span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_WND</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/* Style. */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">DWORD</span> <span class="n">style</span><span class="p">;</span>		<span class="c1">//包含窗口风格/后一个窗口/前一个窗口/父窗口/子窗口等信息
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">WND</span><span class="p">,</span> <span class="o">*</span><span class="n">PWND</span><span class="p">;</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h2 class="heading-element" id="3消息的接收和分发"><span>3.消息的接收和分发</span>
+  <a href="#3%e6%b6%88%e6%81%af%e7%9a%84%e6%8e%a5%e6%94%b6%e5%92%8c%e5%88%86%e5%8f%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="消息队列-1"><span>消息队列</span>
+  <a href="#%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>消息队列共有七组，用于存放不同类型的消息。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="mi">1</span><span class="err">）</span><span class="n">SentMessagesListHead</span>		<span class="c1">//接收SendMessage发来的消息
+</span></span></span><span class="line"><span class="cl"><span class="mi">2</span><span class="err">）</span><span class="n">PostedMessagesListHead</span>	<span class="c1">//接收PostMessage发来的消息
+</span></span></span><span class="line"><span class="cl"><span class="mi">3</span><span class="err">）</span><span class="n">HardwareMessagesListHead</span>	<span class="c1">//接收键盘、鼠标等硬件设备的消息
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span></span></span></code></pre></div></div><p>完整队列：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">//ReactOS v3.12
+</span></span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_USER_MESSAGE_QUEUE</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* Owner of the message queue */</span>
+</span></span><span class="line"><span class="cl">	<span class="k">struct</span> <span class="n">_ETHREAD</span> <span class="o">*</span><span class="n">Thread</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* Queue of messages sent to the queue. */</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LIST_ENTRY</span> <span class="n">SentMessagesListHead</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* Queue of messages posted to the queue. */</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LIST_ENTRY</span> <span class="n">PostedMessagesListHead</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* Queue of sent-message notifies for the queue. */</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LIST_ENTRY</span> <span class="n">NotifyMessagesListHead</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* Queue for hardware messages for the queue. */</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LIST_ENTRY</span> <span class="n">HardwareMessagesListHead</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* messages that are currently dispatched by other threads */</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LIST_ENTRY</span> <span class="n">DispatchingMessagesHead</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* messages that are currently dispatched by this message queue, required for cleanup */</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LIST_ENTRY</span> <span class="n">LocalDispatchingMessagesHead</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h3 class="heading-element" id="消息的接收"><span>消息的接收</span>
+  <a href="#%e6%b6%88%e6%81%af%e7%9a%84%e6%8e%a5%e6%94%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>创建窗口就是在0环创建_WINDOW_OBJECT结构体，然后赋值。</p>
+<p><img loading="lazy" src='/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/image-20230308204349224.png' alt="image-20230308204349224" height="438" width="813"></p>
+<h4 class="heading-element" id="getmessage"><span>GetMessage</span>
+  <a href="#getmessage" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>从消息队列中取出消息</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">BOOL</span> <span class="n">WINAPI</span> <span class="nf">GetMessage</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LPMSG</span> <span class="n">lpMsg</span><span class="p">,</span>	<span class="c1">//返回从队列中取出的消息
+</span></span></span><span class="line"><span class="cl">	<span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span>		<span class="c1">//过滤条件一：窗口句柄
+</span></span></span><span class="line"><span class="cl">	<span class="n">UINT</span> <span class="n">wMsgFilterMin</span><span class="p">,</span>	<span class="c1">//过滤条件二：最小值
+</span></span></span><span class="line"><span class="cl">	<span class="n">UINT</span> <span class="n">wMsgFilterMax</span>	<span class="c1">//过滤条件三：最大值
+</span></span></span><span class="line"><span class="cl"><span class="p">);</span></span></span></code></pre></div></div><p><strong>主要功能</strong>：循环判断是否存在属于该窗口的消息，若存在，则将消息存储到MSG指定的结构中，并将消息从列表中删除。</p>
+<p>示例程序：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">##include &lt;windows.h&gt;
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">LRESULT</span> <span class="n">CALLBACK</span> <span class="nf">WindowProc</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">HWND</span> <span class="n">hwnd</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">UINT</span> <span class="n">uMsg</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">WPARAM</span> <span class="n">wParam</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">LPARAM</span> <span class="n">lParam</span>
+</span></span><span class="line"><span class="cl"><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span><span class="p">(</span><span class="n">uMsg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mh">0x401</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">MessageBoxA</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="s">&#34;测试窗口接收到消息&#34;</span><span class="p">,</span> <span class="s">&#34;新消息&#34;</span><span class="p">,</span> <span class="n">MB_OK</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nf">DefWindowProc</span><span class="p">(</span><span class="n">hwnd</span><span class="p">,</span> <span class="n">uMsg</span><span class="p">,</span> <span class="n">wParam</span><span class="p">,</span> <span class="n">lParam</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">APIENTRY</span> <span class="nf">WinMain</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LPSTR</span> <span class="n">lpCmdLine</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">nShowCmd</span>
+</span></span><span class="line"><span class="cl"><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//窗口的类名
+</span></span></span><span class="line"><span class="cl">	<span class="n">TCHAR</span> <span class="n">className</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;My First Window&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//创建一个自己的窗口
+</span></span></span><span class="line"><span class="cl">	<span class="n">WNDCLASS</span> <span class="n">wndclass</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">hbrBackground</span> <span class="o">=</span> <span class="p">(</span><span class="n">HBRUSH</span><span class="p">)</span><span class="n">COLOR_MENU</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">lpfnWndProc</span> <span class="o">=</span> <span class="n">WindowProc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">lpszClassName</span> <span class="o">=</span> <span class="n">className</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">hInstance</span> <span class="o">=</span> <span class="n">hInstance</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//注册
+</span></span></span><span class="line"><span class="cl">	<span class="nf">RegisterClass</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wndclass</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//创建窗口
+</span></span></span><span class="line"><span class="cl">	<span class="n">HWND</span> <span class="n">hwnd</span> <span class="o">=</span> <span class="nf">CreateWindow</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">		<span class="n">className</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">TEXT</span><span class="p">(</span><span class="s">&#34;测试窗口&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">		<span class="n">WS_OVERLAPPEDWINDOW</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">600</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">300</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">hInstance</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">NULL</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">hwnd</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">//显示窗口
+</span></span></span><span class="line"><span class="cl">	<span class="nf">ShowWindow</span><span class="p">(</span><span class="n">hwnd</span><span class="p">,</span> <span class="n">SW_SHOW</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">//消息循环
+</span></span></span><span class="line"><span class="cl">	<span class="n">MSG</span> <span class="n">msg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span><span class="p">(</span><span class="nf">GetMessage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//TranslateMessage(&amp;msg);
+</span></span></span><span class="line"><span class="cl">		<span class="c1">//DispatchMessage(&amp;msg);
+</span></span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>不关闭该程序，运行：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">##include &lt;stdio.h&gt;
+</span></span></span><span class="line"><span class="cl"><span class="cp">##include &lt;windows.h&gt;
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">HWND</span> <span class="n">hwnd</span> <span class="o">=</span> <span class="nf">FindWindow</span><span class="p">(</span><span class="s">&#34;My First Window&#34;</span><span class="p">,</span> <span class="s">&#34;测试窗口&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">SendMessage</span><span class="p">(</span><span class="n">hwnd</span><span class="p">,</span> <span class="mh">0x401</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div><h4 class="heading-element" id="同步与异步"><span>同步与异步</span>
+  <a href="#%e5%90%8c%e6%ad%a5%e4%b8%8e%e5%bc%82%e6%ad%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
+<li>
+<p>同步
+<code>SendMessage()</code>发送消息,<code>GetMessage()</code>接收,进入0环要遍历<code>SentMessagesListHead</code>有没有消息，有就处理,没有就返回，必须要处理完才会返回结果，<code>SendMessage()</code>要接收到结果才会结束否则会一直 堵塞在这</p>
+</li>
+<li>
+<p>异步
+<code>PostMessage()</code>发送消息，<code>GetMessage()</code>只会接收它的消息,不会处理，它的消息由<code>TranslateMessage(&amp;msg)</code>与<code>DispatchMessage(&amp;msg)来</code>处理</p>
+</li>
+</ol>
+<p><code>PostMessage()</code>发送完后是不会等待你的处理结果的,发完立马就结束</p>
+<p>可以将上面的程序中改为：<code>PostMessage(hwnd, 0x401, 0, 0);</code>，可以看到上面的程序并没有处理消息。</p>
+<h3 class="heading-element" id="消息的分发"><span>消息的分发</span>
+  <a href="#%e6%b6%88%e6%81%af%e7%9a%84%e5%88%86%e5%8f%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><code>GetMessage</code>能够处理<code>SentMessagesListHead</code>队列中的消息，其他队列中的消息则由<code>DispatchMessage</code>进行分发处理。</p>
+<p><strong>大致流程</strong>：</p>
+<ol>
+<li>根据<strong>窗口句柄</strong>找到<strong>窗口对象</strong>。</li>
+<li>根据窗口对象得到<strong>窗口过程函数</strong>，由<strong>0环</strong>进行调用。</li>
+</ol>
+<h4 class="heading-element" id="dispatchmessage"><span>DispatchMessage</span>
+  <a href="#dispatchmessage" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>用于消息分发，根据窗口句柄调用相关的窗口过程，通常用于分发由<code>GetMessage</code>函数检索到的消息。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">LRESULT</span> <span class="nf">DispatchMessage</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="n">CONST</span> <span class="n">MSG</span> <span class="o">*</span><span class="n">lpmsg</span>   <span class="c1">// message information
+</span></span></span><span class="line"><span class="cl"><span class="p">);</span></span></span></code></pre></div></div><p>示例代码：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-c"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">##include &lt;stdio.h&gt;
+</span></span></span><span class="line"><span class="cl"><span class="cp">##include &lt;windows.h&gt;
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">LRESULT</span> <span class="n">CALLBACK</span> <span class="nf">WindowProc</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">HWND</span> <span class="n">hwnd</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">UINT</span> <span class="n">uMsg</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">WPARAM</span> <span class="n">wParam</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">IN</span> <span class="n">LPARAM</span> <span class="n">lParam</span>
+</span></span><span class="line"><span class="cl"><span class="p">){</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span><span class="p">(</span><span class="n">uMsg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mh">0x401</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nf">MessageBoxA</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="s">&#34;测试窗口接收到消息&#34;</span><span class="p">,</span> <span class="s">&#34;新消息&#34;</span><span class="p">,</span> <span class="n">MB_OK</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nl">WM_DESTROY</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nf">ExitProcess</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nf">DefWindowProc</span><span class="p">(</span><span class="n">hwnd</span><span class="p">,</span> <span class="n">uMsg</span><span class="p">,</span> <span class="n">wParam</span><span class="p">,</span> <span class="n">lParam</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">APIENTRY</span> <span class="nf">WinMain</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LPSTR</span> <span class="n">lpCmdLine</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">nShowCmd</span>
+</span></span><span class="line"><span class="cl"><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//窗口的类名
+</span></span></span><span class="line"><span class="cl">	<span class="n">TCHAR</span> <span class="n">className</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;My First Window&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//创建一个自己的窗口
+</span></span></span><span class="line"><span class="cl">	<span class="n">WNDCLASS</span> <span class="n">wndclass</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">hbrBackground</span> <span class="o">=</span> <span class="p">(</span><span class="n">HBRUSH</span><span class="p">)</span><span class="n">COLOR_MENU</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">lpfnWndProc</span> <span class="o">=</span> <span class="n">WindowProc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">lpszClassName</span> <span class="o">=</span> <span class="n">className</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">wndclass</span><span class="p">.</span><span class="n">hInstance</span> <span class="o">=</span> <span class="n">hInstance</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//注册
+</span></span></span><span class="line"><span class="cl">	<span class="nf">RegisterClass</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wndclass</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//创建窗口
+</span></span></span><span class="line"><span class="cl">	<span class="n">HWND</span> <span class="n">hwnd</span> <span class="o">=</span> <span class="nf">CreateWindow</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">		<span class="n">className</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">TEXT</span><span class="p">(</span><span class="s">&#34;测试窗口&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">		<span class="n">WS_OVERLAPPEDWINDOW</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">600</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="mi">300</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">hInstance</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">NULL</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">hwnd</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">//显示窗口
+</span></span></span><span class="line"><span class="cl">	<span class="nf">ShowWindow</span><span class="p">(</span><span class="n">hwnd</span><span class="p">,</span> <span class="n">SW_SHOW</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">//消息循环
+</span></span></span><span class="line"><span class="cl">	<span class="n">MSG</span> <span class="n">msg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span><span class="p">(</span><span class="nf">GetMessage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//TranslateMessage(&amp;msg);
+</span></span></span><span class="line"><span class="cl">		<span class="c1">//DispatchMessage(&amp;msg);
+</span></span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>拖动窗口、点击最小化、缩放、关闭按钮均<strong>无反应</strong>；将<code>DispatchMessage</code>的注释去掉，可以得到响应。</p>
+<h4 class="heading-element" id="translatemessage"><span>TranslateMessage</span>
+  <a href="#translatemessage" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>用于将虚拟键码转换为字符消息。该字符消息又被发送给对应线程（调用<code>TranslateMessage</code>的线程）的消息队列，当线程再次调用<code>GetMessage</code>函数或<code>PeekMessage</code>函数获取消息的时候被读取。</p>
+<h3 class="heading-element" id="总结-1"><span>总结</span>
+  <a href="#%e6%80%bb%e7%bb%93-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><code>GetMessage</code>的不止能够取出消息，还能够处理消息。</li>
+<li><code>GetMessage</code>处理消息时，从0环回到3环调用窗口过程函数进行处理。</li>
+<li><code>SendMessage</code>发送消息后会等待目标处理完毕，<code>PostMessage</code>不会。</li>
+<li><code>GetMessage</code>只会处理<code>SentMessagesListHead</code>列表中的消息。</li>
+<li><code>DispatchMessage</code>的作用是分发除了<code>SentMessagesListHead</code>队列以外的消息给各窗口对象进行处理。</li>
+<li><code>TranslateMessage</code>只处理键盘消息，将虚拟键码转换为字符消息，再由<code>DispatchMessage</code>进行分发。</li>
+<li>未经过<code>TranslateMessage</code>处理的键盘消息，虚拟键码由<code>WM_KEYDOWN</code>进行处理；经过<code>TranslateMessage</code>处理的键盘消息，字符消息由<code>WM_CHAR</code>进行处理</li>
+</ul>
+<h2 class="heading-element" id="4内核回调机制"><span>4.内核回调机制</span>
+  <a href="#4%e5%86%85%e6%a0%b8%e5%9b%9e%e8%b0%83%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="keusermodecallback"><span>KeUserModeCallback</span>
+  <a href="#keusermodecallback" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>1）从0环调用3环函数的几种方式：</p>
+<ul>
+<li>
+<p>APC</p>
+</li>
+<li>
+<p>异常</p>
+</li>
+<li>
+<p>内核回调</p>
+</li>
+</ul>
+<p>APC与异常回三环的落脚点比较单一，而消息机制需要处理的情况较多，不能使用同一个逻辑进行处理，因此消息机制使用内核回调调用三环函数。</p>
+<p>2）回到3环的落脚点：</p>
+<ul>
+<li>
+<p>APC：<code>ntdll!KiUserApcDispatcher</code></p>
+</li>
+<li>
+<p>异常：<code>ntdll!KiUserExceptionDispatcher</code></p>
+</li>
+</ul>
+<p>3）内核回调在3环的落脚点：<code>KeUserModeCallback</code></p>
+<blockquote>
+<p>PEB+0x2C指向回调函数地址表。</p>
+</blockquote>
+<p>4）凡是有窗口的程序就有可能0环直接调用3环的程序。</p>
+<h3 class="heading-element" id="在od中查看回调函数地址表"><span>在OD中查看回调函数地址表</span>
+  <a href="#%e5%9c%a8od%e4%b8%ad%e6%9f%a5%e7%9c%8b%e5%9b%9e%e8%b0%83%e5%87%bd%e6%95%b0%e5%9c%b0%e5%9d%80%e8%a1%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>随便找个程序，找TEB：</p>
+<p><img loading="lazy" src='/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/image-20230308211449772.png' alt="image-20230308211449772" height="654" width="1283"></p>
+<p>找PEB：在TEB+0x30的位置，+2C的位置就是回调地址表：</p>
+<p><img loading="lazy" src='/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/image-20230308211547780.png' alt="image-20230308211547780" height="339" width="442"></p>
+<p>可以看到：</p>
+<p><img loading="lazy" src='/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/image-20230308211627411.png' alt="image-20230308211627411" height="345" width="769"></p>
+<h3 class="heading-element" id="总结-2"><span>总结</span>
+  <a href="#%e6%80%bb%e7%bb%93-2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>不是所有消息都是在进入消息循环后由<code>GetMessage</code>和<code>DispatchMessage</code>进行处理的，部分内核代码也能够调用窗口处理函数。</li>
+<li>内核代码通过<code>KeUserModeCallback</code>调用窗口处理函数，由第一个参数<code>FunctionID</code>决定回到三环时的落脚点。</li>
+<li><code>FunctionID</code>的值为回调地址表的索引，回调地址表位于<code>PEB+0x2C</code>位置，每个值为一个函数地址。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2023-03-07 00:00:00">更新于 2023-03-07&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/2023-3-WinKernel%e6%b6%88%e6%81%af%e6%9c%ba%e5%88%b6/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/" data-title="Windows内核(十)——消息机制" data-hashtags="Win32"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/" data-hashtag="Win32"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/2023-3-winkernel%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/" data-title="Windows内核(十)——消息机制"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/win32/" class="post-tag" title="标签 - Win32">Win32</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/2023-3-winkernel%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="post-nav-item" rel="prev" title="Windows内核(九)——内存管理"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Windows内核(九)——内存管理</a><a href="/posts/2023-3-winkernel%E8%B0%83%E8%AF%95/" class="post-nav-item" rel="next" title="Windows内核(十一)——软件调试">Windows内核(十一)——软件调试<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#1消息队列">1.消息队列</a>
+      <ul>
+        <li><a href="#消息队列">消息队列</a></li>
+        <li><a href="#消息队列在哪">消息队列在哪</a>
+          <ul>
+            <li><a href="#linux专用进程">Linux：专用进程</a></li>
+            <li><a href="#windowsgui线程">Windows：GUI线程</a></li>
+            <li><a href="#win32thread">Win32Thread</a></li>
+          </ul>
+        </li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#2窗口与线程">2.窗口与线程</a>
+      <ul>
+        <li><a href="#消息去处">消息去处</a></li>
+        <li><a href="#窗口对象">窗口对象</a></li>
+      </ul>
+    </li>
+    <li><a href="#3消息的接收和分发">3.消息的接收和分发</a>
+      <ul>
+        <li><a href="#消息队列-1">消息队列</a></li>
+        <li><a href="#消息的接收">消息的接收</a>
+          <ul>
+            <li><a href="#getmessage">GetMessage</a></li>
+            <li><a href="#同步与异步">同步与异步</a></li>
+          </ul>
+        </li>
+        <li><a href="#消息的分发">消息的分发</a>
+          <ul>
+            <li><a href="#dispatchmessage">DispatchMessage</a></li>
+            <li><a href="#translatemessage">TranslateMessage</a></li>
+          </ul>
+        </li>
+        <li><a href="#总结-1">总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#4内核回调机制">4.内核回调机制</a>
+      <ul>
+        <li><a href="#keusermodecallback">KeUserModeCallback</a></li>
+        <li><a href="#在od中查看回调函数地址表">在OD中查看回调函数地址表</a></li>
+        <li><a href="#总结-2">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/2897647a498042798756fae4988c4365.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>使用GIT Clone指定仓库的制定文件夹 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。
+以下是具体的命令步骤：
+"><meta name="keywords" content='tips'>
+  <meta itemprop="name" content="使用GIT clone指定仓库的制定文件夹">
+  <meta itemprop="description" content="要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。
+以下是具体的命令步骤：">
+  <meta itemprop="datePublished" content="2025-08-18T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-18T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1100">
+  <meta itemprop="keywords" content="Tips"><meta property="og:url" content="http://localhost:1313/posts/202508-gitclonedir/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="使用GIT clone指定仓库的制定文件夹">
+  <meta property="og:description" content="要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。
+以下是具体的命令步骤：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-18T00:00:00+00:00">
+    <meta property="article:tag" content="Tips">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="使用GIT clone指定仓库的制定文件夹">
+  <meta name="twitter:description" content="要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。
+以下是具体的命令步骤：">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202508-gitclonedir/" title="使用GIT clone指定仓库的制定文件夹 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202508-prompt/" title="自用prompt整理收集" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202508-ringsign/" title="环签论文阅读《How to Leak a Secret》" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "使用GIT clone指定仓库的制定文件夹",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202508-gitclonedir\/"
+    },"genre": "posts","keywords": "tips","wordcount":  1100 ,
+    "url": "http:\/\/localhost:1313\/posts\/202508-gitclonedir\/","datePublished": "2025-08-18T00:00:00+00:00","dateModified": "2025-08-18T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>使用GIT Clone指定仓库的制定文件夹</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-18 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-18">2025-08-18</time></span>&nbsp;<span title="1100 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 1200 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 3 分钟</span>&nbsp;</div>
+    </div><div class="content" id="content"><p>要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。</p>
+<p>以下是具体的命令步骤：</p>
+<ol>
+<li>
+<p><strong>初始化一个空的 Git 仓库：</strong></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git init Confernces_BlackHat_USA_2025_Slides
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> Confernces_BlackHat_2025_Slides</span></span></code></pre></div></div></li>
+<li>
+<p><strong>添加远程仓库地址：</strong></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git remote add origin https://github.com/onhexgroup/Conferences.git</span></span></code></pre></div></div></li>
+<li>
+<p><strong>启用稀疏检出功能：</strong></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git config core.sparseCheckout true</span></span></code></pre></div></div></li>
+<li>
+<p><strong>指定要克隆的文件夹路径。</strong> 在 <code>.git/info/sparse-checkout</code> 文件中添加路径。这里我们只想要 <code>BlackHat_USA_2025_Slides</code> 文件夹及其所有内容：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;BlackHat_USA_2025_Slides/&#34;</span> &gt;&gt; .git/info/sparse-checkout</span></span></code></pre></div></div><p>如果你只想要某个文件夹下的某个特定文件，可以写：<code>BlackHat_USA_2025_Slides/your_file.pdf</code></p>
+</li>
+<li>
+<p><strong>拉取分支并执行稀疏检出：</strong></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git pull origin master
+</span></span><span class="line"><span class="cl"><span class="c1"># 或者 git pull origin main, 具体取决于该仓库的主分支名称</span></span></span></code></pre></div></div></li>
+</ol>
+<p>执行完这些命令后，你的 <code>Confernces_BlackHat_USA_2025_Slides</code> 文件夹中就只会包含 <code>Onhexgroup/Conferences</code> 仓库下的 <code>BlackHat_USA_2025_Slides</code> 文件夹内容了。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># git pull origin main</span>
+</span></span><span class="line"><span class="cl">remote: Enumerating objects: 1166, <span class="k">done</span>.
+</span></span><span class="line"><span class="cl">remote: Counting objects: 100% <span class="o">(</span>191/191<span class="o">)</span>, <span class="k">done</span>.
+</span></span><span class="line"><span class="cl">remote: Compressing objects: 100% <span class="o">(</span>127/127<span class="o">)</span>, <span class="k">done</span>.
+</span></span><span class="line"><span class="cl">error: RPC failed<span class="p">;</span> curl <span class="m">18</span> Transferred a partial file KiB/s 
+</span></span><span class="line"><span class="cl">error: <span class="m">6725</span> bytes of body are still expected
+</span></span><span class="line"><span class="cl">fetch-pack: unexpected disconnect <span class="k">while</span> reading sideband packet
+</span></span><span class="line"><span class="cl">fatal: early EOF
+</span></span><span class="line"><span class="cl">fatal: fetch-pack: invalid index-pack output</span></span></code></pre></div></div><p>这个错误信息 <code>error: RPC failed; curl 18 Transferred a partial file</code>、<code>unexpected disconnect while reading sideband packet</code>、<code>early EOF</code> 和 <code>invalid index-pack output</code> 通常表明在从 GitHub 拉取数据时发生了网络连接问题或传输中断。这可能是由于以下原因：</p>
+<ul>
+<li><strong>不稳定的网络连接：</strong> 你的网络连接可能不够稳定，导致数据传输中断。</li>
+<li><strong>Git HTTP 缓冲区过小：</strong> Git 默认的 HTTP 缓冲区可能不足以处理大型仓库或包含大文件的传输。</li>
+<li><strong>防火墙或代理问题：</strong> 防火墙或代理服务器可能会中断长时间的连接或大量数据的传输。</li>
+<li><strong>GitHub 服务器临时问题：</strong> 尽管不常见，但 GitHub 服务器偶尔也可能出现瞬时问题。</li>
+</ul>
+<p>你可以尝试以下几种方法来解决这个问题：</p>
+<ol>
+<li>
+<p><strong>增加 Git 的 HTTP Post 缓冲区大小：</strong> 这是最常见的解决方法，特别是在传输大文件或大量对象时。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git config --global http.postBuffer <span class="m">524288000</span></span></span></code></pre></div></div><p>这个命令将缓冲区设置为 500MB (524288000 字节)。你可以根据需要调整这个值，例如设置为 1GB (1073741824)。设置后再次尝试 <code>git pull</code>。</p>
+</li>
+<li>
+<p><strong>检查你的网络连接：</strong></p>
+<ul>
+<li>确保你的网络连接稳定。如果你在使用 Wi-Fi，尝试切换到有线连接。</li>
+<li>如果你在使用 VPN 或代理，尝试暂时禁用它们，看看问题是否解决。</li>
+</ul>
+</li>
+<li>
+<p><strong>使用 SSH 协议代替 HTTPS：</strong> 如果你的 HTTPS 连接有问题（例如，由于代理或防火墙），可以尝试使用 SSH 协议克隆仓库。</p>
+<ul>
+<li>首先，你需要在 GitHub 上设置 SSH 密钥。可以参考 GitHub 官方文档：<a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" target="_blank" rel="external nofollow noopener noreferrer">生成新的 SSH 密钥并将其添加到 GitHub</a>。</li>
+<li>然后，在你的当前目录下，你需要改变远程仓库的 URL：
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git remote set-url origin git@github.com:onhexgroup/Conferences.git</span></span></code></pre></div></div></li>
+<li>更改后，再尝试 <code>git pull origin main</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>尝试禁用 Git 的 HTTP 压缩（不常用，但有时有效）：</strong></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git config --global http.compression false</span></span></code></pre></div></div><p>然后再次尝试 <code>git pull</code>。</p>
+</li>
+<li>
+<p><strong>多次重试：</strong> 有时候这只是一个瞬时的网络问题，多尝试几次 <code>git pull</code> 可能就会成功。</p>
+</li>
+</ol>
+<p><strong>建议你首先尝试第一种方法（增加 <code>http.postBuffer</code>），因为这是最常见且有效的解决方案。</strong> 如果仍然失败，再考虑网络设置和切换到 SSH 协议。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-08-18 00:00:00">更新于 2025-08-18&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202508-gitclonedir/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202508-gitclonedir/" data-title="使用GIT Clone指定仓库的制定文件夹" data-hashtags="tips"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202508-gitclonedir/" data-hashtag="tips"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202508-gitclonedir/" data-title="使用GIT Clone指定仓库的制定文件夹"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/tips/" class="post-tag" title="标签 - Tips">Tips</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202508-prompt/" class="post-nav-item" rel="prev" title="自用prompt整理收集"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>自用prompt整理收集</a><a href="/posts/202508-ringsign/" class="post-nav-item" rel="next" title="环签论文阅读《How to Leak a Secret》">环签论文阅读《How to Leak a Secret》<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"></aside></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/666e30cfef7e848445d78cd7943e345c.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

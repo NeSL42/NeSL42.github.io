@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>15.Uniswap V3 Tick Bitmap 寻找下一个 Tick - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="核心摘要 (Key Takeaways) Tick Bitmap 的核心作用：它是一个 uint256 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。1 代表该 Tick 活跃（有流动性），0 代表不活跃。 寻找下一个 Tick 的目的：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。 通过位运算实现高效查找：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）和按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。 交易方向决定搜索方向： 当交易导致价格上涨时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向左搜索（寻找更大的 Tick）。 当交易导致价格下跌时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向右搜索（寻找更小的 Tick）。 Bitmap 内部方向与全局 Tick 轴方向的区别：在 Bitmap（一个 uint256）内部，索引位（bit position）从右到左增大，因此向左查找意味着寻找更大的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。 I. Tick Bitmap 核心概念回顾 本节内容对应 TickBitmap.sol 库合约中的核心逻辑。
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="15.Uniswap V3 Tick Bitmap 寻找下一个 tick">
+  <meta itemprop="description" content="核心摘要 (Key Takeaways) Tick Bitmap 的核心作用：它是一个 uint256 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。1 代表该 Tick 活跃（有流动性），0 代表不活跃。 寻找下一个 Tick 的目的：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。 通过位运算实现高效查找：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）和按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。 交易方向决定搜索方向： 当交易导致价格上涨时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向左搜索（寻找更大的 Tick）。 当交易导致价格下跌时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向右搜索（寻找更小的 Tick）。 Bitmap 内部方向与全局 Tick 轴方向的区别：在 Bitmap（一个 uint256）内部，索引位（bit position）从右到左增大，因此向左查找意味着寻找更大的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。 I. Tick Bitmap 核心概念回顾 本节内容对应 TickBitmap.sol 库合约中的核心逻辑。">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="4297">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap15/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="15.Uniswap V3 Tick Bitmap 寻找下一个 tick">
+  <meta property="og:description" content="核心摘要 (Key Takeaways) Tick Bitmap 的核心作用：它是一个 uint256 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。1 代表该 Tick 活跃（有流动性），0 代表不活跃。 寻找下一个 Tick 的目的：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。 通过位运算实现高效查找：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）和按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。 交易方向决定搜索方向： 当交易导致价格上涨时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向左搜索（寻找更大的 Tick）。 当交易导致价格下跌时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向右搜索（寻找更小的 Tick）。 Bitmap 内部方向与全局 Tick 轴方向的区别：在 Bitmap（一个 uint256）内部，索引位（bit position）从右到左增大，因此向左查找意味着寻找更大的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。 I. Tick Bitmap 核心概念回顾 本节内容对应 TickBitmap.sol 库合约中的核心逻辑。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="15.Uniswap V3 Tick Bitmap 寻找下一个 tick">
+  <meta name="twitter:description" content="核心摘要 (Key Takeaways) Tick Bitmap 的核心作用：它是一个 uint256 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。1 代表该 Tick 活跃（有流动性），0 代表不活跃。 寻找下一个 Tick 的目的：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。 通过位运算实现高效查找：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）和按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。 交易方向决定搜索方向： 当交易导致价格上涨时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向左搜索（寻找更大的 Tick）。 当交易导致价格下跌时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向右搜索（寻找更小的 Tick）。 Bitmap 内部方向与全局 Tick 轴方向的区别：在 Bitmap（一个 uint256）内部，索引位（bit position）从右到左增大，因此向左查找意味着寻找更大的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。 I. Tick Bitmap 核心概念回顾 本节内容对应 TickBitmap.sol 库合约中的核心逻辑。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap15/" title="15.Uniswap V3 Tick Bitmap 寻找下一个 tick - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap17/" title="16.Uniswap V3 cross tick swap" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap14/" title="14.Uniswap V3 Tick Bitmap" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "15.Uniswap V3 Tick Bitmap 寻找下一个 tick",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap15\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  4297 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap15\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>15.Uniswap V3 Tick Bitmap 寻找下一个 Tick</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="4297 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 4300 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 9 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+        <li><a href="#i-tick-bitmap-核心概念回顾"><strong>I. Tick Bitmap 核心概念回顾</strong></a>
+          <ul>
+            <li><a href="#a-什么是-tick-bitmap"><strong>A. 什么是 Tick Bitmap</strong></a></li>
+            <li><a href="#b-tick-的激活状态-active-state"><strong>B. Tick 的激活状态 (Active State)</strong></a></li>
+            <li><a href="#c-更新-tick-bitmap"><strong>C. 更新 Tick Bitmap</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#ii-寻找下一个活跃-tick-finding-next-tick"><strong>II. 寻找下一个活跃 Tick (Finding Next Tick)</strong></a>
+          <ul>
+            <li><a href="#a-为什么需要寻找下一个-tick"><strong>A. 为什么需要寻找下一个 Tick？</strong></a></li>
+            <li><a href="#b-寻找流程的可视化"><strong>B. 寻找流程的可视化</strong></a></li>
+            <li><a href="#c-场景一寻找"><strong>C. 场景一：寻找 <code>≤</code> 当前 Tick (价格下降)</strong></a></li>
+            <li><a href="#d-场景二寻找"><strong>D. 场景二：寻找 <code>&gt;</code> 当前 Tick (价格上升)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#iii-交易方向与-tick-寻找方向的关联"><strong>III. 交易方向与 Tick 寻找方向的关联</strong></a></li>
+        <li><a href="#iv-重要概念辨析tick-坐标轴方向-vs-bitmap-内部方向"><strong>IV. 重要概念辨析：Tick 坐标轴方向 vs. Bitmap 内部方向</strong></a></li>
+        <li><a href="#v-展望cross-tick-交易"><strong>V. 展望：Cross Tick 交易</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>Tick Bitmap 的核心作用</strong>：它是一个 <code>uint256</code> 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。<code>1</code> 代表该 Tick 活跃（有流动性），<code>0</code> 代表不活跃。</li>
+<li><strong>寻找下一个 Tick 的目的</strong>：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。</li>
+<li><strong>通过位运算实现高效查找</strong>：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）<strong>和</strong>按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。</li>
+<li><strong>交易方向决定搜索方向</strong>：
+<ul>
+<li>当交易导致<strong>价格上涨</strong>时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向<strong>左</strong>搜索（寻找更大的 Tick）。</li>
+<li>当交易导致<strong>价格下跌</strong>时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向<strong>右</strong>搜索（寻找更小的 Tick）。</li>
+</ul>
+</li>
+<li><strong>Bitmap 内部方向与全局 Tick 轴方向的区别</strong>：在 Bitmap（一个 <code>uint256</code>）内部，索引位（<code>bit position</code>）从右到左增大，因此向<strong>左</strong>查找意味着寻找<strong>更大</strong>的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="i-tick-bitmap-核心概念回顾"><span><strong>I. Tick Bitmap 核心概念回顾</strong></span>
+  <a href="#i-tick-bitmap-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e5%9b%9e%e9%a1%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>本节内容对应 <code>TickBitmap.sol</code> 库合约中的核心逻辑。</p>
+<h4 class="heading-element" id="a-什么是-tick-bitmap"><span><strong>A. 什么是 Tick Bitmap</strong></span>
+  <a href="#a-%e4%bb%80%e4%b9%88%e6%98%af-tick-bitmap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>定义</strong>：Tick Bitmap 是一个映射（Mapping），其键（key）为一个 <code>int16</code> 的 <code>word position</code>，值（value）为一个 <code>uint256</code> 的数字。</li>
+<li><strong>数据转换</strong>：
+<ul>
+<li>一个 <code>int24</code> 类型的 <strong>Tick</strong> 首先被转换成两个部分，这对应合约中的 <code>position</code> 函数。
+<ol>
+<li><strong><code>word position</code> (<code>int16</code>)</strong>: 决定了该 Tick 属于哪个 <code>uint256</code> 位图。计算方式为 <code>tick &gt;&gt; 8</code> (相当于 <code>tick / 256</code>)。</li>
+<li><strong><code>bit position</code> (<code>uint8</code>)</strong>: 决定了该 Tick 在对应的 <code>uint256</code> 位图中的具体位置（从0到255）。计算方式为 <code>tick % 256</code>。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>状态表示</strong>：
+<ul>
+<li>在 <code>uint256</code> 的位图中，每一个比特位（<code>0</code> 或 <code>1</code>）代表一个 Tick 的状态。</li>
+<li><code>1</code>：表示该 Tick <strong>被激活 (Active)</strong>。</li>
+<li><code>0</code>：表示该 Tick <strong>未被激活 (Inactive)</strong>。</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="b-tick-的激活状态-active-state"><span><strong>B. Tick 的激活状态 (Active State)</strong></span>
+  <a href="#b-tick-%e7%9a%84%e6%bf%80%e6%b4%bb%e7%8a%b6%e6%80%81-active-state" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>激活定义</strong>：当一个 Tick 被用户选为添加流动性区间的<strong>上界 (<code>upper tick</code>)</strong> 或<strong>下界 (<code>lower tick</code>)</strong> 时，该 Tick 就被认为是<strong>激活的</strong>。</li>
+<li><strong>非激活定义</strong>：如果没有任何流动性头寸使用某个 Tick 作为边界，那么该 Tick 就是非激活的。</li>
+</ul>
+<h4 class="heading-element" id="c-更新-tick-bitmap"><span><strong>C. 更新 Tick Bitmap</strong></span>
+  <a href="#c-%e6%9b%b4%e6%96%b0-tick-bitmap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>更新操作通过位运算实现，对应合约中的 <code>flipTick</code> 函数，确保只修改目标 Tick 对应的比特位，而不影响其他位。</p>
+<ol>
+<li>
+<p><strong>添加流动性 (激活 Tick)</strong></p>
+<ul>
+<li><strong>目标</strong>：将目标 Tick 对应的比特位从 <code>0</code> 变为 <code>1</code>。</li>
+<li><strong>方法</strong>：使用<strong>按位或 (Bitwise OR <code>|</code>)</strong> 运算。</li>
+<li><strong>案例</strong>：
+<ul>
+<li>假设要在 <code>tick = -200697</code> 处添加流动性，该 Tick 对应 <code>word_position = -784</code> 的 <code>uint256</code> 位图中的第 <code>7</code> 个比特位。</li>
+<li><strong>原始位图</strong>: <code>...01101**0**1...</code> (第7位是0)</li>
+<li><strong>构建掩码 (Mask)</strong>: 创建一个只有第 <code>7</code> 位是 <code>1</code>，其他所有位都是 <code>0</code> 的 <code>uint256</code> 值 (<code>...00000**1**0...</code>)。</li>
+<li><strong>运算</strong>: <code>原始位图 | 掩码</code></li>
+<li><strong>结果</strong>: <code>...01101**1**1...</code> (只有第7位被修改，其他位保持不变)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>移除流动性 (取消激活 Tick)</strong></p>
+<ul>
+<li><strong>目标</strong>：将目标 Tick 对应的比特位从 <code>1</code> 变为 <code>0</code>。</li>
+<li><strong>方法</strong>：使用<strong>按位与 (Bitwise AND <code>&amp;</code>)</strong> 运算。</li>
+<li><strong>案例</strong>：
+<ul>
+<li>假设要移除 <code>tick = -200697</code> 处的流动性。</li>
+<li><strong>原始位图</strong>: <code>...01101**1**1...</code> (第7位是1)</li>
+<li><strong>构建掩码 (Mask)</strong>: 创建一个只有第 <code>7</code> 位是 <code>0</code>，其他所有位都是 <code>1</code> 的 <code>uint256</code> 值 (<code>...11111**0**1...</code>)。</li>
+<li><strong>运算</strong>: <code>原始位图 &amp; 掩码</code></li>
+<li><strong>结果</strong>: <code>...01101**0**1...</code> (只有第7位被修改，其他位保持不变)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 class="heading-element" id="ii-寻找下一个活跃-tick-finding-next-tick"><span><strong>II. 寻找下一个活跃 Tick (Finding Next Tick)</strong></span>
+  <a href="#ii-%e5%af%bb%e6%89%be%e4%b8%8b%e4%b8%80%e4%b8%aa%e6%b4%bb%e8%b7%83-tick-finding-next-tick" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>此过程是本节课的核心，对应 <code>TickBitmap.sol</code> 合约中的 <code>nextInitializedTickWithinOneWord</code> 函数。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nf">nextInitializedTickWithinOneWord</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">mapping</span><span class="p">(</span><span class="kt">int16</span> <span class="o">=&gt;</span> <span class="kt">uint256</span><span class="p">)</span> <span class="k">storage</span> <span class="n">self</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int24</span> <span class="n">tick</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int24</span> <span class="n">tickSpacing</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">bool</span> <span class="n">lte</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="k">internal</span> <span class="k">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">int24</span> <span class="n">next</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">initialized</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int24</span> <span class="n">compressed</span> <span class="o">=</span> <span class="n">tick</span> <span class="o">/</span> <span class="n">tickSpacing</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">tick</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">tick</span> <span class="o">%</span> <span class="n">tickSpacing</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">compressed</span><span class="o">--</span><span class="p">;</span> <span class="c1">// round towards negative infinity
+</span></span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">lte</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">(</span><span class="kt">int16</span> <span class="n">wordPos</span><span class="p">,</span> <span class="kt">uint8</span> <span class="n">bitPos</span><span class="p">)</span> <span class="o">=</span> <span class="n">position</span><span class="p">(</span><span class="n">compressed</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// all the 1s at or to the right of the current bitPos
+</span></span></span><span class="line"><span class="cl">        <span class="kt">uint256</span> <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">bitPos</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">bitPos</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">uint256</span> <span class="n">masked</span> <span class="o">=</span> <span class="n">self</span><span class="p">[</span><span class="n">wordPos</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// if there are no initialized ticks to the right of or at the current tick, return rightmost in the word
+</span></span></span><span class="line"><span class="cl">        <span class="n">initialized</span> <span class="o">=</span> <span class="n">masked</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// overflow/underflow is possible, but prevented externally by limiting both tickSpacing and tick
+</span></span></span><span class="line"><span class="cl">        <span class="n">next</span> <span class="o">=</span> <span class="n">initialized</span>
+</span></span><span class="line"><span class="cl">            <span class="o">?</span> <span class="p">(</span><span class="n">compressed</span> <span class="o">-</span> <span class="kt">int24</span><span class="p">(</span><span class="n">bitPos</span> <span class="o">-</span> <span class="n">BitMath</span><span class="p">.</span><span class="n">mostSignificantBit</span><span class="p">(</span><span class="n">masked</span><span class="p">)))</span> <span class="o">*</span> <span class="n">tickSpacing</span>
+</span></span><span class="line"><span class="cl">            <span class="o">:</span> <span class="p">(</span><span class="n">compressed</span> <span class="o">-</span> <span class="kt">int24</span><span class="p">(</span><span class="n">bitPos</span><span class="p">))</span> <span class="o">*</span> <span class="n">tickSpacing</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// start from the word of the next tick, since the current tick state doesn&#39;t matter
+</span></span></span><span class="line"><span class="cl">        <span class="p">(</span><span class="kt">int16</span> <span class="n">wordPos</span><span class="p">,</span> <span class="kt">uint8</span> <span class="n">bitPos</span><span class="p">)</span> <span class="o">=</span> <span class="n">position</span><span class="p">(</span><span class="n">compressed</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// all the 1s at or to the left of the bitPos
+</span></span></span><span class="line"><span class="cl">        <span class="kt">uint256</span> <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">bitPos</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">uint256</span> <span class="n">masked</span> <span class="o">=</span> <span class="n">self</span><span class="p">[</span><span class="n">wordPos</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// if there are no initialized ticks to the left of the current tick, return leftmost in the word
+</span></span></span><span class="line"><span class="cl">        <span class="n">initialized</span> <span class="o">=</span> <span class="n">masked</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// overflow/underflow is possible, but prevented externally by limiting both tickSpacing and tick
+</span></span></span><span class="line"><span class="cl">        <span class="n">next</span> <span class="o">=</span> <span class="n">initialized</span>
+</span></span><span class="line"><span class="cl">            <span class="o">?</span> <span class="p">(</span><span class="n">compressed</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="kt">int24</span><span class="p">(</span><span class="n">BitMath</span><span class="p">.</span><span class="n">leastSignificantBit</span><span class="p">(</span><span class="n">masked</span><span class="p">)</span> <span class="o">-</span> <span class="n">bitPos</span><span class="p">))</span> <span class="o">*</span> <span class="n">tickSpacing</span>
+</span></span><span class="line"><span class="cl">            <span class="o">:</span> <span class="p">(</span><span class="n">compressed</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="kt">int24</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nc">uint8</span><span class="p">).</span><span class="nb">max</span> <span class="o">-</span> <span class="n">bitPos</span><span class="p">))</span> <span class="o">*</span> <span class="n">tickSpacing</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h4 class="heading-element" id="a-为什么需要寻找下一个-tick"><span><strong>A. 为什么需要寻找下一个 Tick？</strong></span>
+  <a href="#a-%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e5%af%bb%e6%89%be%e4%b8%8b%e4%b8%80%e4%b8%aa-tick" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在进行<strong>交易 (Swap)</strong> 时，池子的当前价格会移动。当价格移动到当前流动性区间的边界（即一个活跃的 Tick）时，该区间的流动性就被耗尽了。为了能继续执行交易，合约必须知道下一个有流动性的价格区间在哪里。因此，它需要从当前 Tick 出发，去寻找下一个被激活的 Tick 作为新的边界。</p>
+<h4 class="heading-element" id="b-寻找流程的可视化"><span><strong>B. 寻找流程的可视化</strong></span>
+  <a href="#b-%e5%af%bb%e6%89%be%e6%b5%81%e7%a8%8b%e7%9a%84%e5%8f%af%e8%a7%86%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>以下流程图展示了在合约中根据交易方向（通过 <code>lte</code> 标志判断）寻找下一个活跃 Tick 的完整逻辑。</p>
+<div class="diagram-container">
+  <pre class="mermaid">flowchart TD
+    A[开始: 提供 Current Tick] --> B{判断寻找方向: lte 参数是 true 吗?}
+    B -- "是 (lte=true), 价格下降" --> C[向右寻找更小的Tick]
+    C --> D[构建掩码: 当前位及其左侧为0, 右侧为1]
+    D --> E[将掩码与Tick Bitmap进行 按位与 运算]
+    E --> F[在运算结果中找到最左侧的 1]
+    F --> G[得到 Next Tick 的 bit position]
+  
+    B -- "否 (lte=false), 价格上升" --> H[向左寻找更大的Tick]
+    H --> I[构建掩码: 当前位及其右侧为0, 左侧为1]
+    I --> J[将掩码与Tick Bitmap进行 按位与 运算]
+    J --> K[在运算结果中找到最左侧的 1]
+    K --> L[得到 Next Tick 的 bit position]
+
+    G --> M[计算Next Tick的具体值]
+    L --> M
+    M --> N[结束: 返回Next Tick]</pre>
+  <pre class="mermaid-dark">flowchart TD
+    A[开始: 提供 Current Tick] --> B{判断寻找方向: lte 参数是 true 吗?}
+    B -- "是 (lte=true), 价格下降" --> C[向右寻找更小的Tick]
+    C --> D[构建掩码: 当前位及其左侧为0, 右侧为1]
+    D --> E[将掩码与Tick Bitmap进行 按位与 运算]
+    E --> F[在运算结果中找到最左侧的 1]
+    F --> G[得到 Next Tick 的 bit position]
+  
+    B -- "否 (lte=false), 价格上升" --> H[向左寻找更大的Tick]
+    H --> I[构建掩码: 当前位及其右侧为0, 左侧为1]
+    I --> J[将掩码与Tick Bitmap进行 按位与 运算]
+    J --> K[在运算结果中找到最左侧的 1]
+    K --> L[得到 Next Tick 的 bit position]
+
+    G --> M[计算Next Tick的具体值]
+    L --> M
+    M --> N[结束: 返回Next Tick]</pre>
+  <pre class="mermaid-neutral">flowchart TD
+    A[开始: 提供 Current Tick] --> B{判断寻找方向: lte 参数是 true 吗?}
+    B -- "是 (lte=true), 价格下降" --> C[向右寻找更小的Tick]
+    C --> D[构建掩码: 当前位及其左侧为0, 右侧为1]
+    D --> E[将掩码与Tick Bitmap进行 按位与 运算]
+    E --> F[在运算结果中找到最左侧的 1]
+    F --> G[得到 Next Tick 的 bit position]
+  
+    B -- "否 (lte=false), 价格上升" --> H[向左寻找更大的Tick]
+    H --> I[构建掩码: 当前位及其右侧为0, 左侧为1]
+    I --> J[将掩码与Tick Bitmap进行 按位与 运算]
+    J --> K[在运算结果中找到最左侧的 1]
+    K --> L[得到 Next Tick 的 bit position]
+
+    G --> M[计算Next Tick的具体值]
+    L --> M
+    M --> N[结束: 返回Next Tick]</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>flowchart TD
+    A[开始: 提供 Current Tick] --> B{判断寻找方向: lte 参数是 true 吗?}
+    B -- "是 (lte=true), 价格下降" --> C[向右寻找更小的Tick]
+    C --> D[构建掩码: 当前位及其左侧为0, 右侧为1]
+    D --> E[将掩码与Tick Bitmap进行 按位与 运算]
+    E --> F[在运算结果中找到最左侧的 1]
+    F --> G[得到 Next Tick 的 bit position]
+  
+    B -- "否 (lte=false), 价格上升" --> H[向左寻找更大的Tick]
+    H --> I[构建掩码: 当前位及其右侧为0, 左侧为1]
+    I --> J[将掩码与Tick Bitmap进行 按位与 运算]
+    J --> K[在运算结果中找到最左侧的 1]
+    K --> L[得到 Next Tick 的 bit position]
+
+    G --> M[计算Next Tick的具体值]
+    L --> M
+    M --> N[结束: 返回Next Tick]</pre></template>
+</div><p><strong>流程解释</strong>:</p>
+<ol>
+<li><strong>起始点</strong>：从当前价格所在的 <code>Current Tick</code> 开始。</li>
+<li><strong>方向判断</strong>：通过一个布尔值参数 <code>lte</code> (<strong>L</strong>ess <strong>T</strong>han or <strong>E</strong>qual) 来决定搜索方向。<code>true</code> 表示寻找比当前 Tick 小或相等的下一个活跃 Tick（价格下降），<code>false</code> 表示寻找更大的 Tick（价格上升）。</li>
+<li><strong>构建掩码</strong>：根据搜索方向，生成一个特定的掩码。</li>
+<li><strong>位运算</strong>：将掩码与存储 Tick 状态的位图进行<strong>按位与</strong>操作。这个操作的结果是一个新的 <code>uint256</code>，其中只保留了目标搜索方向上的活跃 Tick。</li>
+<li><strong>定位</strong>：在运算结果中，找到最左边（最高位）的那个 <code>1</code>，其位置就是 <code>Next Tick</code> 的 <code>bit position</code>。</li>
+<li><strong>计算</strong>：最后，根据找到的 <code>bit position</code> 计算出 <code>Next Tick</code> 的确切整数值。</li>
+</ol>
+<h4 class="heading-element" id="c-场景一寻找"><span><strong>C. 场景一：寻找 <code>≤</code> 当前 Tick (价格下降)</strong></span>
+  <a href="#c-%e5%9c%ba%e6%99%af%e4%b8%80%e5%af%bb%e6%89%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>目标</strong>：找到比当前 Tick 值更小（或相等）的、最近的一个活跃 Tick。</li>
+<li><strong>方向</strong>：在 <code>uint256</code> 位图中向<strong>右</strong>查找。</li>
+<li><strong>方法</strong>：
+<ol>
+<li><strong>构建掩码</strong>：以 <code>current tick</code> 的 <code>bit position</code> 为界，其左侧（包括当前位置）全为 <code>0</code>，右侧全为 <code>1</code>。</li>
+<li><strong>运算</strong>：将此掩码与 Tick Bitmap 进行<strong>按位与 (<code>&amp;</code>)</strong> 运算。</li>
+<li><strong>结果</strong>：运算结果会滤掉所有比当前 Tick 大的活跃 Tick，保留所有更小的活跃 Tick。找到结果中最左侧的 <code>1</code> 即可。</li>
+</ol>
+</li>
+<li><strong>案例</strong>：
+<ul>
+<li><strong>当前 Tick</strong>: <code>current_tick = -200697</code>，其 <code>bit_position</code> 为 <code>7</code>。</li>
+<li><strong>Tick Bitmap (示例)</strong>: <code>...001...0100100...</code> (第10、7、2位为1)</li>
+<li><strong>掩码 (Mask)</strong>: <code>...000000001111111...</code> (第7位及其左侧为0，右侧为1)</li>
+<li><strong>运算结果</strong>: <code>...000...0000100...</code> (只有第2位的1被保留)</li>
+<li><strong>找到的 Next Tick</strong>: <code>bit_position</code> 为 <code>2</code>。</li>
+</ul>
+</li>
+<li><strong>计算 Next Tick 值</strong>：
+<ul>
+<li><strong>公式</strong>:
+$$
+\text{NextTick} = \text{CurrentTick} - \text{BitPosition}<em>{\text{current}} + \text{BitPosition}</em>{\text{next}}
+$$</li>
+<li><strong>案例计算</strong>:
+$$
+-200697 - 7 + 2 = -200702
+$$</li>
+<li>新的价格区间边界为 <code>-200702</code> 到 <code>-200697</code>。</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="d-场景二寻找"><span><strong>D. 场景二：寻找 <code>&gt;</code> 当前 Tick (价格上升)</strong></span>
+  <a href="#d-%e5%9c%ba%e6%99%af%e4%ba%8c%e5%af%bb%e6%89%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>目标</strong>：找到比当前 Tick 值更大的、最近的一个活跃 Tick。</li>
+<li><strong>方向</strong>：在 <code>uint256</code> 位图中向<strong>左</strong>查找。</li>
+<li><strong>方法</strong>：
+<ol>
+<li><strong>构建掩码</strong>：以 <code>current tick</code> 的 <code>bit position</code> 为界，其右侧（包括当前位置）全为 <code>0</code>，左侧全为 <code>1</code>。</li>
+<li><strong>运算</strong>：将此掩码与 Tick Bitmap 进行<strong>按位与 (<code>&amp;</code>)</strong> 运算。</li>
+<li><strong>结果</strong>：运算结果会滤掉所有比当前 Tick 小的活跃 Tick，保留所有更大的。找到结果中最左侧的 <code>1</code>。</li>
+</ol>
+</li>
+<li><strong>案例</strong>：
+<ul>
+<li><strong>当前 Tick</strong>: <code>current_tick = -200697</code>，其 <code>bit_position</code> 为 <code>7</code>。</li>
+<li><strong>Tick Bitmap (示例)</strong>: <code>...001...0100100...</code> (第10、7、2位为1)</li>
+<li><strong>掩码 (Mask)</strong>: <code>...111000000000000...</code> (第7位及其右侧为0，左侧为1)</li>
+<li><strong>运算结果</strong>: <code>...001...0000000...</code> (只有第10位的1被保留)</li>
+<li><strong>找到的 Next Tick</strong>: <code>bit_position</code> 为 <code>10</code>。</li>
+</ul>
+</li>
+<li><strong>计算 Next Tick 值</strong>：
+<ul>
+<li><strong>公式</strong>: (同上)
+$$
+\text{NextTick} = \text{CurrentTick} - \text{BitPosition}<em>{\text{current}} + \text{BitPosition}</em>{\text{next}}
+$$</li>
+<li><strong>案例计算</strong>:
+$$
+-200697 - 7 + 10 = -200694
+$$</li>
+<li>新的价格区间边界为 <code>-200697</code> 到 <code>-200694</code>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="iii-交易方向与-tick-寻找方向的关联"><span><strong>III. 交易方向与 Tick 寻找方向的关联</strong></span>
+  <a href="#iii-%e4%ba%a4%e6%98%93%e6%96%b9%e5%90%91%e4%b8%8e-tick-%e5%af%bb%e6%89%be%e6%96%b9%e5%90%91%e7%9a%84%e5%85%b3%e8%81%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>合约如何确定是向左还是向右寻找？这取决于用户的交易行为对池子价格的影响。</p>
+<ul>
+<li>
+<p><strong>案例 1: 用户使用 USDC 购买 ETH</strong></p>
+<ul>
+<li><strong>池子变化</strong>: USDC 数量增加，ETH 数量减少。</li>
+<li><strong>价格影响</strong>: ETH 价格<strong>升高</strong>。</li>
+<li><strong>合约操作</strong>: 需要寻找<strong>大于</strong>当前 Tick 的下一个活跃 Tick。</li>
+<li><strong>Bitmap 内部操作</strong>: 在位图中向<strong>左</strong>寻找。</li>
+</ul>
+</li>
+<li>
+<p><strong>案例 2: 用户卖出 ETH 换取 USDC</strong></p>
+<ul>
+<li><strong>池子变化</strong>: ETH 数量增加，USDC 数量减少。</li>
+<li><strong>价格影响</strong>: ETH 价格<strong>降低</strong>。</li>
+<li><strong>合约操作</strong>: 需要寻找<strong>小于等于</strong>当前 Tick 的下一个活跃 Tick。</li>
+<li><strong>Bitmap 内部操作</strong>: 在位图中向<strong>右</strong>寻找。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="iv-重要概念辨析tick-坐标轴方向-vs-bitmap-内部方向"><span><strong>IV. 重要概念辨析：Tick 坐标轴方向 vs. Bitmap 内部方向</strong></span>
+  <a href="#iv-%e9%87%8d%e8%a6%81%e6%a6%82%e5%bf%b5%e8%be%a8%e6%9e%90tick-%e5%9d%90%e6%a0%87%e8%bd%b4%e6%96%b9%e5%90%91-vs-bitmap-%e5%86%85%e9%83%a8%e6%96%b9%e5%90%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是一个容易混淆的关键点，必须清晰区分：</p>
+<ol>
+<li>
+<p><strong>全局 Tick 坐标轴</strong>:</p>
+<ul>
+<li>这是一个逻辑上的、无限延伸的数轴。</li>
+<li>Tick 值从左到右<strong>递增</strong>（例如：&hellip;, -100, 0, 100, &hellip;）。</li>
+<li>因此，价格<strong>上涨</strong>对应在坐标轴上向<strong>右</strong>移动。</li>
+</ul>
+</li>
+<li>
+<p><strong>Tick Bitmap 内部 (<code>uint256</code>)</strong>:</p>
+<ul>
+<li>这是一个具体的256位数据结构。</li>
+<li><code>bit position</code> (索引) 从<strong>右到左</strong>递增（最右边是第0位，最左边是第255位）。</li>
+<li>由于 <code>Tick</code> 值与 <code>bit position</code> 相关，一个更大的 <code>Tick</code> 值会对应一个更大的 <code>bit position</code> 索引。</li>
+<li>因此，价格<strong>上涨</strong>（寻找更大的Tick）对应在 Bitmap 内部向<strong>左</strong>寻找。</li>
+</ul>
+</li>
+</ol>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">场景</th>
+            <th style="text-align: left">价格变化</th>
+            <th style="text-align: left">全局 Tick 轴移动方向</th>
+            <th style="text-align: left">Tick Bitmap 内部搜索方向</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left">买入 ETH</td>
+            <td style="text-align: left"><strong>上涨</strong></td>
+            <td style="text-align: left">向右</td>
+            <td style="text-align: left"><strong>向左</strong></td>
+        </tr>
+        <tr>
+            <td style="text-align: left">卖出 ETH</td>
+            <td style="text-align: left"><strong>下跌</strong></td>
+            <td style="text-align: left">向左</td>
+            <td style="text-align: left"><strong>向右</strong></td>
+        </tr>
+    </tbody>
+  </table>
+</div><hr>
+<h3 class="heading-element" id="v-展望cross-tick-交易"><span><strong>V. 展望：Cross Tick 交易</strong></span>
+  <a href="#v-%e5%b1%95%e6%9c%9bcross-tick-%e4%ba%a4%e6%98%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>视频结尾提及</strong>：当一笔交易消耗完当前价格区间内的所有流动性后，价格会穿越一个活跃的 Tick，进入下一个流动性区间。</li>
+<li><strong>后续主题</strong>：这个穿越 Tick 的过程被称为 <strong>Cross Tick</strong>。如何处理这种跨区间的交易，是更复杂的逻辑，将在后续课程中讲解。本次学习的核心是掌握如何<strong>找到</strong>下一个 Tick 的边界，为理解 Cross Tick 交易打下基础。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap15/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap15/" data-title="15.Uniswap V3 Tick Bitmap 寻找下一个 Tick" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap15/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap15/" data-title="15.Uniswap V3 Tick Bitmap 寻找下一个 Tick"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap17/" class="post-nav-item" rel="prev" title="16.Uniswap V3 Cross Tick Swap"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>16.Uniswap V3 Cross Tick Swap</a><a href="/posts/202509-uniswap14/" class="post-nav-item" rel="next" title="14.Uniswap V3 Tick Bitmap">14.Uniswap V3 Tick Bitmap<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+        <li><a href="#i-tick-bitmap-核心概念回顾"><strong>I. Tick Bitmap 核心概念回顾</strong></a>
+          <ul>
+            <li><a href="#a-什么是-tick-bitmap"><strong>A. 什么是 Tick Bitmap</strong></a></li>
+            <li><a href="#b-tick-的激活状态-active-state"><strong>B. Tick 的激活状态 (Active State)</strong></a></li>
+            <li><a href="#c-更新-tick-bitmap"><strong>C. 更新 Tick Bitmap</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#ii-寻找下一个活跃-tick-finding-next-tick"><strong>II. 寻找下一个活跃 Tick (Finding Next Tick)</strong></a>
+          <ul>
+            <li><a href="#a-为什么需要寻找下一个-tick"><strong>A. 为什么需要寻找下一个 Tick？</strong></a></li>
+            <li><a href="#b-寻找流程的可视化"><strong>B. 寻找流程的可视化</strong></a></li>
+            <li><a href="#c-场景一寻找"><strong>C. 场景一：寻找 <code>≤</code> 当前 Tick (价格下降)</strong></a></li>
+            <li><a href="#d-场景二寻找"><strong>D. 场景二：寻找 <code>&gt;</code> 当前 Tick (价格上升)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#iii-交易方向与-tick-寻找方向的关联"><strong>III. 交易方向与 Tick 寻找方向的关联</strong></a></li>
+        <li><a href="#iv-重要概念辨析tick-坐标轴方向-vs-bitmap-内部方向"><strong>IV. 重要概念辨析：Tick 坐标轴方向 vs. Bitmap 内部方向</strong></a></li>
+        <li><a href="#v-展望cross-tick-交易"><strong>V. 展望：Cross Tick 交易</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/5db7b2f074a396a410b1749e108ea67f.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

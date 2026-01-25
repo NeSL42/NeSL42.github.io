@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>04.Uniswap V2 添加移除流动性 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="核心摘要 (Key Takeaways) 核心公式与流动性衡量： Uniswap V2 的流动性池基于 $X \times Y = K$ 恒定乘积公式，其中 $L = \sqrt{K}$ 被用作衡量流动性大小的线性指标，便于 LP Token (LPT) 的线性增发与销毁。 价格不变性约束： 无论是添加还是移除流动性，操作前后池内两种代币的价格比（即兑换价格）必须保持不变，这是确保用户按当前市场价提供或撤出流动性的核心原则。 LPT 增发/销毁机制： 添加流动性时，新铸造的 LP Token 数量与新增流动性占总流动性的比例成正比；移除流动性时，用户收回的代币数量也与销毁的 LP Token 占总 LP Token 的比例成正比。 Uniswap V2 合约架构： 核心交互涉及 路由合约 (Router)、工厂合约 (Factory) 和 交易对合约 (Pair)。路由合约是用户入口，工厂合约负责创建交易对，交易对合约管理实际的流动性池和代币交换。 关键工程实现： 智能合约实现中包含多项精巧设计，如使用 create2 预测交易对地址、对代币地址进行排序以确保交易对的唯一性、以及设置 minimum liquidity 机制以增强安全性和稳定性。 Uniswap V2 流动性管理概述 本节课主要围绕 Uniswap V2 中的添加流动性、移除流动性和无常损失（本节课不深入讲解）三个核心概念。目标是清晰梳理前两个概念的数学原理和合约实现流程。
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="04.Uniswap V2 添加移除流动性">
+  <meta itemprop="description" content="核心摘要 (Key Takeaways) 核心公式与流动性衡量： Uniswap V2 的流动性池基于 $X \times Y = K$ 恒定乘积公式，其中 $L = \sqrt{K}$ 被用作衡量流动性大小的线性指标，便于 LP Token (LPT) 的线性增发与销毁。 价格不变性约束： 无论是添加还是移除流动性，操作前后池内两种代币的价格比（即兑换价格）必须保持不变，这是确保用户按当前市场价提供或撤出流动性的核心原则。 LPT 增发/销毁机制： 添加流动性时，新铸造的 LP Token 数量与新增流动性占总流动性的比例成正比；移除流动性时，用户收回的代币数量也与销毁的 LP Token 占总 LP Token 的比例成正比。 Uniswap V2 合约架构： 核心交互涉及 路由合约 (Router)、工厂合约 (Factory) 和 交易对合约 (Pair)。路由合约是用户入口，工厂合约负责创建交易对，交易对合约管理实际的流动性池和代币交换。 关键工程实现： 智能合约实现中包含多项精巧设计，如使用 create2 预测交易对地址、对代币地址进行排序以确保交易对的唯一性、以及设置 minimum liquidity 机制以增强安全性和稳定性。 Uniswap V2 流动性管理概述 本节课主要围绕 Uniswap V2 中的添加流动性、移除流动性和无常损失（本节课不深入讲解）三个核心概念。目标是清晰梳理前两个概念的数学原理和合约实现流程。">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="4180">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap04/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="04.Uniswap V2 添加移除流动性">
+  <meta property="og:description" content="核心摘要 (Key Takeaways) 核心公式与流动性衡量： Uniswap V2 的流动性池基于 $X \times Y = K$ 恒定乘积公式，其中 $L = \sqrt{K}$ 被用作衡量流动性大小的线性指标，便于 LP Token (LPT) 的线性增发与销毁。 价格不变性约束： 无论是添加还是移除流动性，操作前后池内两种代币的价格比（即兑换价格）必须保持不变，这是确保用户按当前市场价提供或撤出流动性的核心原则。 LPT 增发/销毁机制： 添加流动性时，新铸造的 LP Token 数量与新增流动性占总流动性的比例成正比；移除流动性时，用户收回的代币数量也与销毁的 LP Token 占总 LP Token 的比例成正比。 Uniswap V2 合约架构： 核心交互涉及 路由合约 (Router)、工厂合约 (Factory) 和 交易对合约 (Pair)。路由合约是用户入口，工厂合约负责创建交易对，交易对合约管理实际的流动性池和代币交换。 关键工程实现： 智能合约实现中包含多项精巧设计，如使用 create2 预测交易对地址、对代币地址进行排序以确保交易对的唯一性、以及设置 minimum liquidity 机制以增强安全性和稳定性。 Uniswap V2 流动性管理概述 本节课主要围绕 Uniswap V2 中的添加流动性、移除流动性和无常损失（本节课不深入讲解）三个核心概念。目标是清晰梳理前两个概念的数学原理和合约实现流程。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="04.Uniswap V2 添加移除流动性">
+  <meta name="twitter:description" content="核心摘要 (Key Takeaways) 核心公式与流动性衡量： Uniswap V2 的流动性池基于 $X \times Y = K$ 恒定乘积公式，其中 $L = \sqrt{K}$ 被用作衡量流动性大小的线性指标，便于 LP Token (LPT) 的线性增发与销毁。 价格不变性约束： 无论是添加还是移除流动性，操作前后池内两种代币的价格比（即兑换价格）必须保持不变，这是确保用户按当前市场价提供或撤出流动性的核心原则。 LPT 增发/销毁机制： 添加流动性时，新铸造的 LP Token 数量与新增流动性占总流动性的比例成正比；移除流动性时，用户收回的代币数量也与销毁的 LP Token 占总 LP Token 的比例成正比。 Uniswap V2 合约架构： 核心交互涉及 路由合约 (Router)、工厂合约 (Factory) 和 交易对合约 (Pair)。路由合约是用户入口，工厂合约负责创建交易对，交易对合约管理实际的流动性池和代币交换。 关键工程实现： 智能合约实现中包含多项精巧设计，如使用 create2 预测交易对地址、对代币地址进行排序以确保交易对的唯一性、以及设置 minimum liquidity 机制以增强安全性和稳定性。 Uniswap V2 流动性管理概述 本节课主要围绕 Uniswap V2 中的添加流动性、移除流动性和无常损失（本节课不深入讲解）三个核心概念。目标是清晰梳理前两个概念的数学原理和合约实现流程。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap04/" title="04.Uniswap V2 添加移除流动性 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap05/" title="05.Uniswap V2 无常损失" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap03/" title="03.Uniswap V2 手续费机制" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "04.Uniswap V2 添加移除流动性",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap04\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  4180 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap04\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>04.Uniswap V2 添加移除流动性</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="4180 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 4200 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 9 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#uniswap-v2-流动性管理概述">Uniswap V2 流动性管理概述</a></li>
+    <li><a href="#添加流动性-adding-liquidity">添加流动性 (Adding Liquidity)</a>
+      <ul>
+        <li><a href="#1-核心概念与数学原理">1. 核心概念与数学原理</a></li>
+        <li><a href="#2-uniswap-v2-合约实现流程-时序图">2. Uniswap V2 合约实现流程 (时序图)</a></li>
+        <li><a href="#3-代码实现细节与考量">3. 代码实现细节与考量</a></li>
+      </ul>
+    </li>
+    <li><a href="#移除流动性-removing-liquidity">移除流动性 (Removing Liquidity)</a>
+      <ul>
+        <li><a href="#1-核心概念与数学原理-1">1. 核心概念与数学原理</a></li>
+        <li><a href="#2-uniswap-v2-合约实现流程-时序图-1">2. Uniswap V2 合约实现流程 (时序图)</a></li>
+        <li><a href="#3-代码实现细节与考量-1">3. 代码实现细节与考量</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ul>
+<li><strong>核心公式与流动性衡量：</strong> Uniswap V2 的流动性池基于 $X \times Y = K$ 恒定乘积公式，其中 $L = \sqrt{K}$ 被用作衡量流动性大小的线性指标，便于 LP Token (LPT) 的线性增发与销毁。</li>
+<li><strong>价格不变性约束：</strong> 无论是添加还是移除流动性，操作前后池内两种代币的价格比（即兑换价格）必须保持不变，这是确保用户按当前市场价提供或撤出流动性的核心原则。</li>
+<li><strong>LPT 增发/销毁机制：</strong> 添加流动性时，新铸造的 LP Token 数量与新增流动性占总流动性的比例成正比；移除流动性时，用户收回的代币数量也与销毁的 LP Token 占总 LP Token 的比例成正比。</li>
+<li><strong>Uniswap V2 合约架构：</strong> 核心交互涉及 <strong>路由合约 (Router)</strong>、<strong>工厂合约 (Factory)</strong> 和 <strong>交易对合约 (Pair)</strong>。路由合约是用户入口，工厂合约负责创建交易对，交易对合约管理实际的流动性池和代币交换。</li>
+<li><strong>关键工程实现：</strong> 智能合约实现中包含多项精巧设计，如使用 <code>create2</code> 预测交易对地址、对代币地址进行排序以确保交易对的唯一性、以及设置 <code>minimum liquidity</code> 机制以增强安全性和稳定性。</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="uniswap-v2-流动性管理概述"><span>Uniswap V2 流动性管理概述</span>
+  <a href="#uniswap-v2-%e6%b5%81%e5%8a%a8%e6%80%a7%e7%ae%a1%e7%90%86%e6%a6%82%e8%bf%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>本节课主要围绕 Uniswap V2 中的<strong>添加流动性</strong>、<strong>移除流动性</strong>和<strong>无常损失</strong>（本节课不深入讲解）三个核心概念。目标是清晰梳理前两个概念的数学原理和合约实现流程。</p>
+<hr>
+<h2 class="heading-element" id="添加流动性-adding-liquidity"><span>添加流动性 (Adding Liquidity)</span>
+  <a href="#%e6%b7%bb%e5%8a%a0%e6%b5%81%e5%8a%a8%e6%80%a7-adding-liquidity" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="1-核心概念与数学原理"><span>1. 核心概念与数学原理</span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e4%b8%8e%e6%95%b0%e5%ad%a6%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>定义：</strong> 用户向流动性池中同时投入两种代币（X 和 Y），以增加池子的总流动性。</li>
+<li><strong>恒定乘积公式：</strong> 流动性池的核心机制是 <strong>$X \times Y = K$</strong>，其中 $K$ 是一个常数。</li>
+<li><strong>流动性的衡量 (L)：</strong>
+<ul>
+<li>为了实现 LP Token 的线性增发，Uniswap V2 使用 $L$ 来衡量流动性，而非 $K$。</li>
+<li>$L$ 与 $K$ 的关系：<strong>$L = \sqrt{K}$</strong>。</li>
+<li><strong>案例：</strong> 这种开平方根的方式，使得 $L$ 可以线性增长。无论用户提供流动性的时间早晚，只要对池子的贡献比例相同，获得的 LP Token 数量就相同。</li>
+</ul>
+</li>
+<li><strong>价格不变性约束：</strong>
+<ul>
+<li>添加流动性时，池中代币的价格比不能发生变化。</li>
+<li>初始价格比：$P_0 = Y_0 / X_0$</li>
+<li>添加后价格比：$P_1 = (Y_0 + DY) / (X_0 + DX)$</li>
+<li>约束条件：<strong>$P_0 = P_1 \Rightarrow Y_0 / X_0 = DY / DX$</strong>。</li>
+<li><strong>几何表现：</strong> 在坐标系中，添加流动性的操作点会落在连接原点和当前价格点 $(X_0, Y_0)$ 的一条直线上。</li>
+</ul>
+</li>
+<li><strong>LP Token (LPT) 的获取：</strong>
+<ul>
+<li>用户投入 <code>DX</code> 和 <code>DY</code> 两种代币。</li>
+<li>用户获得 <code>LP Token</code> (也称 Share) 作为其流动性贡献的凭证，这些 LPT 后续可用于质押、流动性挖矿等。</li>
+</ul>
+</li>
+<li><strong>LP Token 增发量 (S) 的计算：</strong>
+<ul>
+<li><strong>基本原理：</strong> 新增发的 LP Token (S) 占增发后总量的比例，等于新增流动性占增发后总流动性的比例。</li>
+<li>公式表达：
+$$
+\frac{L_1 - L_0}{L_0} = \frac{S}{T}
+$$
+其中：
+<ul>
+<li>$L_0 = \sqrt{X_0 \times Y_0}$ (初始流动性)</li>
+<li>$L_1 = \sqrt{(X_0 + DX) \times (Y_0 + DY)}$ (添加后的流动性)</li>
+<li>$S$ (为本次操作<strong>新增发</strong>的 LP Token 数量)</li>
+<li>$T$ (初始 LP Token 总量，即 <code>totalSupply</code>)</li>
+</ul>
+</li>
+<li><strong>推导简化结果：</strong> 结合价格不变性约束 $Y_0/X_0 = DY/DX$，可以推导出：
+$$
+S = \frac{DX}{X_0} \times T = \frac{DY}{Y_0} \times T
+$$
+这意味着，新增发的 LP Token 数量与用户投入的代币数量占池中现有代币数量的比例，再乘以总 LP Token 数量相等。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="2-uniswap-v2-合约实现流程-时序图"><span>2. Uniswap V2 合约实现流程 (时序图)</span>
+  <a href="#2-uniswap-v2-%e5%90%88%e7%ba%a6%e5%ae%9e%e7%8e%b0%e6%b5%81%e7%a8%8b-%e6%97%b6%e5%ba%8f%e5%9b%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="diagram-container">
+  <pre class="mermaid">sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Factory as 工厂合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 addLiquidity(tokenA, tokenB, ...)
+    Router->>Factory: 2. 调用 getPair(tokenA, tokenB) 查询是否存在
+  
+    alt 交易对不存在
+        Factory-->>Router: 3a. 返回 address(0)
+        Router->>Factory: 4a. 调用 createPair(tokenA, tokenB)
+        Note right of Factory: 内部使用 create2 创建<br/>并对代币地址排序
+        Factory-->>Router: 5a. 返回新的 Pair 合约地址
+    else 交易对已存在
+        Factory-->>Router: 3b. 返回已存在的 Pair 合约地址
+    end
+
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其代币
+    Router->>Pair: 6. 调用 transferFrom(用户, Pair, DX)
+    Router->>Pair: 7. 调用 transferFrom(用户, Pair, DY)
+  
+    Router->>Pair: 8. 调用 mint(用户地址)
+    Note right of Pair: 内部计算应增发的 LPT 数量 (S)<br/>并铸造新的 LPT
+    Pair-->>User: 9. 转移 S 数量的 LPT 给用户</pre>
+  <pre class="mermaid-dark">sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Factory as 工厂合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 addLiquidity(tokenA, tokenB, ...)
+    Router->>Factory: 2. 调用 getPair(tokenA, tokenB) 查询是否存在
+  
+    alt 交易对不存在
+        Factory-->>Router: 3a. 返回 address(0)
+        Router->>Factory: 4a. 调用 createPair(tokenA, tokenB)
+        Note right of Factory: 内部使用 create2 创建<br/>并对代币地址排序
+        Factory-->>Router: 5a. 返回新的 Pair 合约地址
+    else 交易对已存在
+        Factory-->>Router: 3b. 返回已存在的 Pair 合约地址
+    end
+
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其代币
+    Router->>Pair: 6. 调用 transferFrom(用户, Pair, DX)
+    Router->>Pair: 7. 调用 transferFrom(用户, Pair, DY)
+  
+    Router->>Pair: 8. 调用 mint(用户地址)
+    Note right of Pair: 内部计算应增发的 LPT 数量 (S)<br/>并铸造新的 LPT
+    Pair-->>User: 9. 转移 S 数量的 LPT 给用户</pre>
+  <pre class="mermaid-neutral">sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Factory as 工厂合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 addLiquidity(tokenA, tokenB, ...)
+    Router->>Factory: 2. 调用 getPair(tokenA, tokenB) 查询是否存在
+  
+    alt 交易对不存在
+        Factory-->>Router: 3a. 返回 address(0)
+        Router->>Factory: 4a. 调用 createPair(tokenA, tokenB)
+        Note right of Factory: 内部使用 create2 创建<br/>并对代币地址排序
+        Factory-->>Router: 5a. 返回新的 Pair 合约地址
+    else 交易对已存在
+        Factory-->>Router: 3b. 返回已存在的 Pair 合约地址
+    end
+
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其代币
+    Router->>Pair: 6. 调用 transferFrom(用户, Pair, DX)
+    Router->>Pair: 7. 调用 transferFrom(用户, Pair, DY)
+  
+    Router->>Pair: 8. 调用 mint(用户地址)
+    Note right of Pair: 内部计算应增发的 LPT 数量 (S)<br/>并铸造新的 LPT
+    Pair-->>User: 9. 转移 S 数量的 LPT 给用户</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Factory as 工厂合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 addLiquidity(tokenA, tokenB, ...)
+    Router->>Factory: 2. 调用 getPair(tokenA, tokenB) 查询是否存在
+  
+    alt 交易对不存在
+        Factory-->>Router: 3a. 返回 address(0)
+        Router->>Factory: 4a. 调用 createPair(tokenA, tokenB)
+        Note right of Factory: 内部使用 create2 创建<br/>并对代币地址排序
+        Factory-->>Router: 5a. 返回新的 Pair 合约地址
+    else 交易对已存在
+        Factory-->>Router: 3b. 返回已存在的 Pair 合约地址
+    end
+
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其代币
+    Router->>Pair: 6. 调用 transferFrom(用户, Pair, DX)
+    Router->>Pair: 7. 调用 transferFrom(用户, Pair, DY)
+  
+    Router->>Pair: 8. 调用 mint(用户地址)
+    Note right of Pair: 内部计算应增发的 LPT 数量 (S)<br/>并铸造新的 LPT
+    Pair-->>User: 9. 转移 S 数量的 LPT 给用户</pre></template>
+</div><p><strong>流程解释：</strong></p>
+<ol>
+<li><strong>用户发起请求：</strong> 用户调用<strong>路由合约</strong>的 <code>addLiquidity</code> 方法。</li>
+<li><strong>查询交易对：</strong> 路由合约向<strong>工厂合约</strong>查询 <code>tokenA</code> 和 <code>tokenB</code> 的交易对是否存在。</li>
+<li><strong>创建或获取交易对：</strong>
+<ul>
+<li><strong>如果不存在</strong>，工厂合约返回零地址，路由合约随即调用工厂合约的 <code>createPair</code> 方法来创建新的<strong>交易对合约</strong>，并获取其地址。</li>
+<li><strong>如果已存在</strong>，工厂合约直接返回该交易对的地址。</li>
+</ul>
+</li>
+<li><strong>转移代币：</strong> 在用户已授权的前提下，路由合约调用两种代币的 <code>transferFrom</code> 方法，将用户的 <code>DX</code> 和 <code>DY</code> 数量的代币转移到交易对合约中。</li>
+<li><strong>铸造 LP Token：</strong> 路由合约调用交易对合约的 <code>mint</code> 方法，并将用户的地址作为接收方传入。</li>
+<li><strong>完成：</strong> 交易对合约内部完成 LPT 的计算和铸造，并将新生成的 LPT 发送给用户。</li>
+</ol>
+<h3 class="heading-element" id="3-代码实现细节与考量"><span>3. 代码实现细节与考量</span>
+  <a href="#3-%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0%e7%bb%86%e8%8a%82%e4%b8%8e%e8%80%83%e9%87%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>LPT 计算的精度处理：</strong>
+<ul>
+<li>在智能合约中，由于浮点数精度问题，<code>DX/X0 * T</code> 和 <code>DY/Y0 * T</code> 可能会有微小误差。</li>
+<li>为确保公平和防止潜在攻击，合约会取两者之间的<strong>较小值</strong>作为最终增发的 LPT 数量：
+$$
+S_{contract} = \min \left( \frac{\text{amount0}}{\text{reserve0}} \times \text{totalSupply}, \frac{\text{amount1}}{\text{reserve1}} \times \text{totalSupply} \right)
+$$
+其中 <code>amount0</code> 和 <code>amount1</code> 对应 <code>DX</code> 和 <code>DY</code>，<code>reserve0</code> 和 <code>reserve1</code> 对应 <code>X0</code> 和 <code>Y0</code>。</li>
+</ul>
+</li>
+<li><strong><code>minimum liquidity</code> (最小流动性) 机制：</strong>
+<ul>
+<li>当一个全新的交易对首次创建时（<code>totalSupply</code> 为零），Pair 合约会铸造 <strong>1000</strong> 个 LP Token 并发送到 <code>0x0</code> 地址（永久锁定）。</li>
+<li><strong>案例：</strong> 首次添加流动性时，计算公式为 <code>liquidity = sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY</code>。</li>
+<li><strong>目的/原因：</strong>
+<ol>
+<li><strong>防止除零错误：</strong> 确保 <code>totalSupply</code> 始终大于零。</li>
+<li><strong>防止价格操纵：</strong> 提高对极低流动性池的初始操纵成本。</li>
+<li><strong>提高安全性：</strong> 防止某些极端情况下池子被完全抽干。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>代币地址排序：</strong>
+<ul>
+<li>在 <code>Factory.createPair</code> 中，<code>tokenA</code> 和 <code>tokenB</code> 会根据其地址（视为16进制数字）大小进行排序，小的作为 <code>token0</code>，大的作为 <code>token1</code>。</li>
+<li><strong>案例：</strong> 无论用户输入 <code>(DAI, WETH)</code> 还是 <code>(WETH, DAI)</code> 来添加流动性，经过排序后，工厂合约都会指向同一个唯一的交易对地址，避免了重复创建或查找失败。</li>
+</ul>
+</li>
+<li><strong><code>create2</code> 的使用：</strong>
+<ul>
+<li>在 <code>Factory.createPair</code> 中使用 <code>create2</code> 而非普通的 <code>create</code>。</li>
+<li><strong>原因：</strong> 允许在交易被确认上链之前，就能确定新 Pair 合约的地址。这对于 <code>addLiquidity</code> 流程中，需要提前将代币 <code>transferFrom</code> 到 Pair 合约地址的场景至关重要。</li>
+</ul>
+</li>
+<li><strong><code>initialize</code> 方法与 <code>constructor</code> 的选择：</strong>
+<ul>
+<li>Pair 合约的 <code>token0</code> 和 <code>token1</code> 地址不是在 <code>constructor</code> 中设置，而是在创建后通过 <code>initialize</code> 方法设置。</li>
+<li><strong>原因：</strong> 这种设计简化了 <code>create2</code> 的使用（创建合约时无需传递参数），优先保证了 Pair 地址的快速获取，之后再进行初始化。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="移除流动性-removing-liquidity"><span>移除流动性 (Removing Liquidity)</span>
+  <a href="#%e7%a7%bb%e9%99%a4%e6%b5%81%e5%8a%a8%e6%80%a7-removing-liquidity" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="1-核心概念与数学原理-1"><span>1. 核心概念与数学原理</span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e4%b8%8e%e6%95%b0%e5%ad%a6%e5%8e%9f%e7%90%86-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>定义：</strong> 用户将持有的 LP Token (S) 返还给流动性池，以换取相应比例的两种代币 (DX, DY)。</li>
+<li><strong>逻辑：</strong> 与添加流动性相反，用户将凭证 (LPT) 还给池子，池子则返还用户等比例的两种代币。</li>
+<li><strong>价格不变性约束：</strong> 移除流动性时，池中代币的价格比同样不能发生变化。
+<ul>
+<li>约束条件：<strong>$Y_0 / X_0 = (Y_0 - DY) / (X_0 - DX)$</strong>。</li>
+</ul>
+</li>
+<li><strong>返还代币数量 (DX, DY) 的计算：</strong>
+<ul>
+<li><strong>基本原理：</strong> 用户收回的代币数量占池中总量的比例，等于其销毁的 LP Token 占总 LP Token 的比例。</li>
+<li>公式表达：
+$$
+\frac{L_0 - L_1}{L_0} = \frac{S}{T}
+$$
+其中：
+<ul>
+<li>$L_0$ 是移除前的流动性, $L_1$ 是移除后的流动性 ($L_0 &gt; L_1$)</li>
+<li>$S$ (用户<strong>销毁</strong>的 LP Token 数量)</li>
+<li>$T$ (LP Token 总量，即 <code>totalSupply</code>)</li>
+</ul>
+</li>
+<li><strong>推导简化结果：</strong>
+$$
+DX = \frac{S}{T} \times X_0
+$$
+$$
+DY = \frac{S}{T} \times Y_0
+$$
+其中 $X_0$ 和 $Y_0$ 是当前池中的代币储备量 (<code>reserve0</code> 和 <code>reserve1</code>)。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="2-uniswap-v2-合约实现流程-时序图-1"><span>2. Uniswap V2 合约实现流程 (时序图)</span>
+  <a href="#2-uniswap-v2-%e5%90%88%e7%ba%a6%e5%ae%9e%e7%8e%b0%e6%b5%81%e7%a8%8b-%e6%97%b6%e5%ba%8f%e5%9b%be-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="diagram-container">
+  <pre class="mermaid">sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 removeLiquidity(tokenA, tokenB, amountLP)
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其 LP Token
+    Router->>Pair: 2. 调用 transferFrom(用户, Pair, amountLP)
+  
+    Router->>Pair: 3. 调用 burn(用户地址)
+    Note right of Pair: 内部计算应返还的 DX, DY 数量<br/>并销毁合约持有的 LPT
+  
+    Pair-->>User: 4. 转移 DX 数量的 token0
+    Pair-->>User: 5. 转移 DY 数量的 token1</pre>
+  <pre class="mermaid-dark">sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 removeLiquidity(tokenA, tokenB, amountLP)
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其 LP Token
+    Router->>Pair: 2. 调用 transferFrom(用户, Pair, amountLP)
+  
+    Router->>Pair: 3. 调用 burn(用户地址)
+    Note right of Pair: 内部计算应返还的 DX, DY 数量<br/>并销毁合约持有的 LPT
+  
+    Pair-->>User: 4. 转移 DX 数量的 token0
+    Pair-->>User: 5. 转移 DY 数量的 token1</pre>
+  <pre class="mermaid-neutral">sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 removeLiquidity(tokenA, tokenB, amountLP)
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其 LP Token
+    Router->>Pair: 2. 调用 transferFrom(用户, Pair, amountLP)
+  
+    Router->>Pair: 3. 调用 burn(用户地址)
+    Note right of Pair: 内部计算应返还的 DX, DY 数量<br/>并销毁合约持有的 LPT
+  
+    Pair-->>User: 4. 转移 DX 数量的 token0
+    Pair-->>User: 5. 转移 DY 数量的 token1</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>sequenceDiagram
+    participant User as 用户
+    participant Router as 路由合约
+    participant Pair as 交易对合约
+
+    User->>Router: 1. 调用 removeLiquidity(tokenA, tokenB, amountLP)
+    Note over User, Pair: 用户需提前授权(approve)Router<br/>转移其 LP Token
+    Router->>Pair: 2. 调用 transferFrom(用户, Pair, amountLP)
+  
+    Router->>Pair: 3. 调用 burn(用户地址)
+    Note right of Pair: 内部计算应返还的 DX, DY 数量<br/>并销毁合约持有的 LPT
+  
+    Pair-->>User: 4. 转移 DX 数量的 token0
+    Pair-->>User: 5. 转移 DY 数量的 token1</pre></template>
+</div><p><strong>流程解释：</strong></p>
+<ol>
+<li><strong>用户发起请求：</strong> 用户调用<strong>路由合约</strong>的 <code>removeLiquidity</code> 方法，并指定要移除的 LP Token 数量。</li>
+<li><strong>转移 LP Token：</strong> 在用户已授权的前提下，路由合约调用交易对合约的 <code>transferFrom</code> 方法，将用户指定数量的 LP Token 转移到交易对合约中。</li>
+<li><strong>销毁 LPT 并计算返还量：</strong> 路由合约调用交易对合约的 <code>burn</code> 方法，并将用户地址作为接收方传入。</li>
+<li><strong>返还代币：</strong> 交易对合约内部计算出应返还给用户的两种代币数量 <code>DX</code> 和 <code>DY</code>，然后将这两笔代币转移给用户。</li>
+</ol>
+<h3 class="heading-element" id="3-代码实现细节与考量-1"><span>3. 代码实现细节与考量</span>
+  <a href="#3-%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0%e7%bb%86%e8%8a%82%e4%b8%8e%e8%80%83%e9%87%8f-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong><code>burn</code> 方法的参数：</strong>
+<ul>
+<li>Pair 合约的 <code>burn</code> 方法只接受一个 <code>address to</code> 参数，<strong>没有</strong> <code>amount</code> 参数来指定销毁多少 LP Token。</li>
+<li><strong>隐藏逻辑：</strong> <code>burn</code> 方法会默认销毁 Pair 合约<strong>自身所持有的所有 LP Token 余额</strong> (<code>balanceOf(address(this))</code>)。这意味着在调用 <code>burn</code> 之前，用户必须已经将要销毁的 LP Token 转移到 Pair 合约中。</li>
+</ul>
+</li>
+<li><strong>代币计算：</strong>
+<ul>
+<li><code>amount0</code> (DX) 和 <code>amount1</code> (DY) 的计算直接使用上述简化公式：
+$$
+\text{amount0} = \frac{\text{liquidity}}{\text{totalSupply}} \times \text{reserve0}
+$$
+$$
+\text{amount1} = \frac{\text{liquidity}}{\text{totalSupply}} \times \text{reserve1}
+$$
+其中 <code>liquidity</code> 是 Pair 合约自身持有的、刚刚从用户那里接收的 LP Token 余额。</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap04/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap04/" data-title="04.Uniswap V2 添加移除流动性" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap04/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap04/" data-title="04.Uniswap V2 添加移除流动性"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap05/" class="post-nav-item" rel="prev" title="05.Uniswap V2 无常损失"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>05.Uniswap V2 无常损失</a><a href="/posts/202509-uniswap03/" class="post-nav-item" rel="next" title="03.Uniswap V2 手续费机制">03.Uniswap V2 手续费机制<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#uniswap-v2-流动性管理概述">Uniswap V2 流动性管理概述</a></li>
+    <li><a href="#添加流动性-adding-liquidity">添加流动性 (Adding Liquidity)</a>
+      <ul>
+        <li><a href="#1-核心概念与数学原理">1. 核心概念与数学原理</a></li>
+        <li><a href="#2-uniswap-v2-合约实现流程-时序图">2. Uniswap V2 合约实现流程 (时序图)</a></li>
+        <li><a href="#3-代码实现细节与考量">3. 代码实现细节与考量</a></li>
+      </ul>
+    </li>
+    <li><a href="#移除流动性-removing-liquidity">移除流动性 (Removing Liquidity)</a>
+      <ul>
+        <li><a href="#1-核心概念与数学原理-1">1. 核心概念与数学原理</a></li>
+        <li><a href="#2-uniswap-v2-合约实现流程-时序图-1">2. Uniswap V2 合约实现流程 (时序图)</a></li>
+        <li><a href="#3-代码实现细节与考量-1">3. 代码实现细节与考量</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/89e634bb00ae032fd0640772557fd426.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

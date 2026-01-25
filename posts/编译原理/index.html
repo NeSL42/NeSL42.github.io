@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>编译原理Note - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="[toc]
+英语太差，斯坦福cs143的课看着难受，拿哈工大的编译原理来看，顺序就按照P的顺序
+P2编译系统结构 "><meta name="keywords" content='OS'>
+  <meta itemprop="name" content="编译原理Note">
+  <meta itemprop="description" content="[toc]
+英语太差，斯坦福cs143的课看着难受，拿哈工大的编译原理来看，顺序就按照P的顺序
+P2编译系统结构">
+  <meta itemprop="datePublished" content="2021-12-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2021-12-01T00:00:00+00:00">
+  <meta itemprop="wordCount" content="436">
+  <meta itemprop="keywords" content="OS"><meta property="og:url" content="http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="编译原理Note">
+  <meta property="og:description" content="[toc]
+英语太差，斯坦福cs143的课看着难受，拿哈工大的编译原理来看，顺序就按照P的顺序
+P2编译系统结构">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-12-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-12-01T00:00:00+00:00">
+    <meta property="article:tag" content="OS">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="编译原理Note">
+  <meta name="twitter:description" content="[toc]
+英语太差，斯坦福cs143的课看着难受，拿哈工大的编译原理来看，顺序就按照P的顺序
+P2编译系统结构">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" title="编译原理Note - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/tcache_stashing_unlink_atack%E8%B0%83%E8%AF%95/" title="Tcache_stashing_unlink_atack调试记录" /><link rel="next" type="text/html" href="http://localhost:1313/posts/2021%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" title="2021年终总结" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "编译原理Note",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86\/"
+    },"genre": "posts","keywords": "OS","wordcount":  436 ,
+    "url": "http:\/\/localhost:1313\/posts\/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86\/","datePublished": "2021-12-01T00:00:00+00:00","dateModified": "2021-12-01T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>编译原理Note</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2021-12-01 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2021-12-01">2021-12-01</time></span>&nbsp;<span title="436 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 500 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 1 分钟</span>&nbsp;</div>
+    </div><div class="details toc encrypted-hidden" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#p2编译系统结构">P2编译系统结构</a></li>
+    <li><a href="#p3词法分析概述">P3词法分析概述</a></li>
+    <li><a href="#p4语法分析">P4语法分析</a></li>
+    <li><a href="#p5语义分析">P5语义分析</a></li>
+    <li><a href="#p1-introduction">P1 Introduction</a></li>
+    <li><a href="#p2-structure-of-a-compiler">P2 Structure of a compiler</a></li>
+    <li></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"></div><fixit-encryptor>
+    <div class="fixit-decryptor-container">
+      <img class="fixit-decryptor-loading" src="/images/loading.min.svg" alt="decryptor loading" width="48" height="48" />
+      <label for="fixit-decryptor-input" title="密码">
+        <input type="password" id="fixit-decryptor-input" class="fixit-decryptor-input" placeholder="🔑 请输入密码" />
+      </label>
+      <button class="fixit-decryptor-btn"><i class="fa-solid fa-unlock" aria-hidden="true"></i> 进入</button><button class="fixit-encryptor-btn"><i class="fa-solid fa-lock" aria-hidden="true"></i> 重新加密</button></div><cipher-text data-password="162125bd8a568af6">PHA&#43;W92bf419677972f97e01b702d6f3c2edaf1b536d4a0992680edda0bad5df3RvY108L3A&#43;CjxwPuiLseivreWkquW3ru&#43;8jOaWr&#43;Wdpuemj2NzMTQz55qE6K&#43;&#43;55yL552A6Zq&#43;5Y&#43;X77yM5ou/5ZOI5bel5aSn55qE57yW6K&#43;R5Y6f55CG5p2l55yL77yM6aG65bqP5bCx5oyJ54WnUOeahOmhuuW6jzwvcD4KPGgyIGNsYXNzPSJoZWFkaW5nLWVsZW1lbnQiIGlkPSJwMue8luivkeezu&#43;e7n&#43;e7k&#43;aehCI&#43;PHNwYW4&#43;UDLnvJbor5Hns7vnu5/nu5PmnoQ8L3NwYW4&#43;CiAgPGEgaHJlZj0iI3AyJWU3JWJjJTk2JWU4JWFmJTkxJWU3JWIzJWJiJWU3JWJiJTlmJWU3JWJiJTkzJWU2JTllJTg0IiBjbGFzcz0iaGVhZGluZy1tYXJrIj4KICAgIDxzdmcgY2xhc3M9Im9jdGljb24gb2N0aWNvbi1saW5rIiB2aWV3Qm94PSIwIDAgMTYgMTYiIHZlcnNpb249IjEuMSIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBhcmlhLWhpZGRlbj0idHJ1ZSI&#43;PHBhdGggZD0ibTcuNzc1IDMuMjc1IDEuMjUtMS4yNWEzLjUgMy41IDAgMSAxIDQuOTUgNC45NWwtMi41IDIuNWEzLjUgMy41IDAgMCAxLTQuOTUgMCAuNzUxLjc1MSAwIDAgMSAuMDE4LTEuMDQyLjc1MS43NTEgMCAwIDEgMS4wNDItLjAxOCAxLjk5OCAxLjk5OCAwIDAgMCAyLjgzIDBsMi41LTIuNWEyLjAwMiAyLjAwMiAwIDAgMC0yLjgzLTIuODNsLTEuMjUgMS4yNWEuNzUxLjc1MSAwIDAgMS0xLjA0Mi0uMDE4Ljc1MS43NTEgMCAwIDEtLjAxOC0xLjA0MlptLTQuNjkgOS42NGExLjk5OCAxLjk5OCAwIDAgMCAyLjgzIDBsMS4yNS0xLjI1YS43NTEuNzUxIDAgMCAxIDEuMDQyLjAxOC43NTEuNzUxIDAgMCAxIC4wMTggMS4wNDJsLTEuMjUgMS4yNWEzLjUgMy41IDAgMSAxLTQuOTUtNC45NWwyLjUtMi41YTMuNSAzLjUgMCAwIDEgNC45NSAwIC43NTEuNzUxIDAgMCAxLS4wMTggMS4wNDIuNzUxLjc1MSAwIDAgMS0xLjA0Mi4wMTggMS45OTggMS45OTggMCAwIDAtMi44MyAwbC0yLjUgMi41YTEuOTk4IDEuOTk4IDAgMCAwIDAgMi44M1oiPjwvcGF0aD48L3N2Zz4KICA8L2E&#43;CjwvaDI&#43;PHA&#43;PGltZyBsb2FkaW5nPSJsYXp5IiBzcmM9Jy9wb3N0cy8lRTclQkMlOTYlRTglQUYlOTElRTUlOEUlOUYlRTclOTAlODYvaW1hZ2UtMjAyMTEyMDEyMzE2MjI2ODYucG5nJyBhbHQ9ImltYWdlLTIwMjExMjAxMjMxNjIyNjg2IiBoZWlnaHQ9IjcxMiIgd2lkdGg9IjM2OCI&#43;PC9wPgo8cD7lhbfkvZPkuL7kuKrkvovlrZDvvJo8L3A&#43;CjxwPjxpbWcgbG9hZGluZz0ibGF6eSIgc3JjPScvcG9zdHMvJUU3JUJDJTk2JUU4JUFGJTkxJUU1JThFJTlGJUU3JTkwJTg2L2ltYWdlLTIwMjExMjAyMTM1NDM4MjY5LnBuZycgYWx0PSJpbWFnZS0yMDIxMTIwMjEzNTQzODI2OS5wbmciIGhlaWdodD0iOTQ2IiB3aWR0aD0iNzAzIj48L3A&#43;CjxoMiBjbGFzcz0iaGVhZGluZy1lbGVtZW50IiBpZD0icDPor43ms5XliIbmnpDmpoLov7AiPjxzcGFuPlAz6K&#43;N5rOV5YiG5p6Q5qaC6L&#43;wPC9zcGFuPgogIDxhIGhyZWY9IiNwMyVlOCVhZiU4ZCVlNiViMyU5NSVlNSU4OCU4NiVlNiU5ZSU5MCVlNiVhNiU4MiVlOCViZiViMCIgY2xhc3M9ImhlYWRpbmctbWFyayI&#43;CiAgICA8c3ZnIGNsYXNzPSJvY3RpY29uIG9jdGljb24tbGluayIgdmlld0JveD0iMCAwIDE2IDE2IiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgYXJpYS1oaWRkZW49InRydWUiPjxwYXRoIGQ9Im03Ljc3NSAzLjI3NSAxLjI1LTEuMjVhMy41IDMuNSAwIDEgMSA0Ljk1IDQuOTVsLTIuNSAyLjVhMy41IDMuNSAwIDAgMS00Ljk1IDAgLjc1MS43NTEgMCAwIDEgLjAxOC0xLjA0Mi43NTEuNzUxIDAgMCAxIDEuMDQyLS4wMTggMS45OTggMS45OTggMCAwIDAgMi44MyAwbDIuNS0yLjVhMi4wMDIgMi4wMDIgMCAwIDAtMi44My0yLjgzbC0xLjI1IDEuMjVhLjc1MS43NTEgMCAwIDEtMS4wNDItLjAxOC43NTEuNzUxIDAgMCAxLS4wMTgtMS4wNDJabS00LjY5IDkuNjRhMS45OTggMS45OTggMCAwIDAgMi44MyAwbDEuMjUtMS4yNWEuNzUxLjc1MSAwIDAgMSAxLjA0Mi4wMTguNzUxLjc1MSAwIDAgMSAuMDE4IDEuMDQybC0xLjI1IDEuMjVhMy41IDMuNSAwIDEgMS00Ljk1LTQuOTVsMi41LTIuNWEzLjUgMy41IDAgMCAxIDQuOTUgMCAuNzUxLjc1MSAwIDAgMS0uMDE4IDEuMDQyLjc1MS43NTEgMCAwIDEtMS4wNDIuMDE4IDEuOTk4IDEuOTk4IDAgMCAwLTIuODMgMGwtMi41IDIuNWExLjk5OCAxLjk5OCAwIDAgMCAwIDIuODNaIj48L3BhdGg&#43;PC9zdmc&#43;CiAgPC9hPgo8L2gyPjxwPue8luivkeWZqOeahOesrOS4gOS4quatpemqpOensOS4ujxjb2RlPuivjeazleWIhuaekCggbGV4aWNhbGFuYWx5c2lzKTwvY29kZT7jgIIg6K&#43;N5rOV5YiG5p6Q5Zmo6K&#43;75Lq657uE5oiQ5rqQ56iL5bqP55qE5a2X56ym5rWB77yM5bm25LiU5bCG5a6D5Lus57uE57uH5oiQ5Li65pyJ5oSP5LmJ55qEPGNvZGU&#43;6K&#43;N57SgKGxleGVtZSk8L2NvZGU&#43;55qE5bqP5YiX44CC5a&#43;55LqO5q&#43;P5Liq6K&#43;N57Sg77yM6K&#43;N5rOV5YiG5p6Q5Zmo5Lqn55SfPGNvZGU&#43;6K&#43;N5rOV5Y2V5YWDKHRva2VuKTwvY29kZT7kvZzkuLrovpPlh7o6ICZsdDsgdG9rZW4tbmFtZSwgYXR0cmlidXRlLXZhbHVlICZndDvvvIzmiJbogIUmbHQ756eN5Yir56CB77yM5bGe5oCn5YC8Jmd0OzwvcD4KPGgyIGNsYXNzPSJoZWFkaW5nLWVsZW1lbnQiIGlkPSJwNOivreazleWIhuaekCI&#43;PHNwYW4&#43;UDTor63ms5XliIbmnpA8L3NwYW4&#43;CiAgPGEgaHJlZj0iI3A0JWU4JWFmJWFkJWU2JWIzJTk1JWU1JTg4JTg2JWU2JTllJTkwIiBjbGFzcz0iaGVhZGluZy1tYXJrIj4KICAgIDxzdmcgY2xhc3M9Im9jdGljb24gb2N0aWNvbi1saW5rIiB2aWV3Qm94PSIwIDAgMTYgMTYiIHZlcnNpb249IjEuMSIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBhcmlhLWhpZGRlbj0idHJ1ZSI&#43;PHBhdGggZD0ibTcuNzc1IDMuMjc1IDEuMjUtMS4yNWEzLjUgMy41IDAgMSAxIDQuOTUgNC45NWwtMi41IDIuNWEzLjUgMy41IDAgMCAxLTQuOTUgMCAuNzUxLjc1MSAwIDAgMSAuMDE4LTEuMDQyLjc1MS43NTEgMCAwIDEgMS4wNDItLjAxOCAxLjk5OCAxLjk5OCAwIDAgMCAyLjgzIDBsMi41LTIuNWEyLjAwMiAyLjAwMiAwIDAgMC0yLjgzLTIuODNsLTEuMjUgMS4yNWEuNzUxLjc1MSAwIDAgMS0xLjA0Mi0uMDE4Ljc1MS43NTEgMCAwIDEtLjAxOC0xLjA0MlptLTQuNjkgOS42NGExLjk5OCAxLjk5OCAwIDAgMCAyLjgzIDBsMS4yNS0xLjI1YS43NTEuNzUxIDAgMCAxIDEuMDQyLjAxOC43NTEuNzUxIDAgMCAxIC4wMTggMS4wNDJsLTEuMjUgMS4yNWEzLjUgMy41IDAgMSAxLTQuOTUtNC45NWwyLjUtMi41YTMuNSAzLjUgMCAwIDEgNC45NSAwIC43NTEuNzUxIDAgMCAxLS4wMTggMS4wNDIuNzUxLjc1MSAwIDAgMS0xLjA0Mi4wMTggMS45OTggMS45OTggMCAwIDAtMi44MyAwbC0yLjUgMi41YTEuOTk4IDEuOTk4IDAgMCAwIDAgMi44M1oiPjwvcGF0aD48L3N2Zz4KICA8L2E&#43;CjwvaDI&#43;PHA&#43;PGNvZGU&#43;6K&#43;t5rOV5YiG5p6QKHN5bnRheCBhbmFseXNpcyk8L2NvZGU&#43;44CC6K&#43;t5rOV5YiG5p6Q5Zmo5L2/55So5pyJ6K&#43;N5rOV5YiG5p6Q5Zmo55Sf5oiQ55qE5ZCE5Liq6K&#43;N5rOV5Y2V5YWD55qE56ys5LiA5Liq5YiG6YeP5p2l5Yib5bu65qCR5b2i55qE5Lit6Ze06KGo56S644CCPC9wPgo8aDIgY2xhc3M9ImhlYWRpbmctZWxlbWVudCIgaWQ9InA16K&#43;t5LmJ5YiG5p6QIj48c3Bhbj5QNeivreS5ieWIhuaekDwvc3Bhbj4KICA8YSBocmVmPSIjcDUlZTglYWYlYWQlZTQlYjklODklZTUlODglODYlZTYlOWUlOTAiIGNsYXNzPSJoZWFkaW5nLW1hcmsiPgogICAgPHN2ZyBjbGFzcz0ib2N0aWNvbiBvY3RpY29uLWxpbmsiIHZpZXdCb3g9IjAgMCAxNiAxNiIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGFyaWEtaGlkZGVuPSJ0cnVlIj48cGF0aCBkPSJtNy43NzUgMy4yNzUgMS4yNS0xLjI1YTMuNSAzLjUgMCAxIDEgNC45NSA0Ljk1bC0yLjUgMi41YTMuNSAzLjUgMCAwIDEtNC45NSAwIC43NTEuNzUxIDAgMCAxIC4wMTgtMS4wNDIuNzUxLjc1MSAwIDAgMSAxLjA0Mi0uMDE4IDEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwyLjUtMi41YTIuMDAyIDIuMDAyIDAgMCAwLTIuODMtMi44M2wtMS4yNSAxLjI1YS43NTEuNzUxIDAgMCAxLTEuMDQyLS4wMTguNzUxLjc1MSAwIDAgMS0uMDE4LTEuMDQyWm0tNC42OSA5LjY0YTEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwxLjI1LTEuMjVhLjc1MS43NTEgMCAwIDEgMS4wNDIuMDE4Ljc1MS43NTEgMCAwIDEgLjAxOCAxLjA0MmwtMS4yNSAxLjI1YTMuNSAzLjUgMCAxIDEtNC45NS00Ljk1bDIuNS0yLjVhMy41IDMuNSAwIDAgMSA0Ljk1IDAgLjc1MS43NTEgMCAwIDEtLjAxOCAxLjA0Mi43NTEuNzUxIDAgMCAxLTEuMDQyLjAxOCAxLjk5OCAxLjk5OCAwIDAgMC0yLjgzIDBsLTIuNSAyLjVhMS45OTggMS45OTggMCAwIDAgMCAyLjgzWiI&#43;PC9wYXRoPjwvc3ZnPgogIDwvYT4KPC9oMj48cD7or63kuYnliIbmnpDlmagoc2VtYW50aWMgYW5hbHl6ZXIp44CC5L2/55So6K&#43;t5rOV5qCR5ZKM56ym5Y&#43;36KGo5Lit55qE5L&#43;h5oGv5p2l5qOA5p&#43;l5rqQ56iL5bqP5piv5ZCm5ZKM6K&#43;t6KiA5a6a5LmJ55qE6K&#43;t5LmJ5LiA6Ie077yM5ZCM5pe25pS26ZuG57G75Z6L5L&#43;h5oGv77yM5bm25oqK6L&#43;Z5Lqb5L&#43;h5oGv5a2Y5pS&#43;5Yiw6K&#43;t5rOV5qCR5oiW56ym5Y&#43;36KGo5LitPC9wPgo8aHI&#43;CjxoMiBjbGFzcz0iaGVhZGluZy1lbGVtZW50IiBpZD0icDEtaW50cm9kdWN0aW9uIj48c3Bhbj5QMSBJbnRyb2R1Y3Rpb248L3NwYW4&#43;CiAgPGEgaHJlZj0iI3AxLWludHJvZHVjdGlvbiIgY2xhc3M9ImhlYWRpbmctbWFyayI&#43;CiAgICA8c3ZnIGNsYXNzPSJvY3RpY29uIG9jdGljb24tbGluayIgdmlld0JveD0iMCAwIDE2IDE2IiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgYXJpYS1oaWRkZW49InRydWUiPjxwYXRoIGQ9Im03Ljc3NSAzLjI3NSAxLjI1LTEuMjVhMy41IDMuNSAwIDEgMSA0Ljk1IDQuOTVsLTIuNSAyLjVhMy41IDMuNSAwIDAgMS00Ljk1IDAgLjc1MS43NTEgMCAwIDEgLjAxOC0xLjA0Mi43NTEuNzUxIDAgMCAxIDEuMDQyLS4wMTggMS45OTggMS45OTggMCAwIDAgMi44MyAwbDIuNS0yLjVhMi4wMDIgMi4wMDIgMCAwIDAtMi44My0yLjgzbC0xLjI1IDEuMjVhLjc1MS43NTEgMCAwIDEtMS4wNDItLjAxOC43NTEuNzUxIDAgMCAxLS4wMTgtMS4wNDJabS00LjY5IDkuNjRhMS45OTggMS45OTggMCAwIDAgMi44MyAwbDEuMjUtMS4yNWEuNzUxLjc1MSAwIDAgMSAxLjA0Mi4wMTguNzUxLjc1MSAwIDAgMSAuMDE4IDEuMDQybC0xLjI1IDEuMjVhMy41IDMuNSAwIDEgMS00Ljk1LTQuOTVsMi41LTIuNWEzLjUgMy41IDAgMCAxIDQuOTUgMCAuNzUxLjc1MSAwIDAgMS0uMDE4IDEuMDQyLjc1MS43NTEgMCAwIDEtMS4wNDIuMDE4IDEuOTk4IDEuOTk4IDAgMCAwLTIuODMgMGwtMi41IDIuNWExLjk5OCAxLjk5OCAwIDAgMCAwIDIuODNaIj48L3BhdGg&#43;PC9zdmc&#43;CiAgPC9hPgo8L2gyPjxwPmNvbXBpbGVyc&#43;&#43;8mue8luivkeWZqDwvcD4KPHA&#43;SW50ZXJwcmV0ZXJz77ya6Kej6YeK5ZmoPC9wPgo8aDIgY2xhc3M9ImhlYWRpbmctZWxlbWVudCIgaWQ9InAyLXN0cnVjdHVyZS1vZi1hLWNvbXBpbGVyIj48c3Bhbj5QMiBTdHJ1Y3R1cmUgb2YgYSBjb21waWxlcjwvc3Bhbj4KICA8YSBocmVmPSIjcDItc3RydWN0dXJlLW9mLWEtY29tcGlsZXIiIGNsYXNzPSJoZWFkaW5nLW1hcmsiPgogICAgPHN2ZyBjbGFzcz0ib2N0aWNvbiBvY3RpY29uLWxpbmsiIHZpZXdCb3g9IjAgMCAxNiAxNiIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGFyaWEtaGlkZGVuPSJ0cnVlIj48cGF0aCBkPSJtNy43NzUgMy4yNzUgMS4yNS0xLjI1YTMuNSAzLjUgMCAxIDEgNC45NSA0Ljk1bC0yLjUgMi41YTMuNSAzLjUgMCAwIDEtNC45NSAwIC43NTEuNzUxIDAgMCAxIC4wMTgtMS4wNDIuNzUxLjc1MSAwIDAgMSAxLjA0Mi0uMDE4IDEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwyLjUtMi41YTIuMDAyIDIuMDAyIDAgMCAwLTIuODMtMi44M2wtMS4yNSAxLjI1YS43NTEuNzUxIDAgMCAxLTEuMDQyLS4wMTguNzUxLjc1MSAwIDAgMS0uMDE4LTEuMDQyWm0tNC42OSA5LjY0YTEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwxLjI1LTEuMjVhLjc1MS43NTEgMCAwIDEgMS4wNDIuMDE4Ljc1MS43NTEgMCAwIDEgLjAxOCAxLjA0MmwtMS4yNSAxLjI1YTMuNSAzLjUgMCAxIDEtNC45NS00Ljk1bDIuNS0yLjVhMy41IDMuNSAwIDAgMSA0Ljk1IDAgLjc1MS43NTEgMCAwIDEtLjAxOCAxLjA0Mi43NTEuNzUxIDAgMCAxLTEuMDQyLjAxOCAxLjk5OCAxLjk5OCAwIDAgMC0yLjgzIDBsLTIuNSAyLjVhMS45OTggMS45OTggMCAwIDAgMCAyLjgzWiI&#43;PC9wYXRoPjwvc3ZnPgogIDwvYT4KPC9oMj48cD7kupTkuKrpmLbmrrXvvJo8L3A&#43;CjxvbD4KPGxpPmxleGljYWwgYW5hbHlzaXPvvJror43ms5XliIbmnpA8L2xpPgo8bGk&#43;UGFyc2luZ&#43;&#43;8muino&#43;aekDwvbGk&#43;CjxsaT5TZW1hbnRpYyBBbmFseXNpc&#43;&#43;8muivreS5ieWIhuaekDwvbGk&#43;CjxsaT7kvJjljJY8L2xpPgo8bGk&#43;5Luj56CB55Sf5oiQPC9saT4KPC9vbD4KPGgyIGNsYXNzPSJoZWFkaW5nLWVsZW1lbnQiPjxzcGFuPjwvc3Bhbj4KICA8YSBocmVmPSIjIiBjbGFzcz0iaGVhZGluZy1tYXJrIj4KICAgIDxzdmcgY2xhc3M9Im9jdGljb24gb2N0aWNvbi1saW5rIiB2aWV3Qm94PSIwIDAgMTYgMTYiIHZlcnNpb249IjEuMSIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBhcmlhLWhpZGRlbj0idHJ1ZSI&#43;PHBhdGggZD0ibTcuNzc1IDMuMjc1IDEuMjUtMS4yNWEzLjUgMy41IDAgMSAxIDQuOTUgNC45NWwtMi41IDIuNWEzLjUgMy41IDAgMCAxLTQuOTUgMCAuNzUxLjc1MSAwIDAgMSAuMDE4LTEuMDQyLjc1MS43NTEgMCAwIDEgMS4wNDItLjAxOCAxLjk5OCAxLjk5OCAwIDAgMCAyLjgzIDBsMi41LTIuNWEyLjAwMiAyLjAwMiAwIDAgMC0yLjgzLTIuODNsLTEuMjUgMS4yNWEuNzUxLjc1MSAwIDAgMS0xLjA0Mi0uMDE4Ljc1MS43NTEgMCAwIDEtLjAxOC0xLjA0MlptLTQuNjkgOS42NGExLjk5OCAxLjk5OCAwIDAgMCAyLjgzIDBsMS4yNS0xLjI1YS43NTEuNzUxIDAgMCAxIDEuMDQyLjAxOC43NTEuNzUxIDAgMCAxIC4wMTggMS4wNDJsLTEuMjUgMS4yNWEzLjUgMy41IDAgMSAxLTQuOTUtNC45NWwyLjUtMi41YTMuNSAzLjUgMCAwIDEgNC45NSAwIC43NTEuNzUxIDAgMCAxLS4wMTggMS4wNDIuNzUxLjc1MSAwIDAgMS0xLjA0Mi4wMTggMS45OTggMS45OTggMCAwIDAtMi44MyAwbC0yLjUgMi41YTEuOTk4IDEuOTk4IDAgMCAwIDAgMi44M1oiPjwvcGF0aD48L3N2Zz4KICA8L2E&#43;CjwvaDI&#43;</cipher-text>
+  </fixit-encryptor><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2021-12-01 00:00:00">更新于 2021-12-01&nbsp;</span>
+      </div></div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/os/" class="post-tag" title="标签 - OS">OS</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/tcache_stashing_unlink_atack%E8%B0%83%E8%AF%95/" class="post-nav-item" rel="prev" title="Tcache_stashing_unlink_atack调试记录"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Tcache_stashing_unlink_atack调试记录</a><a href="/posts/2021%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" class="post-nav-item" rel="next" title="2021年终总结">2021年终总结<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title encrypted-hidden">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content encrypted-hidden" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#p2编译系统结构">P2编译系统结构</a></li>
+    <li><a href="#p3词法分析概述">P3词法分析概述</a></li>
+    <li><a href="#p4语法分析">P4语法分析</a></li>
+    <li><a href="#p5语义分析">P5语义分析</a></li>
+    <li><a href="#p1-introduction">P1 Introduction</a></li>
+    <li><a href="#p2-structure-of-a-compiler">P2 Structure of a compiler</a></li>
+    <li></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none encrypted-hidden" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/lib/crypto-js/core.min.js" defer></script><script src="/lib/crypto-js/enc-base64.min.js" defer></script><script src="/lib/crypto-js/sha256.min.js" defer></script><script src="/lib/xxhash-wasm/xxhash-wasm.js" defer></script><script src="/js/fixit-decryptor.min.js" defer></script><script src="/js/config/4c04889352e21b9c15de963da760c8ec.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

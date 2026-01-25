@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Uniswap源码分析：（一）环境搭建 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="这系列文章准备详细看看Uniswap的代码，使用的是，Raydium v3 AMM (CLMM) ，Github：
+https://github.com/raydium-io/raydium-clmm
+这是第一篇，主要讲环境搭建和部署的部分。
+环境搭建 rust 安装rust
+"><meta name="keywords" content='量化'>
+  <meta itemprop="name" content="Uniswap源码分析：（一）环境搭建">
+  <meta itemprop="description" content="这系列文章准备详细看看Uniswap的代码，使用的是，Raydium v3 AMM (CLMM) ，Github：
+https://github.com/raydium-io/raydium-clmm
+这是第一篇，主要讲环境搭建和部署的部分。
+环境搭建 rust 安装rust">
+  <meta itemprop="datePublished" content="2025-09-20T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-20T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1324">
+  <meta itemprop="keywords" content="量化"><meta property="og:url" content="http://localhost:1313/posts/202509-clamm/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="Uniswap源码分析：（一）环境搭建">
+  <meta property="og:description" content="这系列文章准备详细看看Uniswap的代码，使用的是，Raydium v3 AMM (CLMM) ，Github：
+https://github.com/raydium-io/raydium-clmm
+这是第一篇，主要讲环境搭建和部署的部分。
+环境搭建 rust 安装rust">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:tag" content="量化">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Uniswap源码分析：（一）环境搭建">
+  <meta name="twitter:description" content="这系列文章准备详细看看Uniswap的代码，使用的是，Raydium v3 AMM (CLMM) ，Github：
+https://github.com/raydium-io/raydium-clmm
+这是第一篇，主要讲环境搭建和部署的部分。
+环境搭建 rust 安装rust">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-clamm/" title="Uniswap源码分析：（一）环境搭建 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-ethpos/" title="以太坊 PoS 共识机制与 Engine API 源码阅读" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswapv2source/" title="UniswapV2源码阅读" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Uniswap源码分析：（一）环境搭建",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-clamm\/"
+    },"genre": "posts","keywords": "量化","wordcount":  1324 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-clamm\/","datePublished": "2025-09-20T00:00:00+00:00","dateModified": "2025-09-20T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Uniswap源码分析：（一）环境搭建</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-20 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-20">2025-09-20</time></span>&nbsp;<span title="1324 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 1400 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 3 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#rust">rust</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>这系列文章准备详细看看Uniswap的代码，使用的是，Raydium v3 AMM (CLMM) ，Github：</p>
+<blockquote>
+<p><a href="https://github.com/raydium-io/raydium-clmm" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/raydium-io/raydium-clmm</a></p>
+</blockquote>
+<p>这是第一篇，主要讲环境搭建和部署的部分。</p>
+<h1 class="heading-element" id="环境搭建"><span>环境搭建</span>
+  <a href="#%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="rust"><span>rust</span>
+  <a href="#rust" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>安装rust</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% curl --proto <span class="s1">&#39;=https&#39;</span> --tlsv1.2 -sSf https://sh.rustup.rs <span class="p">|</span> sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">% rustup --version
+</span></span><span class="line"><span class="cl">rustup 1.28.2 <span class="o">(</span>e4f3ad6f8 2025-04-28<span class="o">)</span>
+</span></span><span class="line"><span class="cl">info: This is the version <span class="k">for</span> the rustup toolchain manager, not the rustc compiler.
+</span></span><span class="line"><span class="cl">info: The currently active <span class="sb">`</span>rustc<span class="sb">`</span> version is <span class="sb">`</span>rustc 1.90.0 <span class="o">(</span>1159e78c4 2025-09-14<span class="o">)</span><span class="sb">`</span></span></span></code></pre></div></div><h1 class="heading-element" id="solana-cli"><span>Solana cli</span>
+  <a href="#solana-cli" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>Solana工具套件（CLI）是与Solana网络交互的核心工具，用于管理钱包、部署程序和发送交易。</p>
+<p>安装solana</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% sh -c <span class="s2">&#34;</span><span class="k">$(</span>curl -sSfL https://release.anza.xyz/v2.1.0/install<span class="k">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">% solana --version
+</span></span><span class="line"><span class="cl">solana-keygen --version
+</span></span><span class="line"><span class="cl">solana-cli 2.1.0 <span class="o">(</span>src:c1080de4<span class="p">;</span> feat:3176011155, client:Agave<span class="o">)</span>
+</span></span><span class="line"><span class="cl">solana-keygen 2.1.0 <span class="o">(</span>src:c1080de4<span class="p">;</span> feat:3176011155, client:Agave<span class="o">)</span>
+</span></span><span class="line"><span class="cl">% solana-keygen new
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">钱包创建：
+</span></span><span class="line"><span class="cl"><span class="sb">```</span>sh
+</span></span><span class="line"><span class="cl">% solana-keygen new
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">pubkey:GdZirEabxgYcvMzvmDDeZYyypWN13D8JPpbztKyrPn8k
+</span></span><span class="line"><span class="cl">...</span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>获取创建钱包的pubkey：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% solana address
+</span></span><span class="line"><span class="cl">GdZirEabxgYcvMzvmDDeZYyypWN13D8JPpbztKyrPn8k</span></span></code></pre></div></div><p>获取账户信息</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">% solana account GdZirEabxgYcvMzvmDDeZYyypWN13D8JPpbztKyrPn8k
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Public Key: GdZirEabxgYcvMzvmDDeZYyypWN13D8JPpbztKyrPn8k
+</span></span><span class="line"><span class="cl">Balance: 500000991.770995677 SOL
+</span></span><span class="line"><span class="cl">Owner: <span class="m">11111111111111111111111111111111</span>
+</span></span><span class="line"><span class="cl">Executable: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">Rent Epoch: <span class="m">18446744073709551615</span></span></span></code></pre></div></div><h1 class="heading-element" id="安装avm"><span>安装avm</span>
+  <a href="#%e5%ae%89%e8%a3%85avm" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>Anchor是Solana上一个流行的智能合约开发框架，它简化了开发、测试和部署流程。AVM用于管理Anchor的版本。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+</span></span><span class="line"><span class="cl">% avm install latest
+</span></span><span class="line"><span class="cl">% avm use latest</span></span></code></pre></div></div><h1 class="heading-element" id="项目配置"><span>项目配置</span>
+  <a href="#%e9%a1%b9%e7%9b%ae%e9%85%8d%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ol>
+<li>克隆 Raydium CLMM 仓库</li>
+</ol>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% git clone https://github.com/raydium-io/raydium-amm-v3</span></span></code></pre></div></div><ol start="2">
+<li>配置 Solana CLI 指向本地网络</li>
+</ol>
+<p>默认情况下，Solana CLI可能连接到主网 (mainnet-beta) 或开发网 (devnet)。为了进行本地开发，必须将其指向本地测试验证器。</p>
+<p>检查RPC URL字段，确认当前连接的网络。：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% solana config get
+</span></span><span class="line"><span class="cl">Config File: /Users/xxx/.config/solana/cli/config.yml
+</span></span><span class="line"><span class="cl">RPC URL: https://api.mainnet-beta.solana.com 
+</span></span><span class="line"><span class="cl">WebSocket URL: wss://api.mainnet-beta.solana.com/ <span class="o">(</span>computed<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Keypair Path: /Users/xxx/.config/solana/id.json 
+</span></span><span class="line"><span class="cl">Commitment: confirmed </span></span></code></pre></div></div><p>如果RPC不是本地网络，切换到本地网络：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% solana config <span class="nb">set</span> --url localhost
+</span></span><span class="line"><span class="cl">Config File: /Users/xxx/.config/solana/cli/config.yml
+</span></span><span class="line"><span class="cl">RPC URL: http://localhost:8899 
+</span></span><span class="line"><span class="cl">WebSocket URL: ws://localhost:8900/ <span class="o">(</span>computed<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Keypair Path: /Users/xxx/.config/solana/id.json 
+</span></span><span class="line"><span class="cl">Commitment: confirmed </span></span></code></pre></div></div><ol start="3">
+<li>修改源代码以适应本地部署</li>
+</ol>
+<p>为了让程序在本地正确运行并指定管理员，需要修改部分源代码。修改<code>programs/amm/src/lib.rs</code>中的代码:</p>
+<ul>
+<li>将条件编译特性<code>#[cfg(feature = &quot;devnet&quot;)]</code>更改为<code>#[cfg(feature = &quot;localnet&quot;)]</code>。</li>
+<li>将<code>admin::ID</code>的值设置为你自己的钱包公钥</li>
+</ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-rust"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">pub</span><span class="w"> </span><span class="k">mod</span> <span class="nn">admin</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="k">super</span>::<span class="p">{</span><span class="n">pubkey</span><span class="p">,</span><span class="w"> </span><span class="n">Pubkey</span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cp">#[cfg(feature = </span><span class="s">&#34;localnet&#34;</span><span class="cp">)]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="no">ID</span>: <span class="nc">Pubkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">pubkey!</span><span class="p">(</span><span class="s">&#34;GdZirEabxgYcvMzvmDDeZYyypWN13D8JPpbztKyrPn8k  &#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cp">#[cfg(not(feature = </span><span class="s">&#34;localnet&#34;</span><span class="cp">))]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="no">ID</span>: <span class="nc">Pubkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">pubkey!</span><span class="p">(</span><span class="s">&#34;GThUX1Atko4tqhN2NaiTazWSeFWMuiUvfFnyJyUghFMJ&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div><h1 class="heading-element" id="构建部署与验证"><span>构建、部署与验证</span>
+  <a href="#%e6%9e%84%e5%bb%ba%e9%83%a8%e7%bd%b2%e4%b8%8e%e9%aa%8c%e8%af%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ol>
+<li>启动本地测试验证器</li>
+</ol>
+<p>这个命令会运行一个完整的、私有的、仅存在于你电脑上的Solana区块链。在后续步骤完成前，请保持此窗口持续运行。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% solana-test-validator
+</span></span><span class="line"><span class="cl">--faucet-sol argument ignored, ledger already exists
+</span></span><span class="line"><span class="cl">Ledger location: test-ledger
+</span></span><span class="line"><span class="cl">Log: test-ledger/validator.log
+</span></span><span class="line"><span class="cl">⠚ Initializing...                                                                                                                                            Waiting <span class="k">for</span> fees to stabilize 1...
+</span></span><span class="line"><span class="cl">Identity: 4D6F6LWa39h2FVVVcNsi64N1uXtg5hvV9wM17dxvKg7Y
+</span></span><span class="line"><span class="cl">Genesis Hash: EGCeD1zgcUPy3EbZcmApnMGR1WszGEjikYeBEt2yjY27
+</span></span><span class="line"><span class="cl">Version: 2.1.0
+</span></span><span class="line"><span class="cl">Shred Version: <span class="m">64650</span>
+</span></span><span class="line"><span class="cl">Gossip Address: 127.0.0.1:1024
+</span></span><span class="line"><span class="cl">TPU Address: 127.0.0.1:1027
+</span></span><span class="line"><span class="cl">JSON RPC URL: http://127.0.0.1:8899
+</span></span><span class="line"><span class="cl">WebSocket PubSub URL: ws://127.0.0.1:8900
+</span></span><span class="line"><span class="cl">⠤ 00:22:23 <span class="p">|</span> Processed Slot: <span class="m">2924</span> <span class="p">|</span> Confirmed Slot: <span class="m">2924</span> <span class="p">|</span> Finalized Slot: <span class="m">2893</span> <span class="p">|</span> Full Snapshot Slot: <span class="m">2801</span> <span class="p">|</span> Incremental Snapshot Slot: - <span class="p">|</span> Transactions: <span class="m">4155</span> <span class="p">|</span> ◎499.98848500</span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><ol start="2">
+<li>编译并同步程序</li>
+</ol>
+<ul>
+<li>编译命令：此命令会将<code>programs/</code>目录下的Rust代码编译成Solana网络可执行的BPF字节码。</li>
+</ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">anchor build</span></span></code></pre></div></div><ul>
+<li>同步密钥：此命令会自动更新源代码中declare_id!宏里的程序ID，确保其与部署时使用的ID一致</li>
+</ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">anchor keys sync</span></span></code></pre></div></div><ol start="3">
+<li>为钱包空投测试币</li>
+</ol>
+<p>向你的默认钱包地址请求1000个测试SOL。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% solana airdrop <span class="m">1000</span>
+</span></span><span class="line"><span class="cl">Requesting airdrop of <span class="m">1000</span> SOL
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Signature: 3HNXJdESA1ndZGK1C28zJVPmEuKohGkZTmiH34ADNcWYgw9w36GdQequuGTuWfAGioD1fb3zzMGorgpSPzkUoujm
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="m">500001000</span> SOL</span></span></code></pre></div></div><ol start="4">
+<li>部署程序</li>
+</ol>
+<p>请确保在Raydium项目的根目录下运行此命令</p>
+<p>目的：将编译好的程序上传到正在运行的本地测试验证器上。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-sh"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">% anchor deploy
+</span></span><span class="line"><span class="cl">Deploying cluster: http://127.0.0.1:8899
+</span></span><span class="line"><span class="cl">Upgrade authority: /Users/xxx/.config/solana/id.json
+</span></span><span class="line"><span class="cl">Deploying program <span class="s2">&#34;raydium_amm_v3&#34;</span>...
+</span></span><span class="line"><span class="cl">Program path: /Volumes/Elements/github/raydium-amm-v3/target/deploy/raydium_amm_v3.so...
+</span></span><span class="line"><span class="cl">Program Id: A1pqTV22oGeNGjyYyYwfy7U9AK5NtCtCwWT9S6HXuaAN
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Signature: 4NGBVPSzwnTtc1sSWgZGa5ASQ54LtYBVWhVCc7g7ghjA6DMQcGQa7qX6zwc5tvotejCu5heNRwdDUtkFNg9MgfhA
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Deploy success</span></span></code></pre></div></div><ol start="5">
+<li>在浏览器中验证部署</li>
+</ol>
+<ul>
+<li>打开 Solscan 或其他Solana浏览器。</li>
+<li>点击Solscan Testnet，然后在Custom RPC输入本地节点地址：http://localhost:8899</li>
+</ul>
+<p>将部署成功后返回的 Program ID 或 Signature 粘贴到搜索框中</p>
+<p>你将能看到刚刚部署交易的详细信息，包括哪个账户发起了部署、消耗了多少费用以及程序ID是什么，从而完成端到端的验证。</p>
+<p><img loading="lazy" src='/posts/202509-clamm/image.png' alt="alt text" height="1217" width="1417"></p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-20 00:00:00">更新于 2025-09-20&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-CLAMM/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-clamm/" data-title="Uniswap源码分析：（一）环境搭建" data-hashtags="量化"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-clamm/" data-hashtag="量化"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-clamm/" data-title="Uniswap源码分析：（一）环境搭建"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E9%87%8F%E5%8C%96/" class="post-tag" title="标签 - 量化">量化</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-ethpos/" class="post-nav-item" rel="prev" title="以太坊 PoS 共识机制与 Engine API 源码阅读"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>以太坊 PoS 共识机制与 Engine API 源码阅读</a><a href="/posts/202509-uniswapv2source/" class="post-nav-item" rel="next" title="UniswapV2源码阅读">UniswapV2源码阅读<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#rust">rust</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/297bb7be8da72f7ece92e54b83a38f77.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

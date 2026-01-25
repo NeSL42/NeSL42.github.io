@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Shade BIOSUnleashing the Full Stealth of UEFI Malware - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="技术深度分析报告：Shade BIOS: Unleashing the Full Stealth of UEFI Malware 1. 摘要与背景设定 (Executive Summary &amp; Stage Setting)
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="Shade BIOSUnleashing the Full Stealth of UEFI Malware">
+  <meta itemprop="description" content="技术深度分析报告：Shade BIOS: Unleashing the Full Stealth of UEFI Malware 1. 摘要与背景设定 (Executive Summary &amp; Stage Setting)">
+  <meta itemprop="datePublished" content="2025-08-17T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-17T00:00:00+00:00">
+  <meta itemprop="wordCount" content="7357">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202508-shadebiods/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="Shade BIOSUnleashing the Full Stealth of UEFI Malware">
+  <meta property="og:description" content="技术深度分析报告：Shade BIOS: Unleashing the Full Stealth of UEFI Malware 1. 摘要与背景设定 (Executive Summary &amp; Stage Setting)">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-17T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Shade BIOSUnleashing the Full Stealth of UEFI Malware">
+  <meta name="twitter:description" content="技术深度分析报告：Shade BIOS: Unleashing the Full Stealth of UEFI Malware 1. 摘要与背景设定 (Executive Summary &amp; Stage Setting)">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202508-shadebiods/" title="Shade BIOSUnleashing the Full Stealth of UEFI Malware - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202508-com/" title="公司融资的各个阶段和对赌协议简单理解" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202508-prompt/" title="自用prompt整理收集" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Shade BIOSUnleashing the Full Stealth of UEFI Malware",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202508-shadebiods\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  7357 ,
+    "url": "http:\/\/localhost:1313\/posts\/202508-shadebiods\/","datePublished": "2025-08-17T00:00:00+00:00","dateModified": "2025-08-17T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Shade BIOSUnleashing the Full Stealth of UEFI Malware</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-08-17 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-08-17">2025-08-17</time></span>&nbsp;<span title="7357 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 7400 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 15 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#技术深度分析报告shade-bios-unleashing-the-full-stealth-of-uefi-malware">技术深度分析报告：Shade BIOS: Unleashing the Full Stealth of UEFI Malware</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 class="heading-element" id="技术深度分析报告shade-bios-unleashing-the-full-stealth-of-uefi-malware"><span>技术深度分析报告：Shade BIOS: Unleashing the Full Stealth of UEFI Malware</span>
+  <a href="#%e6%8a%80%e6%9c%af%e6%b7%b1%e5%ba%a6%e5%88%86%e6%9e%90%e6%8a%a5%e5%91%8ashade-bios-unleashing-the-full-stealth-of-uefi-malware" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>1. 摘要与背景设定 (Executive Summary &amp; Stage Setting)</strong></p>
+<ul>
+<li>
+<p><strong>1.1 演讲元数据 (Talk Metadata):</strong></p>
+<ul>
+<li>会议/活动 (Conference): Black Hat Briefings</li>
+<li>演讲标题 (Title): Shade BIOS: Unleashing the Full Stealth of UEFI Malware</li>
+<li>主讲人 (Presenter(s)): Kazuki Matsuo (@InfPCTechStack)</li>
+<li>年份/日期 (Year/Date): 2025/08/06</li>
+</ul>
+</li>
+<li>
+<p><strong>1.2 技术执行摘要 (Technical Executive Summary):</strong>
+本次Black Hat演讲揭示了一种名为“Shade BIOS”的颠覆性技术，它彻底重塑了UEFI恶意软件的隐蔽性和通用性。长期以来，UEFI恶意软件虽拥有极高的特权等级，却始终受困于对操作系统（OS）和特定硬件的依赖，这使其在实际攻击中容易被检测，且难以广泛部署。Shade BIOS的核心突破在于，它成功地在操作系统启动后，仍然在内存中保留并激活完整的BIOS环境，使其能够独立于OS执行任意代码，并利用UEFI驱动程序与硬件进行交互。</p>
+<p>这项创新使得恶意软件首次实现了真正的“纯BIOS”运行，不仅能够完全规避操作系统层面的安全机制（如EDR/AV），还极大地降低了对特定硬件的依赖，实现了前所未有的设备无关性。Shade BIOS的出现，标志着UEFI恶意软件进入了一个全新的隐蔽时代，对当前的安全防御体系提出了严峻挑战，迫使业界重新思考和部署针对底层固件的检测与防御策略。</p>
+</li>
+<li>
+<p><strong>1.3 故事的开端：挑战与动机 (The Story Begins: The Challenge &amp; Motivation):</strong>
+在当今高度互联的数字世界中，UEFI（统一可扩展固件接口）的安全已成为国家安全和云安全领域不可忽视的基石。正如<strong>图3</strong>所示，BIOS作为计算机启动的第一道防线，其供应链涉及众多厂商，远比操作系统、虚拟机管理器（VMM）或CPU更为复杂。历史事件，如Vault 7和vector-edk等泄露的文档和工具包，都清晰地证实了UEFI安全在情报和攻击领域的重要性，它被视为安装持久性后门和实现云环境虚拟机全面控制的理想场所。</p>
+<p>然而，尽管UEFI拥有至高无上的权限，现有的UEFI恶意软件却面临着一系列固有的局限性。无论是野外发现的UEFI引导套件（如Lojax-BlackLotus），还是泄露的BIOS/UEFI后门（如Jetplow、vector-edk），它们的核心问题在于其恶意行为最终仍需在用户态或内核态执行，这意味着它们本质上并非“纯BIOS”恶意软件。<strong>图4</strong>和<strong>图5</strong>详细阐述了这种对操作系统层级安全的依赖性：这些恶意软件需要通过模式匹配等方式禁用DSE（驱动签名强制）或Patch Guard等OS安全机制，一旦OS更新或模式改变，它们就可能失效并被检测。攻击者渴望摆脱这种束缚，实现“我们不想关心操作系统！”的终极目标，正如<strong>图6</strong>所提出的疑问：“为什么不完全使用BIOS来实现所有功能？”</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image.png' alt="图 3" height="699" width="1245">
+<img loading="lazy" src='/posts/202508-shadebiods/image-1.png' alt="图 4" height="696" width="1245">
+<img loading="lazy" src='/posts/202508-shadebiods/image-2.png' alt="图 5" height="692" width="1259">
+<img loading="lazy" src='/posts/202508-shadebiods/image-3.png' alt="图 6" height="698" width="1258"></p>
+<p>除了操作系统依赖，现有UEFI恶意软件还普遍存在硬件依赖性。<strong>图8</strong>展示了诸如DEITYBOUNCE、DerStarke等泄露的BIOS后门，它们往往针对非常特定的硬件平台，需要设备特定的实现。即使是研究领域中一些纯SMM（系统管理模式）后门，如<strong>图9</strong>所示的USB键盘记录器，也需要直接读写USB主机控制器寄存器，这意味着攻击者必须深入理解特定设备的硬件规范。这种设备依赖性极大地限制了恶意软件的通用性和部署范围。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-4.png' alt="图 8" height="710" width="1250">
+<img loading="lazy" src='/posts/202508-shadebiods/image-5.png' alt="图 9" height="705" width="1255"></p>
+<p>更具挑战性的是，BIOS环境在操作系统启动后大部分会被销毁，如<strong>图7</strong>所示，引导服务（Boot Services）和协议（Protocols）等接口将不可用，使得设备访问和与C2服务器通信变得异常困难。直接进行I/O操作需要实现完整的驱动栈，这不仅复杂，而且同样导致设备依赖。这种“BIOS无所不能”的说法，在实际操作中却陷入了<strong>图10</strong>所描绘的困境：恶意代码在BIOS层级实现难度高，且易受OS和硬件依赖的制约，这严重压制了BIOS恶意软件的潜力。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-6.png' alt="图 7" height="713" width="1248">
+<img loading="lazy" src='/posts/202508-shadebiods/image-7.png' alt="图 10" height="702" width="1259"></p>
+<p>此外，最新的SMM隔离技术（ISRD &amp; ISSR），如<strong>图11</strong>所示，进一步限制了SMM后门的有效性，非Intel模块的SMM访问受到严格限制，OS内存区域和SMM页表变得不可访问，I/O访问也受到限制。这使得攻击者的目光转向了运行时DXE模块，<strong>图12</strong>指出，运行时DXE模块在SMM隔离生效后，反而比SMM模块更具优势，因为它能够访问OS内存和所有I/O。面对这些挑战，研究者提出了一个大胆的设想：能否让一个“攻击者专属的迷你OS”——BIOS，在主操作系统启动后，仍然静默地并行运行？这正是Shade BIOS所要挑战的“巨龙”。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-8.png' alt="图 11" height="709" width="1258">
+<img loading="lazy" src='/posts/202508-shadebiods/image-9.png' alt="图 12" height="710" width="1256"></p>
+</li>
+</ul>
+<p><strong>2. 核心技术探索之旅 (The Core Technical Journey)</strong></p>
+<p>面对上述困境，研究者提出了一个大胆的设想：在操作系统启动后，仍能让BIOS环境及其功能在内存中持续运作，从而实现一个完全独立于OS、且具备通用硬件交互能力的“迷你BIOS操作系统”。这趟旅程并非一帆风顺，首先摆在他们面前的就是如何“保留BIOS在内存中”的核心挑战。在常规的系统流程中，UEFI的DxeCore模块管理着实际的内存映射，<strong>图15</strong>清晰地展示了这一过程：操作系统加载器通过调用<code>gBS-&gt;GetMemoryMap()</code>获取内存映射副本，并根据其中的<code>EFI_MEMORY_TYPE</code>来决定哪些区域可用。遗憾的是，BIOS代码和数据所在的<code>EfiBootServicesCode/Data</code>区域在<code>gBS-&gt;ExitBootServices()</code>调用后，通常会被操作系统覆盖或释放，使得它们的持续存在成为一个障碍。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-10.png' alt="图 15" height="708" width="1256"></p>
+<p>为了绕过这堵高墙，研究团队的突破口在于一个精妙的观察：虽然实际内存映射由DxeCore管理，但操作系统加载器所依赖的只是<code>gBS-&gt;GetMemoryMap()</code>返回的内存映射“副本”。基于此，他们设计了一种前所未有的技术方案。通过Hook（钩取）<code>gBS-&gt;GetMemoryMap()</code>函数，Shade BIOS能够在返回给OS加载器之前，修改这个内存映射副本。具体而言，它将原本属于<code>BootServices</code>类型的内存区域（如<code>EfiBootServicesCode</code>和<code>EfiBootServicesData</code>）重新分类为<code>RuntimeServices</code>类型，如<strong>图16</strong>所示。这种“魔法”所在：当OS加载器请求内存映射时，它会收到一个被篡改的副本，其中BIOS代码所在的区域被标记为运行时服务，从而欺骗OS认为这些区域是运行时可用的，并避免对其进行覆盖或释放。这种方法的高明之处在于，它并未修改DxeCore中实际的内存映射，因此不会影响BIOS自身的内存管理逻辑，同时又成功地让BIOS在操作系统启动后得以“幸存”。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-11.png' alt="图 16" height="707" width="1251"></p>
+<p>解决了生存问题后，新的挑战接踵而至——如何让这些被保留的BIOS代码在运行时正常工作？这涉及到一系列复杂的内存管理、虚拟化、资源和设备控制问题，正如<strong>图17</strong>所列举的。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-12.png' alt="图 17" height="709" width="1256"></p>
+<p>首先是<strong>运行时内存管理</strong>。BIOS自身的内存分配器（如<code>gBS-&gt;AllocatePages()</code>）在运行时会认为所有OS内存区域都是空闲的，并可能从中分配内存，这与OS的内存使用发生冲突，<strong>图18</strong>就很好地说明了这种潜在的冲突。为了解决这一问题，Shade BIOS采取了一种巧妙的策略：它在<code>EfiConventionalMemory</code>中预留出部分区域专供BIOS使用。具体做法是，在Hook <code>gBS-&gt;GetMemoryMap()</code>时，除了将<code>BootServices</code>类型改为<code>RuntimeServices</code>外，还会将这些预留的<code>EfiConventionalMemory</code>区域也标记为<code>RuntimeServicesCode/Data</code>。同时，它会从BIOS自身维护的实际内存映射（<code>gMemoryMap</code>）中“解链”那些将被OS使用的<code>EfiConventionalMemory</code>区域，如<strong>图19</strong>所示，但会保留那些被标记为<code>RuntimeServicesCode/Data</code>的预留区域。这样，OS会避开这些被标记的区域，而BIOS的内存分配器也只会从这些被保留的、未被OS占用的<code>EfiConventionalMemory</code>中进行分配，从而避免了冲突。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-13.png' alt="图 18" height="711" width="1254">
+<img loading="lazy" src='/posts/202508-shadebiods/image-14.png' alt="图 19" height="709" width="1257"></p>
+<p>其次是<strong>虚拟化内存</strong>的挑战。非运行时BIOS代码通常假定它们在物理地址上执行，并可能包含硬编码的物理地址或全局指针。虽然不能简单地创建一个身份页表并将其设置为CR3（因为当前指令在虚拟地址上执行），但Shade BIOS借鉴了“部分身份映射”的思想。<strong>图20</strong>解释了这一策略：运行时DXE驱动程序通常使用高规范虚拟地址，不需要修改PML4[0]；而身份分页仅需操作PML4[0]。因此，Shade BIOS的运行时DXE驱动程序在正常情况下运行在虚拟地址空间，只有在访问物理地址时，才临时切换当前页表中的PML4[0]到身份映射，从而实现对物理地址的访问，兼顾了兼容性和效率。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-15.png' alt="图 20" height="703" width="1256"></p>
+<p>再者是<strong>引导时资源</strong>的持久化问题。在操作系统启动后，许多UEFI引导时才存在的资源，如<code>EFI SYSTEM TABLES</code>和<code>EFI BOOT SERVICES</code>，会被释放或变得不可用；同时，许多UEFI变量缺乏运行时（RT）属性，导致在OS启动后无法读写。<strong>图21</strong>展示了解决方案：Shade BIOS在引导时复制这些关键的表和变量，并在运行时恢复它们。对于缺乏RT属性的UEFI变量，它Hook了<code>gRT-&gt;SetVariable()</code>函数，在写入新变量时为其添加RT属性，并将其保存到新的变量中，确保了这些变量在运行时仍可被正确访问和修改。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-16.png' alt="图 21" height="709" width="1260"></p>
+<p>接下来是<strong>设备设置</strong>的控制。在操作系统启动后，OS的设备驱动程序会重新初始化设备，并覆盖掉BIOS在引导时设置的寄存器，如USB主机控制器中存储命令环地址的CRC寄存器，<strong>图22</strong>清晰地描绘了这一冲突。为了在不了解具体设备寄存器细节的情况下夺取设备控制权，Shade BIOS巧妙地利用了UEFI驱动模型。<strong>图23</strong>展示了UEFI驱动程序如何通过<code>gBS-&gt;ConnectController()</code>和<code>gBS-&gt;DisconnectController()</code>函数来初始化和重置设备，并安装相应的协议栈（如HTTP协议、网络协议）。Shade BIOS正是利用了这一通用接口，实现了设备无关的控制劫持。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-17.png' alt="图 22" height="704" width="1256">
+<img loading="lazy" src='/posts/202508-shadebiods/image-18.png' alt="图 23" height="709" width="1259"></p>
+<p><strong>图24</strong>详细拆解了劫持设备控制的两个关键步骤：首先，调用<code>gBS-&gt;DisconnectController()</code>来重置设备，这将断开OS对设备的控制；接着，调用<code>gBS-&gt;ConnectController()</code>来重新初始化设备，并为BIOS安装所需的协议栈（例如，网络驱动）。通过这种方式，Shade BIOS能够无缝地从OS手中接管设备控制权，而无需编写设备特定的代码。当然，在恶意行为完成后，还需要将设备控制权返还给OS。<strong>图25</strong>指出，幸运的是，OS驱动程序通常具备自修复能力，例如网卡连接在短暂中断后会自动恢复。然而，手动恢复MMIO空间（内存映射I/O）中的所有寄存器设置是极其困难的，因为某些寄存器触发的是设备动作而非仅仅存储数据，并且这会重新引入设备依赖性。因此，如何优雅地解决“设备控制返回问题”是Shade BIOS面临的一个关键挑战。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-19.png' alt="图 24" height="709" width="1259">
+<img loading="lazy" src='/posts/202508-shadebiods/image-20.png' alt="图 25" height="710" width="1262"></p>
+<p>最后，也是至关重要的一点是<strong>独占控制</strong>。由于Shade BIOS会修改页表和设备设置，它必须确保在执行BIOS代码时，操作系统代码被完全排除在外。这意味着需要有效地抑制中断。<strong>图26</strong>解释道，传统的<code>CLI/STI</code>（清除/设置中断标志）指令并不可靠，因为BIOS代码中可能存在大量的<code>STI</code>指令会重新启用中断。因此，Shade BIOS选择了一种更强硬的手段：通过将<code>CR8</code>（任务优先级寄存器）设置为最大值<code>0xF</code>，从而阻塞所有外部中断，为BIOS代码的执行创造一个纯净的、不受干扰的环境。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-21.png' alt="图 26" height="708" width="1260"></p>
+<p>然而，BIOS自身也需要中断，特别是定时器中断（用于<code>gBS-&gt;SetTimer()</code>注册的定时器事件）。虽然许多UEFI驱动程序依赖轮询机制，并且在没有实际中断的情况下也能正常工作，但Shade BIOS依然能够通过迭代定时器事件列表，并手动触发它们的<code>NotifyFunction</code>来模拟中断，如<strong>图27</strong>所示。这意味着Shade BIOS可以利用OS的IDT（中断描述符表）来模拟定时器事件，从而在不依赖真实中断的情况下，维持BIOS功能的正常运行。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-22.png' alt="图 27" height="706" width="1256"></p>
+<p><strong>图28</strong>总结了Shade BIOS实现OS与硬件独立性的关键步骤：通过Hook <code>gBS-&gt;GetMemoryMap()</code>来保留BIOS，并通过一系列精巧的内存管理（预留<code>EfiConventionalMemory</code>）、虚拟化（部分身份映射）、资源持久化（复制引导时资源）、设备劫持（<code>Disconnect/ConnectController</code>）和独占控制（阻塞中断、模拟定时器事件）技术，使得保留的BIOS代码在运行时能够正常且隐蔽地工作。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-23.png' alt="图 28" height="709" width="1263"></p>
+<p><strong>3. 成果、影响与对策 (Outcomes, Impact &amp; Countermeasures)</strong></p>
+<ul>
+<li>
+<p><strong>3.1 技术成果的展现 (Showcasing the Outcome):</strong>
+Shade BIOS的最终成果是一套能够实现真正OS独立和设备无关的UEFI恶意软件框架。<strong>图29</strong>清晰地对比了现有UEFI恶意软件与Shade BIOS的差异：传统恶意软件在Ring 3或Ring 0与OS进行交互时（如<code>NtCreateFile</code>），会触发OS层面的检测（如ETW日志）或EDR/AV过滤驱动的拦截。而Shade BIOS则通过直接利用被保留的UEFI驱动（例如<code>FileProtocol-&gt;Open</code>），完全绕过了这些OS层面的安全机制，使得C2通信和文件访问等恶意行为对OS和安全产品而言是完全不可见的，实现了“无风险”的隐蔽性。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-24.png' alt="图 29" height="701" width="1254"></p>
+<p>更令人印象深刻的是其设备独立性。<strong>图30</strong>展示了Shade BIOS的核心代码，它通过<code>gBS-&gt;ConnectController</code>和<code>gBS-&gt;DisconnectController</code>等通用UEFI服务来控制网络接口卡（NIC），而无需直接访问I/O寄存器或编写设备特定代码。这意味着同一段恶意代码可以在不同厂商、不同型号的笔记本电脑上运行，例如图中所示的EPSON Endeavor笔记本，实现了极高的通用性。<strong>图31</strong>和<strong>图36</strong>的演示截图直观地展示了这一成果：一台受害者机器在运行Shade BIOS后，能够与C2服务器建立连接并进行数据传输，而C2服务器端则显示成功监听并接收数据，整个过程在OS层面无迹可寻。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-25.png' alt="图 30" height="699" width="1258">
+<img loading="lazy" src='/posts/202508-shadebiods/image-26.png' alt="图 31" height="707" width="1253">
+<img loading="lazy" src='/posts/202508-shadebiods/image-27.png' alt="图 36" height="699" width="1252"></p>
+</li>
+<li>
+<p><strong>3.2 现实世界的影响 (Real-World Implications):</strong>
+Shade BIOS的出现，深刻地改变了我们对UEFI恶意软件威胁的认知。它暴露了当前安全防御体系的根本性盲区：长期以来，安全产品主要聚焦于操作系统内部的检测和行为分析，而Shade BIOS则证明了恶意行为可以完全在OS的“眼皮底下”进行，使得这些被认为是安全的假设失效。它对开发者、运维人员和安全从业者发出了严峻警示：仅仅加固OS层面的安全已远远不够，对底层固件的威胁感知和防御能力亟待提升。</p>
+<p>尽管Shade BIOS在实现完全独立性方面仍有一个微小的限制——它仍需要调用Windows内核的<code>nt!MmGetVirtualForPhysical()</code>函数来获取页表的虚拟地址，但<strong>图32</strong>指出，BIOS可以通过复制和修补这段汇编代码来绕过OS的拒绝，从而消除这一依赖性。此外，<strong>图33</strong>强调，Shade BIOS通过隔离恶意行为中最可疑的部分（如内存属性修改、网络数据拦截），使得仅仅读取内存内容本身并不会触发OS层面的检测，进一步增强了其隐蔽性。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-28.png' alt="图 32" height="708" width="1259">
+<img loading="lazy" src='/posts/202508-shadebiods/image-29.png' alt="图 33" height="701" width="1251"></p>
+</li>
+<li>
+<p><strong>3.3 防御者的行动指南 (An Actionable Playbook for Defenders):</strong>
+面对Shade BIOS这类纯BIOS恶意软件，传统的OS或AV/EDR产品几乎无法观察到其恶意行为，C2通信和文件访问等操作完全在OS的视野之外。因此，防御者必须转向更深层次的“预防性检查”和“内存取证”方法，正如<strong>图34</strong>所强调的。</p>
+<p>首先，最佳检测方法是<strong>内存取证</strong>。Shade BIOS作为运行时DXE驱动程序，会被映射到高规范地址空间。防御者可以从内核层面（例如使用类似<code>kraft dinner</code>的工具）将其内存映像Dump下来，然后进行静态分析。由于运行时服务和代码量相对较小，分析工作并非不可行。</p>
+<p>其次，需要警惕Shade BIOS可能带来的<strong>副作用</strong>。在Shade BIOS执行恶意行为后，被使用的设备可能会短暂冻结，直到OS驱动程序进行自修复。因此，频繁的设备错误或异常行为可能是Shade BIOS存在的迹象。然而，执行频率取决于攻击者的需求，这使得基于副作用的检测更具挑战性。</p>
+<p>对于更广泛的纯BIOS恶意软件，<strong>图35</strong>提供了更全面的检测指南：</p>
+<ul>
+<li><strong>针对SMM模块实现的恶意软件：</strong> 检查SMM隔离是否启用。如果已启用，通过Windows的“系统信息”检查PPAM报告的SMM隔离级别。如果未启用，则需要分析SPI闪存并逆向工程所有UEFI模块。</li>
+<li><strong>针对运行时DXE模块实现的恶意软件：</strong> 从高规范地址转储运行时DXE模块，并应用内存取证技术来识别异常。</li>
+</ul>
+<p>这些检查对于通过政府采购获得的系统尤为关键，因为这些系统可能面临更高风险的供应链攻击。演讲者也呼吁，目前BIOS安全研究仍然不足，需要探索更多的攻击和防御方法。</p>
+<p><img loading="lazy" src='/posts/202508-shadebiods/image-30.png' alt="图 34" height="704" width="1248">
+<img loading="lazy" src='/posts/202508-shadebiods/image-31.png' alt="图 35" height="703" width="1252"></p>
+</li>
+</ul>
+<p><strong>4. 总结与展望 (Conclusion &amp; The Road Ahead)</strong></p>
+<ul>
+<li>
+<p><strong>4.1 核心洞见 (Core Insights):</strong></p>
+<ul>
+<li>现有UEFI恶意软件受限于对操作系统和特定硬件的依赖，易于被检测。</li>
+<li>Shade BIOS成功突破了这些限制，实现了真正的OS独立和低硬件依赖的UEFI恶意软件。</li>
+<li>传统OS层面的安全防御机制对Shade BIOS无效，无法观察到其恶意行为。</li>
+<li>BIOS确实可以被改造为一个在操作系统启动后静默运行的“迷你OS”，这颠覆了传统安全边界。</li>
+<li>预防性检查和内存取证是检测纯BIOS恶意软件的唯一有效途径。</li>
+</ul>
+</li>
+<li>
+<p><strong>4.2 未来的探索方向 (Future Avenues of Exploration):</strong>
+Shade BIOS的成功仅仅是冰山一角，未来的研究方向广阔且充满挑战。为了进一步提升Shade BIOS的成熟度和能力，可以探索以下几个方面：</p>
+<ul>
+<li><strong>加速OS设备设置的修复或探索替代策略：</strong> 优化设备控制权的交还机制，减少或消除对OS自修复的依赖，提升隐蔽性和稳定性。</li>
+<li><strong>扩展硬件支持并测试多样化的BIOS实现：</strong> 确保Shade BIOS能在更广泛的硬件平台和不同的BIOS固件上稳定运行。</li>
+<li><strong>支持不遵循UEFI驱动模型规范的UEFI驱动：</strong> 提升兼容性，使其能够利用更多非标准化的底层驱动。</li>
+<li><strong>启用更多额外的UEFI功能：</strong> 进一步丰富Shade BIOS作为“迷你OS”的能力，使其能够执行更复杂的恶意任务。</li>
+<li><strong>深入研究绕过SMM隔离的SMM后门：</strong> 尽管SMM隔离技术日益成熟，但SMM（Ring 0）后门仍可能提供比运行时DXE模块更深层次的隐蔽性。未来的工作应着重调查如何绕过SMM隔离，并开发相应的检测技术。</li>
+</ul>
+<p>正如演讲所强调的，这项工作“就像是制造一个小型操作系统”，它为未来的底层固件安全研究指明了方向，也预示着一场更为深远的攻防对抗即将展开。</p>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-08-17 00:00:00">更新于 2025-08-17&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202508-ShadeBIODS/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202508-shadebiods/" data-title="Shade BIOSUnleashing the Full Stealth of UEFI Malware" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202508-shadebiods/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202508-shadebiods/" data-title="Shade BIOSUnleashing the Full Stealth of UEFI Malware"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202508-com/" class="post-nav-item" rel="prev" title="公司融资的各个阶段和对赌协议简单理解"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>公司融资的各个阶段和对赌协议简单理解</a><a href="/posts/202508-prompt/" class="post-nav-item" rel="next" title="自用prompt整理收集">自用prompt整理收集<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#技术深度分析报告shade-bios-unleashing-the-full-stealth-of-uefi-malware">技术深度分析报告：Shade BIOS: Unleashing the Full Stealth of UEFI Malware</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/6c071fa42769a87368bc351260b15532.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

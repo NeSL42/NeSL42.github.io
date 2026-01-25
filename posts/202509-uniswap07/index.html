@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>07.Uniswap V2 TWAP - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="Uniswap V2 的时间加权平均价格 (TWAP) 学习笔记 核心摘要 (Key Takeaways) Spot Price (瞬时价格) 的高风险: 直接用储备量相除得出的瞬时价格（Spot Price）非常容易受到闪电贷等方式的操控，不适合在实际应用中作为可靠的价格预言机。 TWAP 的核心思想: TWAP (Time-Weighted Average Price) 通过将每个价格与其持续的时间进行加权平均，提供了一个更能抵抗市场瞬时操纵、反映真实市场价格的指标。 TWAP 的数学原理: 其本质是计算“价格-时间”图下的面积（价格与持续时间的乘积累加），再除以总时间长度，从而得到该时间段内的平均价格。 Uniswap V2 的高效实现: 为了避免在链上存储大量历史价格数据和进行高成本的循环计算，Uniswap V2 巧妙地只维护一个累积价格变量 (Price Cumulative)。通过在两个不同时间点读取这个累积值并做差，可以高效地计算出任意时间区间的 TWAP。 为什么需要 TWAP？—— Spot Price 的局限性 Spot Price (瞬时价格) 的定义 Spot Price 是指在特定时刻，交易池中两种代币储备量的比率。它反映了当前瞬间的兑换价格。
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="07.Uniswap V2 TWAP">
+  <meta itemprop="description" content="Uniswap V2 的时间加权平均价格 (TWAP) 学习笔记 核心摘要 (Key Takeaways) Spot Price (瞬时价格) 的高风险: 直接用储备量相除得出的瞬时价格（Spot Price）非常容易受到闪电贷等方式的操控，不适合在实际应用中作为可靠的价格预言机。 TWAP 的核心思想: TWAP (Time-Weighted Average Price) 通过将每个价格与其持续的时间进行加权平均，提供了一个更能抵抗市场瞬时操纵、反映真实市场价格的指标。 TWAP 的数学原理: 其本质是计算“价格-时间”图下的面积（价格与持续时间的乘积累加），再除以总时间长度，从而得到该时间段内的平均价格。 Uniswap V2 的高效实现: 为了避免在链上存储大量历史价格数据和进行高成本的循环计算，Uniswap V2 巧妙地只维护一个累积价格变量 (Price Cumulative)。通过在两个不同时间点读取这个累积值并做差，可以高效地计算出任意时间区间的 TWAP。 为什么需要 TWAP？—— Spot Price 的局限性 Spot Price (瞬时价格) 的定义 Spot Price 是指在特定时刻，交易池中两种代币储备量的比率。它反映了当前瞬间的兑换价格。">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="3410">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap07/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="07.Uniswap V2 TWAP">
+  <meta property="og:description" content="Uniswap V2 的时间加权平均价格 (TWAP) 学习笔记 核心摘要 (Key Takeaways) Spot Price (瞬时价格) 的高风险: 直接用储备量相除得出的瞬时价格（Spot Price）非常容易受到闪电贷等方式的操控，不适合在实际应用中作为可靠的价格预言机。 TWAP 的核心思想: TWAP (Time-Weighted Average Price) 通过将每个价格与其持续的时间进行加权平均，提供了一个更能抵抗市场瞬时操纵、反映真实市场价格的指标。 TWAP 的数学原理: 其本质是计算“价格-时间”图下的面积（价格与持续时间的乘积累加），再除以总时间长度，从而得到该时间段内的平均价格。 Uniswap V2 的高效实现: 为了避免在链上存储大量历史价格数据和进行高成本的循环计算，Uniswap V2 巧妙地只维护一个累积价格变量 (Price Cumulative)。通过在两个不同时间点读取这个累积值并做差，可以高效地计算出任意时间区间的 TWAP。 为什么需要 TWAP？—— Spot Price 的局限性 Spot Price (瞬时价格) 的定义 Spot Price 是指在特定时刻，交易池中两种代币储备量的比率。它反映了当前瞬间的兑换价格。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="07.Uniswap V2 TWAP">
+  <meta name="twitter:description" content="Uniswap V2 的时间加权平均价格 (TWAP) 学习笔记 核心摘要 (Key Takeaways) Spot Price (瞬时价格) 的高风险: 直接用储备量相除得出的瞬时价格（Spot Price）非常容易受到闪电贷等方式的操控，不适合在实际应用中作为可靠的价格预言机。 TWAP 的核心思想: TWAP (Time-Weighted Average Price) 通过将每个价格与其持续的时间进行加权平均，提供了一个更能抵抗市场瞬时操纵、反映真实市场价格的指标。 TWAP 的数学原理: 其本质是计算“价格-时间”图下的面积（价格与持续时间的乘积累加），再除以总时间长度，从而得到该时间段内的平均价格。 Uniswap V2 的高效实现: 为了避免在链上存储大量历史价格数据和进行高成本的循环计算，Uniswap V2 巧妙地只维护一个累积价格变量 (Price Cumulative)。通过在两个不同时间点读取这个累积值并做差，可以高效地计算出任意时间区间的 TWAP。 为什么需要 TWAP？—— Spot Price 的局限性 Spot Price (瞬时价格) 的定义 Spot Price 是指在特定时刻，交易池中两种代币储备量的比率。它反映了当前瞬间的兑换价格。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap07/" title="07.Uniswap V2 TWAP - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap08/" title="08.Uniswap V3简介" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap06/" title="06.Uniswap V2 闪电贷" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "07.Uniswap V2 TWAP",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap07\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  3410 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap07\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>07.Uniswap V2 TWAP</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="3410 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3500 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 7 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#uniswap-v2-的时间加权平均价格-twap-学习笔记">Uniswap V2 的时间加权平均价格 (TWAP) 学习笔记</a>
+          <ul>
+            <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#为什么需要-twap-spot-price-的局限性">为什么需要 TWAP？—— Spot Price 的局限性</a>
+          <ul>
+            <li><a href="#spot-price-瞬时价格-的定义">Spot Price (瞬时价格) 的定义</a></li>
+            <li><a href="#spot-price-的风险易于被操控">Spot Price 的风险：易于被操控</a></li>
+          </ul>
+        </li>
+        <li><a href="#twap-时间加权平均价格-的核心原理">TWAP (时间加权平均价格) 的核心原理</a>
+          <ul>
+            <li><a href="#基本概念与数学推导">基本概念与数学推导</a></li>
+            <li><a href="#计算任意时间区间的-twap">计算任意时间区间的 TWAP</a></li>
+          </ul>
+        </li>
+        <li><a href="#uniswap-v2-中的-twap-高效实现">Uniswap V2 中的 TWAP 高效实现</a>
+          <ul>
+            <li><a href="#链上实现的挑战">链上实现的挑战</a></li>
+            <li><a href="#巧妙的解决方案累积价格变量-price-cumulative">巧妙的解决方案：累积价格变量 (Price Cumulative)</a></li>
+          </ul>
+        </li>
+        <li><a href="#twap-计算实例一步步拆解">TWAP 计算实例：一步步拆解</a>
+          <ul>
+            <li><a href="#计算流程的可视化">计算流程的可视化</a></li>
+            <li><a href="#流程解释">流程解释</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 class="heading-element" id="uniswap-v2-的时间加权平均价格-twap-学习笔记"><span>Uniswap V2 的时间加权平均价格 (TWAP) 学习笔记</span>
+  <a href="#uniswap-v2-%e7%9a%84%e6%97%b6%e9%97%b4%e5%8a%a0%e6%9d%83%e5%b9%b3%e5%9d%87%e4%bb%b7%e6%a0%bc-twap-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>Spot Price (瞬时价格) 的高风险</strong>: 直接用储备量相除得出的瞬时价格（Spot Price）非常容易受到闪电贷等方式的操控，不适合在实际应用中作为可靠的价格预言机。</li>
+<li><strong>TWAP 的核心思想</strong>: TWAP (Time-Weighted Average Price) 通过将每个价格与其持续的时间进行加权平均，提供了一个更能抵抗市场瞬时操纵、反映真实市场价格的指标。</li>
+<li><strong>TWAP 的数学原理</strong>: 其本质是计算“价格-时间”图下的面积（价格与持续时间的乘积累加），再除以总时间长度，从而得到该时间段内的平均价格。</li>
+<li><strong>Uniswap V2 的高效实现</strong>: 为了避免在链上存储大量历史价格数据和进行高成本的循环计算，Uniswap V2 巧妙地只维护一个<strong>累积价格变量 (Price Cumulative)</strong>。通过在两个不同时间点读取这个累积值并做差，可以高效地计算出任意时间区间的 TWAP。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="为什么需要-twap-spot-price-的局限性"><span>为什么需要 TWAP？—— Spot Price 的局限性</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81-twap-spot-price-%e7%9a%84%e5%b1%80%e9%99%90%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="spot-price-瞬时价格-的定义"><span>Spot Price (瞬时价格) 的定义</span>
+  <a href="#spot-price-%e7%9e%ac%e6%97%b6%e4%bb%b7%e6%a0%bc-%e7%9a%84%e5%ae%9a%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>Spot Price</strong> 是指在特定时刻，交易池中两种代币储备量的比率。它反映了当前瞬间的兑换价格。</p>
+<ul>
+<li><strong>计算方式</strong>: 对于一个拥有 Token X 和 Token Y 的交易池，其瞬时价格可以表示为 $Y/X$。</li>
+<li><strong>获取方式</strong>: 在 Uniswap V2 合约中，可以直接查询 <code>reserve0</code> 和 <code>reserve1</code> 这两个状态变量来计算出当前的 Spot Price。</li>
+<li><strong>例子</strong>: 一个池子中有 1 个 ETH 和 1000 个 DAI，那么 ETH 的瞬时价格就是 1000 DAI / 1 ETH，即每个 ETH 价值 1000 DAI。</li>
+</ul>
+<h4 class="heading-element" id="spot-price-的风险易于被操控"><span>Spot Price 的风险：易于被操控</span>
+  <a href="#spot-price-%e7%9a%84%e9%a3%8e%e9%99%a9%e6%98%93%e4%ba%8e%e8%a2%ab%e6%93%8d%e6%8e%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在实际的 DeFi 应用中，直接使用 Spot Price 是非常危险的，因为它极易被恶意用户在单个交易（或区块）内操控。</p>
+<ul>
+<li><strong>操控原理</strong>: 攻击者可以在一笔交易中，通过闪电贷等方式借入大量的一种代币，与交易池进行大规模兑换，从而在瞬间急剧改变池内的代币储备比例，导致 Spot Price 发生剧烈偏离。</li>
+<li><strong>案例：闪电贷攻击流程</strong>
+<ol>
+<li><strong>借贷</strong>: 攻击者通过闪电贷借出大量的 Token A。</li>
+<li><strong>操纵价格</strong>: 他将这些 Token A 投入到一个 Token A / Token B 的池子中，换取大量的 Token B。此时，池中 Token A 的数量远大于 Token B，导致 Token A 的 Spot Price 被严重拉低。</li>
+<li><strong>利用价差套利</strong>: 如果另一个 DeFi 协议（如借贷平台）依赖这个被操控的 Spot Price 来进行清算或资产估值，攻击者就可以利用这个失衡的价格进行低买高卖等套利行为。</li>
+<li><strong>恢复价格并还款</strong>: 完成套利后，攻击者再将 Token B 换回 Token A，并归还闪电贷。整个过程在同一个区块内完成。</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p><strong>结论</strong>: 任何严肃的 DeFi 项目或预言机，都<strong>不应</strong>直接使用 Spot Price 作为价格参考，因为它无法抵抗瞬时操纵。</p>
+</blockquote>
+<hr>
+<h3 class="heading-element" id="twap-时间加权平均价格-的核心原理"><span>TWAP (时间加权平均价格) 的核心原理</span>
+  <a href="#twap-%e6%97%b6%e9%97%b4%e5%8a%a0%e6%9d%83%e5%b9%b3%e5%9d%87%e4%bb%b7%e6%a0%bc-%e7%9a%84%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="基本概念与数学推导"><span>基本概念与数学推导</span>
+  <a href="#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5%e4%b8%8e%e6%95%b0%e5%ad%a6%e6%8e%a8%e5%af%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>TWAP 的设计初衷就是为了解决 Spot Price 的脆弱性。它引入了<strong>时间</strong>作为权重，使得价格的计算不再只依赖于某个瞬间的状态。</p>
+<ol>
+<li>
+<p><strong>价格分段</strong>: 我们可以将一段时间内的价格变化看作一个阶梯函数。在每个价格保持不变的时间段内，我们定义：</p>
+<ul>
+<li>$P_i$: 在时间区间 $[T_i, T_{i+1}]$ 内保持不变的价格。</li>
+<li>$\Delta T_i$: 该价格持续的时间，即 $\Delta T_i = T_{i+1} - T_i$。</li>
+<li><strong>重要特性</strong>: 交易的发生时间是不规律的，因此每个价格持续的时间间隔 $\Delta T_i$ <strong>通常是不均匀的</strong>。可能前一个价格持续了2秒，后一个价格持续了1小时。</li>
+</ul>
+</li>
+<li>
+<p><strong>平均价格的直观理解</strong>:</p>
+<ul>
+<li>想象一个横坐标为时间（T）、纵坐标为价格（P）的图表。</li>
+<li>计算从 $T_0$ 到 $T_N$ 的时间加权平均价格，就等同于计算这个阶梯函数曲线下方的<strong>总面积</strong>，然后除以总的时间跨度 $(T_N - T_0)$。</li>
+</ul>
+</li>
+<li>
+<p><strong>数学公式推导</strong>:</p>
+<ul>
+<li>总面积（价格与时间的乘积累加）为：
+$$
+\text{总面积} = (T_1 - T_0) \cdot P_0 + (T_2 - T_1) \cdot P_1 + \dots + (T_N - T_{N-1}) \cdot P_{N-1}
+$$</li>
+<li>使用 $\Delta T_i$ 简化表达：
+$$
+\text{总面积} = \sum_{i=0}^{N-1} \Delta T_i \cdot P_i
+$$</li>
+<li>因此，从 <code>T_0</code> 到 <code>T_N</code> 的 TWAP 计算公式为：
+$$
+\text{TWAP}<em>{[T_0, T_N]} = \frac{\sum</em>{i=0}^{N-1} \Delta T_i \cdot P_i}{T_N - T_0}
+$$</li>
+</ul>
+</li>
+</ol>
+<h4 class="heading-element" id="计算任意时间区间的-twap"><span>计算任意时间区间的 TWAP</span>
+  <a href="#%e8%ae%a1%e7%ae%97%e4%bb%bb%e6%84%8f%e6%97%b6%e9%97%b4%e5%8c%ba%e9%97%b4%e7%9a%84-twap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在实际应用中，我们更关心的是过去任意一段时间（如过去1小时、24小时）的平均价格。假设我们需要计算从 $T_K$ 到 $T_N$ 的 TWAP。</p>
+<ul>
+<li><strong>公式</strong>: 原理不变，只是计算的起点从 $T_0$ 变成了 $T_K$。
+$$
+\text{TWAP}<em>{[T_K, T_N]} = \frac{\sum</em>{i=K}^{N-1} \Delta T_i \cdot P_i}{T_N - T_K}
+$$</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="uniswap-v2-中的-twap-高效实现"><span>Uniswap V2 中的 TWAP 高效实现</span>
+  <a href="#uniswap-v2-%e4%b8%ad%e7%9a%84-twap-%e9%ab%98%e6%95%88%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="链上实现的挑战"><span>链上实现的挑战</span>
+  <a href="#%e9%93%be%e4%b8%8a%e5%ae%9e%e7%8e%b0%e7%9a%84%e6%8c%91%e6%88%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>直接在智能合约中实现上述 TWAP 公式是极其困难且昂贵的：</p>
+<ul>
+<li><strong>存储成本</strong>: 需要一个动态数组来存储历史上每一次价格变动的时间点和价格值，这将消耗巨大的存储（Storage）资源。</li>
+<li><strong>计算成本</strong>: 在计算 TWAP 时，需要遍历这个数组进行累加求和（for循环），这将消耗大量的 Gas，甚至可能超出区块的 Gas 上限。</li>
+</ul>
+<h4 class="heading-element" id="巧妙的解决方案累积价格变量-price-cumulative"><span>巧妙的解决方案：累积价格变量 (Price Cumulative)</span>
+  <a href="#%e5%b7%a7%e5%a6%99%e7%9a%84%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88%e7%b4%af%e7%a7%af%e4%bb%b7%e6%a0%bc%e5%8f%98%e9%87%8f-price-cumulative" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Uniswap V2 采用了一种极为巧妙的数学方法，避免了存储历史数据和循环计算。它只在合约中维护一个不断累加的变量。</p>
+<ol>
+<li>
+<p><strong>定义累积价格变量</strong>:</p>
+<ul>
+<li>合约维护一个变量，我们称之为 <code>priceCumulative</code> (价格累积值)。</li>
+<li>每当发生交易（价格变动）时，该变量会累加上 <strong>“上一次的价格”</strong> 乘以 <strong>“距离上次更新所经过的时间”</strong>。</li>
+<li>即 $C_N = C_{N-1} + P_{N-1} \cdot (T_N - T_{N-1})$。</li>
+<li>这个 $C_N$ 就代表了从合约创建（时间0）到 $T_N$ 的价格-时间累积总面积。</li>
+</ul>
+</li>
+<li>
+<p><strong>利用累积值计算区间 TWAP</strong>:</p>
+<ul>
+<li>有了这个累积变量，计算任意区间 $[T_K, T_N]$ 的 TWAP 就变得非常简单。</li>
+<li>$T_K$ 到 $T_N$ 之间的价格-时间总面积，可以通过两个时间点的累积值相减得到：$C_N - C_K$。</li>
+<li>再除以时间差 $(T_N - T_K)$，就得到了该区间的 TWAP。</li>
+</ul>
+</li>
+<li>
+<p><strong>最终实用公式</strong>:
+$$
+\text{TWAP}_{[T_K, T_N]} = \frac{\text{priceCumulative}_N - \text{priceCumulative}_K}{\text{timestamp}_N - \text{timestamp}_K}
+$$
+这个公式就是 Uniswap V2 官方文档中给出的计算方法。它使得用户或外部合约只需进行两次读取和一次简单的链下或链上计算，就能获得任意时间段的 TWAP，极为高效和节省 Gas。</p>
+</li>
+</ol>
+<hr>
+<h3 class="heading-element" id="twap-计算实例一步步拆解"><span>TWAP 计算实例：一步步拆解</span>
+  <a href="#twap-%e8%ae%a1%e7%ae%97%e5%ae%9e%e4%be%8b%e4%b8%80%e6%ad%a5%e6%ad%a5%e6%8b%86%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>一个具体的计算练习，以帮助理解 TWAP 的计算过程。</p>
+<ul>
+<li><strong>问题</strong>: 计算第 4 秒到第 11 秒之间的 TWAP。</li>
+<li><strong>已知数据</strong>:
+<ul>
+<li>时间点 (秒): 1, 3, 4, 7, 11</li>
+<li>对应价格: 1000, 1100, 1300, 1200, 1500</li>
+</ul>
+</li>
+</ul>
+<h4 class="heading-element" id="计算流程的可视化"><span>计算流程的可视化</span>
+  <a href="#%e8%ae%a1%e7%ae%97%e6%b5%81%e7%a8%8b%e7%9a%84%e5%8f%af%e8%a7%86%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>以下是计算该区间 TWAP 的具体步骤流程图：</p>
+<div class="diagram-container">
+  <pre class="mermaid">graph TD
+    A[开始: 计算第4秒到第11秒的TWAP] --> B{识别相关时间段和价格};
+    B --> C[时间段1: 4s-7s<br>价格: 1300<br>持续时间: 7-4=3秒];
+    B --> D[时间段2: 7s-11s<br>价格: 1200<br>持续时间: 11-7=4秒];
+    C --> E{计算各段的 价格 x 时间};
+    D --> E;
+    E --> F[段1面积: 1300 * 3 = 3900];
+    E --> G[段2面积: 1200 * 4 = 4800];
+    F --> H{累加总面积};
+    G --> H;
+    H --> I[总面积: 3900 + 4800 = 8700];
+    I --> J{计算总时间跨度};
+    J --> K[总时间: 11 - 4 = 7秒];
+    K --> L{计算最终TWAP};
+    L --> M[TWAP = 总面积 / 总时间<br>8700 / 7];
+    M --> N[结束: 得出TWAP结果];</pre>
+  <pre class="mermaid-dark">graph TD
+    A[开始: 计算第4秒到第11秒的TWAP] --> B{识别相关时间段和价格};
+    B --> C[时间段1: 4s-7s<br>价格: 1300<br>持续时间: 7-4=3秒];
+    B --> D[时间段2: 7s-11s<br>价格: 1200<br>持续时间: 11-7=4秒];
+    C --> E{计算各段的 价格 x 时间};
+    D --> E;
+    E --> F[段1面积: 1300 * 3 = 3900];
+    E --> G[段2面积: 1200 * 4 = 4800];
+    F --> H{累加总面积};
+    G --> H;
+    H --> I[总面积: 3900 + 4800 = 8700];
+    I --> J{计算总时间跨度};
+    J --> K[总时间: 11 - 4 = 7秒];
+    K --> L{计算最终TWAP};
+    L --> M[TWAP = 总面积 / 总时间<br>8700 / 7];
+    M --> N[结束: 得出TWAP结果];</pre>
+  <pre class="mermaid-neutral">graph TD
+    A[开始: 计算第4秒到第11秒的TWAP] --> B{识别相关时间段和价格};
+    B --> C[时间段1: 4s-7s<br>价格: 1300<br>持续时间: 7-4=3秒];
+    B --> D[时间段2: 7s-11s<br>价格: 1200<br>持续时间: 11-7=4秒];
+    C --> E{计算各段的 价格 x 时间};
+    D --> E;
+    E --> F[段1面积: 1300 * 3 = 3900];
+    E --> G[段2面积: 1200 * 4 = 4800];
+    F --> H{累加总面积};
+    G --> H;
+    H --> I[总面积: 3900 + 4800 = 8700];
+    I --> J{计算总时间跨度};
+    J --> K[总时间: 11 - 4 = 7秒];
+    K --> L{计算最终TWAP};
+    L --> M[TWAP = 总面积 / 总时间<br>8700 / 7];
+    M --> N[结束: 得出TWAP结果];</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>graph TD
+    A[开始: 计算第4秒到第11秒的TWAP] --> B{识别相关时间段和价格};
+    B --> C[时间段1: 4s-7s<br>价格: 1300<br>持续时间: 7-4=3秒];
+    B --> D[时间段2: 7s-11s<br>价格: 1200<br>持续时间: 11-7=4秒];
+    C --> E{计算各段的 价格 x 时间};
+    D --> E;
+    E --> F[段1面积: 1300 * 3 = 3900];
+    E --> G[段2面积: 1200 * 4 = 4800];
+    F --> H{累加总面积};
+    G --> H;
+    H --> I[总面积: 3900 + 4800 = 8700];
+    I --> J{计算总时间跨度};
+    J --> K[总时间: 11 - 4 = 7秒];
+    K --> L{计算最终TWAP};
+    L --> M[TWAP = 总面积 / 总时间<br>8700 / 7];
+    M --> N[结束: 得出TWAP结果];</pre></template>
+</div><h4 class="heading-element" id="流程解释"><span>流程解释</span>
+  <a href="#%e6%b5%81%e7%a8%8b%e8%a7%a3%e9%87%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
+<li><strong>确定计算区间</strong>: 首先，我们的目标是计算从第 4 秒末到第 11 秒末的平均价格。</li>
+<li><strong>分段拆解</strong>: 在这个总区间内，价格发生了变化，我们需要将其拆分为价格恒定的子区间。
+<ul>
+<li><strong>子区间一 (4s-7s)</strong>: 从第 4 秒开始，价格是 1300。这个价格一直维持到第 7 秒。因此，它持续了 <code>7 - 4 = 3</code> 秒。此区间的“价格-时间面积”为 $1300 \times 3 = 3900$。</li>
+<li><strong>子区间二 (7s-11s)</strong>: 从第 7 秒开始，价格变为 1200。这个价格一直维持到第 11 秒。因此，它持续了 <code>11 - 7 = 4</code> 秒。此区间的“价格-时间面积”为 $1200 \times 4 = 4800$。</li>
+</ul>
+</li>
+<li><strong>计算总面积</strong>: 将所有子区间的面积相加，得到目标时间范围内的总面积：$3900 + 4800 = 8700$。</li>
+<li><strong>计算总时长</strong>: 计算区间的总时长：$11 - 4 = 7$ 秒。</li>
+<li><strong>得出最终TWAP</strong>: 用总面积除以总时长，得到最终的 TWAP 值：$8700 / 7 \approx 1242.86$。</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap07/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap07/" data-title="07.Uniswap V2 TWAP" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap07/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap07/" data-title="07.Uniswap V2 TWAP"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap08/" class="post-nav-item" rel="prev" title="08.Uniswap V3简介"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>08.Uniswap V3简介</a><a href="/posts/202509-uniswap06/" class="post-nav-item" rel="next" title="06.Uniswap V2 闪电贷">06.Uniswap V2 闪电贷<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#uniswap-v2-的时间加权平均价格-twap-学习笔记">Uniswap V2 的时间加权平均价格 (TWAP) 学习笔记</a>
+          <ul>
+            <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#为什么需要-twap-spot-price-的局限性">为什么需要 TWAP？—— Spot Price 的局限性</a>
+          <ul>
+            <li><a href="#spot-price-瞬时价格-的定义">Spot Price (瞬时价格) 的定义</a></li>
+            <li><a href="#spot-price-的风险易于被操控">Spot Price 的风险：易于被操控</a></li>
+          </ul>
+        </li>
+        <li><a href="#twap-时间加权平均价格-的核心原理">TWAP (时间加权平均价格) 的核心原理</a>
+          <ul>
+            <li><a href="#基本概念与数学推导">基本概念与数学推导</a></li>
+            <li><a href="#计算任意时间区间的-twap">计算任意时间区间的 TWAP</a></li>
+          </ul>
+        </li>
+        <li><a href="#uniswap-v2-中的-twap-高效实现">Uniswap V2 中的 TWAP 高效实现</a>
+          <ul>
+            <li><a href="#链上实现的挑战">链上实现的挑战</a></li>
+            <li><a href="#巧妙的解决方案累积价格变量-price-cumulative">巧妙的解决方案：累积价格变量 (Price Cumulative)</a></li>
+          </ul>
+        </li>
+        <li><a href="#twap-计算实例一步步拆解">TWAP 计算实例：一步步拆解</a>
+          <ul>
+            <li><a href="#计算流程的可视化">计算流程的可视化</a></li>
+            <li><a href="#流程解释">流程解释</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/359442d33d310fa295b05030ea84477d.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

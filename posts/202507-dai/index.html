@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>DAI 白皮书翻译 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="DAI白皮书
+[toc]
+Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以太币 Ether [ETH]）价格波动过于剧烈，难以作为日常交易货币使用。比特币的价值经常出现大幅波动，单日涨跌幅度可达 25%，有时甚至一个月内涨幅超过 300%。
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="DAI 白皮书翻译">
+  <meta itemprop="description" content="DAI白皮书
+[toc]
+Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以太币 Ether [ETH]）价格波动过于剧烈，难以作为日常交易货币使用。比特币的价值经常出现大幅波动，单日涨跌幅度可达 25%，有时甚至一个月内涨幅超过 300%。">
+  <meta itemprop="datePublished" content="2025-07-19T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-07-19T00:00:00+00:00">
+  <meta itemprop="wordCount" content="11096">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="http://localhost:1313/posts/202507-dai/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="DAI 白皮书翻译">
+  <meta property="og:description" content="DAI白皮书
+[toc]
+Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以太币 Ether [ETH]）价格波动过于剧烈，难以作为日常交易货币使用。比特币的价值经常出现大幅波动，单日涨跌幅度可达 25%，有时甚至一个月内涨幅超过 300%。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-19T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-19T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DAI 白皮书翻译">
+  <meta name="twitter:description" content="DAI白皮书
+[toc]
+Dai稳定币概述 当前主流数字资产（如比特币 Bitcoin [BTC] 和以太币 Ether [ETH]）价格波动过于剧烈，难以作为日常交易货币使用。比特币的价值经常出现大幅波动，单日涨跌幅度可达 25%，有时甚至一个月内涨幅超过 300%。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202507-dai/" title="DAI 白皮书翻译 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202507-eth_white_paper/" title="ETH 白皮书阅读" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202507-lol/" title="十大英雄联盟悲情语录" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "DAI 白皮书翻译",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202507-dai\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  11096 ,
+    "url": "http:\/\/localhost:1313\/posts\/202507-dai\/","datePublished": "2025-07-19T00:00:00+00:00","dateModified": "2025-07-19T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>DAI 白皮书翻译</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-07-19 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-07-19">2025-07-19</time></span>&nbsp;<span title="11096 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 11100 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 23 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#cdp-操作流程"><strong>CDP 操作流程</strong></a>
+          <ul>
+            <li><a href="#步骤-1创建-cdp-并存入抵押物"><strong>步骤 1：创建 CDP 并存入抵押物</strong></a></li>
+            <li><a href="#步骤-2从已抵押的-cdp-中生成-dai"><strong>步骤 2：从已抵押的 CDP 中生成 Dai</strong></a></li>
+            <li><a href="#步骤-3偿还债务并支付稳定费stability-fee"><strong>步骤 3：偿还债务并支付稳定费（Stability Fee）</strong></a></li>
+            <li><a href="#步骤-4提取抵押物并关闭-cdp"><strong>步骤 4：提取抵押物并关闭 CDP</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#资金池化以太币peth单抵押-dai-的临时机制">资金池化以太币/PETH（单抵押 Dai 的临时机制）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#目标价格target-price">目标价格（Target Price）</a></li>
+    <li><a href="#目标利率反馈机制target-rate-feedback-mechanismtrfm">目标利率反馈机制（Target Rate Feedback Mechanism，TRFM）</a></li>
+    <li><a href="#灵敏度参数sensitivity-parameter">灵敏度参数（Sensitivity Parameter）</a></li>
+    <li><a href="#全局清算global-settlement">全局清算（Global Settlement）</a>
+      <ul>
+        <li><a href="#全局清算分步流程">全局清算分步流程</a>
+          <ul>
+            <li><a href="#第一步激活全局清算">第一步：激活全局清算</a></li>
+            <li><a href="#第二步处理全局清算索赔">第二步：处理全局清算索赔</a></li>
+            <li><a href="#第三步dai与cdp持有者申领抵押资产">第三步：Dai与CDP持有者申领抵押资产</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#风险参数risk-parameters">风险参数（Risk Parameters）</a>
+          <ul>
+            <li><a href="#cdp核心风险参数">CDP核心风险参数：</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#治理架构">治理架构</a></li>
+    <li><a href="#提案类型">提案类型</a></li>
+    <li><a href="#提案机制">提案机制</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#风险cdpcollateralized-debt-positions的自动清算机制">风险CDP（Collateralized Debt Positions）的自动清算机制</a>
+          <ul>
+            <li><a href="#清算比率设定">清算比率设定</a></li>
+            <li><a href="#流动性供给合约单抵押dai临时机制">流动性供给合约（单抵押Dai临时机制）</a></li>
+          </ul>
+        </li>
+        <li><a href="#债务与抵押品拍卖multi-collateral-dai">债务与抵押品拍卖（Multi-Collateral Dai）</a>
+          <ul>
+            <li><a href="#债务拍卖debt-auction">债务拍卖（Debt Auction）</a></li>
+            <li><a href="#抵押品拍卖collateral-auction">抵押品拍卖（Collateral Auction）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#关键外部参与者key-external-actors">关键外部参与者（Key External Actors）</a>
+      <ul>
+        <li><a href="#守护者keepers">守护者（Keepers）</a></li>
+        <li><a href="#预言机oracles">预言机（Oracles）</a></li>
+        <li><a href="#全局清算人global-settlers">全局清算人（Global Settlers）</a></li>
+      </ul>
+    </li>
+    <li><a href="#应用案例">应用案例</a>
+      <ul>
+        <li><a href="#基础借贷">基础借贷</a></li>
+        <li><a href="#杠杆交易">杠杆交易</a></li>
+        <li><a href="#多角色协作">多角色协作</a></li>
+        <li><a href="#清算机制">清算机制</a></li>
+        <li><a href="#可触达市场addressable-market">可触达市场（Addressable Market）</a></li>
+        <li><a href="#风险及应对措施risks-and-their-mitigation">风险及应对措施（Risks and their Mitigation）</a>
+          <ul>
+            <li><a href="#1-智能合约基础设施遭恶意黑客攻击">1. 智能合约基础设施遭恶意黑客攻击</a></li>
+            <li><a href="#2-抵押资产遭遇黑天鹅事件black-swan-event">2. 抵押资产遭遇黑天鹅事件（Black Swan Event）</a></li>
+            <li><a href="#3-市场竞争与用户体验挑战">3. 市场竞争与用户体验挑战</a></li>
+            <li><a href="#4-定价异常与非理性市场行为">4. 定价异常与非理性市场行为</a></li>
+            <li><a href="#5-中心化基础设施失效">5. 中心化基础设施失效</a></li>
+          </ul>
+        </li>
+        <li><a href="#结论conclusion">结论（Conclusion）</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#1-什么是抵押债务头寸cdp">1. 什么是抵押债务头寸（CDP）？</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-cdp-的关键参数">2. CDP 的关键参数</a></li>
+        <li><a href="#3-如何计算-cdp-是否安全">3. 如何计算 CDP 是否安全？</a></li>
+        <li><a href="#4-清算会发生什么">4. 清算会发生什么？</a></li>
+        <li><a href="#5-如何避免清算">5. 如何避免清算？</a></li>
+        <li><a href="#6-为什么-cdp-设计成这样">6. 为什么 CDP 设计成这样？</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>DAI白皮书</p>
+<p>[toc]</p>
+<h1 class="heading-element" id="dai稳定币概述"><span>Dai稳定币概述</span>
+  <a href="#dai%e7%a8%b3%e5%ae%9a%e5%b8%81%e6%a6%82%e8%bf%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>当前主流数字资产（如比特币 Bitcoin [BTC] 和以太币 Ether [ETH]）价格波动过于剧烈，难以作为日常交易货币使用。比特币的价值经常出现大幅波动，单日涨跌幅度可达 25%，有时甚至一个月内涨幅超过 300%。</p>
+<p>Dai 稳定币（Dai Stablecoin）是一种以<strong>抵押资产</strong>为支撑的加密货币，其价值相对美元保持稳定。我们认为，像 Dai 这样的稳定数字资产对于充分发挥区块链技术的潜力至关重要。</p>
+<p>Maker 是一个基于以太坊（Ethereum）的智能合约平台，它通过一套动态的<strong>抵押债务头寸</strong>（Collateralized Debt Positions，简称 CDPs）系统、自动反馈机制以及适当激励的外部参与者，来支持并稳定 Dai 的价值。</p>
+<p>Maker 允许任何人利用其持有的以太坊资产，在 Maker 平台上生成 Dai。一旦生成，Dai 就可以像其他任何加密货币一样使用：可以自由转账给他人、用于商品或服务的支付，也可以作为长期储蓄持有。更重要的是，Dai 的生成过程还为构建一个强大的去中心化保证金交易平台提供了必要条件。</p>
+<h1 class="heading-element" id="抵押债务头寸智能合约collateralized-debt-position-smart-contracts"><span>抵押债务头寸智能合约（Collateralized Debt Position Smart Contracts）</span>
+  <a href="#%e6%8a%b5%e6%8a%bc%e5%80%ba%e5%8a%a1%e5%a4%b4%e5%af%b8%e6%99%ba%e8%83%bd%e5%90%88%e7%ba%a6collateralized-debt-position-smart-contracts" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>任何持有抵押资产（Collateral Assets）的用户，都可以通过 Maker 平台独有的<strong>抵押债务头寸（Collateralized Debt Position, CDP）智能合约</strong>，利用这些资产生成 Dai。</p>
+<p>CDP 会锁定用户存入的抵押资产，并允许用户生成 Dai，但同时也会产生相应的债务。这笔债务会一直锁定抵押资产，直到用户偿还等值的 Dai 后，才能重新取回抵押物。<strong>所有活跃的 CDP 都必须保持超额抵押</strong>，即抵押物的价值始终高于债务价值。</p>
+<h3 class="heading-element" id="cdp-操作流程"><span><strong>CDP 操作流程</strong></span>
+  <a href="#cdp-%e6%93%8d%e4%bd%9c%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="步骤-1创建-cdp-并存入抵押物"><span><strong>步骤 1：创建 CDP 并存入抵押物</strong></span>
+  <a href="#%e6%ad%a5%e9%aa%a4-1%e5%88%9b%e5%bb%ba-cdp-%e5%b9%b6%e5%ad%98%e5%85%a5%e6%8a%b5%e6%8a%bc%e7%89%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>用户首先向 Maker 发送交易以创建 CDP，随后再发送另一笔交易，存入用于生成 Dai 的抵押资产（包括数量和类型）。此时，CDP 即被视为<strong>已抵押（Collateralized）</strong>。</p>
+<h4 class="heading-element" id="步骤-2从已抵押的-cdp-中生成-dai"><span><strong>步骤 2：从已抵押的 CDP 中生成 Dai</strong></span>
+  <a href="#%e6%ad%a5%e9%aa%a4-2%e4%bb%8e%e5%b7%b2%e6%8a%b5%e6%8a%bc%e7%9a%84-cdp-%e4%b8%ad%e7%94%9f%e6%88%90-dai" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>用户发送交易，从 CDP 中提取所需数量的 Dai。作为交换，CDP 会累积等值的债务，并锁定抵押物，直到债务还清为止。</p>
+<h4 class="heading-element" id="步骤-3偿还债务并支付稳定费stability-fee"><span><strong>步骤 3：偿还债务并支付稳定费（Stability Fee）</strong></span>
+  <a href="#%e6%ad%a5%e9%aa%a4-3%e5%81%bf%e8%bf%98%e5%80%ba%e5%8a%a1%e5%b9%b6%e6%94%af%e4%bb%98%e7%a8%b3%e5%ae%9a%e8%b4%b9stability-fee" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>当用户想要取回抵押物时，必须偿还 CDP 中的债务，并支付随时间累积的<strong>稳定费（Stability Fee）</strong>（该费用仅能以 MKR 支付）。用户向 CDP 发送足额的 Dai 和 MKR 后，债务和稳定费即被结清，CDP 恢复**无负债（Debt Free）**状态。</p>
+<h4 class="heading-element" id="步骤-4提取抵押物并关闭-cdp"><span><strong>步骤 4：提取抵押物并关闭 CDP</strong></span>
+  <a href="#%e6%ad%a5%e9%aa%a4-4%e6%8f%90%e5%8f%96%e6%8a%b5%e6%8a%bc%e7%89%a9%e5%b9%b6%e5%85%b3%e9%97%ad-cdp" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在债务和稳定费全部结清后，用户可向 Maker 发送交易，自由取回全部或部分抵押物至自己的钱包，并选择关闭 CDP。</p>
+<h1 class="heading-element" id="单抵押-daisingle-collateral-dai-vs-多抵押-daimulti-collateral-dai"><span>单抵押 Dai（Single-Collateral Dai） vs 多抵押 Dai（Multi-Collateral Dai）</span>
+  <a href="#%e5%8d%95%e6%8a%b5%e6%8a%bc-daisingle-collateral-dai-vs-%e5%a4%9a%e6%8a%b5%e6%8a%bc-daimulti-collateral-dai" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>Dai 在初始阶段将仅支持一种抵押资产类型——资金池化以太币（Pooled Ether）。未来 6-12 个月内，我们计划将单抵押 Dai 升级为多抵押 Dai，其核心区别在于后者可支持任意数量的担保债务头寸（CDP）类型。</p>
+<h2 class="heading-element" id="资金池化以太币peth单抵押-dai-的临时机制"><span>资金池化以太币/PETH（单抵押 Dai 的临时机制）</span>
+  <a href="#%e8%b5%84%e9%87%91%e6%b1%a0%e5%8c%96%e4%bb%a5%e5%a4%aa%e5%b8%81peth%e5%8d%95%e6%8a%b5%e6%8a%bc-dai-%e7%9a%84%e4%b8%b4%e6%97%b6%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>在 Maker 平台初期，资金池化以太币（PETH）将是唯一接受的抵押资产类型。用户若想在平台第一阶段开设担保债务头寸（CDP）并生成 Dai，需先获取 PETH。操作方式非常简单：用户将以太币（ETH）存入特定智能合约后，该合约会即时汇集所有用户的 ETH，并按比例向用户返还对应的 PETH。</p>
+<p>若以太币（ETH）遭遇市场暴跌，导致某 CDP 的债务价值超过其抵押资产价值，Maker 平台将通过稀释 PETH 进行系统资本重组。这意味着每位持有人对 PETH 的比例求偿权将相应降低。</p>
+<p>待 Maker 平台完成升级并支持多抵押资产类型后，PETH 机制将被废止，届时以太币（ETH）将与其他新增抵押资产共同作为担保品。</p>
+<h1 class="heading-element" id="价格稳定机制"><span>价格稳定机制</span>
+  <a href="#%e4%bb%b7%e6%a0%bc%e7%a8%b3%e5%ae%9a%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="目标价格target-price"><span>目标价格（Target Price）</span>
+  <a href="#%e7%9b%ae%e6%a0%87%e4%bb%b7%e6%a0%bctarget-price" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>在Maker平台上，Dai目标价格（Dai Target Price）具有两大核心功能：</p>
+<ol>
+<li>用于计算抵押债务头寸（CDP）的抵押品与债务比率；</li>
+<li>在全球清算（global settlement）发生时，用于确定Dai持有者所获抵押资产的价值。</li>
+</ol>
+<p>目标价格（Target Price）最初以美元计价，初始值为1，即与美元保持1:1的软挂钩（soft peg）。</p>
+<h2 class="heading-element" id="目标利率反馈机制target-rate-feedback-mechanismtrfm"><span>目标利率反馈机制（Target Rate Feedback Mechanism，TRFM）</span>
+  <a href="#%e7%9b%ae%e6%a0%87%e5%88%a9%e7%8e%87%e5%8f%8d%e9%a6%88%e6%9c%ba%e5%88%b6target-rate-feedback-mechanismtrfm" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>当市场出现严重不稳定时，可启动<strong>目标利率反馈机制</strong>（TRFM）。该机制启动后，将打破Dai的固定锚定关系，但仍保持相同的计价单位。</p>
+<p>TRFM是Dai稳定币系统（Dai Stablecoin System）通过自动调整目标利率（Target Rate），促使市场力量维持Dai市场价格围绕目标价格（Target Price）波动的核心机制。目标利率决定了目标价格随时间的变化趋势——当目标利率为正时，系统激励用户持有Dai；当目标利率为负时，则激励用户借入Dai。TRFM未启动时，目标利率固定为0%，此时目标价格保持不变，Dai维持锚定状态。</p>
+<p>当TRFM启动后，目标利率与目标价格将动态变化，通过自动调整用户生成/持有Dai的激励来平衡供需关系。该反馈机制推动Dai市场价格向可变目标价格靠拢，既能抑制波动性，又能在需求冲击时提供实时流动性。</p>
+<p>具体运作逻辑：</p>
+<ol>
+<li>当Dai市场价格低于目标价格时，目标利率上升
+→ 目标价格增速加快，通过CDP生成Dai的成本上升
+→ 持有Dai的资本收益增加，推高市场需求
+→ 供需关系变化（供给减少+需求增加）促使Dai市场价格回升至目标价格</li>
+<li>当Dai市场价格高于目标价格时，机制反向运作：
+→ 目标利率下降刺激Dai生成需求，同时抑制持有需求
+→ 供需调整推动Dai市场价格回落至目标价格</li>
+</ol>
+<p>该机制构成负反馈循环（negative feedback loop）：市场价格偏离目标价格的幅度越大，反向调节作用力就越强。</p>
+<pre tabindex="0"><code>举例：
+
+情况 1：Dai 价格太低（低于目标价格）
+- 假设：1 Dai 的市场价格 = 0.98 美元（目标价格是 1 美元）。
+- TRFM 启动：系统 提高目标利率（比如从 0% → +2%）。
+- 影响：
+  - 对借款人（CDP 用户）：借 Dai 的成本变高（因为利率上升），导致 Dai 供应减少。
+  - 对持币人：持有 Dai 能获得利息（利率为正），因此 更多人愿意持有 Dai，而不是卖出。
+- 结果：需求增加 + 供应减少 → Dai 价格回升至 1 美元。
+
+情况 2：Dai 价格太高（高于目标价格）
+- 假设：1 Dai 的市场价格 = 1.02 美元（目标价格是 1 美元）。
+- TRFM 启动：系统 降低目标利率（比如从 0% → -1%）。
+- 影响：
+  - 对借款人（CDP 用户）：借 Dai 的成本降低（利率下降），导致 Dai 供应增加。
+  - 对持币人：持有 Dai 要支付利息（利率为负），因此 更多人愿意卖出 Dai，而不是持有。
+- 结果：供应增加 + 需求减少 → Dai 价格回落至 1 美元。
+
+3. 为什么叫“负反馈循环”？
+- “负反馈” 的意思是：偏离目标越远，反向调节的力度越大。
+  - 比如 Dai 价格跌到 0.95 美元（比 0.98 美元更低），TRFM 会 更大幅度提高利率，加速 Dai 价格回升。
+  - 反之，如果 Dai 涨到 1.05 美元，TRFM 会 更大幅度降低利率，加速价格回落。
+- 这样就能 避免价格剧烈波动，让 Dai 长期稳定在目标价格附近。
+
+TRFM 的本质就是 用利率调节市场行为，让 Dai 的价格 自动回归稳定，而不是依赖人为干预。</code></pre><h2 class="heading-element" id="灵敏度参数sensitivity-parameter"><span>灵敏度参数（Sensitivity Parameter）</span>
+  <a href="#%e7%81%b5%e6%95%8f%e5%ba%a6%e5%8f%82%e6%95%b0sensitivity-parameter" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>TRFM（目标利率反馈机制）的<strong>灵敏度参数（Sensitivity Parameter）​</strong>用于决定<strong>目标利率（Target Rate）​</strong>对Dai目标价格与市场价格偏差的调整幅度。该参数通过调节反馈速率，使系统保持动态平衡。尽管MKR持币人（MKR voters）可设定此参数，但当TRFM激活时，​<strong>目标价格（Target Price）​</strong>与<strong>目标利率（Target Rate）​</strong>将由市场动态决定，而非直接受MKR持币人控制。</p>
+<p>此外，<strong>灵敏度参数（Sensitivity Parameter）<strong>还用于启用或停用TRFM。若该参数与</strong>目标利率（Target Rate）<strong>同时为零，则Dai将严格锚定当前</strong>目标价格（Target Price）</strong>。</p>
+<h2 class="heading-element" id="全局清算global-settlement"><span>全局清算（Global Settlement）</span>
+  <a href="#%e5%85%a8%e5%b1%80%e6%b8%85%e7%ae%97global-settlement" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>全局清算是一项作为最终手段的流程，通过密码学方式为Dai持有者担保目标价格（Target Price）。该流程会关闭并有序解除Maker平台（Maker Platform）的运作，同时确保所有用户（包括Dai持有者和CDP用户）都能获得其应得的资产净值。此过程完全去中心化，由MKR持币人（MKR voters）投票决定是否启动，确保仅在最严重的紧急情况下使用。此类紧急情况包括：长期市场非理性波动、黑客攻击或安全漏洞，以及系统升级。</p>
+<h3 class="heading-element" id="全局清算分步流程"><span>全局清算分步流程</span>
+  <a href="#%e5%85%a8%e5%b1%80%e6%b8%85%e7%ae%97%e5%88%86%e6%ad%a5%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="第一步激活全局清算"><span>第一步：激活全局清算</span>
+  <a href="#%e7%ac%ac%e4%b8%80%e6%ad%a5%e6%bf%80%e6%b4%bb%e5%85%a8%e5%b1%80%e6%b8%85%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>若被Maker治理（Maker Governance）指定为全局清算人（global settlers）的足够多成员认为系统遭受严重攻击，或全局清算被列为技术升级的一部分，则可激活全局清算功能。此操作将停止CDP的创建与操作，并将价格预言机（Price Feed）冻结为固定值，用于计算所有用户的比例索赔。</p>
+<h4 class="heading-element" id="第二步处理全局清算索赔"><span>第二步：处理全局清算索赔</span>
+  <a href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e5%a4%84%e7%90%86%e5%85%a8%e5%b1%80%e6%b8%85%e7%ae%97%e7%b4%a2%e8%b5%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>全局清算激活后，需预留一段时间让清算维护者（keepers）根据固定预言机值处理所有Dai及CDP持有者的比例索赔。处理完成后，Dai和CDP持有者均可凭其资产申领固定数量的ETH。</p>
+<h4 class="heading-element" id="第三步dai与cdp持有者申领抵押资产"><span>第三步：Dai与CDP持有者申领抵押资产</span>
+  <a href="#%e7%ac%ac%e4%b8%89%e6%ad%a5dai%e4%b8%8ecdp%e6%8c%81%e6%9c%89%e8%80%85%e7%94%b3%e9%a2%86%e6%8a%b5%e6%8a%bc%e8%b5%84%e4%ba%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>每位Dai和CDP持有者可调用Maker平台上的索赔功能，直接将其Dai和CDP按Dai目标价格兑换为对应计算值的固定数量ETH。</p>
+<p><em>示例：</em>
+若Dai目标价格为1美元，ETH/USD价格为200，且用户在全局清算激活时持有1000 Dai，则在处理期结束后，可从Maker平台申领恰好5 ETH。最终索赔无时间限制。</p>
+<h1 class="heading-element" id="maker平台maker-platform的风险管理risk-management"><span>Maker平台（Maker Platform）的风险管理（Risk Management）</span>
+  <a href="#maker%e5%b9%b3%e5%8f%b0maker-platform%e7%9a%84%e9%a3%8e%e9%99%a9%e7%ae%a1%e7%90%86risk-management" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>MKR代币（MKR token）持有者可通过投票执行以下风险管理操作：</p>
+<ul>
+<li>
+<p>新增CDP类型（Add new CDP type）：
+创建具有独特风险参数组合的新CDP类型。CDP类型可以是新型抵押品，或对现有抵押品类别的风险参数进行重新配置。</p>
+</li>
+<li>
+<p>修改现有CDP类型（Modify existing CDP types）：
+调整已添加的一个或多个CDP类型的风险参数。</p>
+</li>
+<li>
+<p>调整敏感度参数（Modify Sensitivity Parameter）：
+改变目标利率反馈机制（Target Rate Feedback Mechanism, TRFM）的敏感度。</p>
+</li>
+<li>
+<p>调整目标利率（Modify Target Rate）：
+治理层可变更目标利率。实际操作中仅适用于特定场景：当MKR持有者需要将Dai价格锚定至当前目标价时。该操作需同步调整敏感度参数，若将两者均设为0%，则TRFM将被禁用，Dai目标价将永久锚定当前值。</p>
+</li>
+<li>
+<p>选定可信预言机集合（Choose the set of trusted oracles）：
+Maker平台通过去中心化预言机网络获取抵押品内部报价及Dai市场价格数据。MKR持有者有权决定可信预言机节点的数量及具体成员。即使半数预言机节点被攻陷或故障，系统仍可维持安全运行。</p>
+</li>
+<li>
+<p>调整价格反馈敏感度（Modify Price Feed Sensitivity）：
+修改价格反馈对系统内部价格波动的最大影响阈值规则。</p>
+</li>
+<li>
+<p>选定全局清算人集合（Choose the set of global settlers）：
+全局清算（Global settlement）是抵御预言机攻击或治理流程攻击的关键机制。治理流程负责选定全局清算人组，并确定触发全局清算所需的最低清算人数。</p>
+</li>
+</ul>
+<h3 class="heading-element" id="风险参数risk-parameters"><span>风险参数（Risk Parameters）</span>
+  <a href="#%e9%a3%8e%e9%99%a9%e5%8f%82%e6%95%b0risk-parameters" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>抵押债务头寸（Collateralized Debt Positions, CDPs）通过多重风险参数规范其使用规则。每种CDP类型均具备独特的参数组合，这些参数根据该CDP类型所用抵押品的风险特征设定，并由MKR持有者通过投票直接管控（1 MKR = 1投票权）。</p>
+<h4 class="heading-element" id="cdp核心风险参数"><span>CDP核心风险参数：</span>
+  <a href="#cdp%e6%a0%b8%e5%bf%83%e9%a3%8e%e9%99%a9%e5%8f%82%e6%95%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>
+<p>债务上限（Debt Ceiling）
+单一CDP类型可生成的最大债务额度。当某类CDP的未偿债务达到上限时，必须关闭现有头寸才能新增债务。该参数用于确保抵押品组合的充分多样化。</p>
+</li>
+<li>
+<p>清算比率（Liquidation Ratio）
+触发CDP清算的抵押品-债务比率阈值。低清算比率表明MKR持有者预期抵押品价格波动较小，高比率则预示预期波动剧烈。</p>
+</li>
+<li>
+<p>稳定费（Stability Fee）：所有CDP需支付的年化费用，按未偿债务计算并以Dai计价，但必须通过MKR代币支付（支付金额根据MKR实时市价计算）。所支付的MKR将被销毁，永久减少流通供应。</p>
+</li>
+<li>
+<p>惩罚比率（Penalty Ratio）：用于确定清算拍卖中用于回购销毁MKR的Dai最大比例（剩余抵押品将返还原CDP持有者）。该参数覆盖清算机制的低效成本。
+<em>注：在单抵押Dai（Single-Collateral Dai）阶段，清算惩罚资金用于回购销毁PETH，从而提升PETH/ETH汇率。</em></p>
+</li>
+</ul>
+<h1 class="heading-element" id="mkr代币治理机制"><span>MKR代币治理机制</span>
+  <a href="#mkr%e4%bb%a3%e5%b8%81%e6%b2%bb%e7%90%86%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>除了用于支付活跃CDP（Collateralized Debt Position）的稳定费外，MKR代币在Maker平台治理中发挥着核心作用。</p>
+<h2 class="heading-element" id="治理架构"><span>治理架构</span>
+  <a href="#%e6%b2%bb%e7%90%86%e6%9e%b6%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>系统级治理通过MKR持有者投票选举「活跃提案（Active Proposal）」实现。该提案作为智能合约，经MKR投票授权后获得根权限（root access），可修改Maker平台的内部治理参数。</p>
+<h2 class="heading-element" id="提案类型"><span>提案类型</span>
+  <a href="#%e6%8f%90%e6%a1%88%e7%b1%bb%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>提案分为两种形式：</p>
+<ol>
+<li>
+<p>单次执行提案合约（Single Action Proposal Contracts, SAPC）</p>
+<ul>
+<li>获取根权限后仅能执行一次</li>
+<li>执行后立即生效并自动修改平台治理参数</li>
+<li>执行后合约自毁且不可复用</li>
+<li>适用于系统初期阶段，操作简单但灵活性较低</li>
+</ul>
+</li>
+<li>
+<p>委托提案合约（Delegating Proposal Contracts, DPC）</p>
+<ul>
+<li>通过合约内编码的第二层治理逻辑持续行使根权限</li>
+<li>可包含基础逻辑（如每周风险参数更新投票协议）</li>
+<li>支持高级功能：
+▸ 设定特定时段内的治理行为幅度限制
+▸ 将部分/全部权限分级委托至第三层DPC（可附加限制条件）</li>
+</ul>
+</li>
+</ol>
+<h2 class="heading-element" id="提案机制"><span>提案机制</span>
+  <a href="#%e6%8f%90%e6%a1%88%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ul>
+<li>任何以太坊账户均可部署有效提案合约</li>
+<li>MKR持有者可用代币对多个候选提案进行赞成投票</li>
+<li>累计赞成票数最高的智能合约将当选为活跃提案</li>
+</ul>
+<h1 class="heading-element" id="mkr与多抵押daimulti-collateral-dai"><span>MKR与多抵押Dai（Multi-Collateral Dai）</span>
+  <a href="#mkr%e4%b8%8e%e5%a4%9a%e6%8a%b5%e6%8a%bcdaimulti-collateral-dai" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在升级至多抵押Dai系统后，MKR代币将通过取代PETH（Pooled Ether）成为系统资本重组（recapitalization）的核心资源，从而在Dai稳定币体系中承担更重要的职能。</p>
+<h3 class="heading-element" id="风险cdpcollateralized-debt-positions的自动清算机制"><span>风险CDP（Collateralized Debt Positions）的自动清算机制</span>
+  <a href="#%e9%a3%8e%e9%99%a9cdpcollateralized-debt-positions%e7%9a%84%e8%87%aa%e5%8a%a8%e6%b8%85%e7%ae%97%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为确保系统始终持有足额抵押品覆盖所有未偿债务（根据目标价格/Target Price），当某个CDP被判定风险过高时将被清算。Maker平台通过比较**清算比率（Liquidation Ratio）<strong>与CDP当前的</strong>抵押品-债务比率（collateral-to-debt ratio）**来触发清算流程。</p>
+<h4 class="heading-element" id="清算比率设定"><span>清算比率设定</span>
+  <a href="#%e6%b8%85%e7%ae%97%e6%af%94%e7%8e%87%e8%ae%be%e5%ae%9a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>每种CDP类型都有独特的清算比率，该比率由MKR持币人投票决定，并根据该CDP类型所对应抵押资产的风险特征设定。当CDP的抵押率触及清算阈值时，Maker平台将自动收购其抵押资产并抛售。当前存在两种机制：</p>
+<ul>
+<li>单抵押Dai（Single-Collateral Dai）：临时采用流动性供给合约（Liquidity Providing Contract）</li>
+<li>多抵押Dai（Multi-Collateral Dai）：采用拍卖机制</li>
+</ul>
+<hr>
+<h4 class="heading-element" id="流动性供给合约单抵押dai临时机制"><span>流动性供给合约（单抵押Dai临时机制）</span>
+  <a href="#%e6%b5%81%e5%8a%a8%e6%80%a7%e4%be%9b%e7%bb%99%e5%90%88%e7%ba%a6%e5%8d%95%e6%8a%b5%e6%8a%bcdai%e4%b8%b4%e6%97%b6%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在单抵押Dai阶段，清算通过智能合约「流动性供给合约」执行。该合约根据系统价格预言机（Price Feed）与以太坊用户及清算机器人（Keepers）直接交易：</p>
+<ol>
+<li>
+<p>清算触发</p>
+<ul>
+<li>被清算CDP立即由系统接管</li>
+<li>原持有者可获得：剩余抵押品价值 - 债务 - 稳定费（Stability Fee）- 清算罚金（Liquidation Penalty）</li>
+</ul>
+</li>
+<li>
+<p>抵押品处理流程</p>
+<ul>
+<li>PETH抵押品被放入流动性供给合约公开出售</li>
+<li>清算机器人可通过原子交易（Atomically）支付Dai购买PETH（相当于抄底）</li>
+<li>所获Dai将立即从流通供应量中销毁，直至覆盖CDP债务缺口。卖PETH得到的Dai会先偿还债务，多余的资金将用于回购并销毁PETH，从而推高PETH价格。</li>
+</ul>
+</li>
+<li>
+<p>超额处理与价值重分配</p>
+<ul>
+<li>若Dai支付额超过债务缺口：超额部分将用于从市场回购并销毁PETH，通过提高ETH/PETH比率使PETH持有者增值</li>
+<li>若初始抛售未能覆盖债务：系统将持续增发并抛售PETH，导致ETH/PETH比率下降，使PETH持有者蒙受价值损失</li>
+</ul>
+</li>
+</ol>
+<h3 class="heading-element" id="债务与抵押品拍卖multi-collateral-dai"><span>债务与抵押品拍卖（Multi-Collateral Dai）</span>
+  <a href="#%e5%80%ba%e5%8a%a1%e4%b8%8e%e6%8a%b5%e6%8a%bc%e5%93%81%e6%8b%8d%e5%8d%96multi-collateral-dai" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>当发生清算时，Maker 平台会购买抵押债务头寸（CDP）的抵押资产，随后通过自动化拍卖机制进行出售。该拍卖机制使系统即便在缺乏价格信息时，仍能完成 CDP 的结算。</p>
+<h4 class="heading-element" id="债务拍卖debt-auction"><span>债务拍卖（Debt Auction）</span>
+  <a href="#%e5%80%ba%e5%8a%a1%e6%8b%8d%e5%8d%96debt-auction" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>为接管 CDP 的抵押资产以便出售，系统需先筹集足够的 Dai 代币以偿付该 CDP 的债务。此过程称为债务拍卖（Debt Auction），其运作方式是通过稀释 MKR 代币的供应量，并以拍卖形式向竞标者出售这些代币。</p>
+<h4 class="heading-element" id="抵押品拍卖collateral-auction"><span>抵押品拍卖（Collateral Auction）</span>
+  <a href="#%e6%8a%b5%e6%8a%bc%e5%93%81%e6%8b%8d%e5%8d%96collateral-auction" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>与此同时，CDP 的抵押资产会在抵押品拍卖（Collateral Auction）中出售。拍卖所得（同样以 Dai 计价）将优先用于偿付 CDP 的债务及清算罚金（Liquidation Penalty，这是由 MKR 持有者投票确定的风险参数），剩余资金则用于回购并销毁 MKR 代币。此操作可直接抵消债务拍卖中产生的 MKR 稀释效应。</p>
+<p>若竞标出价足以全额覆盖 CDP 债务及清算罚金，抵押品拍卖将切换为反向拍卖机制（reverse auction），尝试以最小数量的抵押资产完成清算——任何剩余的抵押品将返还给 CDP 的原所有者。</p>
+<h2 class="heading-element" id="关键外部参与者key-external-actors"><span>关键外部参与者（Key External Actors）</span>
+  <a href="#%e5%85%b3%e9%94%ae%e5%a4%96%e9%83%a8%e5%8f%82%e4%b8%8e%e8%80%85key-external-actors" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>除智能合约基础设施外，Maker平台（Maker Platform）依赖特定外部参与者维持运营。其中：</p>
+<ul>
+<li>守护者（Keepers）：利用平台经济激励机制的独立参与者</li>
+<li>预言机（Oracles）与全局清算人（Global Settlers）：由MKR持币人（MKR Voters）授予系统特殊权限的角色</li>
+</ul>
+<h3 class="heading-element" id="守护者keepers"><span>守护者（Keepers）</span>
+  <a href="#%e5%ae%88%e6%8a%a4%e8%80%85keepers" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>守护者是通过盈利机会激励的（通常自动化的）独立参与者，在Dai稳定币系统（Dai Stablecoin System）中：</p>
+<ol>
+<li>参与债务拍卖（Debt Auctions）和抵押品拍卖（Collateral Auctions）（当抵押债务头寸CDPs被清算时）</li>
+<li>围绕目标价格（Target Price）进行Dai套利：
+<ul>
+<li>当市价高于目标价格时卖出Dai</li>
+<li>当市价低于目标价格时买入Dai</li>
+</ul>
+</li>
+</ol>
+<h3 class="heading-element" id="预言机oracles"><span>预言机（Oracles）</span>
+  <a href="#%e9%a2%84%e8%a8%80%e6%9c%baoracles" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>系统需要两类实时数据：</p>
+<ol>
+<li>CDP抵押资产的市场价格（用于触发清算）</li>
+<li>Dai市场价格及其与目标价格的偏差（用于目标费率调整机制TRFM激活时的参数调整）</li>
+</ol>
+<p>安全机制：</p>
+<ul>
+<li>MKR持币人选定可信预言机节点，通过以太坊交易提交数据</li>
+<li><strong>价格反馈敏感度参数（Price Feed Sensitivity Parameter）</strong>：限制价格数据的最大波动幅度（例如&quot;15分钟内5%&ldquo;的设定意味着价格在45分钟内最多波动约15%），为应对预言机攻击提供全局清算（global settlement）响应时间</li>
+</ul>
+<h3 class="heading-element" id="全局清算人global-settlers"><span>全局清算人（Global Settlers）</span>
+  <a href="#%e5%85%a8%e5%b1%80%e6%b8%85%e7%ae%97%e4%ba%baglobal-settlers" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>作为Dai稳定币系统的最后防线：</p>
+<ul>
+<li>由MKR持币人选举产生</li>
+<li>唯一权限：触发全局清算（global settlement）</li>
+<li>无其他系统特权</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="应用案例"><span>应用案例</span>
+  <a href="#%e5%ba%94%e7%94%a8%e6%a1%88%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="基础借贷"><span>基础借贷</span>
+  <a href="#%e5%9f%ba%e7%a1%80%e5%80%9f%e8%b4%b7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>案例1</strong>：Bob需要贷款，他：</p>
+<ol>
+<li>锁定价值显著超过100美元的ETH到CDP</li>
+<li>立即生成100 Dai到其以太坊账户</li>
+<li>假设年稳定费（Stability Fee）为1%，一年后需偿还101 Dai才能取回ETH</li>
+</ol>
+<h3 class="heading-element" id="杠杆交易"><span>杠杆交易</span>
+  <a href="#%e6%9d%a0%e6%9d%86%e4%ba%a4%e6%98%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>案例2</strong>：Bob进行ETH/Dai保证金做多：</p>
+<ol>
+<li>抵押价值150美元的ETH生成100 Dai</li>
+<li>用100 Dai购买等值ETH</li>
+<li>最终获得1.66倍ETH/USD风险敞口</li>
+<li>原始抵押品（150美元ETH）持续锁定直至偿还债务+稳定费</li>
+</ol>
+<h3 class="heading-element" id="多角色协作"><span>多角色协作</span>
+  <a href="#%e5%a4%9a%e8%a7%92%e8%89%b2%e5%8d%8f%e4%bd%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>案例3</strong>：Alice与Bob通过场外合约（OTC contract）合作：</p>
+<ol>
+<li>Alice提供50美元ETH，Bob提供100美元ETH</li>
+<li>合约创建CDP并生成100 Dai转给Bob</li>
+<li>CDP所有权转移给Alice，使其获得：
+<ul>
+<li>100美元债务（以Dai计价）</li>
+<li>150美元抵押品（以ETH计价）</li>
+</ul>
+</li>
+<li>实现3倍ETH/USD杠杆做多</li>
+</ol>
+<h3 class="heading-element" id="清算机制"><span>清算机制</span>
+  <a href="#%e6%b8%85%e7%ae%97%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>案例4</strong>：ETH价格暴跌时的清算流程（假设参数）：</p>
+<ul>
+<li>清算比率（Liquidation Ratio）：145%</li>
+<li>惩罚比率（Penalty Ratio）：105%</li>
+<li>初始抵押率：150% → 价格下跌10%后降至~135%</li>
+</ul>
+<p>触发流程：</p>
+<ol>
+<li>交易者启动清算</li>
+<li>债务拍卖：用Dai竞拍MKR</li>
+<li>抵押品拍卖：用Dai竞拍价值~135美元的ETH抵押品</li>
+<li>当竞价达105 Dai时，进入反向竞价阶段（以最少抵押品换取105 Dai）</li>
+<li>剩余抵押品返还CDP持有者</li>
+</ol>
+<h3 class="heading-element" id="可触达市场addressable-market"><span>可触达市场（Addressable Market）</span>
+  <a href="#%e5%8f%af%e8%a7%a6%e8%be%be%e5%b8%82%e5%9c%baaddressable-market" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如引言所述，具备价格稳定性的加密货币是大多数去中心化应用的基础需求。因此，Dai的潜在市场规模至少与整个区块链行业相当。以下列举了Dai稳定币系统(Dai Stablecoin System)作为价格稳定的加密货币及去中心化保证金交易平台(decentralized margin trading platform)的部分直接应用场景（涵盖区块链及更广泛领域），该清单并非穷尽：</p>
+<ul>
+<li>
+<p>预测市场与博彩应用（Prediction Markets &amp; Gambling Applications）
+当进行非关联性预测时，用户显然不愿因使用波动性加密货币下注而增加额外风险。若用户还需对下注所用波动性资产的未来价格进行投机，长期押注将变得尤其不可行。而像Dai这样具备价格稳定性的加密货币，将成为预测市场和博彩用户的自然选择。</p>
+</li>
+<li>
+<p>金融市场（Financial Markets）：对冲、衍生品与杠杆
+抵押债务头寸(CDPs)将实现无需许可的杠杆交易。Dai还可作为稳定可靠的抵押品，应用于定制化衍生品智能合约（如期权或差价合约(CFD)）中。</p>
+</li>
+<li>
+<p>商户收款、跨境交易与汇款
+通过规避汇率波动风险并消除中间环节，使用Dai可显著降低国际贸易的 transaction costs。</p>
+</li>
+<li>
+<p>透明会计系统（Transparent Accounting Systems）
+慈善机构、非政府组织(NGO)及政府机构采用Dai后，将提升运营效率并降低腐败风险。</p>
+</li>
+</ul>
+<h3 class="heading-element" id="风险及应对措施risks-and-their-mitigation"><span>风险及应对措施（Risks and their Mitigation）</span>
+  <a href="#%e9%a3%8e%e9%99%a9%e5%8f%8a%e5%ba%94%e5%af%b9%e6%8e%aa%e6%96%bdrisks-and-their-mitigation" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Maker平台的顺利开发、部署及运营面临诸多潜在风险。Maker社区必须采取一切必要措施进行风险缓释。以下列举已识别的关键风险及相应应对方案：</p>
+<h4 class="heading-element" id="1-智能合约基础设施遭恶意黑客攻击"><span>1. 智能合约基础设施遭恶意黑客攻击</span>
+  <a href="#1-%e6%99%ba%e8%83%bd%e5%90%88%e7%ba%a6%e5%9f%ba%e7%a1%80%e8%ae%be%e6%96%bd%e9%81%ad%e6%81%b6%e6%84%8f%e9%bb%91%e5%ae%a2%e6%94%bb%e5%87%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>风险描述：</p>
+<p>早期阶段的最大风险在于恶意程序员可能发现已部署智能合约的漏洞，并在修复前利用其破坏系统或窃取资产。最坏情况下，Maker平台（Maker Platform）中作为抵押品的所有去中心化数字资产（如以太坊（ETH）或Augur声誉币（REP））可能被永久盗取。而Digix黄金IOU等非去中心化抵押资产则可通过中心化后门冻结控制。</p>
+<p>应对措施（Mitigation）：</p>
+<ul>
+<li>自开发伊始，智能合约安全始终是Dai项目的最高优先级</li>
+<li>代码库已接受区块链行业顶尖安全研究团队的三次独立审计</li>
+<li>长期将通过形式化验证（Formal Verification）实现理论上的终极安全——用数学方法证明代码行为完全符合设计意图</li>
+<li>目前已通过Haskell语言完成Dai稳定币系统的完整参考实现，为高阶形式化验证奠定基础</li>
+</ul>
+<h4 class="heading-element" id="2-抵押资产遭遇黑天鹅事件black-swan-event"><span>2. 抵押资产遭遇黑天鹅事件（Black Swan Event）</span>
+  <a href="#2-%e6%8a%b5%e6%8a%bc%e8%b5%84%e4%ba%a7%e9%81%ad%e9%81%87%e9%bb%91%e5%a4%a9%e9%b9%85%e4%ba%8b%e4%bb%b6black-swan-event" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>风险描述：</p>
+<p>当Dai稳定币系统（Dai Stablecoin System）处于早期阶段（MKR代币尚不足以支撑通胀稀释时），或后期采用多元化抵押组合时，抵押资产可能发生极端价格波动。</p>
+<p>应对措施：</p>
+<ul>
+<li>初期仅接受ETH作为抵押债务头寸（CDP）抵押品</li>
+<li>设置债务上限（Debt Ceiling）并采用渐进式放宽机制</li>
+</ul>
+<h4 class="heading-element" id="3-市场竞争与用户体验挑战"><span>3. 市场竞争与用户体验挑战</span>
+  <a href="#3-%e5%b8%82%e5%9c%ba%e7%ab%9e%e4%ba%89%e4%b8%8e%e7%94%a8%e6%88%b7%e4%bd%93%e9%aa%8c%e6%8c%91%e6%88%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>风险描述：</p>
+<p>尽管Dai稳定币系统（Dai Stablecoin System）凭借“真正去中心化”特性成为区块链行业最复杂的稳定模型，但用户可能为追求操作简便性转向中心化数字资产。</p>
+<p>应对措施：</p>
+<ul>
+<li>确保Dai符合ERC-20标准，实现与以太坊生态的无缝兼容</li>
+<li>维持高流动性，使普通用户无需理解底层机制即可便捷使用</li>
+<li>针对保证金交易用户（做市商（Keeper）及投资机构）提供详尽文档支持，Maker社区将确保系统各环节均有清晰说明</li>
+</ul>
+<h4 class="heading-element" id="4-定价异常与非理性市场行为"><span>4. 定价异常与非理性市场行为</span>
+  <a href="#4-%e5%ae%9a%e4%bb%b7%e5%bc%82%e5%b8%b8%e4%b8%8e%e9%9d%9e%e7%90%86%e6%80%a7%e5%b8%82%e5%9c%ba%e8%a1%8c%e4%b8%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>风险描述：</p>
+<p>预言机（Oracle）价格馈送故障或非理性市场动态可能导致Dai价值长期偏离锚定。若市场信心崩溃，即使触发TRFM调整机制或启动MKR稀释，仍可能无法恢复流动性。</p>
+<p>应对措施：</p>
+<ul>
+<li>Maker社区需激励充足资本池充当做市商（Keeper）</li>
+<li>通过市场理性最大化实现Dai供应量的稳定增长</li>
+</ul>
+<h4 class="heading-element" id="5-中心化基础设施失效"><span>5. 中心化基础设施失效</span>
+  <a href="#5-%e4%b8%ad%e5%bf%83%e5%8c%96%e5%9f%ba%e7%a1%80%e8%ae%be%e6%96%bd%e5%a4%b1%e6%95%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>风险描述：</p>
+<p>早期阶段Maker团队在预算管理、人才招募、合作拓展及监管沟通等方面起主导作用。若因法律问题或管理不善导致团队失能，平台发展将面临重大风险。</p>
+<p>应对措施：</p>
+<ul>
+<li>Maker社区作为去中心化制衡力量存在</li>
+<li>MKR代币分配阶段已确保核心开发者持有显著份额</li>
+<li>若团队失能，持币者将自发资助开发（或直接参与开发）以维护自身权益</li>
+</ul>
+<h3 class="heading-element" id="结论conclusion"><span>结论（Conclusion）</span>
+  <a href="#%e7%bb%93%e8%ae%baconclusion" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Dai稳定币系统(Dai Stablecoin System)旨在解决以太坊生态系统(Ethereum ecosystem)及更广泛区块链经济中价值稳定交换的核心问题。我们相信：</p>
+<ul>
+<li>通过Dai的生成、流通及回收机制</li>
+<li>结合MKR持有者直接参与风险管理（Risk Management）的设计</li>
+<li>做市商（Keeper）在利益驱动下的自发调节</li>
+</ul>
+<p>这三重机制将共同确保Dai长期保持高效的价格稳定性。Maker社区创始人制定了审慎的治理路线图(governance roadmap)，既满足短期敏捷开发需求，又符合长期去中心化理念。当前发展路线聚焦于以负责任的方式推动Dai的规模化采用，实施路径兼具进取性与系统性。</p>
+<hr>
+<h1 class="heading-element" id="通俗解释抵押债务头寸cdp的计算"><span>通俗解释：抵押债务头寸（CDP）的计算</span>
+  <a href="#%e9%80%9a%e4%bf%97%e8%a7%a3%e9%87%8a%e6%8a%b5%e6%8a%bc%e5%80%ba%e5%8a%a1%e5%a4%b4%e5%af%b8cdp%e7%9a%84%e8%ae%a1%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h4 class="heading-element" id="1-什么是抵押债务头寸cdp"><span>1. 什么是抵押债务头寸（CDP）？</span>
+  <a href="#1-%e4%bb%80%e4%b9%88%e6%98%af%e6%8a%b5%e6%8a%bc%e5%80%ba%e5%8a%a1%e5%a4%b4%e5%af%b8cdp" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>CDP（Collateralized Debt Position，抵押债务头寸）是 MakerDAO 系统的核心机制，类似于银行的“抵押贷款”。</p>
+<ul>
+<li><strong>你存入抵押品（如 ETH）→ 借出 Dai（稳定币）</strong></li>
+<li><strong>必须保持足够的抵押率</strong>，否则会被清算（系统自动卖掉你的抵押品还债）。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="2-cdp-的关键参数"><span>2. CDP 的关键参数</span>
+  <a href="#2-cdp-%e7%9a%84%e5%85%b3%e9%94%ae%e5%8f%82%e6%95%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: left">参数</th>
+            <th style="text-align: left">解释</th>
+            <th style="text-align: left">例子</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: left">抵押品价值（Collateral Value）</td>
+            <td style="text-align: left">你存入的资产（如 ETH）的当前市场价格</td>
+            <td style="text-align: left">1 ETH = $3,000</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">债务（Debt）</td>
+            <td style="text-align: left">你借出的 Dai 数量</td>
+            <td style="text-align: left">借了 2,000 Dai</td>
+        </tr>
+        <tr>
+            <td style="text-align: left">抵押率（Collateral Ratio）</td>
+            <td style="text-align: left">抵押品价值 ÷ 债务</td>
+            <td style="text-align: left"><code>3,000 / 2,000 = 150%</code></td>
+        </tr>
+        <tr>
+            <td style="text-align: left">清算线（Liquidation Threshold）</td>
+            <td style="text-align: left">最低允许的抵押率（如 150%）</td>
+            <td style="text-align: left">低于 150% 会被清算</td>
+        </tr>
+    </tbody>
+  </table>
+</div><hr>
+<h3 class="heading-element" id="3-如何计算-cdp-是否安全"><span>3. 如何计算 CDP 是否安全？</span>
+  <a href="#3-%e5%a6%82%e4%bd%95%e8%ae%a1%e7%ae%97-cdp-%e6%98%af%e5%90%a6%e5%ae%89%e5%85%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>公式</strong>：</p>
+<p>$\text{抵押率} = \frac{\text{抵押品价值}}{\text{债务}} \times 100%$</p>
+<p><strong>举例</strong>：</p>
+<ul>
+<li>
+<p>你存入 <strong>1 ETH（价值 $3,000）</strong>，借出 <strong>2,000 Dai</strong>。</p>
+</li>
+<li>
+<p>当前抵押率：$\frac{3000}{2000} \times 100% = 150%$</p>
+<p>（刚好达到最低要求，暂时安全）</p>
+</li>
+</ul>
+<p><strong>如果 ETH 价格下跌</strong>：</p>
+<ul>
+<li>
+<p>ETH 跌到 <strong>$2,500</strong>，债务仍是 2,000 Dai。</p>
+</li>
+<li>
+<p>新抵押率：</p>
+</li>
+</ul>
+<p>$\frac{2500}{2000} \times 100% = 125% $</p>
+<p>（低于 150%，触发清算！）</p>
+<hr>
+<h3 class="heading-element" id="4-清算会发生什么"><span>4. 清算会发生什么？</span>
+  <a href="#4-%e6%b8%85%e7%ae%97%e4%bc%9a%e5%8f%91%e7%94%9f%e4%bb%80%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>系统会自动拍卖你的抵押品（ETH），用拍卖得到的 Dai 还债。</li>
+<li>你还会被收取 <strong>清算罚金</strong>（如 13%），剩余抵押品（如果有）会还给你。</li>
+</ul>
+<p><strong>接上例</strong>：</p>
+<ul>
+<li>清算时，系统卖掉你的 1 ETH（$2,500），还掉 2,000 Dai 债务。</li>
+<li>罚金：13% × 2,000 Dai = 260 Dai</li>
+<li>最终债务：2,000 + 260 = 2,260 Dai</li>
+<li>剩余抵押品价值：2,500 - 2,260 = $240（还给你）</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="5-如何避免清算"><span>5. 如何避免清算？</span>
+  <a href="#5-%e5%a6%82%e4%bd%95%e9%81%bf%e5%85%8d%e6%b8%85%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>
+<p>增加抵押品：存入更多 ETH，提高抵押率。</p>
+<ul>
+<li>例：再存入 0.2 ETH（$500），新抵押率 = (3,000 + 500) / 2,000 = 175%</li>
+</ul>
+</li>
+<li>
+<p>偿还部分债务：还掉部分 Dai，降低债务。</p>
+<ul>
+<li>例：还 500 Dai，新债务 = 1,500 Dai，新抵押率 = 3,000 / 1,500 = 200%</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="6-为什么-cdp-设计成这样"><span>6. 为什么 CDP 设计成这样？</span>
+  <a href="#6-%e4%b8%ba%e4%bb%80%e4%b9%88-cdp-%e8%ae%be%e8%ae%a1%e6%88%90%e8%bf%99%e6%a0%b7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>保护系统</strong>：确保 Dai 始终有足够抵押品支撑，避免坏账。</li>
+<li><strong>保护借款人</strong>：清算机制避免你欠下无限债务（类似股票融资的“平仓”）。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="总结"><span>总结</span>
+  <a href="#%e6%80%bb%e7%bb%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>CDP = 抵押贷款</strong>，用 ETH 等资产借 Dai。</li>
+<li><strong>抵押率是关键</strong>：必须 &gt;150%（或其他设定值），否则被清算。</li>
+<li><strong>清算 = 强制卖抵押品还债</strong>，并收罚金。</li>
+<li><strong>应对方法</strong>：加抵押品或还部分 Dai。</li>
+</ul>
+<p>这样设计让 MakerDAO 既安全又去中心化，类似银行的“抵押贷款”，但由代码自动执行规则。</p>
+<hr>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-07-19 00:00:00">更新于 2025-07-19&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202507-DAI/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202507-dai/" data-title="DAI 白皮书翻译" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202507-dai/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202507-dai/" data-title="DAI 白皮书翻译"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202507-eth_white_paper/" class="post-nav-item" rel="prev" title="ETH 白皮书阅读"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>ETH 白皮书阅读</a><a href="/posts/202507-lol/" class="post-nav-item" rel="next" title="十大英雄联盟悲情语录">十大英雄联盟悲情语录<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#cdp-操作流程"><strong>CDP 操作流程</strong></a>
+          <ul>
+            <li><a href="#步骤-1创建-cdp-并存入抵押物"><strong>步骤 1：创建 CDP 并存入抵押物</strong></a></li>
+            <li><a href="#步骤-2从已抵押的-cdp-中生成-dai"><strong>步骤 2：从已抵押的 CDP 中生成 Dai</strong></a></li>
+            <li><a href="#步骤-3偿还债务并支付稳定费stability-fee"><strong>步骤 3：偿还债务并支付稳定费（Stability Fee）</strong></a></li>
+            <li><a href="#步骤-4提取抵押物并关闭-cdp"><strong>步骤 4：提取抵押物并关闭 CDP</strong></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#资金池化以太币peth单抵押-dai-的临时机制">资金池化以太币/PETH（单抵押 Dai 的临时机制）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#目标价格target-price">目标价格（Target Price）</a></li>
+    <li><a href="#目标利率反馈机制target-rate-feedback-mechanismtrfm">目标利率反馈机制（Target Rate Feedback Mechanism，TRFM）</a></li>
+    <li><a href="#灵敏度参数sensitivity-parameter">灵敏度参数（Sensitivity Parameter）</a></li>
+    <li><a href="#全局清算global-settlement">全局清算（Global Settlement）</a>
+      <ul>
+        <li><a href="#全局清算分步流程">全局清算分步流程</a>
+          <ul>
+            <li><a href="#第一步激活全局清算">第一步：激活全局清算</a></li>
+            <li><a href="#第二步处理全局清算索赔">第二步：处理全局清算索赔</a></li>
+            <li><a href="#第三步dai与cdp持有者申领抵押资产">第三步：Dai与CDP持有者申领抵押资产</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#风险参数risk-parameters">风险参数（Risk Parameters）</a>
+          <ul>
+            <li><a href="#cdp核心风险参数">CDP核心风险参数：</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#治理架构">治理架构</a></li>
+    <li><a href="#提案类型">提案类型</a></li>
+    <li><a href="#提案机制">提案机制</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#风险cdpcollateralized-debt-positions的自动清算机制">风险CDP（Collateralized Debt Positions）的自动清算机制</a>
+          <ul>
+            <li><a href="#清算比率设定">清算比率设定</a></li>
+            <li><a href="#流动性供给合约单抵押dai临时机制">流动性供给合约（单抵押Dai临时机制）</a></li>
+          </ul>
+        </li>
+        <li><a href="#债务与抵押品拍卖multi-collateral-dai">债务与抵押品拍卖（Multi-Collateral Dai）</a>
+          <ul>
+            <li><a href="#债务拍卖debt-auction">债务拍卖（Debt Auction）</a></li>
+            <li><a href="#抵押品拍卖collateral-auction">抵押品拍卖（Collateral Auction）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#关键外部参与者key-external-actors">关键外部参与者（Key External Actors）</a>
+      <ul>
+        <li><a href="#守护者keepers">守护者（Keepers）</a></li>
+        <li><a href="#预言机oracles">预言机（Oracles）</a></li>
+        <li><a href="#全局清算人global-settlers">全局清算人（Global Settlers）</a></li>
+      </ul>
+    </li>
+    <li><a href="#应用案例">应用案例</a>
+      <ul>
+        <li><a href="#基础借贷">基础借贷</a></li>
+        <li><a href="#杠杆交易">杠杆交易</a></li>
+        <li><a href="#多角色协作">多角色协作</a></li>
+        <li><a href="#清算机制">清算机制</a></li>
+        <li><a href="#可触达市场addressable-market">可触达市场（Addressable Market）</a></li>
+        <li><a href="#风险及应对措施risks-and-their-mitigation">风险及应对措施（Risks and their Mitigation）</a>
+          <ul>
+            <li><a href="#1-智能合约基础设施遭恶意黑客攻击">1. 智能合约基础设施遭恶意黑客攻击</a></li>
+            <li><a href="#2-抵押资产遭遇黑天鹅事件black-swan-event">2. 抵押资产遭遇黑天鹅事件（Black Swan Event）</a></li>
+            <li><a href="#3-市场竞争与用户体验挑战">3. 市场竞争与用户体验挑战</a></li>
+            <li><a href="#4-定价异常与非理性市场行为">4. 定价异常与非理性市场行为</a></li>
+            <li><a href="#5-中心化基础设施失效">5. 中心化基础设施失效</a></li>
+          </ul>
+        </li>
+        <li><a href="#结论conclusion">结论（Conclusion）</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#1-什么是抵押债务头寸cdp">1. 什么是抵押债务头寸（CDP）？</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-cdp-的关键参数">2. CDP 的关键参数</a></li>
+        <li><a href="#3-如何计算-cdp-是否安全">3. 如何计算 CDP 是否安全？</a></li>
+        <li><a href="#4-清算会发生什么">4. 清算会发生什么？</a></li>
+        <li><a href="#5-如何避免清算">5. 如何避免清算？</a></li>
+        <li><a href="#6-为什么-cdp-设计成这样">6. 为什么 CDP 设计成这样？</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/32f94f70af92f0c4ba8aba8dcb50f39b.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

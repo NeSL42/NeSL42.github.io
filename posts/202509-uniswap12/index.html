@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>12.Uniswap V3 添加流动性案例 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="核心摘要 (Key Takeaways) Uniswap V3 的核心是集中流动性：与 V2 的无限价格范围不同，V3 允许流动性提供者（LP）将资金集中在特定的价格区间 [Pa, Pb] 内，其底层数学模型可以看作是对 V2 的 x * y = k 模型进行了平移和截断。 价格变动消耗特定 Token：在设定的价格区间内，当价格从当前价 P 下降至 Pa 时，池子会消耗 Y Token；当价格从 P 上升至 Pb 时，池子会消耗 X Token。理解这一点是计算所需流动性的关键。 流动性计算基于虚拟曲线：尽管 V3 的真实曲线是分段的，但其流动性数量 $\Delta X$ 和 $\Delta Y$ 的计算可以基于 V2 的 $x \cdot y = L^2$ 和 $P = y/x$ 这两个基础公式，应用在一条“虚拟”的、经过平移的曲线上进行推导。 工程实现中的核心逻辑：在实际添加流动性时，智能合约会根据用户提供的两种 Token ($\Delta X$ 和 $\Delta Y$) 分别计算出两个可能的流动性值 L，并最终选择较小的那个作为最终的流动性。这可能导致实际使用的某一种 Token 数量略少于用户最初提供的数量。 一、 Uniswap V3 核心公式与概念回顾 1. V3 流动性公式与曲线 Uniswap V3 引入了集中流动性的概念，允许将流动性提供在指定的价格区间 [Pa, Pb]。其公式可以理解为对 V2 公式的平移。
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="12.Uniswap V3 添加流动性案例">
+  <meta itemprop="description" content="核心摘要 (Key Takeaways) Uniswap V3 的核心是集中流动性：与 V2 的无限价格范围不同，V3 允许流动性提供者（LP）将资金集中在特定的价格区间 [Pa, Pb] 内，其底层数学模型可以看作是对 V2 的 x * y = k 模型进行了平移和截断。 价格变动消耗特定 Token：在设定的价格区间内，当价格从当前价 P 下降至 Pa 时，池子会消耗 Y Token；当价格从 P 上升至 Pb 时，池子会消耗 X Token。理解这一点是计算所需流动性的关键。 流动性计算基于虚拟曲线：尽管 V3 的真实曲线是分段的，但其流动性数量 $\Delta X$ 和 $\Delta Y$ 的计算可以基于 V2 的 $x \cdot y = L^2$ 和 $P = y/x$ 这两个基础公式，应用在一条“虚拟”的、经过平移的曲线上进行推导。 工程实现中的核心逻辑：在实际添加流动性时，智能合约会根据用户提供的两种 Token ($\Delta X$ 和 $\Delta Y$) 分别计算出两个可能的流动性值 L，并最终选择较小的那个作为最终的流动性。这可能导致实际使用的某一种 Token 数量略少于用户最初提供的数量。 一、 Uniswap V3 核心公式与概念回顾 1. V3 流动性公式与曲线 Uniswap V3 引入了集中流动性的概念，允许将流动性提供在指定的价格区间 [Pa, Pb]。其公式可以理解为对 V2 公式的平移。">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="3218">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap12/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="12.Uniswap V3 添加流动性案例">
+  <meta property="og:description" content="核心摘要 (Key Takeaways) Uniswap V3 的核心是集中流动性：与 V2 的无限价格范围不同，V3 允许流动性提供者（LP）将资金集中在特定的价格区间 [Pa, Pb] 内，其底层数学模型可以看作是对 V2 的 x * y = k 模型进行了平移和截断。 价格变动消耗特定 Token：在设定的价格区间内，当价格从当前价 P 下降至 Pa 时，池子会消耗 Y Token；当价格从 P 上升至 Pb 时，池子会消耗 X Token。理解这一点是计算所需流动性的关键。 流动性计算基于虚拟曲线：尽管 V3 的真实曲线是分段的，但其流动性数量 $\Delta X$ 和 $\Delta Y$ 的计算可以基于 V2 的 $x \cdot y = L^2$ 和 $P = y/x$ 这两个基础公式，应用在一条“虚拟”的、经过平移的曲线上进行推导。 工程实现中的核心逻辑：在实际添加流动性时，智能合约会根据用户提供的两种 Token ($\Delta X$ 和 $\Delta Y$) 分别计算出两个可能的流动性值 L，并最终选择较小的那个作为最终的流动性。这可能导致实际使用的某一种 Token 数量略少于用户最初提供的数量。 一、 Uniswap V3 核心公式与概念回顾 1. V3 流动性公式与曲线 Uniswap V3 引入了集中流动性的概念，允许将流动性提供在指定的价格区间 [Pa, Pb]。其公式可以理解为对 V2 公式的平移。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="12.Uniswap V3 添加流动性案例">
+  <meta name="twitter:description" content="核心摘要 (Key Takeaways) Uniswap V3 的核心是集中流动性：与 V2 的无限价格范围不同，V3 允许流动性提供者（LP）将资金集中在特定的价格区间 [Pa, Pb] 内，其底层数学模型可以看作是对 V2 的 x * y = k 模型进行了平移和截断。 价格变动消耗特定 Token：在设定的价格区间内，当价格从当前价 P 下降至 Pa 时，池子会消耗 Y Token；当价格从 P 上升至 Pb 时，池子会消耗 X Token。理解这一点是计算所需流动性的关键。 流动性计算基于虚拟曲线：尽管 V3 的真实曲线是分段的，但其流动性数量 $\Delta X$ 和 $\Delta Y$ 的计算可以基于 V2 的 $x \cdot y = L^2$ 和 $P = y/x$ 这两个基础公式，应用在一条“虚拟”的、经过平移的曲线上进行推导。 工程实现中的核心逻辑：在实际添加流动性时，智能合约会根据用户提供的两种 Token ($\Delta X$ 和 $\Delta Y$) 分别计算出两个可能的流动性值 L，并最终选择较小的那个作为最终的流动性。这可能导致实际使用的某一种 Token 数量略少于用户最初提供的数量。 一、 Uniswap V3 核心公式与概念回顾 1. V3 流动性公式与曲线 Uniswap V3 引入了集中流动性的概念，允许将流动性提供在指定的价格区间 [Pa, Pb]。其公式可以理解为对 V2 公式的平移。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap12/" title="12.Uniswap V3 添加流动性案例 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap13/" title="13.Uniswap V3 单价格区间内 Swap 机制" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap11/" title="11.Uniswap V3 tick 与价格表示" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "12.Uniswap V3 添加流动性案例",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap12\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  3218 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap12\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>12.Uniswap V3 添加流动性案例</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="3218 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3300 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 7 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+        <li><a href="#一-uniswap-v3-核心公式与概念回顾"><strong>一、 Uniswap V3 核心公式与概念回顾</strong></a>
+          <ul>
+            <li><a href="#1-v3-流动性公式与曲线"><strong>1. V3 流动性公式与曲线</strong></a></li>
+            <li><a href="#2-真实流动性与虚拟流动性"><strong>2. 真实流动性与虚拟流动性</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#二-价格区间内的-token-消耗机制"><strong>二、 价格区间内的 Token 消耗机制</strong></a></li>
+        <li><a href="#三-流动性数量计算"><strong>三、 流动性数量计算</strong></a>
+          <ul>
+            <li><a href="#1-基础公式推导"><strong>1. 基础公式推导</strong></a></li>
+            <li><a href="#2-计算-delta-x-和-delta-y"><strong>2. 计算 $\Delta X$ 和 $\Delta Y$</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#四-案例分析添加流动性实践"><strong>四、 案例分析：添加流动性实践</strong></a>
+          <ul>
+            <li><a href="#案例-1-理论计算题回顾"><strong>案例 1: 理论计算题回顾</strong></a></li>
+            <li><a href="#案例-2-结合代码实现的完整流程"><strong>案例 2: 结合代码实现的完整流程</strong></a>
+              <ul>
+                <li><a href="#流程图添加流动性的工程实现步骤"><strong>流程图：添加流动性的工程实现步骤</strong></a></li>
+                <li><a href="#具体步骤详解"><strong>具体步骤详解</strong>:</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>Uniswap V3 的核心是集中流动性</strong>：与 V2 的无限价格范围不同，V3 允许流动性提供者（LP）将资金集中在特定的价格区间 <code>[Pa, Pb]</code> 内，其底层数学模型可以看作是对 V2 的 <code>x * y = k</code> 模型进行了平移和截断。</li>
+<li><strong>价格变动消耗特定 Token</strong>：在设定的价格区间内，当价格从当前价 <code>P</code> 下降至 <code>Pa</code> 时，池子会消耗 <code>Y</code> Token；当价格从 <code>P</code> 上升至 <code>Pb</code> 时，池子会消耗 <code>X</code> Token。理解这一点是计算所需流动性的关键。</li>
+<li><strong>流动性计算基于虚拟曲线</strong>：尽管 V3 的真实曲线是分段的，但其流动性数量 $\Delta X$ 和 $\Delta Y$ 的计算可以基于 V2 的 $x \cdot y = L^2$ 和 $P = y/x$ 这两个基础公式，应用在一条“虚拟”的、经过平移的曲线上进行推导。</li>
+<li><strong>工程实现中的核心逻辑</strong>：在实际添加流动性时，智能合约会根据用户提供的两种 Token ($\Delta X$ 和 $\Delta Y$) 分别计算出两个可能的流动性值 <code>L</code>，并最终选择<strong>较小</strong>的那个作为最终的流动性。这可能导致实际使用的某一种 Token 数量略少于用户最初提供的数量。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="一-uniswap-v3-核心公式与概念回顾"><span><strong>一、 Uniswap V3 核心公式与概念回顾</strong></span>
+  <a href="#%e4%b8%80-uniswap-v3-%e6%a0%b8%e5%bf%83%e5%85%ac%e5%bc%8f%e4%b8%8e%e6%a6%82%e5%bf%b5%e5%9b%9e%e9%a1%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-v3-流动性公式与曲线"><span><strong>1. V3 流动性公式与曲线</strong></span>
+  <a href="#1-v3-%e6%b5%81%e5%8a%a8%e6%80%a7%e5%85%ac%e5%bc%8f%e4%b8%8e%e6%9b%b2%e7%ba%bf" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Uniswap V3 引入了<strong>集中流动性</strong>的概念，允许将流动性提供在指定的价格区间 <code>[Pa, Pb]</code>。其公式可以理解为对 V2 公式的平移。</p>
+<ul>
+<li>
+<p><strong>V2/V3 通用基础公式</strong> (应用于虚拟曲线):</p>
+<ul>
+<li>恒定乘积公式: $x \cdot y = L^2$ (其中 <code>L</code> 是流动性量)</li>
+<li>价格公式: $P = \frac{y}{x}$</li>
+</ul>
+</li>
+<li>
+<p><strong>V3 集中流动性公式</strong> (体现真实与虚拟流动性的关系):
+$$
+(X_{real} + \frac{L}{\sqrt{P_b}}) \cdot (Y_{real} + L\sqrt{P_a}) = L^2
+$$
+这个公式描述了真实流动性（橙色曲线）是如何通过虚拟流动性（绿色曲线）平移而来的。在进行计算时，我们通常会利用更简洁的虚拟曲线公式。</p>
+<p><img loading="lazy" src='/posts/202509-uniswap12/virtual-real-liquidity-20250902234333897.png' alt="img" height="832" width="888"></p>
+</li>
+</ul>
+<h4 class="heading-element" id="2-真实流动性与虚拟流动性"><span><strong>2. 真实流动性与虚拟流动性</strong></span>
+  <a href="#2-%e7%9c%9f%e5%ae%9e%e6%b5%81%e5%8a%a8%e6%80%a7%e4%b8%8e%e8%99%9a%e6%8b%9f%e6%b5%81%e5%8a%a8%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>真实流动性 (Real Liquidity)</strong>: 用户在指定价格区间 <code>[Pa, Pb]</code> 内实际存入的 <code>X</code> 和 <code>Y</code> Token 数量。</li>
+<li><strong>虚拟流动性 (Virtual Liquidity)</strong>: 为了方便使用 $x \cdot y = L^2$ 公式进行计算，我们将真实流动性曲线向左和向下平移，补全成一条完整的双曲线。这部分被“补全”的流动性就是虚拟流动性。</li>
+<li><strong>计算的便利性</strong>：所有关于 $\Delta X$ 和 $\Delta Y$ 的计算都是在这条包含了虚拟流动性的完整双曲线（视频中的黄色曲线）上进行的，这样可以简化数学模型。</li>
+</ul>
+<h3 class="heading-element" id="二-价格区间内的-token-消耗机制"><span><strong>二、 价格区间内的 Token 消耗机制</strong></span>
+  <a href="#%e4%ba%8c-%e4%bb%b7%e6%a0%bc%e5%8c%ba%e9%97%b4%e5%86%85%e7%9a%84-token-%e6%b6%88%e8%80%97%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这是理解添加多少流动性的核心前提。站在资金池的角度：</p>
+<ul>
+<li>
+<p><strong>价格下降，消耗 Y Token</strong>：</p>
+<ul>
+<li><strong>逻辑</strong>：当池内价格从 <code>P</code> 点向 <code>A</code> 点移动（价格下降）时，意味着市场正在用 <code>X</code> Token 换取池中的 <code>Y</code> Token。池中的 <code>Y</code> Token 数量减少，<code>X</code> Token 数量增加。</li>
+<li><strong>结论</strong>：从价格 <code>P</code> 降到 <code>Pa</code> 的过程，消耗的是池子里的 <strong><code>Y</code> Token</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>价格上升，消耗 X Token</strong>：</p>
+<ul>
+<li><strong>逻辑</strong>：当池内价格从 <code>P</code> 点向 <code>B</code> 点移动（价格上升）时，意味着市场正在用 <code>Y</code> Token 换取池中的 <code>X</code> Token。池中的 <code>X</code> Token 数量减少，<code>Y</code> Token 数量增加。</li>
+<li><strong>结论</strong>：从价格 <code>P</code> 升到 <code>Pb</code> 的过程，消耗的是池子里的 <strong><code>X</code> Token</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>案例</strong>：</p>
+<ul>
+<li>假设当前价格点为 <code>P</code>，对应的池内 Token 数量为 ($\Delta X$, $\Delta Y$)。</li>
+<li>当曲线上的点沿着曲线向左下方移动至 <code>A</code> 点时，纵坐标 <code>Y</code> 的值减小，说明 <code>Y</code> Token 被消耗。</li>
+<li>当曲线上的点沿着曲线向右上方移动至 <code>B</code> 点时，横坐标 <code>X</code> 的值减小，说明 <code>X</code> Token 被消耗。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="三-流动性数量计算"><span><strong>三、 流动性数量计算</strong></span>
+  <a href="#%e4%b8%89-%e6%b5%81%e5%8a%a8%e6%80%a7%e6%95%b0%e9%87%8f%e8%ae%a1%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><blockquote>
+<p><strong>三、 流动性数量 ($\Delta X$ 和 $\Delta Y$) 计算</strong></p>
+</blockquote>
+<h4 class="heading-element" id="1-基础公式推导"><span><strong>1. 基础公式推导</strong></span>
+  <a href="#1-%e5%9f%ba%e7%a1%80%e5%85%ac%e5%bc%8f%e6%8e%a8%e5%af%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>从两个基础公式 $x \cdot y = L^2$ 和 $P = y/x$ 出发，可以推导出在任意价格 <code>P</code> 点，对应的 <code>x</code> 和 <code>y</code> 的数量（在虚拟曲线上）。</p>
+<ul>
+<li>
+<p><strong>推导过程</strong>:</p>
+<ol>
+<li>将 $y = Px$ 代入 $x \cdot y = L^2$</li>
+<li>得到 $x \cdot (Px) = L^2 \implies Px^2 = L^2$</li>
+<li>解得 $x^2 = L^2/P \implies x = L / \sqrt{P}$</li>
+<li>再将 <code>x</code> 代入 $y = Px$，得到 $y = P \cdot (L / \sqrt{P}) = L \cdot \sqrt{P}$</li>
+</ol>
+</li>
+<li>
+<p><strong>结论</strong>:
+$$
+X = \frac{L}{\sqrt{P}}
+$$
+$$
+Y = L \cdot \sqrt{P}
+$$</p>
+</li>
+</ul>
+<h4 class="heading-element" id="2-计算-delta-x-和-delta-y"><span><strong>2. 计算 $\Delta X$ 和 $\Delta Y$</strong></span>
+  <a href="#2-%e8%ae%a1%e7%ae%97-delta-x-%e5%92%8c-delta-y" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>利用上述公式，我们可以计算出在特定价格范围内支持交易所需的 Token 数量。</p>
+<ul>
+<li>
+<p><strong>计算 $\Delta Y$ (支持价格从 <code>P</code> 降到 <code>Pa</code>)</strong>:</p>
+<ul>
+<li>这是 <code>Y</code> Token 的消耗量，等于 <code>P</code> 点的 <code>Y</code> 值减去 <code>Pa</code> 点的 <code>Y</code> 值。
+$$
+\Delta Y = Y_P - Y_{Pa} = L \cdot \sqrt{P} - L \cdot \sqrt{P_a} = L \cdot (\sqrt{P} - \sqrt{P_a})
+$$</li>
+</ul>
+</li>
+<li>
+<p><strong>计算 $\Delta X$ (支持价格从 <code>P</code> 升到 <code>Pb</code>)</strong>:</p>
+<ul>
+<li>这是 <code>X</code> Token 的消耗量，等于 <code>P</code> 点的 <code>X</code> 值减去 <code>Pb</code> 点的 <code>X</code> 值。（注意：因为 <code>P</code> 越大，<code>X</code> 越小，所以是用低价对应的 <code>X</code> 减去高价对应的 <code>X</code>）
+$$
+\Delta X = X_P - X_{Pb} = \frac{L}{\sqrt{P}} - \frac{L}{\sqrt{P_b}} = L \cdot (\frac{1}{\sqrt{P}} - \frac{1}{\sqrt{P_b}})
+$$</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="四-案例分析添加流动性实践"><span><strong>四、 案例分析：添加流动性实践</strong></span>
+  <a href="#%e5%9b%9b-%e6%a1%88%e4%be%8b%e5%88%86%e6%9e%90%e6%b7%bb%e5%8a%a0%e6%b5%81%e5%8a%a8%e6%80%a7%e5%ae%9e%e8%b7%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="案例-1-理论计算题回顾"><span><strong>案例 1: 理论计算题回顾</strong></span>
+  <a href="#%e6%a1%88%e4%be%8b-1-%e7%90%86%e8%ae%ba%e8%ae%a1%e7%ae%97%e9%a2%98%e5%9b%9e%e9%a1%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>问题</strong>: 用户有 $\Delta X$ = 2 ETH，当前价格 <code>P = 2000</code>，目标价格区间是 <code>[1500, 2500]</code>，求解需要多少 $\Delta Y$？</li>
+<li><strong>分析</strong>: 这是一个上述公式的直接应用。
+<ol>
+<li>已知 $\Delta X$, <code>P</code>, <code>Pa=1500</code>, <code>Pb=2500</code>。</li>
+<li>使用 $\Delta X$ 的公式 $\Delta X = L \cdot (\frac{1}{\sqrt{P}} - \frac{1}{\sqrt{P_b}})$ 先反解出流动性 <code>L</code>。</li>
+<li>将求出的 <code>L</code> 代入 $\Delta Y$ 的公式 $\Delta Y = L \cdot (\sqrt{P} - \sqrt{P_a})$ 即可计算出所需的 $\Delta Y$。</li>
+</ol>
+</li>
+</ul>
+<h4 class="heading-element" id="案例-2-结合代码实现的完整流程"><span><strong>案例 2: 结合代码实现的完整流程</strong></span>
+  <a href="#%e6%a1%88%e4%be%8b-2-%e7%bb%93%e5%90%88%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0%e7%9a%84%e5%ae%8c%e6%95%b4%e6%b5%81%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>这是一个更贴近工程实践的案例，展示了从价格到最终流动性添加的完整步骤。</p>
+<ul>
+<li><strong>场景设定</strong>:
+<ul>
+<li><strong>交易对</strong>: ETH/USDC</li>
+<li><strong>当前价格 (P)</strong>: 5000</li>
+<li><strong>价格区间</strong>: <code>[4545 (Pa), 5500 (Pb)]</code></li>
+<li><strong>计划投入</strong>: 1 ETH 和 5000 USDC</li>
+</ul>
+</li>
+</ul>
+<h5 class="heading-element" id="流程图添加流动性的工程实现步骤"><span><strong>流程图：添加流动性的工程实现步骤</strong></span>
+  <a href="#%e6%b5%81%e7%a8%8b%e5%9b%be%e6%b7%bb%e5%8a%a0%e6%b5%81%e5%8a%a8%e6%80%a7%e7%9a%84%e5%b7%a5%e7%a8%8b%e5%ae%9e%e7%8e%b0%e6%ad%a5%e9%aa%a4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><div class="diagram-container">
+  <pre class="mermaid">flowchart TD
+    A[用户提供Token和价格区间] --> B
+    B[步骤一 价格转换为Tick索引] --> C
+    C[步骤二 Tick索引转换为SqrtPriceX96格式] --> D
+    D[步骤三 根据ΔX计算流动性L_x] --> F
+    C --> E[步骤四 根据ΔY计算流动性L_y] --> F
+    F[步骤五 选择较小的L作为最终流动性] --> G
+    G[步骤六 使用最终L反推实际Token用量] --> H
+    H[步骤七 完成流动性添加]</pre>
+  <pre class="mermaid-dark">flowchart TD
+    A[用户提供Token和价格区间] --> B
+    B[步骤一 价格转换为Tick索引] --> C
+    C[步骤二 Tick索引转换为SqrtPriceX96格式] --> D
+    D[步骤三 根据ΔX计算流动性L_x] --> F
+    C --> E[步骤四 根据ΔY计算流动性L_y] --> F
+    F[步骤五 选择较小的L作为最终流动性] --> G
+    G[步骤六 使用最终L反推实际Token用量] --> H
+    H[步骤七 完成流动性添加]</pre>
+  <pre class="mermaid-neutral">flowchart TD
+    A[用户提供Token和价格区间] --> B
+    B[步骤一 价格转换为Tick索引] --> C
+    C[步骤二 Tick索引转换为SqrtPriceX96格式] --> D
+    D[步骤三 根据ΔX计算流动性L_x] --> F
+    C --> E[步骤四 根据ΔY计算流动性L_y] --> F
+    F[步骤五 选择较小的L作为最终流动性] --> G
+    G[步骤六 使用最终L反推实际Token用量] --> H
+    H[步骤七 完成流动性添加]</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>flowchart TD
+    A[用户提供Token和价格区间] --> B
+    B[步骤一 价格转换为Tick索引] --> C
+    C[步骤二 Tick索引转换为SqrtPriceX96格式] --> D
+    D[步骤三 根据ΔX计算流动性L_x] --> F
+    C --> E[步骤四 根据ΔY计算流动性L_y] --> F
+    F[步骤五 选择较小的L作为最终流动性] --> G
+    G[步骤六 使用最终L反推实际Token用量] --> H
+    H[步骤七 完成流动性添加]</pre></template>
+</div><p><strong>流程解释</strong>
+上述图表展示了在 Uniswap V3 中添加流动性的实际后台计算流程。它始于用户的输入（两种代币数量和价格区间），经过一系列的格式转换（价格到Tick，再到合约内部使用的SqrtPriceX96）。核心步骤是合约会<strong>并行计算</strong>两种代币分别能提供的流动性<code>L_x</code>和<code>L_y</code>，然后<strong>选择两者中较小的一个</strong>作为最终的有效流动性值。最后，根据这个最终的<code>L</code>值，反向计算出需要投入的精确代币数量，完成添加。</p>
+<h5 class="heading-element" id="具体步骤详解"><span><strong>具体步骤详解</strong>:</span>
+  <a href="#%e5%85%b7%e4%bd%93%e6%ad%a5%e9%aa%a4%e8%af%a6%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><ol>
+<li>
+<p><strong>从价格到 Tick</strong></p>
+<ul>
+<li><strong>概念</strong>: 在 V3 中，价格不是连续的，而是离散的点，每个点由一个整数索引 <strong><code>tick</code></strong> 表示。</li>
+<li><strong>公式</strong>:
+$$
+P(i) = 1.0001^i \quad \Leftrightarrow \quad i = \log_{1.0001}(P)
+$$</li>
+<li><strong>案例结果</strong>:
+<ul>
+<li><code>P = 5000</code> -&gt; <code>tick = 85176</code></li>
+<li><code>Pa = 4545</code> -&gt; <code>tick = 84222</code></li>
+<li><code>Pb = 5500</code> -&gt; <code>tick = 86129</code></li>
+</ul>
+</li>
+<li><strong>案例中的验证</strong>: 视频中提到，<code>1.0001</code> 的 <code>85176</code> 次方约等于 <code>4999.9</code>，由于计算中向下取整，所以非常接近 <code>5000</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>从价格到 SqrtPriceX96</strong></p>
+<ul>
+<li><strong>概念</strong>: 为了计算精度和效率，智能合约内部不直接存储价格 <code>P</code>，而是存储其平方根并乘以 <code>2^96</code> 的<strong>定点数</strong>格式。</li>
+<li><strong>公式</strong>:
+$$
+\text{sqrtPriceX96} = \lfloor \sqrt{P} \cdot 2^{96} \rfloor
+$$</li>
+</ul>
+</li>
+<li>
+<p><strong>计算流动性 L</strong></p>
+<ul>
+<li><strong>逻辑转换</strong>: 前述理论公式计算的是从当前价<code>P</code>到边界所需的$\Delta X$和$\Delta Y$。在实际工程中，合约是根据用户提供的$\Delta X$和$\Delta Y$，来计算它们能为<strong>整个价格区间 <code>[Pa, Pb]</code></strong> 提供多少流动性<code>L</code>。</li>
+<li><strong>公式</strong>:
+<ul>
+<li>从 $\Delta X$ 计算: $$L_x = \frac{\Delta X}{\frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}}}$$</li>
+<li>从 $\Delta Y$ 计算: $$L_y = \frac{\Delta Y}{\sqrt{P_b} - \sqrt{P_a}}$$</li>
+</ul>
+</li>
+<li><strong>核心决策</strong>: 最终采用的流动性是两者中的<strong>最小值</strong>。
+$$L = min(L_x, L_y)$$</li>
+<li><strong>案例结果</strong>: 计算出的最终 <code>L</code> 值为 <code>1517...</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>反推实际使用的 Token 数量</strong></p>
+<ul>
+<li><strong>原因</strong>: 因为选择了最小的 <code>L</code> 值，意味着其中一种 Token 并没有被完全使用，只会使用与那个较小的<code>L</code>值相匹配的数量。</li>
+<li><strong>过程</strong>: 使用最终确定的 <code>L</code> 值，再通过公式反向计算出与这个 <code>L</code> 精确匹配的 $\Delta X$ 和 $\Delta Y$。</li>
+<li><strong>案例结果</strong>:
+<ul>
+<li>初始提供: 1 ETH 和 5000 USDC。</li>
+<li>最终实际使用: <strong>0.998976 ETH</strong> 和 <strong>5000 USDC</strong>。</li>
+<li><strong>结论</strong>: 在这个价格区间和当前价格下，5000 USDC 是<strong>限制因素</strong>，它所能提供的流动性（<code>L_y</code>）小于 1 ETH 所能提供的流动性（<code>L_x</code>）。因此，合约只使用了足以匹配 5000 USDC 的 ETH 数量。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap12/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap12/" data-title="12.Uniswap V3 添加流动性案例" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap12/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap12/" data-title="12.Uniswap V3 添加流动性案例"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap13/" class="post-nav-item" rel="prev" title="13.Uniswap V3 单价格区间内 Swap 机制"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>13.Uniswap V3 单价格区间内 Swap 机制</a><a href="/posts/202509-uniswap11/" class="post-nav-item" rel="next" title="11.Uniswap V3 Tick 与价格表示">11.Uniswap V3 Tick 与价格表示<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+        <li><a href="#一-uniswap-v3-核心公式与概念回顾"><strong>一、 Uniswap V3 核心公式与概念回顾</strong></a>
+          <ul>
+            <li><a href="#1-v3-流动性公式与曲线"><strong>1. V3 流动性公式与曲线</strong></a></li>
+            <li><a href="#2-真实流动性与虚拟流动性"><strong>2. 真实流动性与虚拟流动性</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#二-价格区间内的-token-消耗机制"><strong>二、 价格区间内的 Token 消耗机制</strong></a></li>
+        <li><a href="#三-流动性数量计算"><strong>三、 流动性数量计算</strong></a>
+          <ul>
+            <li><a href="#1-基础公式推导"><strong>1. 基础公式推导</strong></a></li>
+            <li><a href="#2-计算-delta-x-和-delta-y"><strong>2. 计算 $\Delta X$ 和 $\Delta Y$</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#四-案例分析添加流动性实践"><strong>四、 案例分析：添加流动性实践</strong></a>
+          <ul>
+            <li><a href="#案例-1-理论计算题回顾"><strong>案例 1: 理论计算题回顾</strong></a></li>
+            <li><a href="#案例-2-结合代码实现的完整流程"><strong>案例 2: 结合代码实现的完整流程</strong></a>
+              <ul>
+                <li><a href="#流程图添加流动性的工程实现步骤"><strong>流程图：添加流动性的工程实现步骤</strong></a></li>
+                <li><a href="#具体步骤详解"><strong>具体步骤详解</strong>:</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/2c6ce69e04a6fed1952f48f8ee9be71e.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

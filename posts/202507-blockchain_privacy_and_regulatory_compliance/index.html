@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>论文阅读：《Blockchain Privacy and Regulatory Compliance:Towards a Practical Equilibrium》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="论文阅读：《Blockchain privacy and regulatory compliance: Towards a practical equilibrium》 0. 摘要 我们研究了一种名为“隐私池”（Privacy Pools）的新型智能合约隐私增强协议。该协议引入了一种机制，允许用户在不公开完整交易记录的前提下，选择性披露交易的某些属性。其核心在于让用户发布零知识证明，以验证其资金（未）来源于已知的（非法）合法渠道，这通过证明资金属于特定关联集合来实现——这些集合专为展示符合监管框架或社会共识而设计。我们阐述了该机制如何在合规与非合规提款间建立分离均衡，并详细分析了其技术原理、激励机制及更广泛的影响，揭示此类协议如何实现既保护隐私又符合监管要求的区块链交易。
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》">
+  <meta itemprop="description" content="论文阅读：《Blockchain privacy and regulatory compliance: Towards a practical equilibrium》 0. 摘要 我们研究了一种名为“隐私池”（Privacy Pools）的新型智能合约隐私增强协议。该协议引入了一种机制，允许用户在不公开完整交易记录的前提下，选择性披露交易的某些属性。其核心在于让用户发布零知识证明，以验证其资金（未）来源于已知的（非法）合法渠道，这通过证明资金属于特定关联集合来实现——这些集合专为展示符合监管框架或社会共识而设计。我们阐述了该机制如何在合规与非合规提款间建立分离均衡，并详细分析了其技术原理、激励机制及更广泛的影响，揭示此类协议如何实现既保护隐私又符合监管要求的区块链交易。">
+  <meta itemprop="datePublished" content="2025-07-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-07-13T00:00:00+00:00">
+  <meta itemprop="wordCount" content="14557">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》">
+  <meta property="og:description" content="论文阅读：《Blockchain privacy and regulatory compliance: Towards a practical equilibrium》 0. 摘要 我们研究了一种名为“隐私池”（Privacy Pools）的新型智能合约隐私增强协议。该协议引入了一种机制，允许用户在不公开完整交易记录的前提下，选择性披露交易的某些属性。其核心在于让用户发布零知识证明，以验证其资金（未）来源于已知的（非法）合法渠道，这通过证明资金属于特定关联集合来实现——这些集合专为展示符合监管框架或社会共识而设计。我们阐述了该机制如何在合规与非合规提款间建立分离均衡，并详细分析了其技术原理、激励机制及更广泛的影响，揭示此类协议如何实现既保护隐私又符合监管要求的区块链交易。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-13T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》">
+  <meta name="twitter:description" content="论文阅读：《Blockchain privacy and regulatory compliance: Towards a practical equilibrium》 0. 摘要 我们研究了一种名为“隐私池”（Privacy Pools）的新型智能合约隐私增强协议。该协议引入了一种机制，允许用户在不公开完整交易记录的前提下，选择性披露交易的某些属性。其核心在于让用户发布零知识证明，以验证其资金（未）来源于已知的（非法）合法渠道，这通过证明资金属于特定关联集合来实现——这些集合专为展示符合监管框架或社会共识而设计。我们阐述了该机制如何在合规与非合规提款间建立分离均衡，并详细分析了其技术原理、激励机制及更广泛的影响，揭示此类协议如何实现既保护隐私又符合监管要求的区块链交易。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/" title="论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202506-kfk/" title="回看kfk预言，选了一些我感兴趣的" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202507-eth_white_paper/" title="ETH 白皮书阅读" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "论文阅读：《Blockchain privacy and regulatory compliance:Towards a practical equilibrium》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202507-blockchain_privacy_and_regulatory_compliance\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  14557 ,
+    "url": "http:\/\/localhost:1313\/posts\/202507-blockchain_privacy_and_regulatory_compliance\/","datePublished": "2025-07-13T00:00:00+00:00","dateModified": "2025-07-13T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>论文阅读：《Blockchain Privacy and Regulatory Compliance:Towards a Practical Equilibrium》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-07-13 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-07-13">2025-07-13</time></span>&nbsp;<span title="14557 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 14600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 30 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#21-zk-snarks出现前的区块链隐私方案">2.1 ZK-SNARKs出现前的区块链隐私方案</a></li>
+    <li><a href="#22-zk-snarks技术">2.2 ZK-SNARKs技术</a></li>
+    <li><a href="#23-应用案例zcash-与-tornado-cash类系统中的zk-snarks">2.3 应用案例：Zcash 与 Tornado Cash类系统中的ZK-SNARKs</a></li>
+    <li><a href="#24-隐私池中的zk-snark技术"><strong>2.4 隐私池中的ZK-SNARK技术</strong></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-关联集合association-sets的用例">3.1 关联集合（association sets）的用例</a></li>
+    <li><a href="#32-关联集合的构建">3.2 关联集合的构建</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#41-支持任意面额">4.1 支持任意面额</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#隐私池privacy-pools的适配挑战">隐私池（Privacy Pools）的适配挑战</a></li>
+            <li><a href="#解决方案">解决方案</a></li>
+            <li><a href="#防余额求和攻击balance-summing-attacks">防余额求和攻击（balance-summing attacks）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#42-特殊情况">4.2. 特殊情况</a>
+      <ul>
+        <li><a href="#421-重复验证re-proofing">4.2.1. 重复验证（Re-proofing）</a></li>
+        <li><a href="#422-双边直接证明bilateral-direct-proofs">4.2.2 双边直接证明（Bilateral direct proofs）</a></li>
+        <li><a href="#423-顺序证明sequential-proofs">4.2.3 顺序证明（Sequential proofs）</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#51-社会共识与关联集合association-sets">5.1. 社会共识与关联集合（Association Sets）</a></li>
+    <li><a href="#52-关联集合的特性">5.2. 关联集合的特性</a></li>
+    <li><a href="#53-实践考量与竞争关系">5.3 实践考量与竞争关系</a></li>
+    <li><a href="#54-设计选择与替代方案design-choices-and-alternatives">5.4 设计选择与替代方案（Design choices and alternatives）</a></li>
+    <li><a href="#55-后续研究方向further-research-potential">5.5 后续研究方向（Further research potential）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#利益冲突声明declaration-of-competing-interest">利益冲突声明（Declaration of competing interest）</a></li>
+    <li><a href="#致谢acknowledgement">致谢（Acknowledgement）</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="论文阅读blockchain-privacy-and-regulatory-compliance-towards-a-practical-equilibrium"><span>论文阅读：《Blockchain privacy and regulatory compliance: Towards a practical equilibrium》</span>
+  <a href="#%e8%ae%ba%e6%96%87%e9%98%85%e8%af%bbblockchain-privacy-and-regulatory-compliance-towards-a-practical-equilibrium" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h1 class="heading-element" id="0-摘要"><span>0. 摘要</span>
+  <a href="#0-%e6%91%98%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>我们研究了一种名为“隐私池”（Privacy Pools）的新型智能合约隐私增强协议。该协议引入了一种机制，允许用户在不公开完整交易记录的前提下，选择性披露交易的某些属性。其核心在于让用户发布零知识证明，以验证其资金（未）来源于已知的（非法）合法渠道，这通过证明资金属于特定关联集合来实现——这些集合专为展示符合监管框架或社会共识而设计。我们阐述了该机制如何在合规与非合规提款间建立分离均衡，并详细分析了其技术原理、激励机制及更广泛的影响，揭示此类协议如何实现既保护隐私又符合监管要求的区块链交易。</p>
+<h1 class="heading-element" id="1-introduction"><span>1. Introduction</span>
+  <a href="#1-introduction" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>公有区块链在设计上具有透明性。其核心理念是任何人都应能自主验证交易，而无需依赖中心化的第三方机构。然而从隐私角度看，记录所有地址交易的公开数据集存在显著问题。当用户向某个地址转移资产或与智能合约交互时，该交易将永久留存于区块链上。每个链上操作都会形成永久公开记录，使得第三方能够分析用户的财务往来和行为模式。</p>
+<p>这些隐私隐患催生了增强隐私协议的出现。<strong>此类协议允许用户通过A地址存入资金，后续通过B地址提取。尽管存取记录仍公开可见，但具体存取行为间的关联性已被隐藏。</strong></p>
+<p><strong>Tornado Cash</strong>是最著名的隐私增强协议之一。它在解决上述问题的同时，也吸引了不法分子使用。链上数据显示，黑客组织曾利用该协议转移非法所得资金。当证据表明朝鲜黑客组织也使用该协议后，美国财政部海外资产控制办公室(OFAC)将其智能合约地址列入特别指定国民名单(SDN清单)。</p>
+<p>Tornado Cash的核心缺陷在于：诚实用户缺乏有效手段与协议内的非法活动划清界限。其提供的合规工具虽允许用户证明取款来源，但需依赖中心化中介并导致信息不对称，因此实际使用率极低。</p>
+<p>本文提出该方案的扩展机制，使用户能公开证明其取款资金可能来源的宽泛范围。支持两种证明模式：<strong>成员证明（&ldquo;证明取款来自特定存款集合&rdquo;）<strong>或</strong>排除证明（&ldquo;证明取款与特定存款无关&rdquo;）</strong>。该概念由Privacy Pools率先提出，本文将探讨如何运用其构建模块实现诚实用户与恶意用户的行为分离。</p>
+<p>需说明的是，Privacy Pools通过扩展用户操作集提供更多选择。必要时用户仍可向特定对手方提供详细证明。但在多数场景下，成员证明或排除证明已足够。且相较于双边披露机制，公开这些证明具有显著优势。</p>
+<h1 class="heading-element" id="2-技术背景"><span>2. 技术背景</span>
+  <a href="#2-%e6%8a%80%e6%9c%af%e8%83%8c%e6%99%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>本节将简要介绍Privacy Pools类协议的技术构件与基本原理。</p>
+<h2 class="heading-element" id="21-zk-snarks出现前的区块链隐私方案"><span>2.1 ZK-SNARKs出现前的区块链隐私方案</span>
+  <a href="#21-zk-snarks%e5%87%ba%e7%8e%b0%e5%89%8d%e7%9a%84%e5%8c%ba%e5%9d%97%e9%93%be%e9%9a%90%e7%a7%81%e6%96%b9%e6%a1%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>早期区块链支持者认为，尽管交易透明，但通过地址伪匿名性（用户无需透露线下身份，仅通过数字&quot;地址&quot;标识）仍可保障隐私。中本聪在比特币白皮书中明确主张：&ldquo;通过公钥匿名化切断信息流，公众仅能观测资金流向而无法关联具体身份&rdquo;。但事实证明，面对现代聚类分析工具，这种隐私保护程度远远不足。非金融应用（如在Ethereum name service等去中心化域名服务注册名称）往往需要用户链上公开更多个人信息，进一步加剧隐私泄露风险。</p>
+<p>为提升公有链隐私性，业界逐步引入更强大的技术方案。首个被广泛采用的非平凡隐私解决方案是CoinJoin[9]，其通过多用户在同一交易中混合币种实现输入输出对应关系的模糊化。理论上用户参与多轮混合可隐藏资产来源，但Monero采用的环签名方案更进一步，无需链下交互即可实现小额混合。随着技术演进，单次混合参与者数量增加扩大了匿名集（即可能成为交易来源的历史交易范围），但这类小规模重复混合仍存在数据泄露风险。</p>
+<p>密码学隐私技术的下一阶段突破是通用零知识证明的引入。Zerocash率先实现该创新，后被Zcash等区块链及Tornado Cash等智能合约系统采用。这类系统使交易的匿名集可扩展至所有历史交易，此类通用零知识证明技术通常被称为<code>ZK-SNARKs</code>。</p>
+<h2 class="heading-element" id="22-zk-snarks技术"><span>2.2 ZK-SNARKs技术</span>
+  <a href="#22-zk-snarks%e6%8a%80%e6%9c%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><code>ZK-SNARKs</code>允许证明者在不泄露私有数据的前提下，验证关于公私数据组合的数学命题，其具备两大核心特性：</p>
+<ul>
+<li>零知识性：除证明命题成立外，不泄露任何私有数据</li>
+<li>简洁性：证明体积小且验证速度快，即使底层计算非常复杂</li>
+</ul>
+<p>在区块链领域，<code>ZK-SNARKs</code>因这两大特性备受关注。虽然系统公共参数的初始可信设置（trusted setup）需要消耗大量时间和资源，但该过程仅需执行一次。证明过程的简洁性对<code>ZK-rollups</code>等扩展性方案至关重要，而本文讨论的隐私用例更侧重零知识特性。</p>
+<p>ZK-SNARKs证明的<code>命题</code>通常表示为<code>电路</code>程序，数学上可抽象为函数 $f(x, w) \rightarrow {\text{True}, \text{False}}$ 。其中$𝑥$为公开输入，$𝑤$ 为私有输入，$𝑓(.)$为待验证函数。<code>ZK-SNARKs</code>的本质是：对于证明者与验证者共知的$𝑥$，证明者能提供使$𝑓(𝑥,𝑤)=\text{True}$ 的私有参数$𝑤$。</p>
+<h2 class="heading-element" id="23-应用案例zcash-与-tornado-cash类系统中的zk-snarks"><span>2.3 应用案例：Zcash 与 Tornado Cash类系统中的ZK-SNARKs</span>
+  <a href="#23-%e5%ba%94%e7%94%a8%e6%a1%88%e4%be%8bzcash-%e4%b8%8e-tornado-cash%e7%b1%bb%e7%b3%bb%e7%bb%9f%e4%b8%ad%e7%9a%84zk-snarks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>尽管Zcash各版本及其衍生系统（如Tornado Cash）存在细微差异，但其底层逻辑高度相似。本节将描述这些协议的基本运作原理。</p>
+<p>每个&quot;代币&quot;(coin)由持有者保管的私密参数 $𝑠$ 构成，该参数可为任何仅所有者知晓的数据。通过 $𝑠$ 可衍生两个关键值：</p>
+<ul>
+<li>公开的&quot;代币ID&quot;：$L = \mathrm{hash}(s + 1)$</li>
+<li>作废标识符：$U = \mathrm{hash}(s + 2)$</li>
+</ul>
+<p>其中 $\mathrm{hash}$ 代表 SHA256 等密码学哈希函数。已知$s$可计算<strong>代币ID</strong>与作废符，但哈希函数的伪随机性确保在缺乏𝑠的情况下，外界无法关联特定作废符与代币ID的对应关系。</p>
+<p>区块链会记录所有已&quot;创建&quot;的代币ID和已&quot;花费&quot;的作废标识符。这两个集合都是持续增长的（除非协议要求代币必须在时限内花费）。</p>
+<p>代币ID集合存储在名为默克尔树（<strong>Merkle Tree</strong>）的数据结构中：若树包含 $𝑁$ 个条目，则每对相邻条目会被哈希（产生$\lceil N/2 \rceil$个哈希值），这些哈希值再两两哈希（产生$\lceil N/4 \rceil$个哈希值），如此递归直至所有数据最终汇聚为单个&quot;根哈希&quot;。</p>
+<p>一组代币ID存储在一个名为**默克尔树（Merkle Tree）**的数据结构中：</p>
+<ul>
+<li>若树包含 $𝑁$ 个数据项，则首先对<strong>相邻两项进行哈希计算</strong>，生成$\lceil N/2 \rceil$个哈希值；</li>
+<li>接着对这些哈希值<strong>再次两两哈希</strong>，生成$\lceil N/4 \rceil$个哈希值；</li>
+<li>重复此过程，直到最终生成一个唯一的**“根哈希”（root hash）**。</li>
+</ul>
+<p>给定树中的某个值和根哈希，我们可以提供一条<strong>默克尔分支（Merkle Branch）</strong>：即从该值到根哈希的路径上，每一层级哈希时所需的**“兄弟节点值”**。这条分支非常有用，因为它仅需少量数据（约$\log_2 N$个哈希值），即可证明某个值确实存在于树中。下图展示了一个高度为4的默克尔树示例。</p>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250712230003749.png' alt="image-20250712230003749" height="451" width="1026"></p>
+<p>图中高亮了树中某个值对应的<strong>默克尔分支（Merkle Branch）</strong>：</p>
+<ul>
+<li><strong>橙色</strong>：待证明的叶子节点 𝐿（即需要验证的数据项）。</li>
+<li><strong>底部一行</strong>：代表整个数据集（所有叶子节点）。</li>
+<li><strong>绿色</strong>：根哈希 𝑅（整棵树的唯一摘要）。</li>
+<li><strong>蓝色</strong>：从叶子 𝐿 到根 𝑅 的路径。</li>
+<li><strong>紫色</strong>：路径上每一层级的<strong>兄弟节点（sister nodes）</strong>。</li>
+</ul>
+<p>路径本身<strong>无需直接提供</strong>，因为只需从叶子 𝐿 开始，<strong>逐层与兄弟节点哈希计算</strong>，即可推导出根哈希 𝑅。验证时，仅需提供这些<strong>兄弟节点（紫色部分）</strong>，通过计算即可确认 𝐿 是否在树中。</p>
+<p>当用户向他人发送代币时，需提供：(i) <strong>待花费的作废标识符（nullifier）𝑈</strong>；(ii) <strong>新生成的代币ID 𝐿′</strong>（由接收方提供）；(iii) <strong>一个ZK-SNARK证明</strong>。</p>
+<p>该<strong>ZK-SNARK</strong>包含以下<strong>私有输入</strong>：</p>
+<ul>
+<li>用户的私密值 <strong>$𝑠$</strong></li>
+<li>代币ID树中的一条<strong>默克尔分支</strong>，用于证明代币ID <strong>$𝐿 = \text{hash}(𝑠 + 1)$</strong> 曾经被创建过</li>
+</ul>
+<p>以及以下<strong>公开输入</strong>：</p>
+<ul>
+<li><strong>$𝑈$</strong>（待花费代币的作废标识符）</li>
+<li><strong>$𝑅$</strong>（默克尔证明所验证的根哈希）</li>
+</ul>
+<p><strong>ZK-SNARK证明以下两个性质</strong>：</p>
+<ol>
+<li><strong>$𝑈 = \text{hash}(𝑠 + 2)$</strong>（确保作废标识符正确生成）</li>
+<li><strong>默克尔分支有效</strong>（证明代币 $𝐿$ 确实存在于树中）</li>
+</ol>
+<p>在<code>ZK-SNARK</code>之外，协议还会验证：</p>
+<ul>
+<li><strong>𝑅</strong> 是当前或历史版本的代币ID树的根哈希</li>
+<li><strong>𝑈</strong> 未被标记为已花费</li>
+</ul>
+<p>若交易有效，系统会将 <strong>𝑈</strong> 加入<strong>已花费作废标识符集合</strong>，并将 <strong>𝐿′ 添加到代币ID列表</strong>中（见图2）。</p>
+<p><strong>作废机制（𝑈）的作用</strong>：</p>
+<ul>
+<li>防止同一代币被重复花费。</li>
+<li>除此之外，<strong>不泄露任何其他信息</strong>。外界仅能观察到交易的发生，但无法推断交易双方的身份或代币的流转历史。</li>
+</ul>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250712232323160.png' alt="image-20250712232323160" height="1028" width="1034"></p>
+<p><strong>对上述模式存在两种例外情况：存款（deposit）与提款（withdrawal）</strong>
+在存款操作中，系统会直接生成新的代币ID（coin ID），而无需使任何既有代币失效。存款行为本质上<strong>不具备隐私保护性</strong>，因为特定代币ID（𝐿）与其生成所依赖的外部事件（例如Tornado Cash中的ETH充值、Zcash中的ZEC新币挖矿）之间的关联是公开可查的。换言之，存款行为会暴露其与历史交易链路的关联性。</p>
+<p>而在提款操作中，系统仅消耗作废标识符（nullifier）而不生成新代币ID。这种机制可以切断提款操作与对应存款之间的关联，进而消除与历史交易链路的联系。但需注意的是，提款操作仍可能与<strong>后续发生的交易</strong>产生关联[2]。</p>
+<p><strong>Tornado Cash的版本演进</strong></p>
+<ul>
+<li><strong>初代版本</strong>：仅支持存款/提款基础功能，<strong>未实现内部转账</strong>机制</li>
+<li><strong>实验版本（Alpha阶段）</strong>：
+✓ 新增支持<strong>隐私化内部转账</strong>​
+✓ 引入<strong>任意面额代币</strong>处理能力
+✓ 集成&quot;拆分&quot;（splitting）与&quot;合并&quot;（merging）操作协议
+（这些功能是处理可变面额交易的必备基础架构）</li>
+</ul>
+<p>我们将在后续章节详细探讨如何将基础隐私转账系统与隐私资金池（Privacy Pools）扩展至支持任意面额交易的实施方案。</p>
+<h2 class="heading-element" id="24-隐私池中的zk-snark技术"><span><strong>2.4 隐私池中的ZK-SNARK技术</strong></span>
+  <a href="#24-%e9%9a%90%e7%a7%81%e6%b1%a0%e4%b8%ad%e7%9a%84zk-snark%e6%8a%80%e6%9c%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>隐私池的核心思想在于：用户不仅需要零知识证明（zero-knowledge proof）其提款与某个历史存款相关联，还需证明该交易隶属于一个更具约束性的<strong>关联集合（association set）</strong>。这个关联集合可以是所有历史存款的全集子集、仅包含用户自身存款的集合，或是介于二者之间的任意组合。用户通过提供该集合的默克尔根（Merkle root）作为公开输入来指定具体集合。</p>
+<p>为简化流程，我们并不直接证明关联集合确实是历史存款的子集，而是要求用户对两条默克尔分支（Merkle branch）进行零知识证明，且两条分支均使用相同的代币ID作为叶子节点：(i) 指向总币ID集合根𝑅的默克尔分支；(ii) 指向用户提供的关联集合根𝑅𝐴的默克尔分支。下图展示了这一机制：</p>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250712233728987.png' alt="image-20250712233728987" height="267" width="1118"></p>
+<p>设计意图在于，完整的关联集合将通过链上或其他渠道公开。这正是核心创新所在：我们既不强制用户精确披露提款来源的具体存款（这过于严格），也不允许其仅提供防双花证明（这过于宽松），而是让用户自主指定资金可能来源的集合范围——该范围可宽可窄，完全取决于用户意愿。我们期望形成一个生态系统，帮助用户便捷地创建符合其偏好的关联集合。本文后续内容将围绕这一基础机制，阐述其上层基础设施及衍生影响。</p>
+<h1 class="heading-element" id="3-实践考量与应用场景"><span>3. 实践考量与应用场景</span>
+  <a href="#3-%e5%ae%9e%e8%b7%b5%e8%80%83%e9%87%8f%e4%b8%8e%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>在完成技术性介绍后，我们现在转向应用层面，探讨隐私增强协议（privacy-enhancing protocols）如何在实际场景中发挥作用。</p>
+<h2 class="heading-element" id="31-关联集合association-sets的用例"><span>3.1 关联集合（association sets）的用例</span>
+  <a href="#31-%e5%85%b3%e8%81%94%e9%9b%86%e5%90%88association-sets%e7%9a%84%e7%94%a8%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>为了说明该方案在执法场景中的价值，我们举一个简单例子。假设有五名用户：Alice、Bob、Carl、David 和 Eve。前四位是诚实守法的用户，但仍希望保护隐私；而 Eve 是一名窃贼。这一信息为公众所知——尽管公众可能不知道 Eve 的真实身份，但有充分证据表明，发送至标记为“Eve”的地址的代币是赃款。这种情形在实践中很常见：例如，流入 Tornado Cash（一种隐私混币协议）的大部分非法资金均来自 DeFi（去中心化金融）协议漏洞攻击，此类事件在公开区块链上可被追踪。</p>
+<p>当这五名用户发起提款时，他们需选择指定的关联集合（association set）。其关联集合必须包含自己的初始存款地址，但可自由选择是否包含其他地址。我们首先分析 Alice、Bob、Carl 和 David 的动机：</p>
+<ul>
+<li><strong>隐私最大化</strong>：促使他们扩大关联集合的规模；</li>
+<li><strong>降低风险</strong>：为避免商户或交易所将其代币视为可疑资产，他们会选择<strong>不将 Eve 纳入关联集合</strong>。</li>
+</ul>
+<p>因此，四人的选择很明确：关联集合均为 {Alice, Bob, Carl, David}。</p>
+<p>而 Eve 同样希望最大化关联集合，但由于无法排除自己的存款地址，她被迫将关联集合设为全部五个地址。图4展示了参与者的关联集合选择结果。</p>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250712234254049.png' alt="image-20250712234254049" height="356" width="542"></p>
+<blockquote>
+<p>每行中的灰色区域代表相应用户的关联集合（association set）。</p>
+<p>在我们简化的示例中，假设 Alice、Bob、Carl 和 David 的关联集合均包含其他所有“清白”存款地址，同时排除来自已知非法来源的存款5。而 Eve 无法生成一个将其提款与自身存款地址解绑的证明（proof）。</p>
+</blockquote>
+<p>尽管 Eve 本人未主动泄露信息，但通过简单的排除法即可明确推断：<strong>提款 #5 只能来自 Eve</strong>。</p>
+<h2 class="heading-element" id="32-关联集合的构建"><span>3.2 关联集合的构建</span>
+  <a href="#32-%e5%85%b3%e8%81%94%e9%9b%86%e5%90%88%e7%9a%84%e6%9e%84%e5%bb%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>上一节阐述了在类似隐私池（Privacy Pools）的协议中使用关联集合的一种可能方式，以及诚实参与者如何与不良行为者划清界限。需注意，该系统并不依赖Alice、Bob、Carl和David的利他行为——他们有明确的动机去证明自己与不良行为的无关性。</p>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250712234718453.png' alt="image-20250712234718453" height="501" width="550"></p>
+<p>现在，让我们更深入地探讨关联集合的构建方法。总体而言，生成关联集合主要有两大策略（如图5所示）：</p>
+<ul>
+<li><strong>包含策略（Inclusion/Membership）</strong>：
+通过特定证据筛选出一组被认定为低风险的存款（deposits），并构建仅包含这些存款的关联集合。</li>
+<li><strong>排除策略（Exclusion）</strong>：
+通过特定证据识别一组高风险存款，并构建排除这些存款之外的关联集合。</li>
+</ul>
+<p>实际应用中，用户不会手动挑选存款来构建关联集合，而是订阅中介服务商——我们称之为<strong>关联集合提供方（Association Set Providers, ASPs）</strong>。这些提供方会生成具有特定属性的关联集合。某些情况下，ASPs可完全通过链上（on-chain）自动化生成，无需人工（或AI）干预；其他情况下，ASPs可能自主生成关联集合，并将其发布在链上或其他平台。</p>
+<p>我们强烈建议至少将关联集合的默克尔根（Merkle root）发布在链上。此举可防止恶意ASPs对用户实施特定类型的攻击（例如：通过向不同用户提供不同关联集合来试图去匿名化）。完整的集合数据应通过API提供，或理想情况下存储在低成本去中心化存储系统（如IPFS）中。</p>
+<p>用户能够下载完整关联集合至关重要，因为这允许他们在本地生成集合成员证明（proofs of membership），而无需向ASPs透露任何额外信息（包括提款对应的具体存款）。</p>
+<p>以下是ASPs在实际运营中可能采用的几种构建方案：</p>
+<ol>
+<li><strong>延迟添加+排除不良行为者</strong>：
+所有存款在固定期限（如7天）后自动加入关联集合；但若系统检测到某笔存款与已知不良行为（如大规模盗窃或政府制裁名单中的地址）相关联，则永久排除。实践中可通过社区维护的黑名单或现有交易筛查服务商实现。</li>
+<li><strong>每人每月$N限额</strong>：
+加入关联集合的存款需满足：
+<ul>
+<li>金额低于固定上限</li>
+<li>存款人需零知识证明（zero-knowledge-proof）其持有<strong>人格验证凭证（proof-of-personhood token）</strong>（如政府背书的国民ID系统或社交媒体账号验证等轻量机制）
+为防止女巫攻击（Sybil attacks），系统采用带月份参数的作废机制（nullifier mechanism），确保每个身份每月仅能提交一笔存款。此设计试图体现现行反洗钱（AML）规则的精神——低于特定阈值的小额交易可享有更高隐私权限。注：该方案可完全通过智能合约实现，无需人工监督。</li>
+</ul>
+</li>
+<li><strong>可信社区成员每月$N限额</strong>：
+与方案2类似但更严格：用户必须证明自己是<strong>高信任度社区（high-trust community）​</strong>的成员，该社区承诺为成员提供相互隐私保障。</li>
+<li><strong>基于AI的实时评分</strong>：
+AI驱动的ASP系统可实时评估每笔存款的风险分数，并输出包含低于特定风险阈值存款的关联集合。ASPs还可能根据多级风险阈值生成多个集合。</li>
+</ol>
+<h1 class="heading-element" id="4-技术细节详解"><span><strong>4. 技术细节详解</strong></span>
+  <a href="#4-%e6%8a%80%e6%9c%af%e7%bb%86%e8%8a%82%e8%af%a6%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>本节将分析提案如何支持<strong>任意面额（arbitrary denominations）​</strong>，并讨论<strong>重复验证（re-proofing）​</strong>、<strong>双向直接验证（bilateral direct proofs）​</strong>和<strong>序列验证（sequential proofs）​</strong>等特殊情况。</p>
+<h2 class="heading-element" id="41-支持任意面额"><span>4.1 支持任意面额</span>
+  <a href="#41-%e6%94%af%e6%8c%81%e4%bb%bb%e6%84%8f%e9%9d%a2%e9%a2%9d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>前文所述的简化隐私币系统仅支持<strong>同面额转账</strong>。而<strong>Zcash</strong>通过<strong>未花费交易输出模型（UTXO, Unspent Transaction Output）<strong>实现任意面额支持：每笔交易可包含多个输入（需为每个输入公开</strong>作废标识符/nullifier</strong>）和多个输出（需为每个输出公开<strong>币ID/coin ID</strong>）。每个新生成的币ID必须附带加密的面额值。除验证作废标识符有效性外，交易还需额外证明<strong>新生成币的面额总和不超过所花费币的面额总和</strong>（见图6）。</p>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250712235015708.png' alt="image-20250712235015708" height="410" width="552"></p>
+<blockquote>
+<p><strong>图6.</strong> <strong>零知识简洁非交互式论证（ZK-SNARK）</strong> 需额外证明以下声明：加密面额对应的数值满足 <strong>输出端数值总和 ≤ 输入端数值总和</strong>。根据具体实现方案，可能还需显式证明所有新生成币的面额均为非负数。</p>
+</blockquote>
+<p>此设计可通过以下方式扩展以支持存取款：</p>
+<ul>
+<li>将存款视为<strong>未加密的输入</strong>，取款视为<strong>未加密的输出</strong>；</li>
+<li>或限制设计以简化分析（例如仅允许<strong>部分取款/partial withdrawals</strong>）：交易包含1个加密输入和2个输出（1个未加密的取款输出 + 1个加密的&quot;找零&quot;输出，剩余资金可后续使用）。</li>
+</ul>
+<h4 class="heading-element" id="隐私池privacy-pools的适配挑战"><span>隐私池（Privacy Pools）的适配挑战</span>
+  <a href="#%e9%9a%90%e7%a7%81%e6%b1%a0privacy-pools%e7%9a%84%e9%80%82%e9%85%8d%e6%8c%91%e6%88%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>直接套用现有设计会导致**交易图谱（transaction graph）<strong>不符合预期：例如用户存入10个币后分四次取出（1+2+3+4），理想情况是所有取款都应关联原始10币存款，但实际结果如图7所示——第二次取款关联的是第一次取款后生成的9币找零输出，依此类推。这会导致</strong>关联集（association set）**需不断验证中间存款，引发实践问题。</p>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250712235350278.png' alt="image-20250712235350278" height="190" width="1108"></p>
+<h4 class="heading-element" id="解决方案"><span>解决方案</span>
+  <a href="#%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>若要使所有取款都能声明原始10币存款为来源，需同时满足：</p>
+<ol>
+<li>确保部分取款之间无公开关联；</li>
+<li>允许每笔部分取款将存款纳入其关联集。</li>
+</ol>
+<p>对于仅支持部分取款（非复杂多输入/输出交易）的场景，可通过<strong>信息承诺传播</strong>实现：</p>
+<ul>
+<li>要求交易包含承诺值 <code>hash(coinID + hash(r))</code>（添加随机数r保证盲性）；</li>
+<li>通过<strong>零知识证明/ZK-SNARK</strong>验证：若父交易为取款，则承诺值与父交易一致；若为存款，则承诺值关联原始存款的coin ID。</li>
+<li>最终链上每笔交易都会包含对原始存款coin ID的承诺，并证明该值包含在提供的关联集中。</li>
+</ul>
+<h4 class="heading-element" id="防余额求和攻击balance-summing-attacks"><span>防余额求和攻击（balance-summing attacks）</span>
+  <a href="#%e9%98%b2%e4%bd%99%e9%a2%9d%e6%b1%82%e5%92%8c%e6%94%bb%e5%87%bbbalance-summing-attacks" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>例如存入10币后分次取出7.2859和2.7141，攻击者可能通过金额关联交易。为此可支持<strong>币合并（coin merging）</strong>：将零散币与下次存款合并处理。此时需：</p>
+<ul>
+<li>交易承诺一组coin ID；</li>
+<li>多输入交易承诺其所有父交易的并集；</li>
+<li>取款时证明所有承诺的coin ID均在其关联集中。</li>
+</ul>
+<h2 class="heading-element" id="42-特殊情况"><span>4.2. 特殊情况</span>
+  <a href="#42-%e7%89%b9%e6%ae%8a%e6%83%85%e5%86%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="421-重复验证re-proofing"><span>4.2.1. 重复验证（Re-proofing）</span>
+  <a href="#421-%e9%87%8d%e5%a4%8d%e9%aa%8c%e8%af%81re-proofing" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在类似隐私池（Privacy Pools）的协议中，用户需要凭借秘密存款信息 $𝑠$ 才能提取存款。该秘密信息随后还可用于构建关联集成员资格证明（association set membership proofs）。假设以下场景：Alice 提取了她的资金，创建并发布了一个关联集成员资格证明。之后，当她想在要求提供不同关联集证明的商户处消费时，只要仍持有该秘密信息，就能针对商户的关联集生成新的证明。同理，Alice 也可针对初始关联集的更新版本生成新证明。保留秘密信息能赋予 Alice 更大灵活性，但若该信息遭泄露，则可能增加其隐私暴露的风险。</p>
+<p>另一种场景出现在针对特定事件的调查中。假设某些涉及链上代币的不良行为发生，初步调查显示这些代币可能来自一组特定输入源——这可能是因为相关代币源自某个小型社区的提款关联集，或是链上证据与其他证据共同揭示了事件幕后者的部分信息。此时，关联集其他成员或需通过生成排除性证明（exclusion proofs）以自证清白，从而揭露真实责任人的身份。反之，若某事件存在争议但获得大量无关人士支持，这些支持者可能拒绝提供此类证明。</p>
+<h3 class="heading-element" id="422-双边直接证明bilateral-direct-proofs"><span>4.2.2 双边直接证明（Bilateral direct proofs）</span>
+  <a href="#422-%e5%8f%8c%e8%be%b9%e7%9b%b4%e6%8e%a5%e8%af%81%e6%98%8ebilateral-direct-proofs" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在某些场景下，用户可能需要向另一方披露其提款资金的确切来源。例如，当Alice希望将提取的资金存入银行时，银行可能要求提供资金完整来源信息。对此，Alice可以创建一个仅包含其存款的关联集，并针对该集合生成证明。此类证明预计属于特例，且仅在双边共享时提供部分隐私保护。<strong>需注意的是，共享此类证明需基于强信任假设——即接收方不会进一步传播该证明。</strong></p>
+<p>另一种更高级的方案是：Alice通过零知识证明（zero-knowledge proof）声明以下三个命题中至少有一个为真：(i) &ldquo;该提款属于当前关联集&rdquo;；(ii) &ldquo;我是银行方&rdquo;；(iii) &ldquo;根据特定时间戳服务（可以是服务器或区块链记录），本证明的生成时间已超过10秒&rdquo;。只有实时接收证明的银行方（iii）在确认自身未生成该证明（ii）时，才会采信该证明。若证明落入第三方手中，接收者将难以验证其真实性。这种机制可消除绝大多数因隐私泄露导致的对手方风险（counter-party risk）。</p>
+<h3 class="heading-element" id="423-顺序证明sequential-proofs"><span>4.2.3 顺序证明（Sequential proofs）</span>
+  <a href="#423-%e9%a1%ba%e5%ba%8f%e8%af%81%e6%98%8esequential-proofs" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>让我们设想一个长期未来的场景：类似隐私池（Privacy Pools）的系统不再偶尔使用，而是应用于绝大多数交易中。这正是Zcash等隐私优先（privacy-first）系统所追求的理想状态。这种场景会带来一些新的复杂性，而这些复杂性在隐私池偶尔使用的场景中并不存在。</p>
+<p>为适应这种场景，协议需进行如下修改：除存款（deposit）和取款（withdrawal）交易类型外，协议还需支持一种内部发送（internal send）操作——该操作会消耗现有的代币ID（coin ID），并生成一个归属于他人的新代币ID。从协议分析角度看，这等同于发送方将资金提取至接收方地址后，接收方立即重新存款，但通过将步骤数量与链上证明（on-chain proofs）从两次缩减为一次，显著提升了效率。</p>
+<p>假设Alice向Bob发送代币：即她执行一次内部发送操作，（可能部分）消耗属于Alice的代币ID，并根据Bob提供的参数创建新代币ID。若Bob想立即将该代币转给Carl进行消费，同时希望这笔消费交易也保持隐私性，此时就会面临我们的核心挑战：纳入延迟（inclusion delays）。在前文提出的多数配置方案中，关联集提供方（ASPs）不会立即将Bob的新代币加入其关联集（association set），因为他们需要警惕资金源头可能并非Alice，而是刚从Alice钱包窃取资金的攻击者。纳入延迟的设计正是为了让Alice有时间报告异常，或为第三方提供检测时间。</p>
+<p>另一个类似用例是：当&quot;Alice&quot;变为DeFi协议时，Bob希望从该协议提取资金后立即以隐私支付方式转给Carl。此场景虽减少了一个人类参与者，但结构上高度相似。</p>
+<p>在高速流转的经济体中，同一笔资金可能每周甚至更频繁地多次流转，此时纳入延迟将构成严峻挑战。一个可能的解决方案是：当用户钱包中所有代币均未&quot;成熟&quot;（即未被纳入相关关联集）时，用户只能通过非隐私保护交易（non-privacy-preserving transaction）进行转账。但我们提出了信息泄露更少的替代方案：</p>
+<p>当Bob向Carl支付时，Bob会直接向Carl提供用于生成该笔支付的默克尔分支（Merkle branch）和密钥（secret）。这使得Carl能像Bob一样确认：来自Alice的支付记录存在于该代币的历史中。若后续发现大量与不良行为者（bad actors）关联的代币被存入并快速流通，Carl可证明其代币的最终来源与不良行为者无关。</p>
+<p>当Carl将代币转给David时，他会传递来自Bob的默克尔分支与密钥，并追加自己的信息。假设David随后将代币转给Emma时，Alice的存款已被纳入关联集，此时David无需再提供Alice的默克尔分支或密钥——他只需代表Alice生成关联集成员证明（association set membership proof）即可。同理，当Bob的支付被纳入关联集后，其默克尔分支与密钥也将失效。该机制的核心在于确保每个用户仅获取必要的最小信息量，即可对所接收资金建立信任。图8展示了这一案例。</p>
+<p><img loading="lazy" src='/posts/202507-blockchain_privacy_and_regulatory_compliance/image-20250713000029168.png' alt="image-20250713000029168" height="352" width="1108"></p>
+<blockquote>
+<p>图8. 当David向Emma发送交易时，他需要提供来自自身、Carl和Bob的默克尔分支（Merkle branch）与密钥（secret），但无需提供Alice的部分——因为Alice向Bob的支付此时已被纳入关联集（association set）。</p>
+</blockquote>
+<p>实际场景中，一个代币可能具有多重&quot;来源&quot;：例如Bob作为咖啡供应商，分别收到Alice的5枚、Ashley的4枚和Anne的7枚代币，当日需向Carl支付15枚代币作为晚餐费用；而David可能从Carl处收到15枚代币，又从Chris处收到25枚，最终需向交易所Emma存入30枚代币。对于此类复杂情况，我们遵循同一原则：已被纳入关联集的陈旧历史可被忽略，而新近历史需继续向前传递。</p>
+<h1 class="heading-element" id="5-讨论"><span>5. 讨论</span>
+  <a href="#5-%e8%ae%a8%e8%ae%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>类似隐私池（Privacy Pools）的系统允许用户在保护金融交易数据隐私的同时，保留证明其与已知非法活动无关的能力。我们预计诚实用户将受到以下两个因素的共同激励而参与此类方案：(i) 对隐私的需求；(ii) 避免被怀疑的意愿。</p>
+<h2 class="heading-element" id="51-社会共识与关联集合association-sets"><span>5.1. 社会共识与关联集合（Association Sets）</span>
+  <a href="#51-%e7%a4%be%e4%bc%9a%e5%85%b1%e8%af%86%e4%b8%8e%e5%85%b3%e8%81%94%e9%9b%86%e5%90%88association-sets" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>若社会对资金&quot;合法&quot;（good）与&quot;非法&quot;（bad）存在完全共识，该系统将形成简单的分离均衡（separating equilibrium）。所有持有&quot;合法&quot;资产的用户都有强烈动机且能够证明自己属于仅包含&quot;合法&quot;资金的关联集合。而恶意行为者则无法提供此类证明——他们仍可将&quot;非法&quot;资金存入池中，但无法从中获益。任何人都能轻易识别这些资金来自隐私增强协议（privacy-enhancing protocol），并发现其提款引用了包含可疑来源资金的关联集合。更重要的是，&ldquo;非法&quot;资金不会污染&quot;合法&quot;资金：当合法存款被提款时，所有者只需从关联集合中排除所有已知&quot;非法&quot;存款即可。</p>
+<p>当缺乏全球共识，且资金性质判定取决于社会观念或司法管辖区时，关联集合可能显著不同。假设存在两个采用不同规则的司法管辖区，𝐴和𝐵均可使用相同的隐私增强协议，并根据各自辖区要求生成合规证明。双方都能在其关联集合内实现隐私保护，并排除不符合本辖区要求的提款。必要时，用户还可针对两个关联集合的交集生成成员证明（membership proof），从而可信地表明其提款对应的存款同时符合双方法规要求。</p>
+<p>因此，该提案具有高度灵活性，应被视为中立基础设施。一方面，它具有抗审查性（censorship-resistant），允许用户自主选择关联集合并在其社群内保持隐私；另一方面，外部监管方可要求提供符合其特定关联集合的证明。这意味着即使隐私增强协议内存在恶意行为者社群，只要关联集合的构建准确反映信息，他们也无法掩盖存款的可疑来源。</p>
+<h2 class="heading-element" id="52-关联集合的特性"><span>5.2. 关联集合的特性</span>
+  <a href="#52-%e5%85%b3%e8%81%94%e9%9b%86%e5%90%88%e7%9a%84%e7%89%b9%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>关联集合需具备特定属性才能有效运作：首先必须保证准确性（accurate），使用户确信提款后的资金可安全使用；其次应保持稳定性（stable），即属性不会随时间轻易变化，从而减少针对新集合的重复证明需求；最后，为实现实质性隐私，必须确保集合足够庞大且包含多样化存款。然而这些特性存在内在矛盾：规模大且多样化的集合虽能提供更好隐私性，但准确性与稳定性较低；而较小集合更易维护，却会削弱隐私保护效果。</p>
+<h2 class="heading-element" id="53-实践考量与竞争关系"><span>5.3 实践考量与竞争关系</span>
+  <a href="#53-%e5%ae%9e%e8%b7%b5%e8%80%83%e9%87%8f%e4%b8%8e%e7%ab%9e%e4%ba%89%e5%85%b3%e7%b3%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>接受加密资产（crypto assets）的受监管实体必须确保其适用的法律法规允许接收此类资金。目前，这些实体大多依赖所谓的交易筛查工具（transaction screening tools）——通过分析区块链来识别潜在可疑活动、与非法地址（illicit addresses）的关联或其他违规交易的软件或服务。筛查工具通常通过风险评分（risk score）来量化每笔交易的风险程度，该评分基于资金流向地址及其交易历史记录（transaction history）生成。</p>
+<p>隐私增强协议（privacy-enhancing protocols）在这方面可能构成挑战。这类协议会切断存款（deposits）与提款（withdrawals）之间的可见关联。因此，当存在隐私增强协议时，风险评分必须结合零知识证明（proofs），并根据关联集合（association set）进行判定。</p>
+<p>现有的交易筛查工具和服务主要由兼具区块链分析与法律专业知识的公司提供。理想情况下，这些公司（及其他所有方）应能获取全部成员证明（membership proofs）及其对应关联集合，从而对所有交易生成精准风险评分。为此我们建议：除与特定交易对手方（counterparty）共享的单一成员证明（size one proofs）外，所有证明都应存储在区块链或公开可访问的证明库（proof repository）中——基于明显原因，此类单一证明不应公开。</p>
+<p>将证明存储于链上（on-chain）虽会增加交易成本，但能降低协调难度、维护公平竞争环境，并避免筛查工具提供商因掌握非公开证明而获得准垄断地位（quasi-monopoly）。</p>
+<p>隐私池（Privacy Pools）的架构具有高度灵活性。通过创建特定关联集合，该协议可适配多样化应用场景，例如：</p>
+<ul>
+<li>商业银行联盟（consortium of commercial banks）可创建仅包含其客户存款的关联集合。这能确保任何基于该集合生成的提款证明均经过成员银行的客户身份核验（KYC）与反洗钱（AML）程序，同时不暴露具体客户归属；</li>
+<li>当金融中介（financial intermediary）需记录资金确切来源时，可要求用户提供仅包含其自身存款的关联集合证明。该证明通过双方私下交换（exchanged bilaterally），使中介能像用户从未使用隐私池一样追踪资金流向。此方案虽需用户信任中介不泄露证明，但能在满足监管要求的同时避免向公众公开信息。</li>
+</ul>
+<h2 class="heading-element" id="54-设计选择与替代方案design-choices-and-alternatives"><span>5.4 设计选择与替代方案（Design choices and alternatives）</span>
+  <a href="#54-%e8%ae%be%e8%ae%a1%e9%80%89%e6%8b%a9%e4%b8%8e%e6%9b%bf%e4%bb%a3%e6%96%b9%e6%a1%88design-choices-and-alternatives" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>基于关联集合（association sets）、零知识证明（ZK-proofs）和自愿披露（voluntary disclosure）的架构具有高度灵活性。虽然这种设计能确保提案可适配不同司法管辖区，但必须审慎对待具体实施方案。我们特别反对两种潜在调整方案，因其信任要求存在缺陷，并可能催生准垄断（quasi-monopolistic）市场结构。</p>
+<p>下文将简要探讨这两种替代方案：</p>
+<ol>
+<li><strong>中心化访问权限（Centralized access）</strong>：允许执法机构、加密风险评分服务商（crypto risk scoring providers）等特定主体查看用户交易关联，同时对其他主体保持隐匿。</li>
+<li><strong>系统级准入白名单（System-wide entry allowlisting）</strong>：隐私系统可限制用户向资金池存款的权限，要么要求提供额外证明，要么设置存款等待期供中心化风险评分系统（centralized risk scoring system）行使否决权。</li>
+</ol>
+<p>这两种方案的共性在于赋予特定实体特权，进而引发复杂的治理问题：谁有权获取信息？谁掌握权限管理权？</p>
+<p>私营企业并非理想选择——任何特权都可能导致寡头垄断（oligopolistic）市场结构，少数掌握数据权限的企业将垄断服务市场，扼杀竞争。</p>
+<p>若将权力赋予公共机构（public institutions），尤其在国际语境下，则会衍生大量治理与政治难题。即便当前某个完全可信的机构持有后门密钥（backdoor key），既不滥用权力谋取政治利益，也不受其他施压实体影响，但认为这种状态会永恒不变则过于天真。组织架构、成员构成、国家政权及内部政治结构都会随时间演变。外部压力可能涌现，而特权的存在会激励恶意行为者渗透并操控该组织的治理体系。</p>
+<p>更严重的是，组织内外的攻击行为或中心化实体代表的失误都可能引发深远后果。我们认为应当避免制造这类中心化单点故障（central point of failure）。</p>
+<p>当然，我们承认不同交易规模与场景可能需要差异化的证明组合。例如大额交易用户可能需在链上提交基础排他证明（basic exclusion proof），同时向交易对手方披露更详尽的资金来源信息。</p>
+<h2 class="heading-element" id="55-后续研究方向further-research-potential"><span>5.5 后续研究方向（Further research potential）</span>
+  <a href="#55-%e5%90%8e%e7%bb%ad%e7%a0%94%e7%a9%b6%e6%96%b9%e5%90%91further-research-potential" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>尽管本研究概述了基于ZK-SNARK的隐私增强协议（privacy-enhancing protocols）在监管环境中的应用前景，仍有多个领域值得深入探索：</p>
+<p>首先需明确，这些协议提供的隐私保护效果受多重因素影响。关联集合规模不足、根值（root choices）选择不当或用户操作失误，都可能使攻击者成功关联存取款交易。其他用户的行为也可能损害你的隐私——极端情况下，若资金池中所有成员都提交规模为1的成员证明（membership proof），其存取款间的直接关联将暴露无遗，剩余的唯一存取款交易对也会被间接曝光。更微妙的情形中，攻击者可通过组合各类成员证明的约束条件，以高概率推断存取款关联。当这些证明数据与交易元数据（transactional metadata）结合时，协议的隐私属性将受到严重威胁。此外，恶意匿名服务提供商（ASP）可能通过精心构造关联集合来最大化信息提取效率，或通过混入已知取款路径的存款来虚增匿名性感知。这些问题都需进一步研究以评估实际隐私保障效果。</p>
+<p>同样值得深入研究分离均衡（separating equilibrium）的特性：建模分析良性与恶意行为者在特定假设下的行为模式，以及前者的公开证明如何影响后者的隐私。</p>
+<p>最后，法律学者可深入研究具体披露要求。本文提案具有高度适应性（highly adaptable），法学专家的见解能帮助定制协议及周边生态，确保其符合不同司法管辖区的合规要求。</p>
+<h1 class="heading-element" id="6-结论conclusion"><span>6. 结论（Conclusion）</span>
+  <a href="#6-%e7%bb%93%e8%ae%baconclusion" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>传统观点常将隐私保护与监管合规视为不可调和的矛盾。本文论证：若隐私增强协议（privacy-enhancing protocol）允许用户证明其资金合法来源的特定属性，二者便可实现共存。例如，用户既能证明资金与非法来源存款无关，又能通过零知识证明（ZK-proofs）表明资金属于某个合规存款集合，而无需泄露更多信息。</p>
+<p>这种机制可形成<strong>分离均衡（separating equilibrium）</strong>——诚实用户有强烈动机证明自己属于合规关联集合（compliant association set），同时在该集合内享受隐私保护；而欺诈者则无法提供此类证明。这使得诚实用户能与不受监管认可的第三方存款划清界限，避免在受监管环境中遭遇资金使用限制。我们认为该提案具有高度灵活性，可适配多样化的监管要求。</p>
+<p>本文旨在为金融隐私与监管共存的未来提供建设性思考。我们期望推动跨领域对话，将讨论导向更积极务实的方向。要实现这一目标，需要从业者、跨学科学者、政策制定者与监管机构通力合作，共同完善提案细节，最终构建出既符合监管要求又保障隐私的基础设施。</p>
+<h2 class="heading-element" id="利益冲突声明declaration-of-competing-interest"><span>利益冲突声明（Declaration of competing interest）</span>
+  <a href="#%e5%88%a9%e7%9b%8a%e5%86%b2%e7%aa%81%e5%a3%b0%e6%98%8edeclaration-of-competing-interest" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>作者声明以下可能构成潜在利益冲突的财务/个人关系：</p>
+<ul>
+<li>本文分析了类Privacy Pools架构，而Ameen Soleimani系Privacy Pools开发者</li>
+</ul>
+<h2 class="heading-element" id="致谢acknowledgement"><span>致谢（Acknowledgement）</span>
+  <a href="#%e8%87%b4%e8%b0%a2acknowledgement" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>特别感谢Mitchell Goldberg、Katrin Schuler和Dario Thürkauf提供的宝贵意见，Emma Littlejohn的文稿校对，以及Dario Thürkauf在图形设计方面的支持。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-07-13 00:00:00">更新于 2025-07-13&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202507-Blockchain_privacy_and_regulatory_compliance/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/" data-title="论文阅读：《Blockchain Privacy and Regulatory Compliance:Towards a Practical Equilibrium》" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202507-blockchain_privacy_and_regulatory_compliance/" data-title="论文阅读：《Blockchain Privacy and Regulatory Compliance:Towards a Practical Equilibrium》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202506-kfk/" class="post-nav-item" rel="prev" title="回看kfk预言，选了一些我感兴趣的"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>回看kfk预言，选了一些我感兴趣的</a><a href="/posts/202507-eth_white_paper/" class="post-nav-item" rel="next" title="ETH 白皮书阅读">ETH 白皮书阅读<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#21-zk-snarks出现前的区块链隐私方案">2.1 ZK-SNARKs出现前的区块链隐私方案</a></li>
+    <li><a href="#22-zk-snarks技术">2.2 ZK-SNARKs技术</a></li>
+    <li><a href="#23-应用案例zcash-与-tornado-cash类系统中的zk-snarks">2.3 应用案例：Zcash 与 Tornado Cash类系统中的ZK-SNARKs</a></li>
+    <li><a href="#24-隐私池中的zk-snark技术"><strong>2.4 隐私池中的ZK-SNARK技术</strong></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-关联集合association-sets的用例">3.1 关联集合（association sets）的用例</a></li>
+    <li><a href="#32-关联集合的构建">3.2 关联集合的构建</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#41-支持任意面额">4.1 支持任意面额</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#隐私池privacy-pools的适配挑战">隐私池（Privacy Pools）的适配挑战</a></li>
+            <li><a href="#解决方案">解决方案</a></li>
+            <li><a href="#防余额求和攻击balance-summing-attacks">防余额求和攻击（balance-summing attacks）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#42-特殊情况">4.2. 特殊情况</a>
+      <ul>
+        <li><a href="#421-重复验证re-proofing">4.2.1. 重复验证（Re-proofing）</a></li>
+        <li><a href="#422-双边直接证明bilateral-direct-proofs">4.2.2 双边直接证明（Bilateral direct proofs）</a></li>
+        <li><a href="#423-顺序证明sequential-proofs">4.2.3 顺序证明（Sequential proofs）</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#51-社会共识与关联集合association-sets">5.1. 社会共识与关联集合（Association Sets）</a></li>
+    <li><a href="#52-关联集合的特性">5.2. 关联集合的特性</a></li>
+    <li><a href="#53-实践考量与竞争关系">5.3 实践考量与竞争关系</a></li>
+    <li><a href="#54-设计选择与替代方案design-choices-and-alternatives">5.4 设计选择与替代方案（Design choices and alternatives）</a></li>
+    <li><a href="#55-后续研究方向further-research-potential">5.5 后续研究方向（Further research potential）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#利益冲突声明declaration-of-competing-interest">利益冲突声明（Declaration of competing interest）</a></li>
+    <li><a href="#致谢acknowledgement">致谢（Acknowledgement）</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/b1f06cbf757b2ee0168e87582a8e7e4b.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

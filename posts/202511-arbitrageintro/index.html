@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>论文阅读《An Introduction to Arbitrage Trading Strategies》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="套利交易策略导论 引言 套利交易策略是一类通过买卖金融工具来利用价格差异的交易策略。套利交易的目标是从证券或市场之间的价格差异中获利，而不承担重大的方向性风险。套利交易策略通常依赖定量分析和数学模型来识别错误定价，并在市场调整前快速执行交易。本文将介绍五种流行的套利交易策略，并为每种策略提供简单的示例和参考资料。
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="论文阅读《An Introduction to Arbitrage Trading Strategies》">
+  <meta itemprop="description" content="套利交易策略导论 引言 套利交易策略是一类通过买卖金融工具来利用价格差异的交易策略。套利交易的目标是从证券或市场之间的价格差异中获利，而不承担重大的方向性风险。套利交易策略通常依赖定量分析和数学模型来识别错误定价，并在市场调整前快速执行交易。本文将介绍五种流行的套利交易策略，并为每种策略提供简单的示例和参考资料。">
+  <meta itemprop="datePublished" content="2025-11-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-11-23T00:00:00+00:00">
+  <meta itemprop="wordCount" content="3861">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="http://localhost:1313/posts/202511-arbitrageintro/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="论文阅读《An Introduction to Arbitrage Trading Strategies》">
+  <meta property="og:description" content="套利交易策略导论 引言 套利交易策略是一类通过买卖金融工具来利用价格差异的交易策略。套利交易的目标是从证券或市场之间的价格差异中获利，而不承担重大的方向性风险。套利交易策略通常依赖定量分析和数学模型来识别错误定价，并在市场调整前快速执行交易。本文将介绍五种流行的套利交易策略，并为每种策略提供简单的示例和参考资料。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-11-23T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="论文阅读《An Introduction to Arbitrage Trading Strategies》">
+  <meta name="twitter:description" content="套利交易策略导论 引言 套利交易策略是一类通过买卖金融工具来利用价格差异的交易策略。套利交易的目标是从证券或市场之间的价格差异中获利，而不承担重大的方向性风险。套利交易策略通常依赖定量分析和数学模型来识别错误定价，并在市场调整前快速执行交易。本文将介绍五种流行的套利交易策略，并为每种策略提供简单的示例和参考资料。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202511-arbitrageintro/" title="论文阅读《An Introduction to Arbitrage Trading Strategies》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202511-polymarket_new/" title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202511-papercollect/" title="一些想看的论文整理" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "论文阅读《An Introduction to Arbitrage Trading Strategies》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202511-arbitrageintro\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  3861 ,
+    "url": "http:\/\/localhost:1313\/posts\/202511-arbitrageintro\/","datePublished": "2025-11-23T00:00:00+00:00","dateModified": "2025-11-23T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>论文阅读《An Introduction to Arbitrage Trading Strategies》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-11-23 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-11-23">2025-11-23</time></span>&nbsp;<span title="3861 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3900 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 8 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#引言">引言</a></li>
+    <li><a href="#1-波动率中性套利-volatility-arbitrage-neutral"><strong>1. 波动率中性套利 (Volatility Arbitrage Neutral)</strong></a>
+      <ul>
+        <li><a href="#11-原文翻译"><strong>1.1 原文翻译</strong></a></li>
+        <li><a href="#12-术语解释"><strong>1.2 术语解释</strong></a></li>
+        <li><a href="#13-举例跨式策略"><strong>1.3 举例（跨式策略）</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#2-波动率多头偏好套利"><strong>2. 波动率多头偏好套利</strong></a>
+      <ul>
+        <li><a href="#21-原文翻译"><strong>2.1 原文翻译</strong></a></li>
+        <li><a href="#22-术语解释"><strong>2.2 术语解释</strong></a></li>
+        <li><a href="#23-举例"><strong>2.3 举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#3-结构化产品套利"><strong>3. 结构化产品套利</strong></a>
+      <ul>
+        <li><a href="#31-原文翻译"><strong>3.1 原文翻译</strong></a></li>
+        <li><a href="#32-术语解释"><strong>3.2 术语解释</strong></a></li>
+        <li><a href="#33-举例"><strong>3.3 举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#4-资本结构套利"><strong>4. 资本结构套利</strong></a>
+      <ul>
+        <li><a href="#41-原文翻译"><strong>4.1 原文翻译</strong></a></li>
+        <li><a href="#42-术语解释"><strong>4.2 术语解释</strong></a></li>
+        <li><a href="#43-数值举例"><strong>4.3 数值举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#5-信用套利"><strong>5. 信用套利</strong></a>
+      <ul>
+        <li><a href="#51-原文翻译"><strong>5.1 原文翻译</strong></a></li>
+        <li><a href="#52-术语解释"><strong>5.2 术语解释</strong></a></li>
+        <li><a href="#53-具体金额计算举例"><strong>5.3 具体金额计算举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#结论"><strong>结论</strong></a></li>
+    <li><a href="#参考文献"><strong>参考文献</strong></a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="套利交易策略导论"><span>套利交易策略导论</span>
+  <a href="#%e5%a5%97%e5%88%a9%e4%ba%a4%e6%98%93%e7%ad%96%e7%95%a5%e5%af%bc%e8%ae%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="引言"><span>引言</span>
+  <a href="#%e5%bc%95%e8%a8%80" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>套利交易策略是一类通过买卖金融工具来利用价格差异的交易策略。套利交易的目标是从证券或市场之间的价格差异中获利，而不承担重大的方向性风险。套利交易策略通常依赖定量分析和数学模型来识别错误定价，并在市场调整前快速执行交易。本文将介绍五种流行的套利交易策略，并为每种策略提供简单的示例和参考资料。</p>
+<p><strong>关键词：</strong> 套利、交易策略、错误定价、波动率、结构化产品、资本结构、股票、权益、信用衍生品、债券、期权</p>
+<hr>
+<h2 class="heading-element" id="1-波动率中性套利-volatility-arbitrage-neutral"><span><strong>1. 波动率中性套利 (Volatility Arbitrage Neutral)</strong></span>
+  <a href="#1-%e6%b3%a2%e5%8a%a8%e7%8e%87%e4%b8%ad%e6%80%a7%e5%a5%97%e5%88%a9-volatility-arbitrage-neutral" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="11-原文翻译"><span><strong>1.1 原文翻译</strong></span>
+  <a href="#11-%e5%8e%9f%e6%96%87%e7%bf%bb%e8%af%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>波动率中性套利是一种通过同时买卖证券来利用波动率变化引起的定价差异的交易策略。其目标是在保持整体投资组合市场中性的同时（通过维持对市场的平衡敞口），从证券之间的价格差异中获利。</p>
+<p><strong>示例1：</strong> 交易员买入某只预期未来波动率较高的股票的看涨期权，同时买入该股票的看跌期权。这种策略被称为跨式（straddle）或宽跨式（strangle）组合，旨在利用标的股票价格波动率的预期上升获利，而不承担标的资产价格走势的重大方向性风险。</p>
+<p><strong>示例2：</strong> 交易员买入同一股票的长期限平值（ATM）看涨期权，同时卖出短期限平值看涨期权。这种策略在业界被称为<strong>日历价差（Calendar Spread）</strong>（原文描述为对角价差），其依据是隐含波动率往往对期限较长的期权高于期限较短的期权。</p>
+<p>通过对同一标的资产持有不同到期日的相反头寸，交易员可以从两个期权之间的隐含波动率差异中获利，但需动态调整对冲以保持市场中性。</p>
+<h3 class="heading-element" id="12-术语解释"><span><strong>1.2 术语解释</strong></span>
+  <a href="#12-%e6%9c%af%e8%af%ad%e8%a7%a3%e9%87%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>跨式/宽跨式 (Straddle/Strangle)</strong>：同时买一份看涨和一份看跌期权，像押注&quot;股价会大动，但不知道往哪边动&quot;。</li>
+<li><strong>平值 (ATM)</strong>：行权价正好等于股票现价，好比&quot;现价就是目标价&quot;。</li>
+<li><strong>隐含波动率 (IV)</strong>：期权价格里包含的&quot;市场猜测未来股价波动的程度&quot;。</li>
+<li><strong>时间价值衰减 (Theta)</strong>：期权越接近到期日，价值像沙漏一样流走得越快。</li>
+</ul>
+<h3 class="heading-element" id="13-举例跨式策略"><span><strong>1.3 举例（跨式策略）</strong></span>
+  <a href="#13-%e4%b8%be%e4%be%8b%e8%b7%a8%e5%bc%8f%e7%ad%96%e7%95%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>场景</strong>：股票A现价100元，即将发布财报。</p>
+<p><strong>操作</strong>：</p>
+<ul>
+<li>买入1份看涨期权（行权价100元），花费5元</li>
+<li>买入1份看跌期权（行权价100元），花费5元</li>
+<li><strong>总成本</strong>：10元（这是你可能亏的最大金额）</li>
+</ul>
+<p><strong>到期时不同股价的结局</strong>：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>股价</th>
+            <th>看涨期权价值</th>
+            <th>看跌期权价值</th>
+            <th>总回款</th>
+            <th>净利润</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>100元（不动）</td>
+            <td>0元</td>
+            <td>0元</td>
+            <td>0元</td>
+            <td><strong>-10元</strong>（亏光）</td>
+        </tr>
+        <tr>
+            <td>120元（大涨）</td>
+            <td>20元</td>
+            <td>0元</td>
+            <td>20元</td>
+            <td><strong>+10元</strong>（翻倍）</td>
+        </tr>
+        <tr>
+            <td>80元（大跌）</td>
+            <td>0元</td>
+            <td>20元</td>
+            <td>20元</td>
+            <td><strong>+10元</strong>（翻倍）</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p><strong>结论</strong>：股价涨跌幅超过10元才能赚钱，否则亏钱。玩的就是&quot;波动大不大&quot;，不是&quot;涨还是跌&quot;。</p>
+<hr>
+<h2 class="heading-element" id="2-波动率多头偏好套利"><span><strong>2. 波动率多头偏好套利</strong></span>
+  <a href="#2-%e6%b3%a2%e5%8a%a8%e7%8e%87%e5%a4%9a%e5%a4%b4%e5%81%8f%e5%a5%bd%e5%a5%97%e5%88%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="21-原文翻译"><span><strong>2.1 原文翻译</strong></span>
+  <a href="#21-%e5%8e%9f%e6%96%87%e7%bf%bb%e8%af%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>波动率多头偏好套利是一种与上述策略相似但带有方向性多头偏见的交易策略。交易员可能会持有高波动率证券的多头头寸和低波动率证券的空头头寸，旨在从多头头寸波动率的预期上升中获利。</p>
+<p><strong>示例：</strong> 交易员买入一只预期未来波动率较高的股票的看涨期权，同时买入另一只预期波动率较低的股票的看跌期权。交易员通过持有较大规模的看涨期权头寸来维持多头偏见。</p>
+<h3 class="heading-element" id="22-术语解释"><span><strong>2.2 术语解释</strong></span>
+  <a href="#22-%e6%9c%af%e8%af%ad%e8%a7%a3%e9%87%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>多头偏向 (Long Biased)</strong>：投资组合在方向性敞口上有净多头，即整体上更受益于标的资产价格上涨。</li>
+<li><strong>相关性对冲</strong>：利用低波动股票作为&quot;安全垫&quot;，赌高波动股票的表现会优于它。</li>
+</ul>
+<h3 class="heading-element" id="23-举例"><span><strong>2.3 举例</strong></span>
+  <a href="#23-%e4%b8%be%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>场景</strong>：</p>
+<ul>
+<li><strong>科技股A</strong>：波动很大，你觉得还会更大。</li>
+<li><strong>公用事业股B</strong>：波动很小，像死水一样。</li>
+</ul>
+<p><strong>操作（100股规模）</strong>：</p>
+<ol>
+<li><strong>主攻</strong>：买入科技股A的看涨期权（行权价110元），支付300元权利金。</li>
+<li><strong>防守</strong>：买入公用事业股B的看跌期权（行权价45元），支付100元权利金。</li>
+<li><strong>偏见设定</strong>：A的名义价值高于B，赌A的大涨能覆盖成本。</li>
+</ol>
+<p><strong>情景分析</strong>：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>情景</th>
+            <th>科技股A表现</th>
+            <th>公用事业股B表现</th>
+            <th>净收益计算</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>1. 科技爆发</strong></td>
+            <td>股价涨至130元<br>(期权价值2000元)</td>
+            <td>股价稳在48元<br>(期权归零)</td>
+            <td>2000 - 300(成本) - 100(成本) =  <strong>+1,600元</strong></td>
+        </tr>
+        <tr>
+            <td><strong>2. 市场崩盘</strong></td>
+            <td>股价跌至70元<br>(期权归零)</td>
+            <td>股价跌至40元<br>(期权价值500元)</td>
+            <td>0 + 500 - 400(总成本) =  <strong>+100元</strong>  (防守生效)</td>
+        </tr>
+        <tr>
+            <td><strong>3. 阴跌/横盘</strong></td>
+            <td>股价105元<br>(期权归零)</td>
+            <td>股价48元<br>(期权归零)</td>
+            <td><strong>-400元</strong> (最大亏损)</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h2 class="heading-element" id="3-结构化产品套利"><span><strong>3. 结构化产品套利</strong></span>
+  <a href="#3-%e7%bb%93%e6%9e%84%e5%8c%96%e4%ba%a7%e5%93%81%e5%a5%97%e5%88%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="31-原文翻译"><span><strong>3.1 原文翻译</strong></span>
+  <a href="#31-%e5%8e%9f%e6%96%87%e7%bf%bb%e8%af%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>结构化产品套利利用担保债务凭证（CDO）、资产支持证券（ABS）等产品的定价效率低下获利。</p>
+<p><strong>示例：</strong> 交易员买入由高质量汽车贷款支持但被折价交易的ABS，同时做空包含被高估的低质量汽车贷款（或房贷）的MBS。交易员寻求在价格回归正常时获利。</p>
+<h3 class="heading-element" id="32-术语解释"><span><strong>3.2 术语解释</strong></span>
+  <a href="#32-%e6%9c%af%e8%af%ad%e8%a7%a3%e9%87%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>ABS/MBS</strong>：资产证券化产品。套利逻辑是利用不同信贷资产池（如车贷 vs 房贷）在市场恐慌时的<strong>错误定价差</strong>。</li>
+<li><strong>标的资产 vs 结构化产品</strong>：就像&quot;散装苹果&quot;和&quot;精装果篮&quot;。理论上果篮价格=苹果总和+包装费，但恐慌时果篮可能卖得比散装还便宜。</li>
+</ul>
+<h3 class="heading-element" id="33-举例"><span><strong>3.3 举例</strong></span>
+  <a href="#33-%e4%b8%be%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>场景</strong>：市场恐慌，误杀优质车贷ABS（价格9000万，面值1亿），而劣质房贷MBS仍有泡沫（价格1亿）。</p>
+<p><strong>操作</strong>：</p>
+<ol>
+<li><strong>做多</strong>：买入车贷ABS，花费9000万元。</li>
+<li><strong>做空</strong>：借入并卖出房贷MBS（面值1亿元），获得1亿元现金。</li>
+<li><strong>等待</strong>：市场情绪回归理性，ABS价格回升，而MBS价格因为泡沫破裂开始下跌。</li>
+</ol>
+<p><strong>结局分析</strong>：</p>
+<ul>
+<li>
+<p><strong>理想情景（均值回归）</strong>：</p>
+<ul>
+<li>多头端（ABS）：价格涨回9900万（盈利900万）</li>
+<li>空头端（MBS）：价格下跌至9500万，买回平仓（盈利500万）</li>
+<li><strong>总利润</strong>：<strong>1400万元</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>风险情景（系统性违约）</strong>：</p>
+<ul>
+<li>经济危机导致违约率全面上升。</li>
+<li>ABS价格继续跌至8000万（亏损1000万）</li>
+<li>MBS价格崩盘跌至9000万（做空获利1000万）</li>
+<li><strong>净结果</strong>：接近盈亏平衡（不计融资成本）</li>
+<li><strong>结论</strong>：通过做空MBS，对冲了宏观经济崩盘的风险。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="4-资本结构套利"><span><strong>4. 资本结构套利</strong></span>
+  <a href="#4-%e8%b5%84%e6%9c%ac%e7%bb%93%e6%9e%84%e5%a5%97%e5%88%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="41-原文翻译"><span><strong>4.1 原文翻译</strong></span>
+  <a href="#41-%e5%8e%9f%e6%96%87%e7%bf%bb%e8%af%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>资本结构套利利用公司内部不同证券（如股票与债券）之间的定价偏差。</p>
+<p><strong>示例：</strong> 当股票相对于债券被高估时（例如P/E过高而债券YTM也过高），投资者做空股票并买入债券。反之，当股票被相对低估时，则采取相反操作。</p>
+<h3 class="heading-element" id="42-术语解释"><span><strong>4.2 术语解释</strong></span>
+  <a href="#42-%e6%9c%af%e8%af%ad%e8%a7%a3%e9%87%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>资本结构</strong>：公司融资的&quot;蛋糕分层&quot;——最底层是股票（风险大），中间是债券（优先还），顶层可能是优先股。</li>
+<li><strong>优先求偿权</strong>：债券持有人的清偿顺序在股东之前。这导致在公司重组时，债券往往比股票更有价值。</li>
+<li><strong>P/E (市盈率)</strong>：股价÷每股收益。比如P/E=20倍，意味着投资者愿意花20年利润的钱买一股。越高说明市场越乐观。</li>
+<li><strong>YTM (到期收益率)</strong>：持有债券到期的年化回报率。垃圾债YTM可能20%，因为违约风险高。</li>
+</ul>
+<h3 class="heading-element" id="43-数值举例"><span><strong>4.3 数值举例</strong></span>
+  <a href="#43-%e6%95%b0%e5%80%bc%e4%b8%be%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>场景</strong>：陷入困境的地产公司D。</p>
+<p><strong>市场矛盾</strong>：散户死扛股票（股价50元）；机构抛售债券（价格60元，面值100元）。</p>
+<p><strong>操作</strong>：</p>
+<ul>
+<li><strong>做空股票</strong>：借入1万股卖出，获得50万元</li>
+<li><strong>买入债券</strong>：买入面值100万元的债券，花费60万元</li>
+</ul>
+<p><strong>3个月后（债务重组）</strong>：
+公司宣布债务重组，原有股东权益被大幅稀释，债权人获得新公司大部分股权。</p>
+<ul>
+<li><strong>股票端</strong>：股价暴跌至25元（-50%）。买回平仓获利：$(50 - 25) \times 10,000 = \mathbf{25万元}$</li>
+<li><strong>债券端</strong>：因重组方案落地，债券价格微涨至62元（+3.3%）。获利：$(62 - 60) \times 10,000份 = \mathbf{2万元}$</li>
+<li><strong>总净利润</strong>：$25万 + 2万 = \mathbf{27万元}$</li>
+</ul>
+<p><strong>逻辑</strong>：利用了危机时刻股票下跌幅度远大于债券（因债券有保底价值）的特性。</p>
+<hr>
+<h2 class="heading-element" id="5-信用套利"><span><strong>5. 信用套利</strong></span>
+  <a href="#5-%e4%bf%a1%e7%94%a8%e5%a5%97%e5%88%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="51-原文翻译"><span><strong>5.1 原文翻译</strong></span>
+  <a href="#51-%e5%8e%9f%e6%96%87%e7%bf%bb%e8%af%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>信用套利利用不同信用评级证券间的定价差异。</p>
+<p><strong>示例：</strong> 买入某信用恶化公司的CDS（做多保护），同时卖出另一家信用好转公司的CDS（做空保护）。</p>
+<h3 class="heading-element" id="52-术语解释"><span><strong>5.2 术语解释</strong></span>
+  <a href="#52-%e6%9c%af%e8%af%ad%e8%a7%a3%e9%87%8a" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>CDS (信用违约互换)</strong>：针对债务违约的保险合约。买入保护=看空信用，卖出保护=看多信用。</li>
+<li><strong>信用利差</strong>：高风险债券收益率 - 无风险利率（如国债）。利差越大，市场觉得越危险。</li>
+<li><strong>久期 (Duration)</strong>：CDS价格对利差变化的敏感度。<strong>估算公式：盈亏 ≈ 利差变化(bps) × 久期 × 名义本金</strong>。</li>
+</ul>
+<h3 class="heading-element" id="53-具体金额计算举例"><span><strong>5.3 具体金额计算举例</strong></span>
+  <a href="#53-%e5%85%b7%e4%bd%93%e9%87%91%e9%a2%9d%e8%ae%a1%e7%ae%97%e4%b8%be%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>场景</strong>：</p>
+<ul>
+<li><strong>公司E（变差）</strong>：CDS利差500bps。预测会恶化。</li>
+<li><strong>公司F（变好）</strong>：CDS利差100bps。预测会稳定。</li>
+<li><strong>参数</strong>：名义本金均为1000万元，<strong>久期设为4.5</strong>（5年期合约标准值）。</li>
+</ul>
+<p><strong>操作</strong>：</p>
+<ol>
+<li>买入公司E的CDS（<strong>买入保护</strong>）。</li>
+<li>卖出公司F的CDS（<strong>卖出保护</strong>）。</li>
+<li><strong>持有成本</strong>：每年净支付400bps保费（500-100）。</li>
+</ol>
+<p><strong>半年后结局</strong>：</p>
+<ul>
+<li><strong>公司E（暴雷）</strong>：利差飙升至1000bps（扩大500bps）。
+<ul>
+<li><strong>资本利得</strong>：$500 \times 4.5 \times 1000万 / 10,000 = \mathbf{225万元}$</li>
+</ul>
+</li>
+<li><strong>公司F（受牵连）</strong>：利差微涨至120bps（扩大20bps）。
+<ul>
+<li><strong>资本亏损</strong>：$20 \times 4.5 \times 1000万 / 10,000 = \mathbf{9万元}$</li>
+</ul>
+</li>
+<li><strong>保费支出</strong>：半年净保费 = $400 \times 0.5 \times 1000万 / 10,000 = \mathbf{20万元}$</li>
+</ul>
+<p><strong>最终净利润</strong>：
+$$225万 (E盈利) - 9万 (F亏损) - 20万 (保费成本) = \mathbf{196万元}$$</p>
+<p><strong>结论</strong>：通过捕捉特定的信用恶化事件，利用<strong>久期杠杆</strong>放大收益，覆盖了对冲端的轻微亏损和时间成本。</p>
+<hr>
+<h2 class="heading-element" id="结论"><span><strong>结论</strong></span>
+  <a href="#%e7%bb%93%e8%ae%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>套利交易策略涉及在不同市场买卖金融工具以利用价格差异。其目标是从证券或市场之间的价格差异中获利，而不承担重大的方向性风险。这些策略通常依赖定量分析和数学模型来识别错误定价或套利机会，并在市场调整前快速执行交易。</p>
+<p>本文介绍的五种流行套利交易策略分别是：波动率中性套利、波动率多头偏好套利、结构化产品套利、资本结构套利和信用套利。每种策略都有其独特的特点和示例，但它们都共享从定价差异中获利的目标，同时保持市场中性和/或管理标的资产价格变动的风险。</p>
+<hr>
+<h2 class="heading-element" id="参考文献"><span><strong>参考文献</strong></span>
+  <a href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ol>
+<li>Dupire, Bruno. &ldquo;Volatility Arbitrage.&rdquo; (1992)</li>
+<li>Whitcomb, David K. &ldquo;Equity Volatility Arbitrage.&rdquo; (2002)</li>
+<li>Peters, Gareth &amp; Shevchenko, Pavel. &ldquo;Volatility Trading Strategies, with Applications to Equity and FX Markets.&rdquo; (2010)</li>
+<li>Embrahim, M. Shahid, Unal, Haluk &amp; Antolin-Diaz, Saul. &ldquo;Arbitrage Opportunities in Structured Securities.&rdquo; (2011)</li>
+<li>Weisbach, Michael S. &amp; Jin, Li. &ldquo;Capital Structure Arbitrage: An Empirical Study.&rdquo; (2006)</li>
+<li>Avellaneda, Marco &amp; Stoikov, Sasha. &ldquo;Credit Arbitrage and Equity Prices.&rdquo; (2008)</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-11-23 00:00:00">更新于 2025-11-23&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202511-ArbitrageIntro/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202511-arbitrageintro/" data-title="论文阅读《An Introduction to Arbitrage Trading Strategies》" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202511-arbitrageintro/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202511-arbitrageintro/" data-title="论文阅读《An Introduction to Arbitrage Trading Strategies》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202511-polymarket_new/" class="post-nav-item" rel="prev" title="论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>论文阅读《Unravelling the Probabilistic Forest:Arbitrage in Prediction Markets》</a><a href="/posts/202511-papercollect/" class="post-nav-item" rel="next" title="一些想看的论文整理">一些想看的论文整理<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#引言">引言</a></li>
+    <li><a href="#1-波动率中性套利-volatility-arbitrage-neutral"><strong>1. 波动率中性套利 (Volatility Arbitrage Neutral)</strong></a>
+      <ul>
+        <li><a href="#11-原文翻译"><strong>1.1 原文翻译</strong></a></li>
+        <li><a href="#12-术语解释"><strong>1.2 术语解释</strong></a></li>
+        <li><a href="#13-举例跨式策略"><strong>1.3 举例（跨式策略）</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#2-波动率多头偏好套利"><strong>2. 波动率多头偏好套利</strong></a>
+      <ul>
+        <li><a href="#21-原文翻译"><strong>2.1 原文翻译</strong></a></li>
+        <li><a href="#22-术语解释"><strong>2.2 术语解释</strong></a></li>
+        <li><a href="#23-举例"><strong>2.3 举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#3-结构化产品套利"><strong>3. 结构化产品套利</strong></a>
+      <ul>
+        <li><a href="#31-原文翻译"><strong>3.1 原文翻译</strong></a></li>
+        <li><a href="#32-术语解释"><strong>3.2 术语解释</strong></a></li>
+        <li><a href="#33-举例"><strong>3.3 举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#4-资本结构套利"><strong>4. 资本结构套利</strong></a>
+      <ul>
+        <li><a href="#41-原文翻译"><strong>4.1 原文翻译</strong></a></li>
+        <li><a href="#42-术语解释"><strong>4.2 术语解释</strong></a></li>
+        <li><a href="#43-数值举例"><strong>4.3 数值举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#5-信用套利"><strong>5. 信用套利</strong></a>
+      <ul>
+        <li><a href="#51-原文翻译"><strong>5.1 原文翻译</strong></a></li>
+        <li><a href="#52-术语解释"><strong>5.2 术语解释</strong></a></li>
+        <li><a href="#53-具体金额计算举例"><strong>5.3 具体金额计算举例</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#结论"><strong>结论</strong></a></li>
+    <li><a href="#参考文献"><strong>参考文献</strong></a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/5db86173f523088666c6b2a0a6ed54f3.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>09.Uniswap V3 集中流动性 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="核心摘要 (Key Takeaways) 核心问题与解决方案：Uniswap V2 的流动性平均分布在 (0, &#43;∞) 的整个价格区间，导致对价格稳定的资产（如稳定币）或价格波动在可预测范围内的资产，资本效率极低。Uniswap V3 引入集中流动性，允许流动性提供者（LP）将资金集中在自定义的价格区间 [Pa, Pb] 内，从而极大地提高了资本效率。 虚拟流动性 (Virtual Liquidity)：通过将流动性集中在特定区间，V3 能用较少的真实资产（x_real, y_real）创造出等效于 V2 中巨大资金量的虚拟流动性。这个虚拟的 k 值（流动性深度）在进行交易计算时生效，能为交易者提供更低的滑点。 价格区间与资产构成：当市场价格在 LP 设置的 [Pa, Pb] 区间内波动时，其持有的两种代币会根据交易进行兑换。一旦价格超出这个区间，LP 的全部流动性头寸会自动转换成区间边界上的一种代币（在 Pa 点全部变为 X 代币，在 Pb 点全部变为 Y 代币）。 价格区间的宽度是关键：LP 设置的价格区间越窄，资本效率的提升倍数就越高，但也面临着价格更容易偏离区间的风险。反之，区间越宽，其表现越接近于 Uniswap V2，资本效率越低，但管理更省心。 1. Uniswap V2 的核心问题：资本效率低下 Uniswap V2 使用一个非常简洁的恒定乘积做市商（AMM）公式来定义资产池的行为： $$ x \cdot y = k $$ 其中 x 和 y 是两种代币的数量，k 是一个常数。池中的瞬时价格 P 由两种资产的比例决定： $$ P = \frac{y}{x} $$
+"><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="09.Uniswap V3 集中流动性">
+  <meta itemprop="description" content="核心摘要 (Key Takeaways) 核心问题与解决方案：Uniswap V2 的流动性平均分布在 (0, &#43;∞) 的整个价格区间，导致对价格稳定的资产（如稳定币）或价格波动在可预测范围内的资产，资本效率极低。Uniswap V3 引入集中流动性，允许流动性提供者（LP）将资金集中在自定义的价格区间 [Pa, Pb] 内，从而极大地提高了资本效率。 虚拟流动性 (Virtual Liquidity)：通过将流动性集中在特定区间，V3 能用较少的真实资产（x_real, y_real）创造出等效于 V2 中巨大资金量的虚拟流动性。这个虚拟的 k 值（流动性深度）在进行交易计算时生效，能为交易者提供更低的滑点。 价格区间与资产构成：当市场价格在 LP 设置的 [Pa, Pb] 区间内波动时，其持有的两种代币会根据交易进行兑换。一旦价格超出这个区间，LP 的全部流动性头寸会自动转换成区间边界上的一种代币（在 Pa 点全部变为 X 代币，在 Pb 点全部变为 Y 代币）。 价格区间的宽度是关键：LP 设置的价格区间越窄，资本效率的提升倍数就越高，但也面临着价格更容易偏离区间的风险。反之，区间越宽，其表现越接近于 Uniswap V2，资本效率越低，但管理更省心。 1. Uniswap V2 的核心问题：资本效率低下 Uniswap V2 使用一个非常简洁的恒定乘积做市商（AMM）公式来定义资产池的行为： $$ x \cdot y = k $$ 其中 x 和 y 是两种代币的数量，k 是一个常数。池中的瞬时价格 P 由两种资产的比例决定： $$ P = \frac{y}{x} $$">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="3356">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap09/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="09.Uniswap V3 集中流动性">
+  <meta property="og:description" content="核心摘要 (Key Takeaways) 核心问题与解决方案：Uniswap V2 的流动性平均分布在 (0, &#43;∞) 的整个价格区间，导致对价格稳定的资产（如稳定币）或价格波动在可预测范围内的资产，资本效率极低。Uniswap V3 引入集中流动性，允许流动性提供者（LP）将资金集中在自定义的价格区间 [Pa, Pb] 内，从而极大地提高了资本效率。 虚拟流动性 (Virtual Liquidity)：通过将流动性集中在特定区间，V3 能用较少的真实资产（x_real, y_real）创造出等效于 V2 中巨大资金量的虚拟流动性。这个虚拟的 k 值（流动性深度）在进行交易计算时生效，能为交易者提供更低的滑点。 价格区间与资产构成：当市场价格在 LP 设置的 [Pa, Pb] 区间内波动时，其持有的两种代币会根据交易进行兑换。一旦价格超出这个区间，LP 的全部流动性头寸会自动转换成区间边界上的一种代币（在 Pa 点全部变为 X 代币，在 Pb 点全部变为 Y 代币）。 价格区间的宽度是关键：LP 设置的价格区间越窄，资本效率的提升倍数就越高，但也面临着价格更容易偏离区间的风险。反之，区间越宽，其表现越接近于 Uniswap V2，资本效率越低，但管理更省心。 1. Uniswap V2 的核心问题：资本效率低下 Uniswap V2 使用一个非常简洁的恒定乘积做市商（AMM）公式来定义资产池的行为： $$ x \cdot y = k $$ 其中 x 和 y 是两种代币的数量，k 是一个常数。池中的瞬时价格 P 由两种资产的比例决定： $$ P = \frac{y}{x} $$">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="09.Uniswap V3 集中流动性">
+  <meta name="twitter:description" content="核心摘要 (Key Takeaways) 核心问题与解决方案：Uniswap V2 的流动性平均分布在 (0, &#43;∞) 的整个价格区间，导致对价格稳定的资产（如稳定币）或价格波动在可预测范围内的资产，资本效率极低。Uniswap V3 引入集中流动性，允许流动性提供者（LP）将资金集中在自定义的价格区间 [Pa, Pb] 内，从而极大地提高了资本效率。 虚拟流动性 (Virtual Liquidity)：通过将流动性集中在特定区间，V3 能用较少的真实资产（x_real, y_real）创造出等效于 V2 中巨大资金量的虚拟流动性。这个虚拟的 k 值（流动性深度）在进行交易计算时生效，能为交易者提供更低的滑点。 价格区间与资产构成：当市场价格在 LP 设置的 [Pa, Pb] 区间内波动时，其持有的两种代币会根据交易进行兑换。一旦价格超出这个区间，LP 的全部流动性头寸会自动转换成区间边界上的一种代币（在 Pa 点全部变为 X 代币，在 Pb 点全部变为 Y 代币）。 价格区间的宽度是关键：LP 设置的价格区间越窄，资本效率的提升倍数就越高，但也面临着价格更容易偏离区间的风险。反之，区间越宽，其表现越接近于 Uniswap V2，资本效率越低，但管理更省心。 1. Uniswap V2 的核心问题：资本效率低下 Uniswap V2 使用一个非常简洁的恒定乘积做市商（AMM）公式来定义资产池的行为： $$ x \cdot y = k $$ 其中 x 和 y 是两种代币的数量，k 是一个常数。池中的瞬时价格 P 由两种资产的比例决定： $$ P = \frac{y}{x} $$">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap09/" title="09.Uniswap V3 集中流动性 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap10/" title="10UniswapV3流动性计算" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap08/" title="08.Uniswap V3简介" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "09.Uniswap V3 集中流动性",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap09\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  3356 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap09\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>09.Uniswap V3 集中流动性</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="3356 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3400 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 7 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+        <li><a href="#1-uniswap-v2-的核心问题资本效率低下"><strong>1. Uniswap V2 的核心问题：资本效率低下</strong></a></li>
+        <li><a href="#2-uniswap-v3-的解决方案集中流动性-concentrated-liquidity"><strong>2. Uniswap V3 的解决方案：集中流动性 (Concentrated Liquidity)</strong></a></li>
+        <li><a href="#3-核心概念虚拟流动性-virtual-liquidity"><strong>3. 核心概念：虚拟流动性 (Virtual Liquidity)</strong></a></li>
+        <li><a href="#4-价格变动对流动性头寸的影响"><strong>4. 价格变动对流动性头寸的影响</strong></a>
+          <ul>
+            <li><a href="#资产状态变化流程图"><strong>资产状态变化流程图</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#5-价格区间宽度的影响"><strong>5. 价格区间宽度的影响</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>核心问题与解决方案</strong>：Uniswap V2 的流动性平均分布在 <code>(0, +∞)</code> 的整个价格区间，导致对价格稳定的资产（如稳定币）或价格波动在可预测范围内的资产，<strong>资本效率极低</strong>。Uniswap V3 引入<strong>集中流动性</strong>，允许流动性提供者（LP）将资金集中在自定义的价格区间 <code>[Pa, Pb]</code> 内，从而极大地提高了资本效率。</li>
+<li><strong>虚拟流动性 (Virtual Liquidity)</strong>：通过将流动性集中在特定区间，V3 能用较少的<strong>真实资产</strong>（<code>x_real</code>, <code>y_real</code>）创造出等效于 V2 中巨大资金量的<strong>虚拟流动性</strong>。这个虚拟的 <code>k</code> 值（流动性深度）在进行交易计算时生效，能为交易者提供更低的<strong>滑点</strong>。</li>
+<li><strong>价格区间与资产构成</strong>：当市场价格在 LP 设置的 <code>[Pa, Pb]</code> 区间内波动时，其持有的两种代币会根据交易进行兑换。一旦价格超出这个区间，LP 的全部流动性头寸会自动转换成区间边界上的一种代币（在 <code>Pa</code> 点全部变为 X 代币，在 <code>Pb</code> 点全部变为 Y 代币）。</li>
+<li><strong>价格区间的宽度是关键</strong>：LP 设置的价格区间越窄，资本效率的提升倍数就越高，但也面临着价格更容易偏离区间的风险。反之，区间越宽，其表现越接近于 Uniswap V2，资本效率越低，但管理更省心。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="1-uniswap-v2-的核心问题资本效率低下"><span><strong>1. Uniswap V2 的核心问题：资本效率低下</strong></span>
+  <a href="#1-uniswap-v2-%e7%9a%84%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e8%b5%84%e6%9c%ac%e6%95%88%e7%8e%87%e4%bd%8e%e4%b8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Uniswap V2 使用一个非常简洁的恒定乘积做市商（AMM）公式来定义资产池的行为：
+$$
+x \cdot y = k
+$$
+其中 <code>x</code> 和 <code>y</code> 是两种代币的数量，<code>k</code> 是一个常数。池中的瞬时价格 <code>P</code> 由两种资产的比例决定：
+$$
+P = \frac{y}{x}
+$$</p>
+<ul>
+<li>
+<p><strong>流动性分布</strong>：这个模型将流动性均匀地分布在从 <code>0</code> 到 <code>+∞</code> 的整个价格曲线上。</p>
+</li>
+<li>
+<p><strong>资本浪费</strong>：在大多数实际场景中，代币的价格只在一个相对较小的范围内波动。这意味着分布在价格范围之外的绝大部分流动性从未被使用，造成了严重的资本浪费。</p>
+<ul>
+<li><strong>案例 (稳定币)</strong>：像 <code>USDC/USDT</code> 这样的稳定币对，其价格通常只在 <code>0.99</code> 到 <code>1.01</code> 之间微小波动。在 V2 中，为 <code>0</code> 到 <code>0.99</code> 和 <code>1.01</code> 到 <code>+∞</code> 价格区间提供的流动性几乎永远不会被触及，这部分资金完全被闲置。</li>
+<li><strong>案例 (主流资产)</strong>：即使是像 <code>ETH</code> 这样波动性较高的资产，其价格在特定时期（如一周内）也往往在一个可预测的范围内波动，例如 <code>1500</code> 到 <code>2000</code> 美元。超出此范围的流动性同样被浪费了。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="2-uniswap-v3-的解决方案集中流动性-concentrated-liquidity"><span><strong>2. Uniswap V3 的解决方案：集中流动性 (Concentrated Liquidity)</strong></span>
+  <a href="#2-uniswap-v3-%e7%9a%84%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88%e9%9b%86%e4%b8%ad%e6%b5%81%e5%8a%a8%e6%80%a7-concentrated-liquidity" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为了解决 V2 的资本效率问题，Uniswap V3 提出了<strong>集中流动性</strong>（也称<strong>区间流动性</strong>）的核心概念。</p>
+<ul>
+<li><strong>核心机制</strong>：允许流动性提供者（LP）不再为整个 <code>(0, +∞)</code> 价格曲线提供流动性，而是可以选择一个自定义的价格区间 <code>[Pa, Pb]</code> 来集中投入他们的资金。</li>
+<li><strong>目标</strong>：通过将资金集中在最有可能发生交易的价格附近，极大地提高<strong>资本的利用效率</strong>。</li>
+<li><strong>主动管理</strong>：LP 可以根据市场价格的变化，主动地撤出旧区间的流动性，并在新的、更合适的价格区间内重新提供流动性，以持续追踪市场价格，保持高效率。</li>
+</ul>
+<h3 class="heading-element" id="3-核心概念虚拟流动性-virtual-liquidity"><span><strong>3. 核心概念：虚拟流动性 (Virtual Liquidity)</strong></span>
+  <a href="#3-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e8%99%9a%e6%8b%9f%e6%b5%81%e5%8a%a8%e6%80%a7-virtual-liquidity" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/202509-uniswap09/virtual-liquidity-20250902211902925.png' alt="img" height="806" width="894"></p>
+<blockquote>
+<p>此图展示了一个 $x \cdot y = k$ 的函数曲线图。为了满足让用户可以选择只在 $[a, b]$ 价格区间内提供流动性。对于图中 $[a, b]$ 区间的任意点，都有：</p>
+<p>$$
+x = x_{virtual} + x_{real} ,</p>
+</blockquote>
+<p>y = y_{virtual} + y_{real}
+$$</p>
+<p>集中流动性机制创造了一个强大的效果，即<strong>虚拟流动性</strong>。</p>
+<ul>
+<li>
+<p><strong>定义</strong>：在 V3 中，LP 使用的<strong>真实代币</strong>数量（$x_{real}$, $y_{real}$）虽然有限，但通过集中在 <code>[Pa, Pb]</code> 区间，它们所能产生的交易深度（即等效的 <code>k</code> 值）被极大地放大了。这个被放大的流动性被称为<strong>虚拟流动性</strong> ($x_{virtual}$, $y_{virtual}$)。</p>
+</li>
+<li>
+<p><strong>作用</strong>：这个虚拟流动性仅用于交易滑点的计算。它并不代表池子里有那么多的真实资产，但它能确保在指定价格区间内的交易滑点非常低，体验远超 V2。</p>
+</li>
+<li>
+<p><strong>为什么需要更高的流动性 (更大的k值)?</strong></p>
+<ul>
+<li><strong>对交易者</strong>：<code>k</code> 值越大，单笔交易对价格的影响就越小，意味着<strong>滑点</strong>越低，交易体验越好。</li>
+<li><strong>对 LP</strong>：价格变动更平滑，理论上可以减少<strong>无常损失</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>案例 (数据对比)</strong>：</p>
+<ul>
+<li><strong>V2 场景</strong>: 假设用户投入 <code>100</code> 个 X 代币和 <code>100</code> 个 Y 代币。
+<ul>
+<li>流动性常数 $L_{V2} = \sqrt{100 \times 100} = 100$</li>
+</ul>
+</li>
+<li><strong>V3 场景</strong>: 用户同样投入 <code>100</code> 个 X ($x_{real}$) 和 <code>100</code> 个 Y ($y_{real}$)，但将它们集中在一个较窄的价格区间内。
+<ul>
+<li>系统计算出的<strong>虚拟流动性</strong>可能等效于一个拥有 <code>300</code> 个 X 和 <code>300</code> 个 Y 的 V2 池子。</li>
+<li>虚拟流动性常数 $L_{V3} = \sqrt{300 \times 300} = 300$</li>
+<li>这意味着，用同样数量的真实资产，V3 在该区间内实现了 <code>3</code> 倍于 V2 的流动性深度。
+<img loading="lazy" src='/posts/202509-uniswap09/20250902211058.png' alt="/posts/202509-uniswap09/20250902211058.png" height="832" width="888">
+上图展示了用户选择在价格 $[a,b]$之间提供流动性时，通过虚拟 token 的参与，将曲线 $f(real)$（橘红色）向右上方移动至 $f(virtual)$（绿色），实现了价格计算的一致性（即满足 $x⋅y=k$）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="4-价格变动对流动性头寸的影响"><span><strong>4. 价格变动对流动性头寸的影响</strong></span>
+  <a href="#4-%e4%bb%b7%e6%a0%bc%e5%8f%98%e5%8a%a8%e5%af%b9%e6%b5%81%e5%8a%a8%e6%80%a7%e5%a4%b4%e5%af%b8%e7%9a%84%e5%bd%b1%e5%93%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>当市场价格在 LP 设置的 <code>[Pa, Pb]</code> 区间内移动时，其资产构成会发生变化。如果价格移出区间，资产会完全变为单一币种。</p>
+<h4 class="heading-element" id="资产状态变化流程图"><span><strong>资产状态变化流程图</strong></span>
+  <a href="#%e8%b5%84%e4%ba%a7%e7%8a%b6%e6%80%81%e5%8f%98%e5%8c%96%e6%b5%81%e7%a8%8b%e5%9b%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><div class="diagram-container">
+  <pre class="mermaid">graph TD
+    A[开始: LP在价格区间 Pa, Pb 内提供X和Y] --> B{市场价格 P 发生变动};
+    B --> C{价格 P 上涨 --> Pb};
+    C --> D[交易: 卖出X, 买入Y<br/>LP资产: x_real减少, y_real增加];
+    D --> E[状态1: 价格到达 Pb<br/>LP资产: x_real = 0<br/>头寸100%为 Y 代币];
+  
+    B --> F{价格 P 下跌 --> Pa};
+    F --> G[交易: 卖出Y, 买入X<br/>LP资产: y_real减少, x_real增加];
+    G --> H[状态2: 价格到达 Pa<br/>LP资产: y_real = 0<br/>头寸100%为 X 代币];
+
+    subgraph "区间内"
+        direction LR
+        A
+        B
+        C
+        D
+        F
+        G
+    end
+
+    subgraph "区间外"
+        direction LR
+        E
+        H
+    end</pre>
+  <pre class="mermaid-dark">graph TD
+    A[开始: LP在价格区间 Pa, Pb 内提供X和Y] --> B{市场价格 P 发生变动};
+    B --> C{价格 P 上涨 --> Pb};
+    C --> D[交易: 卖出X, 买入Y<br/>LP资产: x_real减少, y_real增加];
+    D --> E[状态1: 价格到达 Pb<br/>LP资产: x_real = 0<br/>头寸100%为 Y 代币];
+  
+    B --> F{价格 P 下跌 --> Pa};
+    F --> G[交易: 卖出Y, 买入X<br/>LP资产: y_real减少, x_real增加];
+    G --> H[状态2: 价格到达 Pa<br/>LP资产: y_real = 0<br/>头寸100%为 X 代币];
+
+    subgraph "区间内"
+        direction LR
+        A
+        B
+        C
+        D
+        F
+        G
+    end
+
+    subgraph "区间外"
+        direction LR
+        E
+        H
+    end</pre>
+  <pre class="mermaid-neutral">graph TD
+    A[开始: LP在价格区间 Pa, Pb 内提供X和Y] --> B{市场价格 P 发生变动};
+    B --> C{价格 P 上涨 --> Pb};
+    C --> D[交易: 卖出X, 买入Y<br/>LP资产: x_real减少, y_real增加];
+    D --> E[状态1: 价格到达 Pb<br/>LP资产: x_real = 0<br/>头寸100%为 Y 代币];
+  
+    B --> F{价格 P 下跌 --> Pa};
+    F --> G[交易: 卖出Y, 买入X<br/>LP资产: y_real减少, x_real增加];
+    G --> H[状态2: 价格到达 Pa<br/>LP资产: y_real = 0<br/>头寸100%为 X 代币];
+
+    subgraph "区间内"
+        direction LR
+        A
+        B
+        C
+        D
+        F
+        G
+    end
+
+    subgraph "区间外"
+        direction LR
+        E
+        H
+    end</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>graph TD
+    A[开始: LP在价格区间 Pa, Pb 内提供X和Y] --> B{市场价格 P 发生变动};
+    B --> C{价格 P 上涨 --> Pb};
+    C --> D[交易: 卖出X, 买入Y<br/>LP资产: x_real减少, y_real增加];
+    D --> E[状态1: 价格到达 Pb<br/>LP资产: x_real = 0<br/>头寸100%为 Y 代币];
+  
+    B --> F{价格 P 下跌 --> Pa};
+    F --> G[交易: 卖出Y, 买入X<br/>LP资产: y_real减少, x_real增加];
+    G --> H[状态2: 价格到达 Pa<br/>LP资产: y_real = 0<br/>头寸100%为 X 代币];
+
+    subgraph "区间内"
+        direction LR
+        A
+        B
+        C
+        D
+        F
+        G
+    end
+
+    subgraph "区间外"
+        direction LR
+        E
+        H
+    end</pre></template>
+</div><p><strong>图表解释</strong>:</p>
+<p>这个流程图展示了当市场价格变动时，一个 Uniswap V3 流动性头寸的演变过程。</p>
+<ol>
+<li><strong>初始状态</strong>: LP 在 <code>Pa</code> 和 <code>Pb</code> 之间同时提供 X 和 Y 两种代币。</li>
+<li><strong>价格上涨</strong>: 如果价格从当前点 <code>P</code> 向 <code>Pb</code> 上涨，池子会不断卖出 X 代币换取 Y 代币。因此，LP 持有的 X 代币 ($x_{real}$) 逐渐减少，Y 代币 ($y_{real}$) 逐渐增多。</li>
+<li><strong>触及上边界</strong>: 当价格达到 <code>Pb</code> 时，LP 的所有 X 代币都被卖光，其头寸完全由 Y 代币构成。</li>
+<li><strong>价格下跌</strong>: 反之，如果价格从 <code>P</code> 向 <code>Pa</code> 下跌，池子会卖出 Y 代币换取 X 代币。LP 持有的 Y 代币 ($y_{real}$) 减少，X 代币 ($x_{real}$) 增多。</li>
+<li><strong>触及下边界</strong>: 当价格达到 <code>Pa</code> 时，LP 的所有 Y 代币都被卖光，其头寸完全由 X 代币构成。</li>
+</ol>
+<ul>
+<li><strong>流动性贡献 (Liquidity Contribution)</strong>：
+<ul>
+<li>当价格从 <code>P</code> 移动到 <code>Pb</code> 时，是 <strong>X 代币</strong>在为交易提供流动性（因为它被卖出）。</li>
+<li>当价格从 <code>P</code> 移动到 <code>Pa</code> 时，是 <strong>Y 代币</strong>在为交易提供流动性（因为它被卖出）。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="5-价格区间宽度的影响"><span><strong>5. 价格区间宽度的影响</strong></span>
+  <a href="#5-%e4%bb%b7%e6%a0%bc%e5%8c%ba%e9%97%b4%e5%ae%bd%e5%ba%a6%e7%9a%84%e5%bd%b1%e5%93%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>价格区间的宽度是决定资本效率的核心变量。</p>
+<ul>
+<li>
+<p><strong>宽区间 (Wide Range)</strong>：</p>
+<ul>
+<li>如果 LP 设置的区间非常宽，例如 <code>Pa</code> 接近 <code>0</code>，<code>Pb</code> 接近 <code>+∞</code>。</li>
+<li>这种情况下，V3 的行为和资本效率将无限接近于 <strong>Uniswap V2</strong>。虚拟流动性的放大效应会变得很小。</li>
+</ul>
+</li>
+<li>
+<p><strong>窄区间 (Narrow Range)</strong>：</p>
+<ul>
+<li>如果 LP 设置的区间非常窄，资本效率会得到惊人的提升。</li>
+<li><strong>案例 (稳定币)</strong>：假设为稳定币对设置一个 <code>0.9</code> 到 <code>1.1</code> 的价格区间。同样投入 <code>100</code> 个 X 和 <code>100</code> 个 Y。
+<ul>
+<li>视频中的演示显示，在这种情况下，资本效率（以 L 值衡量）可以提升约 <strong>200 倍</strong>。这意味着用 <code>100</code> 对代币达到的交易深度，在 V2 中可能需要 <code>20000</code> 对代币才能实现。</li>
+</ul>
+</li>
+<li><strong>权衡</strong>：区间越窄，效率越高，但价格也更容易偏离这个区间，导致流动性失效（头寸变为单一资产）并停止赚取手续费。这要求 LP 进行更主动的管理。</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap09/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap09/" data-title="09.Uniswap V3 集中流动性" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap09/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap09/" data-title="09.Uniswap V3 集中流动性"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap10/" class="post-nav-item" rel="prev" title="10UniswapV3流动性计算"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>10UniswapV3流动性计算</a><a href="/posts/202509-uniswap08/" class="post-nav-item" rel="next" title="08.Uniswap V3简介">08.Uniswap V3简介<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#核心摘要-key-takeaways"><strong>核心摘要 (Key Takeaways)</strong></a></li>
+        <li><a href="#1-uniswap-v2-的核心问题资本效率低下"><strong>1. Uniswap V2 的核心问题：资本效率低下</strong></a></li>
+        <li><a href="#2-uniswap-v3-的解决方案集中流动性-concentrated-liquidity"><strong>2. Uniswap V3 的解决方案：集中流动性 (Concentrated Liquidity)</strong></a></li>
+        <li><a href="#3-核心概念虚拟流动性-virtual-liquidity"><strong>3. 核心概念：虚拟流动性 (Virtual Liquidity)</strong></a></li>
+        <li><a href="#4-价格变动对流动性头寸的影响"><strong>4. 价格变动对流动性头寸的影响</strong></a>
+          <ul>
+            <li><a href="#资产状态变化流程图"><strong>资产状态变化流程图</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#5-价格区间宽度的影响"><strong>5. 价格区间宽度的影响</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/05e010d8f4d37e4f393acfd544726d13.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>11.Uniswap V3 Tick 与价格表示 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="核心摘要 (Key Takeaways) tick 引入目的与作用: Uniswap V3 引入了 tick 机制，将连续的价格范围离散化，以解决集中流动性中用户随意设置价格区间导致的高 Gas 消耗问题，从而大幅节省 Gas 费用。 价格与 tick 的数学关系: Uniswap V3 中的价格 $P$ 与 tick 索引 $T$ 之间通过公式 $P = 1.0001^T$ 建立精确的指数关系。 合约价格存储: Uniswap V3 合约的 slot0 结构中，价格信息并非直接存储为 $P$，而是以 $\sqrt{P} \times 2^{96}$ 的形式（即 sqrtPriceX96）存储，并采用 Q64.96 定点数格式，以适应 Solidity 对浮点数处理的限制并优化 Gas 消耗。 实际价格计算的复杂性: 从合约中读取的价格需要考虑 Token 精度差异 和 token0/token1 顺序（可能导致价格倒数）进行修正，才能得到真实的市场价格。 tick 范围的由来: tick 的范围被限制在 -887272 到 &#43;887272，这一范围是根据 Q64.96 定点数格式所能表示的 $\sqrt{P}$ 的上下限，通过价格与 tick 的数学关系推导而来，并硬编码在合约中。 1. tick 的引入与作用 1.1 问题背景：集中流动性的 Gas 消耗 Uniswap V3 的核心创新: 引入了集中流动性 (Concentrated Liquidity)，允许用户在任意价格区间 $P_a$ 和 $P_b$ 内提供流动性。 潜在问题: 如果用户可以随意设置 $P_a$ 和 $P_b$ (例如 $1795.0234$ 到 $1800.00012$)，会带来以下问题： 每个用户设置的价格范围都是独一无二且随意的。 维护和记录每个用户添加的 $P_a$ 和 $P_b$ 范围会消耗巨量的 Gas 费用，因为合约状态需要存储大量不规则的数据。 1.2 解决方案：引入 tick 进行离散化 "><meta name="keywords" content='Web3'>
+  <meta itemprop="name" content="11.Uniswap V3 tick 与价格表示">
+  <meta itemprop="description" content="核心摘要 (Key Takeaways) tick 引入目的与作用: Uniswap V3 引入了 tick 机制，将连续的价格范围离散化，以解决集中流动性中用户随意设置价格区间导致的高 Gas 消耗问题，从而大幅节省 Gas 费用。 价格与 tick 的数学关系: Uniswap V3 中的价格 $P$ 与 tick 索引 $T$ 之间通过公式 $P = 1.0001^T$ 建立精确的指数关系。 合约价格存储: Uniswap V3 合约的 slot0 结构中，价格信息并非直接存储为 $P$，而是以 $\sqrt{P} \times 2^{96}$ 的形式（即 sqrtPriceX96）存储，并采用 Q64.96 定点数格式，以适应 Solidity 对浮点数处理的限制并优化 Gas 消耗。 实际价格计算的复杂性: 从合约中读取的价格需要考虑 Token 精度差异 和 token0/token1 顺序（可能导致价格倒数）进行修正，才能得到真实的市场价格。 tick 范围的由来: tick 的范围被限制在 -887272 到 &#43;887272，这一范围是根据 Q64.96 定点数格式所能表示的 $\sqrt{P}$ 的上下限，通过价格与 tick 的数学关系推导而来，并硬编码在合约中。 1. tick 的引入与作用 1.1 问题背景：集中流动性的 Gas 消耗 Uniswap V3 的核心创新: 引入了集中流动性 (Concentrated Liquidity)，允许用户在任意价格区间 $P_a$ 和 $P_b$ 内提供流动性。 潜在问题: 如果用户可以随意设置 $P_a$ 和 $P_b$ (例如 $1795.0234$ 到 $1800.00012$)，会带来以下问题： 每个用户设置的价格范围都是独一无二且随意的。 维护和记录每个用户添加的 $P_a$ 和 $P_b$ 范围会消耗巨量的 Gas 费用，因为合约状态需要存储大量不规则的数据。 1.2 解决方案：引入 tick 进行离散化">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="3619">
+  <meta itemprop="keywords" content="Web3"><meta property="og:url" content="http://localhost:1313/posts/202509-uniswap11/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="11.Uniswap V3 tick 与价格表示">
+  <meta property="og:description" content="核心摘要 (Key Takeaways) tick 引入目的与作用: Uniswap V3 引入了 tick 机制，将连续的价格范围离散化，以解决集中流动性中用户随意设置价格区间导致的高 Gas 消耗问题，从而大幅节省 Gas 费用。 价格与 tick 的数学关系: Uniswap V3 中的价格 $P$ 与 tick 索引 $T$ 之间通过公式 $P = 1.0001^T$ 建立精确的指数关系。 合约价格存储: Uniswap V3 合约的 slot0 结构中，价格信息并非直接存储为 $P$，而是以 $\sqrt{P} \times 2^{96}$ 的形式（即 sqrtPriceX96）存储，并采用 Q64.96 定点数格式，以适应 Solidity 对浮点数处理的限制并优化 Gas 消耗。 实际价格计算的复杂性: 从合约中读取的价格需要考虑 Token 精度差异 和 token0/token1 顺序（可能导致价格倒数）进行修正，才能得到真实的市场价格。 tick 范围的由来: tick 的范围被限制在 -887272 到 &#43;887272，这一范围是根据 Q64.96 定点数格式所能表示的 $\sqrt{P}$ 的上下限，通过价格与 tick 的数学关系推导而来，并硬编码在合约中。 1. tick 的引入与作用 1.1 问题背景：集中流动性的 Gas 消耗 Uniswap V3 的核心创新: 引入了集中流动性 (Concentrated Liquidity)，允许用户在任意价格区间 $P_a$ 和 $P_b$ 内提供流动性。 潜在问题: 如果用户可以随意设置 $P_a$ 和 $P_b$ (例如 $1795.0234$ 到 $1800.00012$)，会带来以下问题： 每个用户设置的价格范围都是独一无二且随意的。 维护和记录每个用户添加的 $P_a$ 和 $P_b$ 范围会消耗巨量的 Gas 费用，因为合约状态需要存储大量不规则的数据。 1.2 解决方案：引入 tick 进行离散化">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="Web3">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="11.Uniswap V3 tick 与价格表示">
+  <meta name="twitter:description" content="核心摘要 (Key Takeaways) tick 引入目的与作用: Uniswap V3 引入了 tick 机制，将连续的价格范围离散化，以解决集中流动性中用户随意设置价格区间导致的高 Gas 消耗问题，从而大幅节省 Gas 费用。 价格与 tick 的数学关系: Uniswap V3 中的价格 $P$ 与 tick 索引 $T$ 之间通过公式 $P = 1.0001^T$ 建立精确的指数关系。 合约价格存储: Uniswap V3 合约的 slot0 结构中，价格信息并非直接存储为 $P$，而是以 $\sqrt{P} \times 2^{96}$ 的形式（即 sqrtPriceX96）存储，并采用 Q64.96 定点数格式，以适应 Solidity 对浮点数处理的限制并优化 Gas 消耗。 实际价格计算的复杂性: 从合约中读取的价格需要考虑 Token 精度差异 和 token0/token1 顺序（可能导致价格倒数）进行修正，才能得到真实的市场价格。 tick 范围的由来: tick 的范围被限制在 -887272 到 &#43;887272，这一范围是根据 Q64.96 定点数格式所能表示的 $\sqrt{P}$ 的上下限，通过价格与 tick 的数学关系推导而来，并硬编码在合约中。 1. tick 的引入与作用 1.1 问题背景：集中流动性的 Gas 消耗 Uniswap V3 的核心创新: 引入了集中流动性 (Concentrated Liquidity)，允许用户在任意价格区间 $P_a$ 和 $P_b$ 内提供流动性。 潜在问题: 如果用户可以随意设置 $P_a$ 和 $P_b$ (例如 $1795.0234$ 到 $1800.00012$)，会带来以下问题： 每个用户设置的价格范围都是独一无二且随意的。 维护和记录每个用户添加的 $P_a$ 和 $P_b$ 范围会消耗巨量的 Gas 费用，因为合约状态需要存储大量不规则的数据。 1.2 解决方案：引入 tick 进行离散化">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202509-uniswap11/" title="11.Uniswap V3 tick 与价格表示 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202509-uniswap12/" title="12.Uniswap V3 添加流动性案例" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202509-uniswap10/" title="10UniswapV3流动性计算" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "11.Uniswap V3 tick 与价格表示",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202509-uniswap11\/"
+    },"genre": "posts","keywords": "Web3","wordcount":  3619 ,
+    "url": "http:\/\/localhost:1313\/posts\/202509-uniswap11\/","datePublished": "2025-09-02T00:00:00+00:00","dateModified": "2025-09-02T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>11.Uniswap V3 Tick 与价格表示</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-09-02 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-09-02">2025-09-02</time></span>&nbsp;<span title="3619 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3700 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 8 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#1-tick-的引入与作用">1. <code>tick</code> 的引入与作用</a>
+      <ul>
+        <li><a href="#11-问题背景集中流动性的-gas-消耗">1.1 问题背景：集中流动性的 Gas 消耗</a></li>
+        <li><a href="#12-解决方案引入-tick-进行离散化">1.2 解决方案：引入 <code>tick</code> 进行离散化</a></li>
+        <li><a href="#13-uniswap-v2-与-v3-合约记录逻辑对比">1.3 Uniswap V2 与 V3 合约记录逻辑对比</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-tick-与价格的数学关系">2. <code>tick</code> 与价格的数学关系</a>
+      <ul>
+        <li><a href="#21-核心价格公式">2.1 核心价格公式</a></li>
+        <li><a href="#22-tick-变化对价格的影响">2.2 <code>tick</code> 变化对价格的影响</a></li>
+        <li><a href="#23-tick-的有效范围">2.3 <code>tick</code> 的有效范围</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-uniswap-v3-合约中的价格存储">3. Uniswap V3 合约中的价格存储</a>
+      <ul>
+        <li><a href="#31-slot0-结构">3.1 <code>slot0</code> 结构</a></li>
+        <li><a href="#32-为什么存储-sqrtpricex96-而不是-p">3.2 为什么存储 <code>sqrtPriceX96</code> 而不是 $P$？</a></li>
+        <li><a href="#33-案例从-sqrtpricex96-计算价格-ethdai">3.3 案例：从 <code>sqrtPriceX96</code> 计算价格 (ETH/DAI)</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-实际价格计算中的精度与方向问题">4. 实际价格计算中的精度与方向问题</a>
+      <ul>
+        <li><a href="#41-token-精度差异">4.1 Token 精度差异</a></li>
+        <li><a href="#42-token0token1-顺序导致的价格倒数问题">4.2 <code>token0</code>/<code>token1</code> 顺序导致的价格倒数问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-tick-范围的由来">5. <code>tick</code> 范围的由来</a>
+      <ul>
+        <li><a href="#51-q6496-格式对-sqrtp-的限制">5.1 <code>Q64.96</code> 格式对 $\sqrt{P}$ 的限制</a></li>
+        <li><a href="#52-价格-p-的有效范围">5.2 价格 $P$ 的有效范围</a></li>
+        <li><a href="#53-从价格范围推导-tick-范围">5.3 从价格范围推导 <code>tick</code> 范围</a></li>
+        <li><a href="#54-合约硬编码">5.4 合约硬编码</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><ul>
+<li><strong><code>tick</code> 引入目的与作用</strong>: Uniswap V3 引入了 <strong><code>tick</code></strong> 机制，将连续的价格范围离散化，以解决集中流动性中用户随意设置价格区间导致的高 Gas 消耗问题，从而大幅节省 Gas 费用。</li>
+<li><strong>价格与 <code>tick</code> 的数学关系</strong>: Uniswap V3 中的价格 $P$ 与 <code>tick</code> 索引 $T$ 之间通过公式 $P = 1.0001^T$ 建立精确的指数关系。</li>
+<li><strong>合约价格存储</strong>: Uniswap V3 合约的 <code>slot0</code> 结构中，价格信息并非直接存储为 $P$，而是以 <strong>$\sqrt{P} \times 2^{96}$</strong> 的形式（即 <code>sqrtPriceX96</code>）存储，并采用 <strong>Q64.96 定点数格式</strong>，以适应 Solidity 对浮点数处理的限制并优化 Gas 消耗。</li>
+<li><strong>实际价格计算的复杂性</strong>: 从合约中读取的价格需要考虑 <strong>Token 精度差异</strong> 和 <strong><code>token0</code>/<code>token1</code> 顺序</strong>（可能导致价格倒数）进行修正，才能得到真实的市场价格。</li>
+<li><strong><code>tick</code> 范围的由来</strong>: <code>tick</code> 的范围被限制在 <strong>-887272 到 +887272</strong>，这一范围是根据 <code>Q64.96</code> 定点数格式所能表示的 $\sqrt{P}$ 的上下限，通过价格与 <code>tick</code> 的数学关系推导而来，并硬编码在合约中。</li>
+</ul>
+<hr>
+<h2 class="heading-element" id="1-tick-的引入与作用"><span>1. <code>tick</code> 的引入与作用</span>
+  <a href="#1-tick-%e7%9a%84%e5%bc%95%e5%85%a5%e4%b8%8e%e4%bd%9c%e7%94%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="11-问题背景集中流动性的-gas-消耗"><span>1.1 问题背景：集中流动性的 Gas 消耗</span>
+  <a href="#11-%e9%97%ae%e9%a2%98%e8%83%8c%e6%99%af%e9%9b%86%e4%b8%ad%e6%b5%81%e5%8a%a8%e6%80%a7%e7%9a%84-gas-%e6%b6%88%e8%80%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>Uniswap V3 的核心创新</strong>: 引入了<strong>集中流动性 (Concentrated Liquidity)</strong>，允许用户在任意价格区间 $P_a$ 和 $P_b$ 内提供流动性。</li>
+<li><strong>潜在问题</strong>: 如果用户可以随意设置 $P_a$ 和 $P_b$ (例如 $1795.0234$ 到 $1800.00012$)，会带来以下问题：
+<ul>
+<li>每个用户设置的价格范围都是独一无二且随意的。</li>
+<li>维护和记录每个用户添加的 $P_a$ 和 $P_b$ 范围会消耗巨量的 <strong>Gas 费用</strong>，因为合约状态需要存储大量不规则的数据。</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="12-解决方案引入-tick-进行离散化"><span>1.2 解决方案：引入 <code>tick</code> 进行离散化</span>
+  <a href="#12-%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88%e5%bc%95%e5%85%a5-tick-%e8%bf%9b%e8%a1%8c%e7%a6%bb%e6%95%a3%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/202509-uniswap11/tickTickTickTick.jpg' alt="An illustration of Uniswap price curve getting sliced by ticks" height="1080" width="1920"></p>
+<ul>
+<li><strong>核心思想</strong>: 将连续的价格空间离散化。用户添加流动性的最小单位是 <strong><code>tick</code></strong>。</li>
+<li><strong><code>tick</code> 的定义</strong>: <code>tick</code> 可以理解为价格轴上的一个“刻度点”。用户只能在两个 <code>tick</code> 之间选择 $P_a$ 和 $P_b$ 来添加流动性，即 $P_a$ 必须是 <code>lowerTick</code>， $P_b$ 必须是 <code>upperTick</code>。</li>
+<li><strong>类比</strong>: 就像高速公路的里程表，你可以连续地报出 $60.22345$ 公里，但更常见和高效的方式是离散地报出 $60$ 公里、$61$ 公里等整数里程。<code>tick</code> 机制就是将连续的价格报数离散化。</li>
+<li><strong>好处</strong>:
+<ul>
+<li><strong>节省 Gas 费用</strong>: 通过将连续的价格范围转换为离散的 <code>tick</code> 范围，大大减少了需要维护的状态数量和计算复杂度。</li>
+<li><strong>标准化</strong>: 统一了流动性添加的边界，使得不同用户的流动性可以更有效地聚合和管理。</li>
+</ul>
+</li>
+<li><strong>价格表示</strong>: 在 Uniswap V3 的图示中，<code>tick</code> 之间的斜率表示价格。</li>
+</ul>
+<p><img loading="lazy" src='/posts/202509-uniswap11/pApB.png' alt="An illustration of a price range between ticks" height="1080" width="1920"></p>
+<h3 class="heading-element" id="13-uniswap-v2-与-v3-合约记录逻辑对比"><span>1.3 Uniswap V2 与 V3 合约记录逻辑对比</span>
+  <a href="#13-uniswap-v2-%e4%b8%8e-v3-%e5%90%88%e7%ba%a6%e8%ae%b0%e5%bd%95%e9%80%bb%e8%be%91%e5%af%b9%e6%af%94" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Uniswap V2 和 V3 在合约中记录流动性和价格的方式存在根本性差异，以下流程图展示了它们的逻辑对比：</p>
+<div class="diagram-container">
+  <pre class="mermaid">graph TD
+    subgraph Uniswap V2
+        A[记录 Token X 数量] --> B[推导价格 P]
+        A --> C[推导流动性 L]
+        D[记录 Token Y 数量] --> B
+        D --> C
+    end
+
+    subgraph Uniswap V3
+        E[记录价格 P] --> F[推导特定 tick 范围内的 Token X 数量]
+        E --> G[推导特定 tick 范围内的 Token Y 数量]
+        H[记录流动性 L]
+    end</pre>
+  <pre class="mermaid-dark">graph TD
+    subgraph Uniswap V2
+        A[记录 Token X 数量] --> B[推导价格 P]
+        A --> C[推导流动性 L]
+        D[记录 Token Y 数量] --> B
+        D --> C
+    end
+
+    subgraph Uniswap V3
+        E[记录价格 P] --> F[推导特定 tick 范围内的 Token X 数量]
+        E --> G[推导特定 tick 范围内的 Token Y 数量]
+        H[记录流动性 L]
+    end</pre>
+  <pre class="mermaid-neutral">graph TD
+    subgraph Uniswap V2
+        A[记录 Token X 数量] --> B[推导价格 P]
+        A --> C[推导流动性 L]
+        D[记录 Token Y 数量] --> B
+        D --> C
+    end
+
+    subgraph Uniswap V3
+        E[记录价格 P] --> F[推导特定 tick 范围内的 Token X 数量]
+        E --> G[推导特定 tick 范围内的 Token Y 数量]
+        H[记录流动性 L]
+    end</pre><div class="diagram-copy-btn" aria-label="Copy Mermaid code" role="button"><i class="fa-regular fa-clone fa-width-auto" aria-hidden="true"></i></div>
+<template><pre>graph TD
+    subgraph Uniswap V2
+        A[记录 Token X 数量] --> B[推导价格 P]
+        A --> C[推导流动性 L]
+        D[记录 Token Y 数量] --> B
+        D --> C
+    end
+
+    subgraph Uniswap V3
+        E[记录价格 P] --> F[推导特定 tick 范围内的 Token X 数量]
+        E --> G[推导特定 tick 范围内的 Token Y 数量]
+        H[记录流动性 L]
+    end</pre></template>
+</div><p><strong>解释</strong>:</p>
+<ul>
+<li><strong>Uniswap V2</strong>: 合约直接记录 <code>Token X</code> 和 <code>Token Y</code> 的数量，然后通过这些数量推导出当前价格 $P$ 和总流动性 $L$。</li>
+<li><strong>Uniswap V3</strong>: 合约直接记录当前价格 $P$ (通过 <code>tick</code> 和 <code>sqrtPriceX96</code> 表示) 以及总流动性 $L$。然后，反过来根据这些信息推导出在每个特定 <code>tick</code> 范围内的 <code>Token X</code> 和 <code>Token Y</code> 数量。这意味着直接查看 V3 合约的 <code>Token X</code> 和 <code>Token Y</code> 余额并不能直接计算出当前价格，因为流动性是分散在不同价格区间内的。</li>
+</ul>
+<h2 class="heading-element" id="2-tick-与价格的数学关系"><span>2. <code>tick</code> 与价格的数学关系</span>
+  <a href="#2-tick-%e4%b8%8e%e4%bb%b7%e6%a0%bc%e7%9a%84%e6%95%b0%e5%ad%a6%e5%85%b3%e7%b3%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="21-核心价格公式"><span>2.1 核心价格公式</span>
+  <a href="#21-%e6%a0%b8%e5%bf%83%e4%bb%b7%e6%a0%bc%e5%85%ac%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Uniswap V3 使用以下公式将 <code>tick</code> 索引 $T$ 转换为价格 $P$:</p>
+<p>$$
+P = 1.0001^T
+$$</p>
+<ul>
+<li><strong>$T$</strong>: 表示 <code>tick</code> 索引，可以是正数、负数或零。</li>
+<li><strong>$P$</strong>: 表示价格。</li>
+</ul>
+<h3 class="heading-element" id="22-tick-变化对价格的影响"><span>2.2 <code>tick</code> 变化对价格的影响</span>
+  <a href="#22-tick-%e5%8f%98%e5%8c%96%e5%af%b9%e4%bb%b7%e6%a0%bc%e7%9a%84%e5%bd%b1%e5%93%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>$T=0$</strong>: 任何非零数的零次方都是 1。因此，当 $T=0$ 时，$P = 1.0001^0 = 1$。</li>
+<li><strong>$T &gt; 0$</strong>: 随着 $T$ 增大，价格 $P$ 会不断增大。</li>
+<li><strong>$T &lt; 0$</strong>: 随着 $T$ 减小（变为负数），价格 $P$ 会不断减小，可以表示非常小的价格（例如 $0.00&hellip;$）。</li>
+<li><strong><code>tick</code> 边界</strong>: 当价格在 <code>tick</code> 之间移动并越过一个 <code>tick</code> 边界时，合约会记录当前价格<strong>向下取整</strong>的 <code>tick</code> 索引。</li>
+</ul>
+<h3 class="heading-element" id="23-tick-的有效范围"><span>2.3 <code>tick</code> 的有效范围</span>
+  <a href="#23-tick-%e7%9a%84%e6%9c%89%e6%95%88%e8%8c%83%e5%9b%b4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Uniswap V3 将 <code>tick</code> 的有效范围限制在：</p>
+<ul>
+<li><strong>最小 <code>tick</code></strong>: <strong>-887272</strong></li>
+<li><strong>最大 <code>tick</code></strong>: <strong>+887272</strong></li>
+</ul>
+<p>这个范围的由来将在后面的章节详细解释。</p>
+<h2 class="heading-element" id="3-uniswap-v3-合约中的价格存储"><span>3. Uniswap V3 合约中的价格存储</span>
+  <a href="#3-uniswap-v3-%e5%90%88%e7%ba%a6%e4%b8%ad%e7%9a%84%e4%bb%b7%e6%a0%bc%e5%ad%98%e5%82%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="31-slot0-结构"><span>3.1 <code>slot0</code> 结构</span>
+  <a href="#31-slot0-%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Uniswap V3 合约（例如 <code>UniswapV3Pool</code>）内部定义了一个 <code>STRUCT</code> 叫 <code>slot0</code> 来存储当前池子的关键状态信息，其中包括：</p>
+<ul>
+<li><code>uint160 sqrtPriceX96</code>: 当前价格的平方根，经过 $2^{96}$ 缩放后的值。</li>
+<li><code>int24 tick</code>: 当前的 <code>tick</code> 索引。</li>
+</ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-solidity"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-solidity" data-lang="solidity"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">Slot0</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// the current price
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint160</span> <span class="n">sqrtPriceX96</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// the current tick
+</span></span></span><span class="line"><span class="cl"><span class="kt">int24</span> <span class="n">tick</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// the most-recently updated index of the observations array
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint16</span> <span class="n">observationIndex</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// the current maximum number of observations that are being stored
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint16</span> <span class="n">observationCardinality</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// the next maximum number of observations to store, triggered in observations.write
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint16</span> <span class="n">observationCardinalityNext</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// the current protocol fee as a percentage of the swap fee taken on withdrawal
+</span></span></span><span class="line"><span class="cl"><span class="c1">// represented as an integer denominator (1/x)%
+</span></span></span><span class="line"><span class="cl"><span class="kt">uint8</span> <span class="n">feeProtocol</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// whether the pool is locked
+</span></span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">unlocked</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h3 class="heading-element" id="32-为什么存储-sqrtpricex96-而不是-p"><span>3.2 为什么存储 <code>sqrtPriceX96</code> 而不是 $P$？</span>
+  <a href="#32-%e4%b8%ba%e4%bb%80%e4%b9%88%e5%ad%98%e5%82%a8-sqrtpricex96-%e8%80%8c%e4%b8%8d%e6%98%af-p" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>原因</strong>: Uniswap V3 的流动性计算公式中大量使用了价格的平方根 ($\sqrt{P}$)，例如：
+$$
+\Delta X = L \left( \frac{1}{\sqrt{P_a}} - \frac{1}{\sqrt{P_b}} \right)
+$$
+$$
+\Delta Y = L (\sqrt{P_b} - \sqrt{P_a})
+$$
+如果合约中存储的是 $P$，每次计算都需要进行开平方根运算，这在 EVM (以太坊虚拟机) 上是非常消耗 Gas 的操作。</li>
+<li><strong>优化</strong>: 为了节省 Gas，合约直接存储 $\sqrt{P}$ 的值。</li>
+<li><strong>Solidity 浮点数限制</strong>: Solidity 语言不支持浮点数运算。为了在整数运算中保留浮点数的精度，Uniswap V3 采用了 <strong>Q64.96 定点数格式</strong>。
+<ul>
+<li><strong>存储方式</strong>: <code>sqrtPriceX96</code> 存储的是 $\sqrt{P}$ 乘以 $2^{96}$ 后的整数值。</li>
+<li><strong>公式</strong>: $$stored_sqrtPriceX96 = \sqrt{P} \times 2^{96}$$</li>
+<li><strong>逆运算（获取 $\sqrt{P}$）</strong>: $$\sqrt{P} = stored_sqrtPriceX96 / 2^{96}$$</li>
+<li><strong>最终价格 $P$</strong>: $$P = (stored_sqrtPriceX96 / 2^{96})^2$$</li>
+</ul>
+</li>
+<li><strong>精度</strong>: 乘以 $2^{96}$ (一个非常大的数) 后，小数部分被“提升”为整数，从而在整数运算中保留了足够的精度，避免了直接存储小数可能导致的精度损失。</li>
+</ul>
+<h3 class="heading-element" id="33-案例从-sqrtpricex96-计算价格-ethdai"><span>3.3 案例：从 <code>sqrtPriceX96</code> 计算价格 (ETH/DAI)</span>
+  <a href="#33-%e6%a1%88%e4%be%8b%e4%bb%8e-sqrtpricex96-%e8%ae%a1%e7%ae%97%e4%bb%b7%e6%a0%bc-ethdai" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>假设从区块链浏览器查询到 ETH/DAI 交易对的 <code>sqrtPriceX96</code> 值为 <code>3364239860641323386927909307</code>。</p>
+<ol>
+<li><strong>计算 $\sqrt{P}$</strong>:
+$C = 3364239860641323386927909307 / 2^{96}$
+$C \approx 42.493106$</li>
+<li><strong>计算 $P$</strong>:
+$P = C^2 \approx 42.493106^2 \approx 1805.66$
+（这与 ETH 的市场价格 $1803 \sim 1806$ 接近）
+<ul>
+<li><strong>注意</strong>: ETH 和 DAI 的精度都是 18，因此无需额外精度修正。</li>
+</ul>
+</li>
+</ol>
+<h2 class="heading-element" id="4-实际价格计算中的精度与方向问题"><span>4. 实际价格计算中的精度与方向问题</span>
+  <a href="#4-%e5%ae%9e%e9%99%85%e4%bb%b7%e6%a0%bc%e8%ae%a1%e7%ae%97%e4%b8%ad%e7%9a%84%e7%b2%be%e5%ba%a6%e4%b8%8e%e6%96%b9%e5%90%91%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>在从 Uniswap V3 合约中读取 <code>tick</code> 或 <code>sqrtPriceX96</code> 并计算实际价格时，需要注意以下两个常见问题：</p>
+<h3 class="heading-element" id="41-token-精度差异"><span>4.1 Token 精度差异</span>
+  <a href="#41-token-%e7%b2%be%e5%ba%a6%e5%b7%ae%e5%bc%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>问题</strong>: 如果交易对中的两个 Token (例如 ETH 和 USDC) 具有不同的 <code>decimals</code> (精度)，直接通过 <code>tick</code> 或 <code>sqrtPriceX96</code> 计算出的价格将不正确。
+<ul>
+<li><strong>案例</strong>: ETH (18 位精度) / USDC (6 位精度)
+<ul>
+<li>从合约 <code>slot0</code> 读取 <code>tick</code> = -201344。</li>
+<li>直接计算 $P = 1.0001^{-201344} \approx 1.803 \times 10^{-9}$。这个价格显然是错误的，因为 ETH 价格远高于此。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>解决方案</strong>: 需要根据 Token 的精度差异进行修正。
+<ul>
+<li><strong>修正公式</strong>: 真实价格 = 计算价格 $\times 10^{(\text{Token0_decimals} - \text{Token1_decimals})}$</li>
+<li><strong>案例修正</strong>: 假设 ETH 是 <code>token0</code> (18 精度)，USDC 是 <code>token1</code> (6 精度)。
+真实价格 = $(1.803 \times 10^{-9}) \times 10^{(18 - 6)}$
+真实价格 = $(1.803 \times 10^{-9}) \times 10^{12}$
+真实价格 = $1.803 \times 10^3 = 1803$ (这与 ETH 的市场价格相符)</li>
+</ul>
+</li>
+<li><strong>无精度差异</strong>: 如果两个 Token 精度相同 (例如 ETH/DAI 都是 18 位精度)，则无需进行此修正。</li>
+</ul>
+<h3 class="heading-element" id="42-token0token1-顺序导致的价格倒数问题"><span>4.2 <code>token0</code>/<code>token1</code> 顺序导致的价格倒数问题</span>
+  <a href="#42-token0token1-%e9%a1%ba%e5%ba%8f%e5%af%bc%e8%87%b4%e7%9a%84%e4%bb%b7%e6%a0%bc%e5%80%92%e6%95%b0%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>问题</strong>: Uniswap V3 合约内部定义了 <code>token0</code> 和 <code>token1</code>，但这两个 Token 在合约中的顺序可能与我们预期计算价格时使用的 X 轴和 Y 轴的 Token 顺序不一致。例如，如果合约将 USDC 视为 <code>token0</code> (X 轴)，ETH 视为 <code>token1</code> (Y 轴)，那么通过 $P = Y/X$ 计算出的价格可能是 USDC/ETH 的价格，而不是我们通常期望的 ETH/USDC 价格。</li>
+<li><strong>表现</strong>: 通过 <code>sqrtPriceX96</code> 计算出的价格与实际市场价格互为倒数。</li>
+<li><strong>解决方案</strong>: 如果发现通过 <code>sqrtPriceX96</code> 计算出的价格与预期价格互为倒数，则需要对计算结果再取一次倒数。
+<ul>
+<li><strong>修正步骤</strong>:
+<ol>
+<li>从 <code>sqrtPriceX96</code> 计算出 $P_{raw}$。</li>
+<li>如果 $P_{raw}$ 与预期价格互为倒数，则 $P_{corrected} = 1 / P_{raw}$。</li>
+<li>再应用精度修正 (如果需要)。</li>
+</ol>
+</li>
+<li><strong>案例</strong>: 假设 ETH/USDC 交易对，通过 <code>sqrtPriceX96</code> 计算出的 $P_{raw}$ 经过精度修正后是 $5.538 \times 10^8$ (一个非常大的错误数字)。这表明合约内部的 <code>token0</code> 和 <code>token1</code> 顺序与我们期望的 ETH/USDC 顺序相反。
+<ul>
+<li>取倒数: $1 / P_{raw} = 1 / (5.538 \times 10^8) \approx 1.805 \times 10^{-9}$。</li>
+<li>再应用精度修正 (假设 ETH 是 18 精度，USDC 是 6 精度): $(1.805 \times 10^{-9}) \times 10^{(18 - 6)} = 1.805 \times 10^{-9} \times 10^{12} = 1805$。这个价格与 ETH 实际价格相符。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 class="heading-element" id="5-tick-范围的由来"><span>5. <code>tick</code> 范围的由来</span>
+  <a href="#5-tick-%e8%8c%83%e5%9b%b4%e7%9a%84%e7%94%b1%e6%9d%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Uniswap V3 <code>tick</code> 范围 (-887272 到 +887272) 并非随意设置，而是由 <code>sqrtPriceX96</code> 采用的 <strong>Q64.96 定点数格式</strong>所能表示的价格范围推导而来。</p>
+<h3 class="heading-element" id="51-q6496-格式对-sqrtp-的限制"><span>5.1 <code>Q64.96</code> 格式对 $\sqrt{P}$ 的限制</span>
+  <a href="#51-q6496-%e6%a0%bc%e5%bc%8f%e5%af%b9-sqrtp-%e7%9a%84%e9%99%90%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><code>uint160</code> 类型用于存储 <code>sqrtPriceX96</code>，意味着它可以存储一个 160 位的无符号整数。</li>
+<li><code>Q64.96</code> 格式表示这个 160 位整数中，有 64 位用于整数部分，96 位用于小数部分。</li>
+<li>为了保证价格的对称性 (即 $P$ 和 $1/P$ 都能被表示)，Uniswap V3 将 $\sqrt{P}$ 的有效范围限制在：
+<ul>
+<li><strong>$\sqrt{P}$ 最小值</strong>: $2^{-64}$</li>
+<li><strong>$\sqrt{P}$ 最大值</strong>: $2^{64}$</li>
+</ul>
+</li>
+</ul>
+<h3 class="heading-element" id="52-价格-p-的有效范围"><span>5.2 价格 $P$ 的有效范围</span>
+  <a href="#52-%e4%bb%b7%e6%a0%bc-p-%e7%9a%84%e6%9c%89%e6%95%88%e8%8c%83%e5%9b%b4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>基于 $\sqrt{P}$ 的范围，价格 $P$ 的有效范围为 $(\sqrt{P})^2$:</p>
+<ul>
+<li><strong>$P$ 最小值</strong>: $(2^{-64})^2 = 2^{-128}$</li>
+<li><strong>$P$ 最大值</strong>: $(2^{64})^2 = 2^{128}$</li>
+</ul>
+<h3 class="heading-element" id="53-从价格范围推导-tick-范围"><span>5.3 从价格范围推导 <code>tick</code> 范围</span>
+  <a href="#53-%e4%bb%8e%e4%bb%b7%e6%a0%bc%e8%8c%83%e5%9b%b4%e6%8e%a8%e5%af%bc-tick-%e8%8c%83%e5%9b%b4" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>我们已知价格与 <code>tick</code> 的关系公式为 $P = 1.0001^T$。为了求出 $T$，我们可以对两边取以 $1.0001$ 为底的对数：</p>
+<p>$$
+T = \log_{1.0001}(P)
+$$</p>
+<p>现在，我们将 $P$ 的最大值和最小值代入此公式：</p>
+<ol>
+<li>
+<p><strong>最大 <code>tick</code> ($T_{max}$)</strong>:
+$$
+T_{max} = \log_{1.0001}(2^{128})
+$$
+使用换底公式 $\log_b(a) = \frac{\ln(a)}{\ln(b)}$：
+$$
+T_{max} = \frac{128 \times \ln(2)}{\ln(1.0001)}
+$$
+计算结果约为 $887272.975&hellip;$。向下取整，得到 <strong>+887272</strong>。</p>
+</li>
+<li>
+<p><strong>最小 <code>tick</code> ($T_{min}$)</strong>:
+$$
+T_{min} = \log_{1.0001}(2^{-128})
+$$
+$$
+T_{min} = \frac{-128 \times \ln(2)}{\ln(1.0001)}
+$$
+计算结果约为 $-887272.975&hellip;$。向上取整，得到 <strong>-887272</strong>。</p>
+</li>
+</ol>
+<h3 class="heading-element" id="54-合约硬编码"><span>5.4 合约硬编码</span>
+  <a href="#54-%e5%90%88%e7%ba%a6%e7%a1%ac%e7%bc%96%e7%a0%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这些计算出的 <code>tick</code> 范围值被硬编码在 Uniswap V3 Core 合约中，例如 <code>MIN_TICK</code> 和 <code>MAX_TICK</code> 常量。这确保了所有 Uniswap V3 池子的 <code>tick</code> 都在一个预定义的、数学上合理的范围内运行。</p>
+<h1 class="heading-element" id="ref"><span>REF</span>
+  <a href="#ref" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ul>
+<li><a href="https://rareskills.io/post/uniswap-v3-ticks" target="_blank" rel="external nofollow noopener noreferrer">https://rareskills.io/post/uniswap-v3-ticks</a></li>
+<li><a href="https://github.com/Uniswap/v3-core/blob/main/contracts/UniswapV3Pool.sol" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/Uniswap/v3-core/blob/main/contracts/UniswapV3Pool.sol</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-09-02 00:00:00">更新于 2025-09-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202509-Uniswap11/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202509-uniswap11/" data-title="11.Uniswap V3 Tick 与价格表示" data-hashtags="Web3"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202509-uniswap11/" data-hashtag="Web3"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202509-uniswap11/" data-title="11.Uniswap V3 Tick 与价格表示"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/web3/" class="post-tag" title="标签 - Web3">Web3</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202509-uniswap12/" class="post-nav-item" rel="prev" title="12.Uniswap V3 添加流动性案例"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>12.Uniswap V3 添加流动性案例</a><a href="/posts/202509-uniswap10/" class="post-nav-item" rel="next" title="10UniswapV3流动性计算">10UniswapV3流动性计算<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#核心摘要-key-takeaways">核心摘要 (Key Takeaways)</a></li>
+    <li><a href="#1-tick-的引入与作用">1. <code>tick</code> 的引入与作用</a>
+      <ul>
+        <li><a href="#11-问题背景集中流动性的-gas-消耗">1.1 问题背景：集中流动性的 Gas 消耗</a></li>
+        <li><a href="#12-解决方案引入-tick-进行离散化">1.2 解决方案：引入 <code>tick</code> 进行离散化</a></li>
+        <li><a href="#13-uniswap-v2-与-v3-合约记录逻辑对比">1.3 Uniswap V2 与 V3 合约记录逻辑对比</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-tick-与价格的数学关系">2. <code>tick</code> 与价格的数学关系</a>
+      <ul>
+        <li><a href="#21-核心价格公式">2.1 核心价格公式</a></li>
+        <li><a href="#22-tick-变化对价格的影响">2.2 <code>tick</code> 变化对价格的影响</a></li>
+        <li><a href="#23-tick-的有效范围">2.3 <code>tick</code> 的有效范围</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-uniswap-v3-合约中的价格存储">3. Uniswap V3 合约中的价格存储</a>
+      <ul>
+        <li><a href="#31-slot0-结构">3.1 <code>slot0</code> 结构</a></li>
+        <li><a href="#32-为什么存储-sqrtpricex96-而不是-p">3.2 为什么存储 <code>sqrtPriceX96</code> 而不是 $P$？</a></li>
+        <li><a href="#33-案例从-sqrtpricex96-计算价格-ethdai">3.3 案例：从 <code>sqrtPriceX96</code> 计算价格 (ETH/DAI)</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-实际价格计算中的精度与方向问题">4. 实际价格计算中的精度与方向问题</a>
+      <ul>
+        <li><a href="#41-token-精度差异">4.1 Token 精度差异</a></li>
+        <li><a href="#42-token0token1-顺序导致的价格倒数问题">4.2 <code>token0</code>/<code>token1</code> 顺序导致的价格倒数问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-tick-范围的由来">5. <code>tick</code> 范围的由来</a>
+      <ul>
+        <li><a href="#51-q6496-格式对-sqrtp-的限制">5.1 <code>Q64.96</code> 格式对 $\sqrt{P}$ 的限制</a></li>
+        <li><a href="#52-价格-p-的有效范围">5.2 价格 $P$ 的有效范围</a></li>
+        <li><a href="#53-从价格范围推导-tick-范围">5.3 从价格范围推导 <code>tick</code> 范围</a></li>
+        <li><a href="#54-合约硬编码">5.4 合约硬编码</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/c7c6418e3ac51d99750ef7c7e43164b4.js" defer></script><script src="/js/lib/mermaid.js" type="module"></script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>论文阅读：《区块链共识算法的发展现状与展望》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content=""><meta name="keywords" content='论文'>
+  <meta itemprop="name" content="论文阅读：《区块链共识算法的发展现状与展望》">
+  <meta itemprop="datePublished" content="2025-03-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-03-23T00:00:00+00:00">
+  <meta itemprop="wordCount" content="7990">
+  <meta itemprop="keywords" content="论文"><meta property="og:url" content="http://localhost:1313/posts/202503-blockchainconsensus/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="论文阅读：《区块链共识算法的发展现状与展望》">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-03-23T00:00:00+00:00">
+    <meta property="article:tag" content="论文">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="论文阅读：《区块链共识算法的发展现状与展望》">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/202503-blockchainconsensus/" title="论文阅读：《区块链共识算法的发展现状与展望》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202503-shadowsocks/" title="shadowsocks实现原理" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202503-pytorchlearn/" title="Pytorch 学习" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "论文阅读：《区块链共识算法的发展现状与展望》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/202503-blockchainconsensus\/"
+    },"genre": "posts","keywords": "论文","wordcount":  7990 ,
+    "url": "http:\/\/localhost:1313\/posts\/202503-blockchainconsensus\/","datePublished": "2025-03-23T00:00:00+00:00","dateModified": "2025-03-23T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>论文阅读：《区块链共识算法的发展现状与展望》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-03-23 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-03-23">2025-03-23</time></span>&nbsp;<span title="7990 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 8000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 16 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#共识过程模型">共识过程模型</a></li>
+    <li><a href="#共识算法分类">共识算法分类</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#主线-1-pow-与-pos-算法的有机结合">主线 1: PoW 与 PoS 算法的有机结合</a></li>
+    <li><a href="#主线-2-原生-pos-算法的改进">主线 2: 原生 PoS 算法的改进</a></li>
+    <li><a href="#主线-3-原生-pow-共识算法的改进">主线 3: 原生 PoW 共识算法的改进</a></li>
+    <li><a href="#主线-4-传统分布式一致性算法的改进及其他">主线 4: 传统分布式一致性算法的改进及其他</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#两个将军问题">两个将军问题</a></li>
+    <li><a href="#拜占庭将军问题">拜占庭将军问题</a></li>
+    <li><a href="#拜占庭容错">拜占庭容错</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>这篇论文讲的是共识问题。</p>
+<p>计算机科学领域的早期共识研究一般聚焦于分布式一致性, 即如何保证分布式系统集群中所有节点的数据完全相同并且能够对某个提案达成一致的问题, 是分布式计算的根本问题之一.</p>
+<p>共识(Consensus) 和一致性 (Consistency) 在很多文献和应用场景中被认为是近似等价和可互换使用的,但二者涵义存在着细微的差别:</p>
+<ul>
+<li>共识研究侧重于分布式节点达成一致的过程及其算法</li>
+<li>一致性研究则侧重于节点共识过程最终达成的稳定状态</li>
+</ul>
+<p>本文致力于按时间顺序梳理和讨论区块链发展过程中的共识算法,</p>
+<h1 class="heading-element" id="1传统分布式一致性算法"><span>1.传统分布式一致性算法</span>
+  <a href="#1%e4%bc%a0%e7%bb%9f%e5%88%86%e5%b8%83%e5%bc%8f%e4%b8%80%e8%87%b4%e6%80%a7%e7%ae%97%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ul>
+<li>
+<p>1975 年，论文“Some constraints and tradeoffs in the design of network communications”首次提出了计算机领域的两军问题及其无解性证明。</p>
+<p>两军问题表明, 在不可靠的通信链路上试图通过通信达成一致共识是不可能的, 这被认为是计算机通信研究中第一个被证明无解的问题.</p>
+</li>
+<li>
+<p>分布式计算领域的共识问题于 1980 年提出。</p>
+</li>
+<li>
+<p>1982年, 在另一篇文章中正式将该问题命名为 “拜占庭将军问题”, 提出了基于口头消息和基于签名消息的两种算法来解决该问题.</p>
+</li>
+<li>
+<p>2008 年末, 比特币等公有链诞生后, 拜占庭容错类共识算法才逐渐获得实际应用. 需要说明的是, 拜占庭将军问题是区块链技术核心思想的根源, 直接影响着区块链系统共识算法的设计和实现, 因而在区块链技术体系中具有重要意义.</p>
+</li>
+<li>
+<p>1985 年，论文 “Impossibility of distributed consensus with one faulty process”. 这篇文章证明: 在含有多个确定性进程的异步系统中, 只要有一个进程可能发生故障, 那么就不存在协议能保证有限时间内使所有进程达成一致.按照作者姓氏的首字母, 该定理被命名为 <code>FLP 不可能定理</code>, 是分布式系统领域的经典结论之一。</p>
+<p><code>FLP 不可能定理</code>同样指出了存在故障进程的异步系统的共识问题不存在有限时间的理论解, 因而必须寻找其可行的 “工程解”。只能通过调整问题模型来规避 FLP 不可能定理, 例如牺牲确定性、增加时间等; 加密货币则是通过设定网络同步性 (或弱同步性) 和时间假设来规避 FLP 不可能性, 例如网络节点可以快速同步,且矿工在最优链上投入有限时间和资源等.</p>
+<p>早期的共识算法一般也称为分布式一致性算法.与目前主流的区块链共识算法相比, 分布式一致性算法主要面向分布式数据库操作、且大多不考虑拜占庭容错问题，即只考虑非人为问题，不考虑恶意节点篡改数据等问题.</p>
+</li>
+<li>
+<p>1988 年，提出了 <code>VR一致性</code>算法, 采用<code>主机 – 备份 (Primary-backup) </code>模式, 规定所有数据操作都必须通过主机进行, 然后复制到各备份机器以保证一致性</p>
+</li>
+<li>
+<p>1989 年，论文 “The part-time parliament” 中提出 Paxos 算法, 由于文章采用了讲故事的叙事风格且内容过于艰深晦涩,直到 1998 年才通过评审。Paxos 是基于消息传递的一致性算法, 主要解决分布式系统如何就某个特定值达成一致的问题。Paxos 算法获得了学术界和工业界的广泛认可, 并衍生出 <code>Abstract paxos</code>、<code>Classic paxos</code>、<code>Byzantine paxos</code> 和 <code>Disk paxos</code> 等变种算法,成为解决异步系统共识问题最重要的算法家族。<code>VR 算法</code>本质上也是一类 <code>Paxos 算法</code>.</p>
+</li>
+</ul>
+<p><strong>VR 和 Paxos 算法均假设系统中不存在拜占庭故障节点, 因而是非拜占庭容错的共识算法.</strong></p>
+<h1 class="heading-element" id="2主流区块链共识算法"><span>2.主流区块链共识算法</span>
+  <a href="#2%e4%b8%bb%e6%b5%81%e5%8c%ba%e5%9d%97%e9%93%be%e5%85%b1%e8%af%86%e7%ae%97%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ul>
+<li>
+<p>1993 年，首次提出了工作量证明思想，用来解决垃圾邮件问题. 该机制要求邮件发送者必须算出某个数学难题的答案来证明其确实执行了一定程度的计算工作, 从而提高垃圾邮件发送者的成本.</p>
+</li>
+<li>
+<p>1997 年提出<code>哈希现金 (Hash cash)</code> 的工作量证明机制（也是用来解决垃圾邮件问题）。其数学难题是寻找包含邮件接受者地址和当前日期在内的特定数据的 SHA-1 哈希值, 使其至少包含 20 个前导零.</p>
+</li>
+<li>
+<p>1999 年，正式提出了 “工作量证明” 概念，为后来中本聪设计比特币的共识机制奠定了基础。</p>
+</li>
+<li>
+<p>1999 年,提出了实用拜<code>占庭容错算法 (Practical Byzantine fault tolerance, PBFT)</code>，解决了原始拜占庭容错算法效率不高的问题, 将算法复杂度由指数级降低到多项式级，<code>PBFT</code>实际上是<code>Paxos</code>算法的变种，通过改进<code>Paxos</code>算法使其可以处理拜占庭错误，因而也称为<code>Byzantine paxos</code>算法。它可以在保证活性（Liveness）和安全性（Safety）的前提下提供 $\frac{n - 1}{3}$ 的容错性，其中 $n$ 为节点总数。</p>
+</li>
+<li>
+<p>2000年提出猜想（2002年被证明， 称为<code>CAP定理</code>或<code>布鲁尔定理</code>）：分布式系统无法同时满足一致性 (Consistency)、可用性 (Availability) 和分区容错性 (Partition tolerance), 最多只能同时满足其中两个。其中, 一致性是指分布式系统中的所有数据备份在同一时刻保持同样的值; 可用性是指集群中部分节点出现故障时, 集群整体是否还能处理客户端的更新请求; 分区容忍性则是指是否允许数据分区, 不同分区的集群节点之间无法互相通信.</p>
+</li>
+<li>
+<p>2008 年 10 月, 中本聪发表的比特币创世论文，前文所提到的传统分布式一致性算法大多应用于相对可信的联盟链和私有链, 而面向比特币、以太坊等公有链环境则诞生了 PoW、PoS 等一系列新的拜占庭容错类共识算法.</p>
+<p>比特币采用了 PoW 共识算法来保证比特币网络分布式记账的一致性, 这也是最早和迄今为止最安全可靠的公有链共识算法. PoW 的核心思想是通过分布式节点的算力竞争来保证数据的一致性和共识的安全性。比特币系统的各节点 (即矿工) 基于各自的计算机算力相互竞争来共同解决一个求解复杂但是验证容易的 SHA256 数学难题 (即挖矿), 最快解决该难题的节点将获得下一区块的记账权和系统自动生成的比特币奖励.</p>
+<p>然而, PoW 共识同时存在着显著的缺陷, 其强大算力造成的资源浪费 (主要是电  力消耗) 历来为人们所诟病, 而且长达 10 分钟的交  易确认时间使其相对不适合小额交易的商业应用</p>
+</li>
+<li>
+<p>2011 年 7 月，提出了权益证明 PoS 共识算法。随后, Sunny King 在 2012 年 8 月发布的点点币 (Peercoin, PPC) 中首次实现。</p>
+<p>PoS 由系统中具有最高权益而非最高算力的节点获得记账权, 其中权益体现为节点对特定数量货币的所有权,称为币龄或币天数 (Coin days). PPC 将 PoW 和PoS 两种共识算法结合起来, 初期采用 PoW 挖矿方式以使得 Token 相对公平地分配给矿工, 后期随着挖矿难度增加, 系统将主要由 PoS 共识算法维护.</p>
+<p>PoS 一定程度上解决了 PoW 算力浪费的问题, 并能够缩短达成共识的时间, 因而比特币之后的许多竞争币都采用 PoS 共识算法</p>
+</li>
+<li>
+<p>2013 年 2 月，以太坊创始人在比特币杂志网站详细地介绍了 Ripple (瑞波币) 及其共识过程的思路，Ripple 项目实际上早于比特币, 2004 年就由瑞安 · 福格尔 (Ryan Fugger)实现, 其初衷是创造一种能够有效支持个人和社区发行自己货币的去中心化货币系统。</p>
+</li>
+<li>
+<p>2014 年，提出了<code>瑞波协议共识算法 (Ripple Protocol Consensus Algorithm, RPCA)</code>, 该共识算法解决了异步网络节点通讯时的高延迟问题, 通过使用集体信任的子网络(Collectively-trusted subnetworks), 在只需最小化信任和最小连通性的网络环境中实现了低延迟、高鲁棒性的拜占庭容错共识算法. 目前, Ripple 已经发展为基于区块链技术的全球金融结算网络.</p>
+</li>
+<li>
+<p>2013 年 8 月，提出了一种新的共识算法, 即<code>授权股份证明算法 (Delegated proof-of-stake, DPoS)</code>。DPoS 共识的基本思路类似于 “董事会决策”, 即系统中每个节点可以将其持有的股份权益作为选票授予一个代表, 获得票数最多且愿意成为代表的前 N 个节点将进入 “董事会”, 按照既定的时间表轮流对交易进行打包结算、并且签署 (即生产) 新区块[3]. 如果说 PoW 和 PoS共识分别是 “算力为王” 和 “权益为王” 的记账方式的话, DPoS 则可以认为是 “民主集中式” 的记账方式, 其不仅能够很好地解决 PoW 浪费能源和联合挖矿对系统的去中心化构成威胁的问题, 也能够弥补PoS 中拥有记账权益的参与者未必希望参与记账的缺点, 其设计者认为 DPoS 是当时最快速、最高效、最去中心化和最灵活的共识算法</p>
+</li>
+<li>
+<p>2013 年,提出了 <code>Raft 共识算法</code>，论文：“In search of an understandable consensus algorithm”。<code>Raft</code> 的初衷是为设计一种比 Paxos 更易于理解和实现的共识算法. 由于 <code>Paxos</code> 论文极少有人理解, Lamport 于 2001 年曾专门写过一篇文章 “Paxos made simple”, 试图简化描述 <code>Paxos算法</code>但效果不好, 这也直接导致了 <code>Raft</code> 的提出. 目前, <code>Raft</code> 已经在多个主流的开源语言中得以实现.</p>
+</li>
+</ul>
+<h1 class="heading-element" id="3共识算法的模型与分类"><span>3.共识算法的模型与分类</span>
+  <a href="#3%e5%85%b1%e8%af%86%e7%ae%97%e6%b3%95%e7%9a%84%e6%a8%a1%e5%9e%8b%e4%b8%8e%e5%88%86%e7%b1%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>本节给出区块链共识过程的一个主流模型. 需要说明的是, 该模型并非通用模型,可能无法涵盖所有种类的共识过程, 但是可以体现大多数主流共识算法的核心思想.</p>
+<h2 class="heading-element" id="共识过程模型"><span>共识过程模型</span>
+  <a href="#%e5%85%b1%e8%af%86%e8%bf%87%e7%a8%8b%e6%a8%a1%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><img loading="lazy" src='/posts/202503-blockchainconsensus/image.png' alt="alt text" height="330" width="506"></p>
+<p>区块链系统建立在 P2P 网络之上，其全体节点的集合记为 $P$，分为普通节点和矿工节点集合 $M$（两类节点可能会有交集）。矿工节点通常参与共识竞争，特定算法中会选举代表节点集合 $D$，最终选定的记账节点记为 $A$。共识过程按轮次重复执行，每轮重新选择记账节点。</p>
+<p>共识过程分为四个阶段：</p>
+<ol>
+<li>​<strong>选主</strong>：选主是共识过程的核心。从矿工节点集 $M$ 中选出记账节点 $A$，表示为 $f(M) \rightarrow A$，通常 $|A| = 1$。</li>
+<li>​<strong>造块</strong>：记账节点将交易或数据打包到区块中，并广播给矿工节点或其代表节点。</li>
+<li>​<strong>验证</strong>：矿工节点或代表节点验证新区块的正确性和合理性，若获得多数认可，则更新到区块链。</li>
+<li>​<strong>上链</strong>：记账节点将新区块添加到主链，若存在分叉链，则根据共识算法选择主链。</li>
+</ol>
+<h2 class="heading-element" id="共识算法分类"><span>共识算法分类</span>
+  <a href="#%e5%85%b1%e8%af%86%e7%ae%97%e6%b3%95%e5%88%86%e7%b1%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>根据选主策略，区块链共识算法可分为以下五类：</p>
+<ol>
+<li>​<strong>选举类</strong>：即矿工节点在每一轮共识过程中通过 “投票选举” 的方式选出当前轮次的记账节点,首先获得半数以上选票的矿工节点将会获得记账权;多见于传统分布式一致性算法, 例如 Paxos 和 Raft等.，如 Paxos 和 Raft。</li>
+<li>​<strong>证明类</strong>：也可称为 “Proof of X” 类共识,即矿工节点在每一轮共识过程中必须证明自己具有某种特定的能力, 证明方式通常是竞争性地完成某项难以解决但易于验证的任务, 在竞争中胜出的矿工节点将获得记账权; 例如 PoW 和 PoS 等共识算法是基于矿工的算力或者权益来完成随机数搜索任务, 以此竞争记账权。</li>
+<li>​<strong>随机类</strong>：根据随机方式确定记账节点，如 Algorand 和 PoET。</li>
+<li>​<strong>联盟类</strong>：先选举代表节点，再由代表节点轮流或选举取得记账权，如 DPoS。</li>
+<li>​<strong>混合类</strong>：采用多种共识算法的混合体，如 PoW + PoS 和 DPoS+BFT。</li>
+</ol>
+<h1 class="heading-element" id="4区块链共识算法的新进展"><span>4.区块链共识算法的新进展</span>
+  <a href="#4%e5%8c%ba%e5%9d%97%e9%93%be%e5%85%b1%e8%af%86%e7%ae%97%e6%b3%95%e7%9a%84%e6%96%b0%e8%bf%9b%e5%b1%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p><img loading="lazy" src='/posts/202503-blockchainconsensus/image-1.png' alt="alt text" height="807" width="1060"></p>
+<h2 class="heading-element" id="主线-1-pow-与-pos-算法的有机结合"><span>主线 1: PoW 与 PoS 算法的有机结合</span>
+  <a href="#%e4%b8%bb%e7%ba%bf-1-pow-%e4%b8%8e-pos-%e7%ae%97%e6%b3%95%e7%9a%84%e6%9c%89%e6%9c%ba%e7%bb%93%e5%90%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>基于 PoW 和 PoS 算法的有机结合：</p>
+<ul>
+<li>
+<p>2014 年 4 月，<code>权益 – 速度证明 (Proof of stake velocity, PoSV)</code>。在蜗牛币 Reddcoin 白皮书中提 出了 PoSV 共识算法, 针对 PoS 中币龄是时间的线 性函数这一问题进行改进。PoSV 算法前期使用 PoW 实现代币分配,后期使用 PoSV 维护网络长期安全. PoSV 将 PoS中币龄和时间的线性函数修改为指数式衰减函数,即币龄的增长率随时间减少最后趋于零. 因此新币的币龄比老币增长地更快, 直到达到上限阈值, 这在一定程度上缓和了持币者的屯币现象</p>
+</li>
+<li>
+<p>2014 年 5 月，<code>燃烧证明 (Proof of burn, PoB)</code>。Slimcoin 币借鉴了比特币和点点币的设计, 基于 PoW 和 PoS 首创提出了 PoB 共识算法. 其中,PoW 共识被用来产生初始的代币供应, 随着时间增长, 区块链网络累积了足够的代币时, 系统将依赖PoB 和 PoS 共识来共同维护. PoB 共识的特色是矿工通过将其持有的 Slimcoin 发送至特定的无法找回的地址 (燃烧) 来竞争新区块的记账权, 燃烧的币越多则挖到新区块的概率越高.</p>
+</li>
+<li>
+<p>2014 年 12 月，<code>行动证明 (Proof of activity, PoA)</code>。采用 PoW挖出的部分代币以抽奖的方式分发给所有活跃节点,而节点拥有的权益与抽奖券的数量即抽中概率成正比.</p>
+</li>
+<li>
+<p>2017 年 4 月，<code>二跳 (2-hop)</code>。设计初衷是为解决 PoW 潜在的 51 % 算力攻击问题, 解决思路是在 PoW 算力的基础上引入 PoS 权益, 使得区块链安全建立在诚实节点占有大多数联合资源 (算力 +权益) 的基础上. 换句话说, 拜占庭节点必须同时控制 51 % 以上的算力和 51 % 以上的权益, 才能成功实施 51 % 攻击。</p>
+</li>
+</ul>
+<h2 class="heading-element" id="主线-2-原生-pos-算法的改进"><span>主线 2: 原生 PoS 算法的改进</span>
+  <a href="#%e4%b8%bb%e7%ba%bf-2-%e5%8e%9f%e7%94%9f-pos-%e7%ae%97%e6%b3%95%e7%9a%84%e6%94%b9%e8%bf%9b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>原生 PoS 共识一般假设系统中的对等节点都是静态和长期稳定的，但实际不现实。</p>
+<ul>
+<li>
+<p>2014 年，提出 <code>Tendermint</code> ，使用区块、哈希链接、动态验证器集合和循环的领导者选举, 实现了第一个基于 PBFT 的 PoS共识算法. 为解决无利害关系问题, <code>Tendermint</code> 节点需要缴纳保证金, 如果作恶则保证金就会被没收.<code>Tendermint</code> 是一种拜占庭容错的共识算法, 具有抵御双花攻击的鲁棒性, 并且可以抵御网络中至多三分之一的破坏者的攻击.</p>
+</li>
+<li>
+<p>2015 年提出的 <code>Casper</code> 是以太坊计划在其路线图中称为宁静 (Serenity) 的第 4 阶段采用的共识算法, 尚在设计、讨论和完善阶段.</p>
+</li>
+<li>
+<p>2016 年提出的 <code>HoneyBadger</code> 共识是首个实用的异步拜占庭容错共识协议, 可以在没有任何网络时间假设的前提下保证区块链系统的活性 (Liveness). 该共识基于一种可实现渐近有效性的原子广播协议, 能够在广域网的上百个节点上处理每秒上万笔交易.</p>
+</li>
+<li>
+<p>2017 年 8 月提出的 <code>Ouroboros</code> 共识是首个基于 PoS 并且具有严格安全性保障的区块链协议, 其特色是提出了一种新的奖励机制来驱动 PoS共识过程, 使得诚实节点的行为构成一个近似纳什均衡, 可以有效地抵御区块截留和自私挖矿等由于矿工的策略性行为而导致的安全攻击.</p>
+</li>
+</ul>
+<h2 class="heading-element" id="主线-3-原生-pow-共识算法的改进"><span>主线 3: 原生 PoW 共识算法的改进</span>
+  <a href="#%e4%b8%bb%e7%ba%bf-3-%e5%8e%9f%e7%94%9f-pow-%e5%85%b1%e8%af%86%e7%ae%97%e6%b3%95%e7%9a%84%e6%94%b9%e8%bf%9b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>原生 PoW 共识算法的改进目标主要是实现比特币扩容或者降低其能耗.</p>
+<ul>
+<li>
+<p>2016 年 3 月，提出一种新的共识算法 <code>Bitcoin-NG</code>,将时间切分为不同的时间段. 在每一个时间段上由一个领导者负责生成区块、打包交易. 该协议引入了两种不同的区块: 用于选举领导者的关键区块和包含交易数据的微区块. 关键区块采用比特币 PoW共识算法生成, 然后领导者被允许小于预设阈值的速率 (例如 10 秒) 来生成微区块. <code>Bitcoin-NG</code> 可在不改变区块容量的基础上通过选举领导者生成更多的区块, 从而可辅助解决比特币的扩容问题.</p>
+</li>
+<li>
+<p>2016 年 8 月，提出的 <code>ByzCoin 共识算法</code>借鉴了 <code>Bitcoin-NG</code>这种领导者选举和交易验证相互独立的设计思想,是一种新型的可扩展拜占庭容错算法, 可使得区块链系统在保持强一致性的同时, 达到超出 Paypal 吞吐量的高性能和低确认延迟</p>
+</li>
+<li>
+<p>2016 年，提出 <code>Elastico 共识机制</code>通过分片技术来增强区块链的扩展性, 其思路是将挖矿网络以可证明安全的方式隔离为多个分片 (Shard), 这些分片并行地处理互不相交的交易集合. <code>Elastico</code> 是第一个拜占庭容错的安全分片协议.</p>
+</li>
+<li>
+<p>2017 年, <code>OmniLedger</code> 进一步借鉴 <code>ByzCoin</code> 和 <code>Elastico</code> 共识, 设计并提出名为 <code>ByzCoinX</code> 的拜占庭容错协议. <code>OmniLedger</code> 通过并行跨分片交易处理优化区块链性能, 是第一种能够提供水平扩展性而不必牺牲长期安全性和去中心性的分布式账本架构.</p>
+</li>
+<li>
+<p>2014 年，提出<code>空间证明(Proof of space，PoSp) </code>和 2017 年提出的<code>有益工作证明 (Proof of useful work, PoUW) </code>也是为解决 PoW 的能耗问题而提出的共识算法.PoSp 共识要求矿工必须出具一定数量的磁盘空间 (而非算力) 来挖矿, 而PoUW 则将 PoW 共识中毫无意义的 SHA256 哈希运算转变为实际场景中既困难又有价值的运算, 例如计算正交向量问题、3SUM 问题、最短路径问题等.</p>
+</li>
+</ul>
+<h2 class="heading-element" id="主线-4-传统分布式一致性算法的改进及其他"><span>主线 4: 传统分布式一致性算法的改进及其他</span>
+  <a href="#%e4%b8%bb%e7%ba%bf-4-%e4%bc%a0%e7%bb%9f%e5%88%86%e5%b8%83%e5%bc%8f%e4%b8%80%e8%87%b4%e6%80%a7%e7%ae%97%e6%b3%95%e7%9a%84%e6%94%b9%e8%bf%9b%e5%8f%8a%e5%85%b6%e4%bb%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>传统分布式一致性算法大多是非拜占庭容错的,因而难以应用于区块链场景 (特别是公有链).</p>
+<ul>
+<li>
+<p>2014 年提出拜占庭容错的 <code>Tangaroa 算法</code>，继承了 Raft简洁和容易理解的优势, 同时在拜占庭错误环境下也能够维持安全性、容错性和活性.</p>
+</li>
+<li>
+<p>2016 年，提出一种拜占庭容错的 <code>Raft 算法</code>, 此后该算法演变为一种称为 <code>ScalableBFT</code> 的专用拜占庭容错协议, 能够实现比 <code>Tangaroa</code> 和 <code>Juno</code> 更好的性能</p>
+</li>
+<li>
+<p>2015 年，提出了<code>恒星共识协议 (Stellar consensus protocol, SCP)</code>。SCP 在联邦拜占庭协议和 Ripple 协议的基础上演化而来的, 是第一个可证明安全的共识机制, 具有分散控制、低延迟、灵活信任和渐近安全 4 个关键属性.</p>
+</li>
+<li>
+<p>2015年，提出了<code>法定人数投票 (Quorum voting) 共识算法</code>, 以应对那些需要即时交易最终性的应用场景.</p>
+</li>
+<li>
+<p>2016 年,提出一种改进的拜占庭容错算法 <code>dBFT</code>, 该算法在 <code>PBFT</code> 的基础上借鉴了 PoS 设计思路, 首先按照节点的权益来选出记账人, 然后记账人之间通过拜占庭容错算法来达成共识. 该算法改进了 PoW 和 PoS 缺乏最终一致性的问题, 使得区块链能够适用于金融场景.</p>
+</li>
+<li>
+<p>2016 年,提出了一种称为 <code>AlgoRand</code> 的快速拜占庭容错共识算法. 该算法利用密码抽签技术选择共识过程的验证者和领导者, 并通过其设计的 BA* 拜占庭容错协议对新区块达成共识. AlgoRand 只需极小计算量且极少分叉, 被认为是真正民主和高效的分布式账本共识技术.</p>
+</li>
+<li>
+<p>2017 年提出了一种称为 <code>Sleepy Consensus</code> (休眠共识) 的新算法. 这种共识针对的是互联网环境下大规模的共识节点中可能多数都处于离线状态, 仅有少数节点在线参与共识过程的实际情况. 该研究证明, 传统共识算法无法在这种环境下保证共识的安全性. 而采用休眠共识算法, 只要在线诚实节点的数量超过故障节点的数量, 即可保证安全性和鲁棒性.</p>
+</li>
+</ul>
+<h1 class="heading-element" id="区块链共识算法汇总表"><span>区块链共识算法汇总表</span>
+  <a href="#%e5%8c%ba%e5%9d%97%e9%93%be%e5%85%b1%e8%af%86%e7%ae%97%e6%b3%95%e6%b1%87%e6%80%bb%e8%a1%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>提出年份</th>
+            <th>拜占庭容错</th>
+            <th>基础算法</th>
+            <th>代表性应用</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Viewstamped replication</td>
+            <td>1988</td>
+            <td>否</td>
+            <td>无</td>
+            <td>BDB-HA</td>
+        </tr>
+        <tr>
+            <td>Paxos（族）</td>
+            <td>1989</td>
+            <td>否</td>
+            <td>无</td>
+            <td>Chubby</td>
+        </tr>
+        <tr>
+            <td>PBFT</td>
+            <td>1999</td>
+            <td>是（&lt;1/3）</td>
+            <td>BFT</td>
+            <td>Hyperledger v0.6.0</td>
+        </tr>
+        <tr>
+            <td>PoW</td>
+            <td>1999</td>
+            <td>是（&lt;1/2）</td>
+            <td>无</td>
+            <td>Bitcoin</td>
+        </tr>
+        <tr>
+            <td>PoS</td>
+            <td>2011</td>
+            <td>是（&lt;1/2）</td>
+            <td>无</td>
+            <td>Peercoin, Nxt</td>
+        </tr>
+        <tr>
+            <td>DPoS</td>
+            <td>2013</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoS</td>
+            <td>EOS, Bitshares</td>
+        </tr>
+        <tr>
+            <td>Raft</td>
+            <td>2013</td>
+            <td>否</td>
+            <td>无</td>
+            <td>etcd, braft</td>
+        </tr>
+        <tr>
+            <td>Ripple</td>
+            <td>2013</td>
+            <td>是（&lt;1/5）</td>
+            <td>无</td>
+            <td>Ripple</td>
+        </tr>
+        <tr>
+            <td>Tendermint</td>
+            <td>2014</td>
+            <td>是（&lt;1/3）</td>
+            <td>PoS+PBFT</td>
+            <td>Monax</td>
+        </tr>
+        <tr>
+            <td>Tangaroa（BFTRaft）</td>
+            <td>2014</td>
+            <td>是（&lt;1/3）</td>
+            <td>Raft+PBFT</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>Proof of activity</td>
+            <td>2014</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW+PoS</td>
+            <td>Decred</td>
+        </tr>
+        <tr>
+            <td>Proof of burn</td>
+            <td>2014</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW+PoS</td>
+            <td>Slimcoin</td>
+        </tr>
+        <tr>
+            <td>Proof of space</td>
+            <td>2014</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW</td>
+            <td>Burstcoin</td>
+        </tr>
+        <tr>
+            <td>Proof of stake velocity（PoSV）</td>
+            <td>2014</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW+PoS</td>
+            <td>ReddCoin</td>
+        </tr>
+        <tr>
+            <td>Casper</td>
+            <td>2015</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW+PoS</td>
+            <td>Ethereum</td>
+        </tr>
+        <tr>
+            <td>Quorum voting</td>
+            <td>2015</td>
+            <td>是（&lt;1/3）</td>
+            <td>Ripple+Stellar</td>
+            <td>Sawtooth Lake</td>
+        </tr>
+        <tr>
+            <td>Stellar（SCP）</td>
+            <td>2015</td>
+            <td>是（&lt;1/3）</td>
+            <td>Ripple+BFT</td>
+            <td>Stellar</td>
+        </tr>
+        <tr>
+            <td>Algorand</td>
+            <td>2016</td>
+            <td>是（&lt;1/3）</td>
+            <td>PoS+BFT</td>
+            <td>ArcBlock</td>
+        </tr>
+        <tr>
+            <td>Bitcoin-NG</td>
+            <td>2016</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>Byzcoin</td>
+            <td>2016</td>
+            <td>是（&lt;1/3）</td>
+            <td>BTC-NG</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>dBFT</td>
+            <td>2016</td>
+            <td>是（&lt;1/3）</td>
+            <td>PoS+pBFT</td>
+            <td>NEO</td>
+        </tr>
+        <tr>
+            <td>Elastico</td>
+            <td>2016</td>
+            <td>是（&lt;1/3）</td>
+            <td>PBFT+PoW</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>HoneyBadger</td>
+            <td>2016</td>
+            <td>是（&lt;1/3）</td>
+            <td>Tendermint</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>PoET</td>
+            <td>2016</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW</td>
+            <td>Sawtooth Lake</td>
+        </tr>
+        <tr>
+            <td>Proof of luck</td>
+            <td>2016</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW</td>
+            <td>Luckychain</td>
+        </tr>
+        <tr>
+            <td>Scalable BFT</td>
+            <td>2016</td>
+            <td>是（&lt;1/3）</td>
+            <td>Tangaroa</td>
+            <td>Kadena</td>
+        </tr>
+        <tr>
+            <td>2-hop</td>
+            <td>2017</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW+PoS</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>ByzCoinX</td>
+            <td>2017</td>
+            <td>是（&lt;1/3）</td>
+            <td>ByzCoin+Elastico</td>
+            <td>OmniLedger</td>
+        </tr>
+        <tr>
+            <td>Proof of authority</td>
+            <td>2017</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoS</td>
+            <td>Parity</td>
+        </tr>
+        <tr>
+            <td>Proof of useful work</td>
+            <td>2017</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoW</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>Ouroboros</td>
+            <td>2017</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoS</td>
+            <td>Cardano</td>
+        </tr>
+        <tr>
+            <td>Sleepy consensus</td>
+            <td>2017</td>
+            <td>是（&lt;1/2）</td>
+            <td>PoS</td>
+            <td>—</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h1 class="heading-element" id="一些基本概念"><span>一些基本概念</span>
+  <a href="#%e4%b8%80%e4%ba%9b%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h2 class="heading-element" id="两个将军问题"><span>两个将军问题</span>
+  <a href="#%e4%b8%a4%e4%b8%aa%e5%b0%86%e5%86%9b%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>首次是在：<a href="http://hydra.infosys.tuwien.ac.at/teaching/courses/AdvancedDistributedSystems/download/1975_Akkoyunlu,%20Ekanadham,%20Huber_Some%20constraints%20and%20tradeoffs%20in%20the%20design%20of%20network%20communications.pdf" target="_blank" rel="external nofollow noopener noreferrer">两个将军问题</a>（1975首次发行，1978年被命名）</p>
+<blockquote>
+<p>描述了两个将军在攻击同一个敌人的场景。将军1号被认为是领导，而另一个被认为是跟随者。每个将军的军队都无法仅靠自己的力量成功打败敌军，所以他们需要合作并同一时间发起攻击。这看起来是一个简单的情况，但有一点要注意：</p>
+<p>为了两军的沟通和决定作战时间，将军1号必须要派遣一个信使穿过敌人的营地去把攻击时间告诉将军2号。但是，信使可能会被敌人抓住因而信息无法传到友军。那会导致将军1号发起攻击时，将军2号和他的军队还呆在原地。</p>
+<p>即使第一条信息传到了，将军2号也需要确认（ACK，注意和TCP三次握手的相似之处）他收到了信息，所以他要派遣一个信使回去，因此重复上一个信使可能被抓的情况。这会延伸到无限的ACK，两位将军将无法达成一致。</p>
+<p>没有任何办法可以保证第二个要求，那就是每个将军都要确保对方同意了攻击计划。两个将军都总会怀疑他们最后的信使是否能到达。</p>
+</blockquote>
+<p>两个将军问题已被证实<strong>无解</strong>。</p>
+<h2 class="heading-element" id="拜占庭将军问题"><span>拜占庭将军问题</span>
+  <a href="#%e6%8b%9c%e5%8d%a0%e5%ba%ad%e5%b0%86%e5%86%9b%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><blockquote>
+<p>拜占庭将军问题是Leslie Lamport在10世纪80年代提出的一个假想问题。拜占庭是东罗马帝国的首都，由于当时拜占庭罗马帝国国土辽阔，每支军队的驻地分隔很远，将军们只能靠信使传递消息。发生战争时将军们必须制订统一的行动计划。然而，这些将军中有叛徒，叛徒希望通过影响统一行动计划的制定与传播，破坏忠诚的将军们一致的行动计划。因此，将军们必须有一个预定的方法协议，使所有忠诚的将军够达成一致。而且少数几个叛徒不能使忠诚的将军做出错误的计划。也就是说，拜占庭将军问题的实质就是要寻找一个方法，使得将军们在一个有版徒的非信任环境中建立对战斗计划的共识。</p>
+</blockquote>
+<p>是一个带反转的广义版本的两个将军问题。</p>
+<p>它描绘了同一个场景，但两个以上的将军需要对攻打他们共同敌人的时间作出同意。增加的一层复杂性就是，其中一个或几个将军有可能是叛徒，意味着他们可以对他们的选择撒谎（比如他们同意在0900发起攻击但实际上他们不）。</p>
+<p>两个将军问题中<code>领导者－跟随者</code>的关系变成了<code>指挥官－中尉</code>的组合。为了在这里达成共识，指挥官和每个中尉必须就同一个决定达成一致（为了简单，只有攻击或撤退）。</p>
+<p><strong>定理</strong>：对于任意 m ，如果有多于 3m 的将军和至多 m 个叛徒，算法 <code>OM(m)</code> 达到共识。</p>
+<p>这说明只要2/3的成员是诚实的，算法就能达到共识。如果叛徒多于1/3，无法达到共识，这些军队无法协调他们的攻击，敌军胜利。</p>
+<blockquote>
+<p><a href="https://medium.com/loom-network-chinese/%E4%BA%86%E8%A7%A3%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%9F%BA%E6%9C%AC-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86-%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99-byzantine-fault-tolerance-8a1912c311ba" target="_blank" rel="external nofollow noopener noreferrer">https://medium.com/loom-network-chinese/%E4%BA%86%E8%A7%A3%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%9F%BA%E6%9C%AC-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86-%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99-byzantine-fault-tolerance-8a1912c311ba</a></p>
+</blockquote>
+<h2 class="heading-element" id="拜占庭容错"><span>拜占庭容错</span>
+  <a href="#%e6%8b%9c%e5%8d%a0%e5%ba%ad%e5%ae%b9%e9%94%99" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>拜占庭容错（Byzantine Fault Tolerance, BFT）共识算法是由拜占庭将军问题衍生出来的共识算法。</p>
+<p>拜占庭容错共识算法有3种版本，每种版本都具有各自的优缺点。这些版本分别是：</p>
+<ul>
+<li>
+<p>实用拜占庭容错（PBFT，Practical Byzantine Fault Tolerance）</p>
+</li>
+<li>
+<p>联邦拜占庭协议（FBA，Federated Byzantine Agreement）</p>
+</li>
+<li>
+<p>授权拜占庭容错算法（dBFT，Delegated Byzantine Fault Tolerance）</p>
+</li>
+</ul></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-03-23 00:00:00">更新于 2025-03-23&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/202503-BlockchainConsensus/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/202503-blockchainconsensus/" data-title="论文阅读：《区块链共识算法的发展现状与展望》" data-hashtags="论文"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/202503-blockchainconsensus/" data-hashtag="论文"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/202503-blockchainconsensus/" data-title="论文阅读：《区块链共识算法的发展现状与展望》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87/" class="post-tag" title="标签 - 论文">论文</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202503-shadowsocks/" class="post-nav-item" rel="prev" title="Shadowsocks实现原理"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Shadowsocks实现原理</a><a href="/posts/202503-pytorchlearn/" class="post-nav-item" rel="next" title="Pytorch 学习">Pytorch 学习<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#共识过程模型">共识过程模型</a></li>
+    <li><a href="#共识算法分类">共识算法分类</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#主线-1-pow-与-pos-算法的有机结合">主线 1: PoW 与 PoS 算法的有机结合</a></li>
+    <li><a href="#主线-2-原生-pos-算法的改进">主线 2: 原生 PoS 算法的改进</a></li>
+    <li><a href="#主线-3-原生-pow-共识算法的改进">主线 3: 原生 PoW 共识算法的改进</a></li>
+    <li><a href="#主线-4-传统分布式一致性算法的改进及其他">主线 4: 传统分布式一致性算法的改进及其他</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#两个将军问题">两个将军问题</a></li>
+    <li><a href="#拜占庭将军问题">拜占庭将军问题</a></li>
+    <li><a href="#拜占庭容错">拜占庭容错</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/428aeaa204b604872c8ddfc98c5f5d3f.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

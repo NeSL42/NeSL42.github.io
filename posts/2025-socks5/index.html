@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Socks5原理 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content=""><meta name="keywords" content='网络'>
+  <meta itemprop="name" content="Socks5原理">
+  <meta itemprop="datePublished" content="2025-03-22T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-03-22T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1925">
+  <meta itemprop="keywords" content="网络"><meta property="og:url" content="http://localhost:1313/posts/2025-socks5/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="Socks5原理">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-03-22T00:00:00+00:00">
+    <meta property="article:tag" content="网络">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Socks5原理">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/posts/2025-socks5/" title="Socks5原理 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="http://localhost:1313/posts/202503-mcp/" title="LLM MCP记录" /><link rel="next" type="text/html" href="http://localhost:1313/posts/202503-shadowsocks/" title="shadowsocks实现原理" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Socks5原理",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/posts\/2025-socks5\/"
+    },"genre": "posts","keywords": "网络","wordcount":  1925 ,
+    "url": "http:\/\/localhost:1313\/posts\/2025-socks5\/","datePublished": "2025-03-22T00:00:00+00:00","dateModified": "2025-03-22T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Socks5原理</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2025-03-22 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2025-03-22">2025-03-22</time></span>&nbsp;<span title="1925 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 2000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 4 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="base"><span>Base</span>
+  <a href="#base" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>SOCKS5，通常在1080端口，支持代理 TCP/UDP 网络协议，建立socks5代理等流程：</p>
+<p><img loading="lazy" src='/posts/2025-socks5/image.png' alt="alt text" height="936" width="621"></p>
+<p>client 连接 SOCKS5 代理服务代码：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-py"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">socket</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ipaddress</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">struct</span>
+</span></span><span class="line"><span class="cl"><span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;127.0.0.1&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">port</span> <span class="o">=</span> <span class="mi">1080</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">client</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span></span></span></code></pre></div></div><h1 class="heading-element" id="协商阶段"><span>协商阶段</span>
+  <a href="#%e5%8d%8f%e5%95%86%e9%98%b6%e6%ae%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>client 与 socks5代理服务器建立tcp链接后，首先需要进行身份验证协商，客户端和服务端就身份验证的方法达成一致。</p>
+<p>首先，客户端向服务器发送一条包含协议版本号和可选验证方法的消息：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+            <th>例值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VER</td>
+            <td>协议版本号</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td>NMETHODS</td>
+            <td>客户端支持的方法数量，决定 METHODS 的长度</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>1 - 255</td>
+        </tr>
+        <tr>
+            <td>METHODS</td>
+            <td>客户端支持的方法列表，一个字节对应一个方法</td>
+            <td>unsigned char []</td>
+            <td>可变长度，1-255</td>
+            <td>0x02 用户名密码验证</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>对于 METHODS：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>代码</th>
+            <th>描述</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>X’00’</td>
+            <td>NO AUTHENTICATION REQUIRED</td>
+        </tr>
+        <tr>
+            <td>X’01’</td>
+            <td>GSSAPI</td>
+        </tr>
+        <tr>
+            <td>X’02’</td>
+            <td>USERNAME/PASSWORD</td>
+        </tr>
+        <tr>
+            <td>X’03’ to X’7F’</td>
+            <td>IANA ASSIGNED</td>
+        </tr>
+        <tr>
+            <td>X’80’ to X’FE’</td>
+            <td>RESERVED FOR PRIVATE METHODS</td>
+        </tr>
+        <tr>
+            <td>X’FF’</td>
+            <td>NO ACCEPTABLE METHODS</td>
+        </tr>
+    </tbody>
+  </table>
+</div><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-py"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;!3B&#39;</span><span class="p">,</span> <span class="mh">0x05</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span><span class="mh">0x02</span><span class="p">))</span></span></span></code></pre></div></div><p>之后，服务器会在客户端支持的方法中选择一个，并返回消息：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+            <th>例值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VER</td>
+            <td>协议版本号</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td>METHOD</td>
+            <td>服务端选择的可用方法</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x00 不需要身份验证<br>0x02 用户名密码验证<br>0xFF 无可接受的方法</td>
+        </tr>
+    </tbody>
+  </table>
+</div><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+            <th>例值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VER</td>
+            <td>协议版本号</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td>METHOD</td>
+            <td>服务端选择的可用方法</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x00 不需要身份验证<br>0x02 用户名密码验证<br>0xFF 无可接受的方法</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>解析服务器消息的 Python 代码如下：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">ver</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;!2B&#39;</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">ver</span> <span class="o">!=</span> <span class="n">proxy_version</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;协议版本不匹配&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="mh">0xFF</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;协商失败：代理服务器无可接受的方法&#39;</span><span class="p">)</span></span></span></code></pre></div></div><h1 class="heading-element" id="子协商"><span>子协商</span>
+  <a href="#%e5%ad%90%e5%8d%8f%e5%95%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>如果服务器返回的方法不为 0x00 ，则需要进入子协商阶段，即身份验证阶段。本文实现的客户端仅支持用户名密码的验证方式。客户端向服务端发送一条包含用户名和密码的消息：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+            <th>例值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VER</td>
+            <td>协议版本号</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td>ULEN</td>
+            <td>用户名长度</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>UNAME</td>
+            <td>用户名</td>
+            <td>unsigned char []</td>
+            <td>可变长度（1 - 255）</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PLEN</td>
+            <td>密码长度</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>PASSWD</td>
+            <td>密码</td>
+            <td>unsigned char []</td>
+            <td>可变长度（1 - 255）</td>
+            <td></td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>客户端发送：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">raw_username</span> <span class="o">=</span> <span class="n">proxy_username</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">raw_password</span> <span class="o">=</span> <span class="n">proxy_password</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">username_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_username</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">password_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_password</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;!2B</span><span class="si">%d</span><span class="s1">sB</span><span class="si">%d</span><span class="s1">s&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username_len</span><span class="p">,</span> <span class="n">password_len</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">proxy_version</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">username_len</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">raw_username</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">password_len</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">raw_password</span>
+</span></span><span class="line"><span class="cl"><span class="p">))</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>服务端验证后返回：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+            <th>例值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VER</td>
+            <td>协议版本号</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td>STATUS</td>
+            <td>验证结果</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x00 成功</td>
+        </tr>
+    </tbody>
+  </table>
+</div><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">ver</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;!2B&#39;</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="mh">0x00</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;身份验证失败&#39;</span><span class="p">)</span></span></span></code></pre></div></div><h1 class="heading-element" id="代理请求"><span>代理请求</span>
+  <a href="#%e4%bb%a3%e7%90%86%e8%af%b7%e6%b1%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>协商验证通过后，客户端向服务器发送代理请求消息：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+            <th>例值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VER</td>
+            <td>协议版本号</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td>CMD</td>
+            <td>命令类型</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x01 CONNECT<br>0x02 BIND<br>0x03 UDP ASSOCIATE</td>
+        </tr>
+        <tr>
+            <td>RSV</td>
+            <td>保留字段</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x00</td>
+        </tr>
+        <tr>
+            <td>ATYP</td>
+            <td>目标地址类型</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x01 IPv4<br>0x03 域名<br>0x04 IPv6</td>
+        </tr>
+        <tr>
+            <td>DST.ADDR</td>
+            <td>目标地址</td>
+            <td>unsigned char []</td>
+            <td>可变长度<br>4 (IPv4)<br>16 (IPv6)<br>域名另见下表</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>DST.PORT</td>
+            <td>目标端口</td>
+            <td>unsigned short</td>
+            <td>2</td>
+            <td></td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>CMD 字段的三个值分别表示：</p>
+<ul>
+<li>CONNECT 代理 TCP 流量</li>
+<li>BIND 代理开启监听端口，接收目标地址的连接</li>
+<li>UDP ASSOCIATE 代理 UDP 数据转发</li>
+</ul>
+<p>通常只用到 CONNECT 和 UDP ASSOCIATE 请求。如果 SOCKS5 代理服务器具有公网 IP 地址，则可以通过 BIND 请求实现内网穿透。</p>
+<p>如果 ATYP 字段值是 0x03，则 DST.ADDR 的格式为：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>DLEN</td>
+            <td>域名长度</td>
+            <td>unsigned char</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>DOMAIN</td>
+            <td>域名</td>
+            <td>unsigned char []</td>
+            <td>可变长度（范围为 1 - 255）</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>发送 CONNECT 请求的 Python 代码实现如下：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">dst_addr</span> <span class="o">=</span> <span class="s1">&#39;www.baidu.com&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">dst_port</span> <span class="o">=</span> <span class="mi">443</span>
+</span></span><span class="line"><span class="cl"><span class="n">cmd_connect</span> <span class="o">=</span> <span class="mh">0x01</span>
+</span></span><span class="line"><span class="cl"><span class="n">atyp_ipv4</span> <span class="o">=</span> <span class="mh">0x01</span>
+</span></span><span class="line"><span class="cl"><span class="n">atyp_ipv6</span> <span class="o">=</span> <span class="mh">0x04</span>
+</span></span><span class="line"><span class="cl"><span class="n">atyp_domain</span> <span class="o">=</span> <span class="mh">0x03</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ip_addr</span> <span class="o">=</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">dst_addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Domain</span>
+</span></span><span class="line"><span class="cl">    <span class="n">raw_dst_addr</span> <span class="o">=</span> <span class="n">dst_addr</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dst_addr_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_dst_addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;!5B</span><span class="si">%d</span><span class="s1">sH&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dst_addr_len</span><span class="p">,</span> <span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">proxy_version</span><span class="p">,</span> <span class="n">cmd_connect</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atyp_domain</span><span class="p">,</span> <span class="n">dst_addr_len</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">raw_dst_addr</span><span class="p">,</span> <span class="n">dst_port</span>
+</span></span><span class="line"><span class="cl">    <span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">IPv4Address</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;!4B4sH&#39;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">            <span class="n">proxy_version</span><span class="p">,</span> <span class="n">cmd_connect</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atyp_ipv4</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ip_addr</span><span class="o">.</span><span class="n">packed</span><span class="p">,</span> <span class="n">dst_port</span>
+</span></span><span class="line"><span class="cl">        <span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># IPv6</span>
+</span></span><span class="line"><span class="cl">        <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;!4B16sH&#39;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">            <span class="n">proxy_version</span><span class="p">,</span> <span class="n">cmd_connect</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atyp_ipv6</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ip_addr</span><span class="o">.</span><span class="n">packed</span><span class="p">,</span> <span class="n">dst_port</span>
+</span></span><span class="line"><span class="cl">        <span class="p">))</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>服务器收到代理请求后响应如下信息：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>字段</th>
+            <th>描述</th>
+            <th>类型</th>
+            <th>长度</th>
+            <th>例值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VER</td>
+            <td>协议版本号</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td>REP</td>
+            <td>服务器应答</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x00 成功</td>
+        </tr>
+        <tr>
+            <td>RSV</td>
+            <td>保留字段</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x00</td>
+        </tr>
+        <tr>
+            <td>ATYP</td>
+            <td>目标地址类型</td>
+            <td>unsigned char</td>
+            <td>1</td>
+            <td>0x01 IPv4<br>0x04 IPv6</td>
+        </tr>
+        <tr>
+            <td>BND.ADDR</td>
+            <td>绑定地址</td>
+            <td>unsigned char []</td>
+            <td>可变长度<br>4 (IPv4)<br>16 (IPv6)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>BND.PORT</td>
+            <td>绑定端口</td>
+            <td>unsigned short</td>
+            <td>2</td>
+            <td></td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>服务器响应消息中的 REP 字段如果不为 0x00 ，则表示请求失败。不同值的具体含义如下：</p>
+<ul>
+<li>0x00 成功</li>
+<li>0x01 常规 SOCKS 服务器故障</li>
+<li>0x02 规则不允许的链接</li>
+<li>0x03 网络无法访问</li>
+<li>0x04 主机无法访问</li>
+<li>0x05 连接被拒绝</li>
+<li>0x06 TTL 过期</li>
+<li>0x07 不支持的命令</li>
+<li>0x08 不支持的地址类型</li>
+</ul>
+<h1 class="heading-element" id="代理中继"><span>代理中继</span>
+  <a href="#%e4%bb%a3%e7%90%86%e4%b8%ad%e7%bb%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>服务器返回的 BND.ADDR 和 BND.PORT 是 SOCKS5 代理中继服务器的地址和端口，通常返回的中继服务器即当前 SOCKS5 代理的地址和端口。如果 SOCKS5 代理是以多主机（ multi-homed ）方式部署的话，则返回的 BND.ADDR 和 BND.PORT 可能与当前代理服务器地址和端口不一致。</p>
+<h2 class="heading-element" id="connect"><span>Connect</span>
+  <a href="#connect" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>需要判断返回的中继地址和端口与当前连接的代理服务器一致。如果一致，则直接在当前会话开始代理流量的数据通信。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">getpeername</span><span class="p">()</span> <span class="o">!=</span> <span class="p">(</span><span class="n">bind_addr</span><span class="p">,</span> <span class="n">bind_port</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;SOCKS5 代理客户端不支持中继&#39;</span><span class="p">)</span></span></span></code></pre></div></div><h1 class="heading-element" id="示例代码"><span>示例代码</span>
+  <a href="#%e7%a4%ba%e4%be%8b%e4%bb%a3%e7%a0%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ipaddress</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">socket</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">struct</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ssl</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">PROXY_ADDR</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">7897</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">PROXY_USERNAME</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">PROXY_PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">PROXY_VERSION</span> <span class="o">=</span> <span class="mh">0x05</span>
+</span></span><span class="line"><span class="cl"><span class="n">METHOD_USERNAME_PASSWORD</span> <span class="o">=</span> <span class="mh">0x02</span>
+</span></span><span class="line"><span class="cl"><span class="n">METHOD_NO_AUTHENTICATION_REQUIRED</span> <span class="o">=</span> <span class="mh">0x00</span>
+</span></span><span class="line"><span class="cl"><span class="n">METHOD_NO_ACCEPTABLE_METHODS</span> <span class="o">=</span> <span class="mh">0xFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">SUCCESS</span> <span class="o">=</span> <span class="mh">0x00</span>
+</span></span><span class="line"><span class="cl"><span class="n">DST_HOSTNAME</span> <span class="o">=</span> <span class="s1">&#39;www.google.com&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">DST_PORT</span> <span class="o">=</span> <span class="mi">443</span>
+</span></span><span class="line"><span class="cl"><span class="n">CMD_CONNECT</span> <span class="o">=</span> <span class="mh">0x01</span>
+</span></span><span class="line"><span class="cl"><span class="n">ATYP_IPV4</span> <span class="o">=</span> <span class="mh">0x01</span>
+</span></span><span class="line"><span class="cl"><span class="n">ATYP_DOMAIN</span> <span class="o">=</span> <span class="mh">0x03</span>
+</span></span><span class="line"><span class="cl"><span class="n">HTTP_REQUEST</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;GET / HTTP/1.1</span><span class="se">\r\n</span><span class="s1">HOST: </span><span class="si">%s</span><span class="se">\r\n</span><span class="s1">Connection: close</span><span class="se">\r\n\r\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">DST_HOSTNAME</span><span class="p">,</span> <span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">socks5_client</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">socks5_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">PROXY_ADDR</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">socks5_client</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">socks5_client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;!3B&#39;</span><span class="p">,</span> <span class="n">PROXY_VERSION</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">METHOD_USERNAME_PASSWORD</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ver</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;!2B&#39;</span><span class="p">,</span> <span class="n">socks5_client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">ver</span> <span class="o">!=</span> <span class="n">PROXY_VERSION</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="n">METHOD_NO_ACCEPTABLE_METHODS</span><span class="p">:</span> <span class="c1"># 版本不匹配或没有可用的方法</span>
+</span></span><span class="line"><span class="cl">    <span class="n">socks5_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="n">METHOD_USERNAME_PASSWORD</span><span class="p">:</span> <span class="c1"># 需要身份验证</span>
+</span></span><span class="line"><span class="cl">    <span class="n">raw_username</span> <span class="o">=</span> <span class="n">PROXY_USERNAME</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">raw_password</span> <span class="o">=</span> <span class="n">PROXY_PASSWORD</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">username_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_username</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">password_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_password</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 发送身份验证信息</span>
+</span></span><span class="line"><span class="cl">    <span class="n">socks5_client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;!2B</span><span class="si">%d</span><span class="s1">sB</span><span class="si">%d</span><span class="s1">s&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username_len</span><span class="p">,</span> <span class="n">password_len</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">PROXY_VERSION</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">username_len</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">raw_username</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">password_len</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">raw_password</span>
+</span></span><span class="line"><span class="cl">    <span class="p">))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">_</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;!2B&#39;</span><span class="p">,</span> <span class="n">socks5_client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">SUCCESS</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">socks5_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;身份验证失败&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;身份验证成功&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">raw_DST_HOSTNAME</span> <span class="o">=</span> <span class="n">DST_HOSTNAME</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">DST_HOSTNAME_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_DST_HOSTNAME</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 代理 TCP 流量</span>
+</span></span><span class="line"><span class="cl"><span class="n">socks5_client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;!5B</span><span class="si">%d</span><span class="s1">sH&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">DST_HOSTNAME_len</span><span class="p">,</span> <span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">PROXY_VERSION</span><span class="p">,</span> <span class="n">CMD_CONNECT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ATYP_DOMAIN</span><span class="p">,</span> <span class="n">DST_HOSTNAME_len</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">raw_DST_HOSTNAME</span><span class="p">,</span> <span class="n">DST_PORT</span>
+</span></span><span class="line"><span class="cl"><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">_</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">atyp</span><span class="p">,</span> <span class="n">bind_addr</span><span class="p">,</span> <span class="n">bind_port</span>  <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;!4B4sH&#39;</span><span class="p">,</span> <span class="n">socks5_client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">rep</span> <span class="o">!=</span> <span class="n">SUCCESS</span> <span class="ow">or</span> <span class="n">atyp</span> <span class="o">!=</span> <span class="n">ATYP_IPV4</span><span class="p">:</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">socks5_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">bind_addr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">IPv4Address</span><span class="p">(</span><span class="n">bind_addr</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">socks5_client</span><span class="o">.</span><span class="n">getpeername</span><span class="p">()</span> <span class="o">!=</span> <span class="p">(</span><span class="n">bind_addr</span><span class="p">,</span> <span class="n">bind_port</span><span class="p">):</span> <span class="c1"># 确保绑定的 IP 和端口正确</span>
+</span></span><span class="line"><span class="cl">    <span class="n">socks5_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ssl_context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">create_default_context</span><span class="p">(</span><span class="n">cafile</span><span class="o">=</span><span class="s1">&#39;/etc/ssl/cert.pem&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">ssl_context</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">socks5_client</span><span class="p">,</span> <span class="n">server_hostname</span><span class="o">=</span><span class="n">DST_HOSTNAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">https_client</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">https_client</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">HTTP_REQUEST</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">https_client_file</span> <span class="o">=</span> <span class="n">https_client</span><span class="o">.</span><span class="n">makefile</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># Specify newline as \r\n</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ln</span> <span class="o">=</span> <span class="n">https_client_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 输出返回的内容</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># try:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#     while True:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#         ln = https_client_file.readline()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#         if not ln:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#             break</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#         print(ln, end=&#39;&#39;)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># except socket.timeout:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#     print(&#34;Timeout occurred while reading from socket&#34;)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># finally:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#     https_client_file.close()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">socks5_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="展开或折叠代码块" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h1 class="heading-element" id="ref"><span>REF</span>
+  <a href="#ref" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><ul>
+<li><a href="https://www.ddhigh.com/2019/08/24/socks5-protocol/" target="_blank" rel="external nofollow noopener noreferrer">https://www.ddhigh.com/2019/08/24/socks5-protocol/</a></li>
+<li><a href="https://www.txthinking.com/talks/articles/socks5-and-http-proxy.article" target="_blank" rel="external nofollow noopener noreferrer">https://www.txthinking.com/talks/articles/socks5-and-http-proxy.article</a></li>
+<li><a href="https://www.fournoas.com/posts/socks5-proxy-protocol-quick-start/" target="_blank" rel="external nofollow noopener noreferrer">https://www.fournoas.com/posts/socks5-proxy-protocol-quick-start/</a></li>
+<li><a href="https://wiyi.org/socks5-protocol-in-deep.html" target="_blank" rel="external nofollow noopener noreferrer">https://wiyi.org/socks5-protocol-in-deep.html</a></li>
+</ul></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2025-03-22 00:00:00">更新于 2025-03-22&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//Users/ghostasky/Blog/content/posts/2025-Socks5/index.md" title="在编辑器中打开" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">在编辑器中打开</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="http://localhost:1313/posts/2025-socks5/" data-title="Socks5原理" data-hashtags="网络"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/posts/2025-socks5/" data-hashtag="网络"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/posts/2025-socks5/" data-title="Socks5原理"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E7%BD%91%E7%BB%9C/" class="post-tag" title="标签 - 网络">网络</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202503-mcp/" class="post-nav-item" rel="prev" title="LLM MCP记录"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>LLM MCP记录</a><a href="/posts/202503-shadowsocks/" class="post-nav-item" rel="next" title="Shadowsocks实现原理">Shadowsocks实现原理<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/27b8b9bad0354aa92a6599893e4cb12e.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>
