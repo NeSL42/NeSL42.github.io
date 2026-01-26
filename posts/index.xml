@@ -6,7 +6,7 @@
     <description>敬渊&#39;s Blog</description>
     <generator>Hugo 0.154.5 &amp; FixIt v0.4.3-20260123080729-2a5bd268</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 25 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nesl42.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>久别博客再启新程</title>
@@ -15,6 +15,14 @@
       <guid>https://nesl42.github.io/posts/firstpost/</guid>
       <category domain="https://nesl42.github.io/categories/%E4%BA%BA%E9%97%B4%E4%B8%96/">人间世</category>
       <description>&lt;p&gt;种种，欢迎邮件交流：&lt;strong&gt;&lt;a href=&#34;mailto:jingyuan_101@foxmail.com&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;jingyuan_101@foxmail.com&lt;/a&gt;&lt;/strong&gt;， 期待你的来信。&lt;/p&gt;&#xA;&lt;p&gt;坟墓里寂静无比，埋葬你的是你所有没说出口的话&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>论文阅读《基于强化学习的协同公式化Alpha因子集合生成方法》</title>
+      <link>https://nesl42.github.io/posts/202601-paper2/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/posts/202601-paper2/</guid>
+      <category domain="https://nesl42.github.io/categories/technology/">Technology</category>
+      <description>&lt;h2 class=&#34;heading-element&#34; id=&#34;0-论文基本信息&#34;&gt;&lt;span&gt;0. 论文基本信息&lt;/span&gt;&#xA;  &lt;a href=&#34;#0-%e8%ae%ba%e6%96%87%e5%9f%ba%e6%9c%ac%e4%bf%a1%e6%81%af&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;标题&lt;/strong&gt;：Generating Synergistic Formulaic Alpha Collections via Reinforcement Learning&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;作者/机构&lt;/strong&gt;：Shuo Yu, Hongyan Xue, Xiang Ao, Feiyang Pan, Jia He, Dandan Tu, Qing He（中国科学院计算技术研究所/中国科学院大学；华为EI创新实验室等）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;发表出处/时间&lt;/strong&gt;：KDD 2023（arXiv:2306.12964v1，2023-05-25）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 class=&#34;heading-element&#34; id=&#34;1-核心问题与创新总览&#34;&gt;&lt;span&gt;1. 核心问题与创新总览&lt;/span&gt;&#xA;  &lt;a href=&#34;#1-%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e4%b8%8e%e5%88%9b%e6%96%b0%e6%80%bb%e8%a7%88&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&lt;p&gt;量化交易中常将历史价格/成交量等原始数据变换为可解释的市场信号，称为阿尔法因子 (alpha factor)。其中，公式化阿尔法 (formulaic alpha) 因可解释性强而常用于风控敏感场景；然而，实践中通常并非单因子使用，而是将多个因子输入下游组合模型以提升预测精度。传统自动挖掘方法大多“逐个”生成因子，并用互信息系数或互相关等相似性指标筛选“多样性”，忽略了因子最终将被组合这一事实，导致得到的因子集合在组合后增益有限，甚至与筛选指标不一致。&lt;/p&gt;</description>
     </item>
     <item>
       <title>论文阅读《中国市场的盈余公告：隔夜与日内收益差异》</title>

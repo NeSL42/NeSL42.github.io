@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-01-25T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-01-25T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-01-26T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-01-26T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,32 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap17/">16.Uniswap V3 Cross Tick Swap</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap15/">15.Uniswap V3 Tick Bitmap 寻找下一个 Tick</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>Tick Bitmap 的核心作用</strong>：它是一个 <code>uint256</code> 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。<code>1</code> 代表该 Tick 活跃（有流动性），<code>0</code> 代表不活跃。</li>
+<li><strong>寻找下一个 Tick 的目的</strong>：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。</li>
+<li><strong>通过位运算实现高效查找</strong>：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）<strong>和</strong>按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。</li>
+<li><strong>交易方向决定搜索方向</strong>：
+<ul>
+<li>当交易导致<strong>价格上涨</strong>时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向<strong>左</strong>搜索（寻找更大的 Tick）。</li>
+<li>当交易导致<strong>价格下跌</strong>时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向<strong>右</strong>搜索（寻找更小的 Tick）。</li>
+</ul>
+</li>
+<li><strong>Bitmap 内部方向与全局 Tick 轴方向的区别</strong>：在 Bitmap（一个 <code>uint256</code>）内部，索引位（<code>bit position</code>）从右到左增大，因此向<strong>左</strong>查找意味着寻找<strong>更大</strong>的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。</li>
+</ul>
+<hr>
+<h4 class="heading-element" id="i-tick-bitmap-核心概念回顾"><span><strong>I. Tick Bitmap 核心概念回顾</strong></span>
+  <a href="#i-tick-bitmap-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e5%9b%9e%e9%a1%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>本节内容对应 <code>TickBitmap.sol</code> 库合约中的核心逻辑。</p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap15/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap17/">16.Uniswap V3 Cross Tick Swap</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
   <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
@@ -323,220 +348,6 @@
   </a>
 </h4><p>每个新版本的发布都是为了解决前一版本的问题。</p></div><div class="post-footer">
     <a href="/posts/202509-uniswap20/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap01/">01.Uniswap 简介</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-01 00:00:00'>发布于 <time datetime="2025-09-01">2025-09-01</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="uniswap-简介"><span>Uniswap 简介</span>
-  <a href="#uniswap-%e7%ae%80%e4%bb%8b" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><h4 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>Uniswap 作为 DeFi 核心基础设施：</strong> 掌握 Uniswap V2, V3, V4 能帮助深度理解 DeFi 领域，超越行业内90-95%的人。其团队以创新力著称，而非营销。</li>
-<li><strong>恒定乘积做市商模型 (AMM) 的起源：</strong> Vitalik Buterin 在2017年提出无订单簿交易方案，核心是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>⋅</mo><mi>Y</mi><mo>=</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">X \cdot Y = K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 公式，由 Hayden Adams 实现并部署了 Uniswap V1。</li>
-<li><strong>Uniswap V2 引爆 DeFi 赛道：</strong> 2020年5月发布，引入 ERC20-ERC20 直换、闪电贷、预言机等，直接推动 DeFi 总锁仓量 (TVL) 从平稳期飙升至千亿规模。</li>
-<li><strong>创新与竞争：</strong> Uniswap V2 因其宽松的开源协议被 SushiSwap 抄袭并挖走大量流动性，促使 Uniswap 发行 UNI 代币并空投反击。此事件凸显了创新与营销在加密货币领域的博弈。</li>
-<li><strong>V3 与 V4 的技术飞跃：</strong> V3 引入<strong>集中流动性</strong>和 <strong>LP NFT</strong>，显著提升资本效率并改进开源协议（2年商用保护期）。V4 引入 <strong>Hooks (钩子)</strong> 和 <strong>Singleton 架构</strong>，旨在成为更快、更省 Gas、更易集成的 DeFi 基础设施。</li>
-</ul>
-<h4 class="heading-element" id="1-uniswap-简介与重要性"><span>1. Uniswap 简介与重要性</span>
-  <a href="#1-uniswap-%e7%ae%80%e4%bb%8b%e4%b8%8e%e9%87%8d%e8%a6%81%e6%80%a7" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li>本系列将以 Uniswap 为主线，深入讲解其 V2、V3、V4 版本。</li>
-<li><strong>深度理解 DeFi：</strong> 大部分人对于Uniswap仅停留在 <code>X * Y = K</code> 的肤浅认知。</li>
-<li><strong>创新驱动：</strong> Uniswap 团队是业界极具创新力的团队，与多数仅靠营销的项目不同。它为行业带来了巨大的变革和创新。</li>
-<li><strong>DeFi 基础设施：</strong> 如果只了解一个区块链项目，那必须是 Uniswap。</li>
-</ul>
-<h4 class="heading-element" id="2-uniswap-v1恒定乘积做市商的诞生"><span>2. Uniswap V1：恒定乘积做市商的诞生</span>
-  <a href="#2-uniswap-v1%e6%81%92%e5%ae%9a%e4%b9%98%e7%a7%af%e5%81%9a%e5%b8%82%e5%95%86%e7%9a%84%e8%af%9e%e7%94%9f" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>诞生时间：</strong> 2017年6月22日，Vitalik Buterin 发表文章。</li>
-<li><strong>Vitalik 的文章：</strong>
-<ul>
-<li><strong>标题：</strong> &ldquo;On Path Independence&rdquo;</li>
-<li><strong>核心思想：</strong> 提出无需订单簿模式也能完成代币互换 (swap) 的方案。</li>
-<li><strong>数学机制：</strong> 基于 <strong>恒定乘积做市商 (Constant Product Market Maker, CPMM)</strong> 模型，即：
-<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>⋅</mo><mi>Y</mi><mo>=</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">
-        X \cdot Y = K
-        </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span>
-其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span></span></span></span> 分别代表两种代币的储备量，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 是一个常数。价格波动通过曲线上代币余额的变化来体现。</li>
-</ul>
-</li>
-<li><strong>Hayden Adams 的实现：</strong>
-<ul>
-<li><strong>背景故事：</strong> 曾是西门子机械工程师，被解雇后在好友 Karl 的建议下开始学习以太坊和智能合约开发。Hayden 在《A Short History of Uniswap》中记录了这段经历。</li>
-<li><strong>对话案例：</strong>
-<ul>
-<li>Hayden: &ldquo;我刚被开除了&hellip;&rdquo;</li>
-<li>Karl: &ldquo;恭喜你！这是你身上发生的最好的事情了！以太坊是未来，你的新使命就是写智能合约。&rdquo;</li>
-<li>Hayden: &ldquo;我也不知道怎么写代码啊&hellip;&rdquo;</li>
-<li>Karl: &ldquo;没事，写代码很简单，而且那个时候（2017年）也没人知道怎么写智能合约，学学就好了。&rdquo;</li>
-</ul>
-</li>
-<li><strong>开发历程：</strong> 学习 Solidity 和 JavaScript 两个月后开始编写代码，并与团队伙伴共同尝试实现 Vitalik 的公式。</li>
-</ul>
-</li>
-<li><strong>部署与初期影响：</strong>
-<ul>
-<li><strong>部署时间：</strong> 2018年11月2日，在 <strong>伊斯坦布尔会议</strong> 期间正式部署到以太坊主网。</li>
-<li><strong>市场环境：</strong> 处于熊市 (比特币价格约 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3000</mn><mo>−</mo></mrow><annotation encoding="application/x-tex">3000-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3000</span><span class="mord">−</span></span></span></span>4000，此前高峰 $20000)，因此 V1 发布后并未引起广泛关注。</li>
-<li><strong>开发语言：</strong> 使用 <strong>Viper</strong> 语言编写 (类似 Python)，由 Vitalik 建议。</li>
-</ul>
-</li>
-<li><strong>V1 的局限性：</strong>
-<ul>
-<li><strong>仅支持 ERC20-ETH 互换：</strong> 所有流动性池都必须是 ERC20 代币与 ETH 的配对。</li>
-<li><strong>案例：</strong> 若要将 DAI 兑换为 USDC，必须先将 DAI 兑换为 ETH，再将 ETH 兑换为 USDC，需要两次交易。</li>
-</ul>
-</li>
-<li><strong>合约结构：</strong>
-<ul>
-<li><code>UniswapExchange</code>：负责代币互换逻辑，代码逻辑简单，约 <strong>490行</strong>。</li>
-<li><code>UniswapFactory</code>：负责创建新的交易对。</li>
-<li><strong>特点：</strong> 合约代码简洁，被视为“历史遗迹”。</li>
-</ul>
-</li>
-<li><strong>名字由来：</strong>
-<ul>
-<li><strong>最初内部名称：</strong> UniPeg (铆钉)。</li>
-<li><strong>Vitalik 建议：</strong> UniSwap。</li>
-<li><strong>Logo：</strong> 独角兽 (Unicorn)。</li>
-</ul>
-</li>
-</ul>
-<h4 class="heading-element" id="3-uniswap-v2引爆-defi-赛道"><span>3. Uniswap V2：引爆 DeFi 赛道</span>
-  <a href="#3-uniswap-v2%e5%bc%95%e7%88%86-defi-%e8%b5%9b%e9%81%93" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>发布时间：</strong> 2020年5月。</li>
-<li><strong>核心特性：</strong>
-<ul>
-<li><strong>ERC20-ERC20 直接互换：</strong> 允许任意两种 ERC20 代币直接组成流动性池 (例如 DAI-USDC 池)，无需通过 ETH 中转。</li>
-<li><strong>闪电贷 (Flash Swaps)：</strong> 允许用户在同一笔交易中借入资产、使用、并归还，无需抵押品。</li>
-<li><strong>价格预言机 (Price Oracles)：</strong> 提供链上价格数据，供其他 DeFi 协议使用。</li>
-<li><strong>改进手续费设计。</strong></li>
-</ul>
-</li>
-<li><strong>对 DeFi 行业的影响 (引爆 DeFi)：</strong>
-<ul>
-<li><strong>数据案例：</strong> 2020年5月 V2 发布后，DeFi 领域的 <strong>总锁仓量 (TVL)</strong> 从平稳状态迅速飙升，并在2021年达到约2000亿美元的峰值。V2 的发布是这一增长的起点。</li>
-<li><strong>个人经历案例：</strong> 2020年7月，老师的朋友主动联系讨论 Fork Uniswap，显示了 V2 巨大的市场热度。</li>
-</ul>
-</li>
-</ul>
-<h5 class="heading-element" id="31-uniswap-与-sushiswap-的竞争uni-代币的诞生"><span>3.1 Uniswap 与 SushiSwap 的竞争：UNI 代币的诞生</span>
-  <a href="#31-uniswap-%e4%b8%8e-sushiswap-%e7%9a%84%e7%ab%9e%e4%ba%89uni-%e4%bb%a3%e5%b8%81%e7%9a%84%e8%af%9e%e7%94%9f" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h5><ul>
-<li><strong>背景：</strong> Uniswap V2 采用宽松的开源协议，允许任何人商用其代码。</li>
-<li><strong>SushiSwap (2020年8月发布)：</strong>
-<ul>
-<li><strong>策略：</strong> Fork Uniswap V2 代码，并在此基础上增加了对 <strong>流动性提供者 (LP) 的奖励</strong> (即<strong>流动性挖矿</strong>)。</li>
-<li><strong>影响：</strong> 通过 SUSHI 代币的激励，SushiSwap 从 Uniswap 挖走了数十亿美元的流动性，对 Uniswap 造成巨大冲击。</li>
-</ul>
-</li>
-<li><strong>Uniswap 的反击 (2020年9月)：</strong>
-<ul>
-<li><strong>发行 UNI 代币：</strong> 作为治理代币。</li>
-<li><strong>空投：</strong> 向所有在特定时间点前使用过 Uniswap 的地址空投 <strong>400个 UNI 代币</strong>。
-<ul>
-<li><strong>价值案例：</strong> 以当前价格 <span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;计&quot; used in math mode [unicodeTextInMathMode] at position 7: 7/UNI 计̲算，空投价值 " style="color:#ff4949">7/UNI 计算，空投价值 </span>2800。历史最高价曾达 $40/UNI。</li>
-</ul>
-</li>
-<li><strong>意义：</strong> 这是 Uniswap 团队夺回劳动成果、反击抄袭者的一种方式。</li>
-</ul>
-</li>
-<li><strong>Hayden Adams 的理念与团队风格：</strong>
-<ul>
-<li><strong>反浮躁：</strong> 批评加密货币领域过度炒作、高估值（例如：“不是所有项目一发布就必须成为独角兽”）。他认为，一个项目在百万到十亿级别（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>7</mn></msup><mo>∼</mo><msup><mn>10</mn><mn>9</mn></msup></mrow><annotation encoding="application/x-tex">10^7 \sim 10^9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">7</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span>）的市场估值已是非常了不起的成就。</li>
-<li><strong>注重实际价值：</strong> 认为项目估值应基于实际成就，而非短期炒作。</li>
-<li><strong>团队风格：</strong> Uniswap 团队秉持踏实、有远见的风格，不追求短期利益和泡沫，不频繁喊单，因此能够走得更远，成为行业创新的引领者。</li>
-</ul>
-</li>
-</ul>
-<h4 class="heading-element" id="4-uniswap-v3资本效率的飞跃"><span>4. Uniswap V3：资本效率的飞跃</span>
-  <a href="#4-uniswap-v3%e8%b5%84%e6%9c%ac%e6%95%88%e7%8e%87%e7%9a%84%e9%a3%9e%e8%b7%83" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>发布时间：</strong> 2021年5月。</li>
-<li><strong>核心特性：</strong>
-<ul>
-<li><strong>集中流动性 (Concentrated Liquidity)：</strong> 允许 LP 将其流动性集中在特定的价格区间内，显著提高资本效率。</li>
-<li><strong>优化手续费设置：</strong> 提供多层手续费选项。</li>
-<li><strong>LP Token 作为 NFT：</strong> 流动性提供者代币 (LPT) 从 ERC20 形式改为 NFT 形式，以支持集中流动性的复杂性。</li>
-<li><strong>改进开源协议：</strong> 引入 <strong>2年商业使用保护期</strong>。在此期间，社区成员可学习代码，但禁止直接 Fork 并发布商用产品。</li>
-<li><strong>市场影响：</strong> 2023年5月保护期结束后，许多 DEX 纷纷宣布“更新到 V3”，实则抄袭了 Uniswap V3 的代码。市场会通过自我纠错机制，最终认可创新而非简单的抄袭。</li>
-</ul>
-</li>
-</ul>
-<h4 class="heading-element" id="5-uniswap-v4-草案基础设施愿景"><span>5. Uniswap V4 (草案)：基础设施愿景</span>
-  <a href="#5-uniswap-v4-%e8%8d%89%e6%a1%88%e5%9f%ba%e7%a1%80%e8%ae%be%e6%96%bd%e6%84%bf%e6%99%af" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>代码草案发布时间：</strong> 2023年6月23日。</li>
-<li><strong>核心特性：</strong>
-<ul>
-<li><strong>Hooks (钩子)：</strong> 允许开发者在 Uniswap 协议的固定操作点 (如 <code>beforeSwap</code>, <code>afterSwap</code>) 插入自定义逻辑。
-<ul>
-<li><strong>案例：</strong> 可用于创建带有 KYC 验证的去中心化交易所 (在 Swap 前调用 Hook 检查地址的 KYC 信息)。</li>
-</ul>
-</li>
-<li><strong>Singleton 架构：</strong> 将所有交易对部署在一个合约中，而非每个交易对一个合约，显著降低部署成本和 Gas 费用。解决了 V2/V3 中每个交易对都需要独立部署合约的问题。</li>
-<li><strong>重新引入原生 ETH 支持 (Reintroduction of Native ETH)：</strong> V4 将再次支持原生 ETH，无需 WETH 中转。</li>
-<li><strong>Flash Accounting。</strong></li>
-</ul>
-</li>
-<li><strong>目标：</strong> 成为一个更快、更省 Gas、更易集成、更具可扩展性的 DeFi 领域基础设施平台。</li>
-</ul>
-<h4 class="heading-element" id="6-核心概念解析eth-erc20-weth"><span>6. 核心概念解析：ETH, ERC20, WETH</span>
-  <a href="#6-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e8%a7%a3%e6%9e%90eth-erc20-weth" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>ETH (以太坊原生代币)：</strong>
-<ul>
-<li><strong>定义：</strong> 以太坊区块链的原生代币，用于支付 Gas 费用。</li>
-<li><strong>ERC20 兼容性：</strong> <strong>不符合</strong> ERC20 标准。</li>
-<li><strong>原因：</strong> ETH 早于 ERC20 标准诞生。它没有 <code>approve</code>、<code>transferFrom</code> 等 ERC20 标准中定义的函数。</li>
-<li><strong>转账方式：</strong> 在智能合约中，转账原生 ETH 通常使用 <code>address.transfer()</code> 或 <code>address.call{value: ...}()</code>。</li>
-</ul>
-</li>
-<li><strong>ERC20 (代币标准)：</strong>
-<ul>
-<li><strong>定义：</strong> 以太坊上的第20个改进提案 (EIP-20) 提出的一种代币协议标准。</li>
-<li><strong>功能：</strong> 规定了代币必须实现的一系列函数 (如 <code>transfer</code>, <code>transferFrom</code>, <code>approve</code>, <code>balanceOf</code>) 和事件 (如 <code>Transfer</code>, <code>Approval</code>)。</li>
-<li><strong>目的：</strong> 确保不同代币之间的互操作性。</li>
-</ul>
-</li>
-<li><strong>WETH (Wrapped ETH / 封装的 ETH)：</strong>
-<ul>
-<li><strong>定义：</strong> 将原生 ETH “封装”成符合 ERC20 标准的代币。</li>
-<li><strong>作用：</strong> 由于 Uniswap V2 和 V3 等 DEX 主要支持 ERC20 代币之间的交易，原生 ETH 无法直接参与。<strong>WETH 使得 ETH 能够以 ERC20 的形式在这些智能合约和 DeFi 协议中使用。</strong></li>
-<li><strong>历史版本支持：</strong>
-<ul>
-<li><strong>Uniswap V1：</strong> 支持原生 ETH。</li>
-<li><strong>Uniswap V2/V3：</strong> <strong>依赖 WETH</strong> 才能与 ERC20 代币配对。</li>
-<li><strong>Uniswap V4：</strong> 重新引入对原生 ETH 的支持。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 class="heading-element" id="7-uniswap-v2-与-sushiswap-竞争时序图"><span>7. Uniswap V2 与 SushiSwap 竞争时序图</span>
-  <a href="#7-uniswap-v2-%e4%b8%8e-sushiswap-%e7%ab%9e%e4%ba%89%e6%97%b6%e5%ba%8f%e5%9b%be" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><p>以下 Mermaid 时序图展示了 Uniswap V2 发布后，SushiSwap 如何通过 Fork 代码和流动性挖矿与 Uniswap 竞争，以及 Uniswap 如何通过发行 UNI 代币反击的过程。</p></div><div class="post-footer">
-    <a href="/posts/202509-uniswap01/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
@@ -567,7 +378,7 @@
           <span class="page-link" aria-hidden="true">&hellip;</span>
         </li><li class="page-item">
           <span class="page-link">
-            <a href="/page/22/">22</a>
+            <a href="/page/23/">23</a>
           </span>
         </li></ul></div></main><footer class="footer">
     <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
