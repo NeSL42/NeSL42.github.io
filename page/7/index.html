@@ -57,7 +57,26 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap09/">09.Uniswap V3 集中流动性</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap08/">08.Uniswap V3简介</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>解决核心痛点</strong>：Uniswap V3 的首要目标是解决 V2 版本<strong>资金利用率低下</strong>的问题。V2 将流动性平均分布在 <code>(0, +∞)</code> 的价格区间，导致大部分资金在常规价格波动范围之外被闲置。</li>
+<li><strong>核心创新：集中流动性 (Concentrated Liquidity)</strong>：V3 允许流动性提供者 (LP) 将资金集中在自定义的<strong>价格区间 <code>[PA, PB]</code></strong> 内。这使得在有限的资本下，可以实现与 V2 庞大资金池相同的交易深度，从而极大地提高了资本效率。</li>
+<li><strong>LP 角色与凭证的转变</strong>：由于每个 LP 提供的价格区间和资金量都可能不同，其流动性头寸是独一无二的。因此，LP 凭证从 V2 的同质化代币 <strong>ERC-20</strong> 演变为 V3 的非同质化代币 <strong>ERC-721 (NFT)</strong>。这也要求 LP 从被动提供者转变为<strong>主动的策略管理者</strong>。</li>
+<li><strong>功能与风险的优化</strong>：集中流动性不仅能带来更高的手续费收益，还能在极端行情下提供更好的<strong>风险控制</strong>。此外，它还催生了新功能，如通过设置极窄的价格区间来<strong>模拟限价订单 (Range Orders)</strong>。</li>
+<li><strong>灵活的手续费机制</strong>：V3 摒弃了 V2 单一的 0.3% 手续费，引入了基于交易对波动性的<strong>多级费率</strong>（如 0.01%, 0.05%, 0.3%, 1%），为不同类型的资产（稳定币、主流币等）提供了更合理的定价。</li>
+</ul>
+<h4 class="heading-element" id="1-uniswap-v2-的核心问题资金利用率低下"><span><strong>1. Uniswap V2 的核心问题：资金利用率低下</strong></span>
+  <a href="#1-uniswap-v2-%e7%9a%84%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e8%b5%84%e9%87%91%e5%88%a9%e7%94%a8%e7%8e%87%e4%bd%8e%e4%b8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><img loading="lazy" src='/posts/202509-uniswap08/v2-swap.webp' alt="img" height="964" width="1226"></p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap08/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap09/">09.Uniswap V3 集中流动性</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
   <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
@@ -249,94 +268,6 @@ s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
 c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
 M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span> (square root price)。在一个给定的价格点 <code>P</code>，流动性 <code>L</code> 与两种代币（X 和 Y）的数量关系如下：</p></div><div class="post-footer">
     <a href="/posts/202509-uniswap13/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap14/">14.Uniswap V3 Tick Bitmap</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>Tick BitMap 的核心目的</strong>: 为了高效、低成本地跟踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界，从而知道哪些价格范围是活跃的。</li>
-<li><strong>精巧的数据压缩</strong>: <code>Tick BitMap</code> 抛弃了为每个 Tick 单独存储状态的朴素方案（成本过高），而是通过位运算将 256 个连续的 Tick 状态压缩存储在一个 <code>uint256</code> 变量中，极大地节省了 Gas 费和存储空间。</li>
-<li><strong>关键转换公式</strong>: 任何一个 <code>tick</code> (类型为 <code>int24</code>) 都可以通过数学运算定位到它在 BitMap 中的具体位置。其核心是两个坐标：<code>wordPosition</code> (确定在哪一个 <code>uint256</code> 组里) 和 <code>bitPosition</code> (确定在该组的第几位)。
-<ul>
-<li><code>wordPosition = tick / 256</code></li>
-<li><code>bitPosition = tick % 256</code></li>
-</ul>
-</li>
-<li><strong>数据结构</strong>: <code>Tick BitMap</code> 在合约中实现为一个 <code>mapping(int16 =&gt; uint256)</code>。其中 <code>key (int16)</code> 是 <code>wordPosition</code>，<code>value (uint256)</code> 是一个 256 位的位图，每一位代表一个 <code>tick</code> 的活跃状态（1 表示活跃，0 表示不活跃）。</li>
-<li><strong>状态更新机制</strong>: 添加或移除流动性时，通过生成一个特定的<strong>掩码 (Mask)</strong>，并与 BitMap 中对应的 <code>uint256</code> 值进行<strong>按位或 (OR)</strong> 或<strong>按位与 (AND)</strong> 运算，来精确地将某一位从 0 改为 1 或从 1 改为 0，而不影响其他位。</li>
-</ul>
-<hr>
-<h4 class="heading-element" id="1-tick-的回顾与作用"><span><strong>1. Tick 的回顾与作用</strong></span>
-  <a href="#1-tick-%e7%9a%84%e5%9b%9e%e9%a1%be%e4%b8%8e%e4%bd%9c%e7%94%a8" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>定义</strong>: <strong>Tick</strong> (也称 <strong>Tick Index</strong>) 是 Uniswap V3 中用来标记离散化价格点的单位。</li>
-<li><strong>价格公式</strong>: 价格 <code>P</code> 与 <code>tick</code> <code>T</code> 的关系通过以下公式定义：
-<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><msup><mn>1.0001</mn><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">
-    P = 1.0001^T
-    </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord">1.000</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span>
-其中 <code>T</code> 就是 <code>tick</code> 的索引。当 <code>T</code> 增大时，价格 <code>P</code> 上升；当 <code>T</code> 减小时，价格 <code>P</code> 下降。</li>
-<li><strong>Tick 范围</strong>:
-<ul>
-<li>合约中 <code>tick</code> 的类型为 <code>int24</code>，其理论范围是从 <code>-887272</code> 到 <code>+887272</code>。</li>
-<li><strong>案例</strong>: 这个范围足以表示极其宽广的价格区间。
-<ul>
-<li>当 <code>tick</code> 为 <code>-887272</code> 时，价格约为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2.938</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>39</mn></mrow></msup></mrow><annotation encoding="application/x-tex">2.938 \times 10^{-39}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2.938</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">39</span></span></span></span></span></span></span></span></span></span></span></span>。</li>
-<li>当 <code>tick</code> 为 <code>+887272</code> 时，价格约为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3.4</mn><mo>×</mo><msup><mn>10</mn><mn>38</mn></msup></mrow><annotation encoding="application/x-tex">3.4 \times 10^{38}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3.4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">38</span></span></span></span></span></span></span></span></span></span></span></span>。</li>
-<li>这个范围远超比特币等主流资产的价格波动范围，因此在设计上是足够用的。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 class="heading-element" id="2-核心问题如何跟踪活跃的流动性区间"><span><strong>2. 核心问题：如何跟踪活跃的流动性区间？</strong></span>
-  <a href="#2-%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e5%a6%82%e4%bd%95%e8%b7%9f%e8%b8%aa%e6%b4%bb%e8%b7%83%e7%9a%84%e6%b5%81%e5%8a%a8%e6%80%a7%e5%8c%ba%e9%97%b4" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>背景</strong>: 在 Uniswap V3 中，用户在自定义的价格区间 <code>[PA, PB]</code> (对应 <code>[Tick_A, Tick_B]</code>) 内添加流动性。</li>
-<li><strong>挑战</strong>: 一个活跃的交易对（如 BTC/USDT）可能有成千上万的用户在各种不同的、甚至重叠的价格区间添加流动性。合约需要一种高效的方式来跟踪哪些 <code>tick</code> 成为了这些流动性区间的边界（即被激活）。
-<ul>
-<li><strong>案例</strong>: 假设一个用户在 <code>tick</code> 范围 <code>[-10, -5]</code> 添加了流动性，而另一个用户在 <code>[-4, 1]</code> 添加了流动性。此外，还可能存在重叠区间，例如用户 A 在 <code>[6, 10]</code> 添加流动性，用户 B 在 <code>[7, 12]</code> 添加流动性，那么在 <code>[7, 10]</code> 区间内流动性是重叠的。合约必须有效管理这一切。</li>
-</ul>
-</li>
-<li><strong>从 ERC20 到 ERC721</strong>:
-<ul>
-<li><strong>V2</strong>: 所有流动性提供者的 LP 凭证是同质化的 <strong>ERC20</strong> 代币。</li>
-<li><strong>V3</strong>: 由于每个人的流动性价格区间和数量都可能不同，LP 凭证变成了非同质化的 <strong>ERC721</strong> 代币（NFT）。</li>
-<li><strong>案例</strong>: 一个 V3 LP NFT (通过 <code>NonfungiblePositionManager</code> 合约管理) 记录了如 <code>tickLower</code>、<code>tickUpper</code> 和 <code>liquidity (uint128)</code> 等唯一信息，代表一个独一无二的流动性仓位。</li>
-</ul>
-</li>
-<li><strong>根本问题</strong>: 尽管 NFT 记录了每个仓位的具体信息，但 <code>Pool</code> 合约本身如何宏观地、低成本地知道在任意一个 <code>tick</code> 上，是否有流动性边界存在？</li>
-</ul>
-<h4 class="heading-element" id="3-一种被否决的朴素方案"><span><strong>3. 一种被否决的朴素方案</strong></span>
-  <a href="#3-%e4%b8%80%e7%a7%8d%e8%a2%ab%e5%90%a6%e5%86%b3%e7%9a%84%e6%9c%b4%e7%b4%a0%e6%96%b9%e6%a1%88" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>思路</strong>: 设计一个简单的键值对（Key-Value）结构来记录每个 <code>tick</code> 的状态。
-<ul>
-<li><code>mapping(int24 =&gt; bool)</code></li>
-<li><code>Key</code>: <code>tick</code> 索引 (例如: -10000, 20000)</li>
-<li><code>Value</code>: <code>true</code> (被用作边界) 或 <code>false</code> (未被用作边界)</li>
-</ul>
-</li>
-<li><strong>致命缺陷</strong>:
-<ol>
-<li><strong>存储量巨大</strong>: <code>tick</code> 的总数约有 177 万个。为每一个 <code>tick</code> 都创建一个存储槽位在区块链上是无法承受的，成本极高。</li>
-<li><strong>计算量巨大 (高 Gas 费)</strong>: 当一笔交易（swap）需要跨越成千上万个 <code>tick</code> 时，如果需要逐一查询这些 <code>tick</code> 的状态，将会导致交易的 Gas 费极高，用户无法接受。</li>
-</ol>
-</li>
-</ul>
-<h4 class="heading-element" id="4-uniswap-v3-的精巧解决方案tick-bitmap"><span><strong>4. Uniswap V3 的精巧解决方案：Tick BitMap</strong></span>
-  <a href="#4-uniswap-v3-%e7%9a%84%e7%b2%be%e5%b7%a7%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88tick-bitmap" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><p><img loading="lazy" src='/posts/202509-uniswap14/tick_bitmap.png' alt="Tick indexes in tick bitmap" height="432" width="1058"></p></div><div class="post-footer">
-    <a href="/posts/202509-uniswap14/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>

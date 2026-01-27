@@ -57,7 +57,24 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-ethpos/">以太坊 PoS 共识机制与 Engine API 源码阅读</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-clamm/">Uniswap源码分析：（一）环境搭建</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-20 00:00:00'>发布于 <time datetime="2025-09-20">2025-09-20</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>这系列文章准备详细看看Uniswap的代码，使用的是，Raydium v3 AMM (CLMM) ，Github：</p>
+<blockquote>
+<p><a href="https://github.com/raydium-io/raydium-clmm" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/raydium-io/raydium-clmm</a></p>
+</blockquote>
+<p>这是第一篇，主要讲环境搭建和部署的部分。</p>
+<h3 class="heading-element" id="环境搭建" data-decreased><span>环境搭建</span>
+  <a href="#%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 class="heading-element" id="rust"><span>rust</span>
+  <a href="#rust" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>安装rust</p></div><div class="post-footer">
+    <a href="/posts/202509-clamm/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E9%87%8F%E5%8C%96/' class="post-tag">量化</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-ethpos/">以太坊 PoS 共识机制与 Engine API 源码阅读</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-18 00:00:00'>发布于 <time datetime="2025-09-18">2025-09-18</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="1-理论基础" data-decreased><span>1. 理论基础</span>
   <a href="#1-%e7%90%86%e8%ae%ba%e5%9f%ba%e7%a1%80" class="heading-mark">
@@ -114,32 +131,6 @@
 </h4><hr>
 <p>所谓大语言模型（LLM），“大”是其最显著的特征之一。这不仅体现在它们能够处理海量信息，更直接地体现在其庞大的体积上。这些模型动辄拥有数十亿的参数，通常需要配备大显存的顶级 GPU 才能流畅运行，这无疑将许多普通用户和开发者拒之门外。</p></div><div class="post-footer">
     <a href="/posts/202509-llmquart/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap02/">02.Uniswap V2 Swap 操作</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p><strong>这份学习笔记将Uniswap V2的swap操作进行了深入剖析，涵盖了其核心机制、数学原理和代码实现，以及手续费的计算方式。</strong></p>
-<h3 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><ul>
-<li><strong>Uniswap V2 架构与路由灵活性</strong>：V2引入了任何ERC20代币之间直接交换的能力，不再强制通过ETH作为中介。用户通过<code>UniswapV2Router02</code>合约进行交互，该合约负责寻找并协调<code>UniswapV2Pair</code>合约完成交易，支持单跳和多跳（多级路由）交换。</li>
-<li><strong>两种核心交换类型</strong>：V2提供了两种主要的<code>swap</code>函数：
-<ol>
-<li><code>swapExactTokensForTokens</code>：用户指定<strong>精确的输入代币数量</strong>，系统计算并返回尽可能多的输出代币。</li>
-<li><code>swapTokensForExactTokens</code>：用户指定<strong>精确的输出代币数量</strong>，系统计算所需的最小输入代币数量。</li>
-</ol>
-</li>
-<li><strong>0.3%固定手续费机制</strong>：每次<code>swap</code>操作都会对<strong>输入代币</strong>收取0.3%（千分之三）的手续费。这意味着实际用于AMM计算的输入量是用户提供量的99.7%。多跳交易会累积手续费。</li>
-<li><strong>数学原理与代码实现</strong>：<code>UniswapV2Library</code>中的<code>getAmountOut</code>和<code>getAmountIn</code>函数是核心计算逻辑，它们基于恒定乘积做市商（AMM）公式，并融入了0.3%的手续费计算，确保了交易的准确性。</li>
-<li><strong>滑点与MEV攻击</strong>：用户可以通过设置<code>amountOutMin</code>（最小输出量）来控制滑点。然而，这种机制也可能被MEV（矿工可提取价值）套利者利用，通过三明治攻击（Front-running + Back-running）来捕获用户设定的最小输出与实际可能输出之间的差价。</li>
-</ul>
-<hr>
-<h3 class="heading-element" id="1-uniswap-v2-核心架构与合约"><span>1. Uniswap V2 核心架构与合约</span>
-  <a href="#1-uniswap-v2-%e6%a0%b8%e5%bf%83%e6%9e%b6%e6%9e%84%e4%b8%8e%e5%90%88%e7%ba%a6" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>Uniswap V2 的代码主要存在于两个仓库：</p></div><div class="post-footer">
-    <a href="/posts/202509-uniswap02/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>

@@ -57,7 +57,33 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap03/">03.Uniswap V2 手续费机制</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap02/">02.Uniswap V2 Swap 操作</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p><strong>这份学习笔记将Uniswap V2的swap操作进行了深入剖析，涵盖了其核心机制、数学原理和代码实现，以及手续费的计算方式。</strong></p>
+<h3 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>Uniswap V2 架构与路由灵活性</strong>：V2引入了任何ERC20代币之间直接交换的能力，不再强制通过ETH作为中介。用户通过<code>UniswapV2Router02</code>合约进行交互，该合约负责寻找并协调<code>UniswapV2Pair</code>合约完成交易，支持单跳和多跳（多级路由）交换。</li>
+<li><strong>两种核心交换类型</strong>：V2提供了两种主要的<code>swap</code>函数：
+<ol>
+<li><code>swapExactTokensForTokens</code>：用户指定<strong>精确的输入代币数量</strong>，系统计算并返回尽可能多的输出代币。</li>
+<li><code>swapTokensForExactTokens</code>：用户指定<strong>精确的输出代币数量</strong>，系统计算所需的最小输入代币数量。</li>
+</ol>
+</li>
+<li><strong>0.3%固定手续费机制</strong>：每次<code>swap</code>操作都会对<strong>输入代币</strong>收取0.3%（千分之三）的手续费。这意味着实际用于AMM计算的输入量是用户提供量的99.7%。多跳交易会累积手续费。</li>
+<li><strong>数学原理与代码实现</strong>：<code>UniswapV2Library</code>中的<code>getAmountOut</code>和<code>getAmountIn</code>函数是核心计算逻辑，它们基于恒定乘积做市商（AMM）公式，并融入了0.3%的手续费计算，确保了交易的准确性。</li>
+<li><strong>滑点与MEV攻击</strong>：用户可以通过设置<code>amountOutMin</code>（最小输出量）来控制滑点。然而，这种机制也可能被MEV（矿工可提取价值）套利者利用，通过三明治攻击（Front-running + Back-running）来捕获用户设定的最小输出与实际可能输出之间的差价。</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="1-uniswap-v2-核心架构与合约"><span>1. Uniswap V2 核心架构与合约</span>
+  <a href="#1-uniswap-v2-%e6%a0%b8%e5%bf%83%e6%9e%b6%e6%9e%84%e4%b8%8e%e5%90%88%e7%ba%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Uniswap V2 的代码主要存在于两个仓库：</p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap02/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap03/">03.Uniswap V2 手续费机制</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
   <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
@@ -246,25 +272,6 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </a>
 </h5><p><strong>Spot Price</strong> 是指在特定时刻，交易池中两种代币储备量的比率。它反映了当前瞬间的兑换价格。</p></div><div class="post-footer">
     <a href="/posts/202509-uniswap07/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap08/">08.Uniswap V3简介</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>解决核心痛点</strong>：Uniswap V3 的首要目标是解决 V2 版本<strong>资金利用率低下</strong>的问题。V2 将流动性平均分布在 <code>(0, +∞)</code> 的价格区间，导致大部分资金在常规价格波动范围之外被闲置。</li>
-<li><strong>核心创新：集中流动性 (Concentrated Liquidity)</strong>：V3 允许流动性提供者 (LP) 将资金集中在自定义的<strong>价格区间 <code>[PA, PB]</code></strong> 内。这使得在有限的资本下，可以实现与 V2 庞大资金池相同的交易深度，从而极大地提高了资本效率。</li>
-<li><strong>LP 角色与凭证的转变</strong>：由于每个 LP 提供的价格区间和资金量都可能不同，其流动性头寸是独一无二的。因此，LP 凭证从 V2 的同质化代币 <strong>ERC-20</strong> 演变为 V3 的非同质化代币 <strong>ERC-721 (NFT)</strong>。这也要求 LP 从被动提供者转变为<strong>主动的策略管理者</strong>。</li>
-<li><strong>功能与风险的优化</strong>：集中流动性不仅能带来更高的手续费收益，还能在极端行情下提供更好的<strong>风险控制</strong>。此外，它还催生了新功能，如通过设置极窄的价格区间来<strong>模拟限价订单 (Range Orders)</strong>。</li>
-<li><strong>灵活的手续费机制</strong>：V3 摒弃了 V2 单一的 0.3% 手续费，引入了基于交易对波动性的<strong>多级费率</strong>（如 0.01%, 0.05%, 0.3%, 1%），为不同类型的资产（稳定币、主流币等）提供了更合理的定价。</li>
-</ul>
-<h4 class="heading-element" id="1-uniswap-v2-的核心问题资金利用率低下"><span><strong>1. Uniswap V2 的核心问题：资金利用率低下</strong></span>
-  <a href="#1-uniswap-v2-%e7%9a%84%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e8%b5%84%e9%87%91%e5%88%a9%e7%94%a8%e7%8e%87%e4%bd%8e%e4%b8%8b" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><p><img loading="lazy" src='/posts/202509-uniswap08/v2-swap.webp' alt="img" height="964" width="1226"></p></div><div class="post-footer">
-    <a href="/posts/202509-uniswap08/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
