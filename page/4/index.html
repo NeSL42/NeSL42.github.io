@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-01-26T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-01-26T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-01-27T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-01-27T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,11 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202510-aeaortcfmms/">论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202510-linearalgebra/">线性代数课程学习笔记</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-10-07 00:00:00'>发布于 <time datetime="2025-10-07">2025-10-07</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/202510-linearalgebra/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/math/' class="post-tag">Math</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202510-aeaortcfmms/">论文阅读《An Eﬃcient Algorithm for Optimal Routing Through Constant Function Market Makers》</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-10-04 00:00:00'>发布于 <time datetime="2025-10-04">2025-10-04</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="摘要" data-decreased><span>摘要</span>
   <a href="#%e6%91%98%e8%a6%81" class="heading-mark">
@@ -104,15 +108,6 @@
   </a>
 </h3><p>在本章中，我们将解释如何构建风险因子模型，试图将资产收益表现作为风险因子表现的函数来解释。然后，基于这些模型，我们可以将资产收益的预期收益向量和协方差矩阵估计为风险因子的函数，这些风险因子可以是显性的（外生变量）或隐性的（外生变量的主成分）。与仅使用基于样本的参数估计作为投资组合优化模型的输入相比，这些新的估计方法往往能产生更多样化和稳健的投资组合。</p></div><div class="post-footer">
     <a href="/posts/apo-04/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E9%87%8F%E5%8C%96/' class="post-tag">量化</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswapv2source/">UniswapV2源码阅读</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-20 00:00:00'>发布于 <time datetime="2025-09-20">2025-09-20</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>这系列文章准备详细看看Uniswap的代码，使用的是 <code>Hardhat</code></p>
-<h3 class="heading-element" id="零主要内容" data-decreased><span>零。主要内容</span>
-  <a href="#%e9%9b%b6%e4%b8%bb%e8%a6%81%e5%86%85%e5%ae%b9" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>当然！阅读 Uniswap V2 源码是一个非常棒的主题，可以写出一个非常深入和受欢迎的系列。基于第一篇《环境搭建》，后续文章可以按照从核心到外围、从基础到复杂的逻辑展开。</p></div><div class="post-footer">
-    <a href="/posts/202509-uniswapv2source/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E9%87%8F%E5%8C%96/' class="post-tag">量化</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>

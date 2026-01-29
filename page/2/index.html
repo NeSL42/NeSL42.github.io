@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-01-26T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-01-26T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-01-27T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-01-27T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,25 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202601-aavev1source/">AAVE V1 源码阅读</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202601-paper1/">论文阅读《中国市场的盈余公告：隔夜与日内收益差异》</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2026-01-25 00:00:00'>发布于 <time datetime="2026-01-25">2026-01-25</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="0-论文基本信息"><span>0. 论文基本信息</span>
+  <a href="#0-%e8%ae%ba%e6%96%87%e5%9f%ba%e6%9c%ac%e4%bf%a1%e6%81%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li><strong>标题</strong>：中国市场的盈余公告：隔夜与日内收益差异 (Earnings Announcements in China: Overnight-Intraday Disparity)</li>
+<li><strong>作者/机构</strong>：刘俊豪 (Junhao Liu)、Ole-Kristian Hope（多伦多大学罗特曼管理学院）；胡丹琪 (Danqi Hu)（北京大学光华管理学院）</li>
+<li><strong>发表出处/时间</strong>：SSRN工作论文，2023年7月5日</li>
+</ul>
+<hr>
+<h3 class="heading-element" id="1-核心问题与创新总览"><span>1. 核心问题与创新总览</span>
+  <a href="#1-%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e4%b8%8e%e5%88%9b%e6%96%b0%e6%80%bb%e8%a7%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>该研究聚焦于<strong>盈余公告 (Earnings Announcements)</strong> 在<strong>中国股票市场 (Chinese Stock Market)</strong> 中的价格发现机制问题。传统金融学研究通常将<strong>日度收益 (Daily Returns)</strong> 作为分析单位，但本文揭示了一个被长期忽视的核心现象：在独特的交易与信息披露制度安排下，中国市场的盈余公告反应呈现出显著的<strong>隔夜-日内收益差异 (Overnight-Intraday Disparity)</strong>。</p></div><div class="post-footer">
+    <a href="/posts/202601-paper1/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202601-aavev1source/">AAVE V1 源码阅读</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2026-01-20 00:00:00'>发布于 <time datetime="2026-01-20">2026-01-20</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p><img loading="lazy" src='/posts/202601-aavev1source/file-20260121000438250.png' alt="/posts/202601-aavev1source/file-20260121000438250.png" height="1006" width="1426"></p>
 <h3 class="heading-element" id="1-架构鸟瞰birds-eye-view"><span>1 架构鸟瞰（Bird&rsquo;s-eye View）</span>
@@ -97,15 +115,6 @@
 </ul>
 <p>做了多轮英文关键词检索，把近几年<strong>和“在几十/几百个池子里快速找最优套利路径、高计算复杂度算法”最相关</strong>的研究论文和接近论文风格的技术文全部整理出来（下面会把我“搜到的都列出来”，并注明不是严格意义上的论文时）。</p></div><div class="post-footer">
     <a href="/posts/202511-openaipaper/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202511-frl/">论文阅读《愿望还是现实？论加密货币市场中三角套利的可利用性》</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-11-26 00:00:00'>发布于 <time datetime="2025-11-26">2025-11-26</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="愿望还是现实论加密货币市场中三角套利的可利用性" data-decreased><span>愿望还是现实？论加密货币市场中三角套利的可利用性</span>
-  <a href="#%e6%84%bf%e6%9c%9b%e8%bf%98%e6%98%af%e7%8e%b0%e5%ae%9e%e8%ae%ba%e5%8a%a0%e5%af%86%e8%b4%a7%e5%b8%81%e5%b8%82%e5%9c%ba%e4%b8%ad%e4%b8%89%e8%a7%92%e5%a5%97%e5%88%a9%e7%9a%84%e5%8f%af%e5%88%a9%e7%94%a8%e6%80%a7" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><blockquote>
-<p><a href="https://www.sciencedirect.com/science/article/pii/S154461232401537X?ref=pdf_download&amp;fr=RR-2&amp;rr=9a4aac511b200540" target="_blank" rel="external nofollow noopener noreferrer">https://www.sciencedirect.com/science/article/pii/S154461232401537X?ref=pdf_download&fr=RR-2&rr=9a4aac511b200540</a></p></div><div class="post-footer">
-    <a href="/posts/202511-frl/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
