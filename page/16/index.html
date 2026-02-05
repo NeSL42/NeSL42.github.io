@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-01-31T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-01-31T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,17 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkmem/">浅析WRK内存管理</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-aflsourceread/">AFL源码阅读</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-16 00:00:00'>发布于 <time datetime="2023-09-16">2023-09-16</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>阅读源码的主要目标应该是：</p>
+<ol>
+<li>理清静态插桩过程（gcc、clang、llvm mode）</li>
+<li>理清 fuzz 过程：如何变异、如何将 input 传递给程序、如何收集覆盖度信息</li>
+<li>理清 qemu mode 的插桩和执行过程</li>
+</ol>
+<p>因此，我们决定阅读顺序：</p></div><div class="post-footer">
+    <a href="/posts/2023-9-aflsourceread/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/afl/' class="post-tag">AFL</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-wrkmem/">浅析WRK内存管理</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-12 00:00:00'>发布于 <time datetime="2023-09-12">2023-09-12</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
     <a href="/posts/2023-9-wrkmem/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
@@ -83,15 +93,6 @@
 </blockquote>
 <p><strong>摘要</strong>：堆溢出是应用程序中相当常见的漏洞。利用这类漏洞通常依赖于对用于管理堆的基础机制的深入理解。Windows 10 最近改变了其在内核空间中管理堆的方式。本文旨在介绍Windows NT内核中堆机制的最新演变，并介绍针对内核池的新的利用技术。</p></div><div class="post-footer">
     <a href="/posts/2023-8-scoopthewindows10pool/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-kernelpoolexploitationonwin7/">【译】Kernel Pool Exploitation on Windows 7</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-16 00:00:00'>发布于 <time datetime="2023-08-16">2023-08-16</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
-<p><a href="https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf</a>
-<a href="https://media.blackhat.com/bh-dc-11/Mandt/BlackHat_DC_2011_Mandt_kernelpool-wp.pdf?source=post_page" target="_blank" rel="external nofollow noopener noreferrer">https://media.blackhat.com/bh-dc-11/Mandt/BlackHat_DC_2011_Mandt_kernelpool-wp.pdf?source=post_page</a>
-<a href="https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf</a></p>
-</blockquote>
-<p><strong>摘要</strong>：在Windows 7中，微软引入了safe unlinking技术来解决影响Windows内核的安全公告日益增多的问题。在从双向链表中删除条目之前，safe unlinking旨在通过验证相邻列表条目的指针来检测内存损坏。因此，攻击者不能轻易地利用通用技术来利用泄漏池溢出或其他泄漏池损坏漏洞。本文中，我们展示了尽管引入了安全措施，Windows 7仍然容易受到通用内核池(kernel pool)攻击的影响。特别是，我们展示了在某些条件下，池分配器可能无法安全地unlink空闲列表条目，从而允许攻击者破坏任意内存。为了防止这些攻击，我们提出了进一步加固和增强内核池安全性的方法。</p></div><div class="post-footer">
-    <a href="/posts/2023-8-kernelpoolexploitationonwin7/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>

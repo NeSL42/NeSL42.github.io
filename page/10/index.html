@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-01-31T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-01-31T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,31 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-tao/">Lex Fridman播客:陶哲轩：数学、物理学中最难的问题以及人工智能的未来</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-amm/">恒定乘积自动做市商 (CPAMM) 学习笔记</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-30 00:00:00'>发布于 <time datetime="2025-08-30">2025-08-30</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="恒定乘积自动做市商-cpamm-学习笔记"><span>恒定乘积自动做市商 (CPAMM) 学习笔记</span>
+  <a href="#%e6%81%92%e5%ae%9a%e4%b9%98%e7%a7%af%e8%87%aa%e5%8a%a8%e5%81%9a%e5%b8%82%e5%95%86-cpamm-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>CPAMM 核心公式</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>×</mo><mi>Y</mi><mo>=</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">X \times Y = K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 是恒定乘积自动做市商（Constant Product Automated Market Maker, CPAMM）的核心，它定义了去中心化交易所（DEX）中流动性池中两种资产数量的关系。</li>
+<li><strong>DEFI 基石</strong>：该公式是 2020-2021 年 DEFI 浪潮的起点，支撑了数百亿美元的 DEFI 市值发展，实现了无需中心化对手方的代币交换。</li>
+<li><strong>交换中的 K 值恒定</strong>：在用户进行代币买卖（Swap）时，池子的总流动性 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 保持不变，但池中两种代币的比例会根据交易量动态调整。</li>
+<li><strong>滑点 (Slippage)</strong>：交易量相对于池子总流动性的比例越大，交易产生的滑点就越大，导致实际成交价格偏离预期市场价格。用户在交易时可设置<strong>滑点容忍度</strong>。</li>
+<li><strong>流动性提供者 (LP)</strong>：用户可以通过向池子提供两种代币，成为流动性提供者，获得 LP 凭证 (LPT) 并赚取交易手续费；添加和移除流动性会改变 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 值。</li>
+</ul>
+<hr>
+<h4 class="heading-element" id="1-恒定乘积自动做市商-cpamm-核心原理"><span>1. 恒定乘积自动做市商 (CPAMM) 核心原理</span>
+  <a href="#1-%e6%81%92%e5%ae%9a%e4%b9%98%e7%a7%af%e8%87%aa%e5%8a%a8%e5%81%9a%e5%b8%82%e5%95%86-cpamm-%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><strong>1.1 定义与核心公式</strong></p></div><div class="post-footer">
+    <a href="/posts/202509-amm/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-tao/">Lex Fridman播客:陶哲轩：数学、物理学中最难的问题以及人工智能的未来</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-24 00:00:00'>发布于 <time datetime="2025-08-24">2025-08-24</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>这是Lex Fridman播客第472期与陶哲轩（Terence Tao）的访谈文字记录。文字记录中的时间戳是可点击链接，可直接带你跳转到主视频中的相应时间点。请注意，文字记录由人工生成，可能存在错误。以下是一些有用的链接：</p></div><div class="post-footer">
     <a href="/posts/202508-tao/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/tips/' class="post-tag">Tips</a></div></div>
@@ -120,11 +144,6 @@
   </a>
 </h3><p>在数字签名领域，传统的数字签名方案能够确保消息的真实性和发送者的身份，但有时发送者希望保持匿名性。现有的匿名通信方案（如匿名转发器）通常会剥离所有源身份信息和认证，导致接收者无法确信消息的来源是可信的。另一方面，<strong>群签名 (Group Signatures)</strong> 方案虽然允许群成员匿名签名，但它们通常效率低下，需要预先设置群组、群管理器，并可能存在群管理器揭露签名者身份的风险。这些现有方案无法满足在确保消息来源可信的同时，又完全保护签名者身份的需求。</p></div><div class="post-footer">
     <a href="/posts/202508-ringsign/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/tips/' class="post-tag">Tips</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202508-gitclonedir/">使用GIT Clone指定仓库的制定文件夹</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-18 00:00:00'>发布于 <time datetime="2025-08-18">2025-08-18</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>要只克隆 GitHub 仓库中的一个文件夹，你需要使用 Git 的稀疏检出（sparse-checkout）功能。这个功能允许你只下载仓库中你指定的路径。</p>
-<p>以下是具体的命令步骤：</p></div><div class="post-footer">
-    <a href="/posts/202508-gitclonedir/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/tips/' class="post-tag">Tips</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>

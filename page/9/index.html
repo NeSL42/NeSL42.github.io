@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-01-31T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-01-31T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,25 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap18/">18.Uniswap V3 手续费计算（一）</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap16/">16.Uniswap V3 LiquidityNet</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>智能合约的效率限制</strong>：Uniswap v3 智能合约因存储和计算成本的限制，不会记录每个价格区间的具体流动性值。它采用一种更高效的动态计算方法，只在流动性发生变化的 <code>tick</code> 边界点记录关键信息。</li>
+<li><strong>核心概念 <code>Liquidity Net</code></strong>：合约追踪流动性的核心是记录在每个被初始化的 <code>tick</code> 上的 <strong><code>Liquidity Net</code> (流动性净变化量)</strong>。这是一个<strong>有符号</strong>的值 (<code>ΔL</code>)，表示当价格穿越该 <code>tick</code> 时，池中活跃流动性的<strong>变化量</strong>。</li>
+<li><strong>边界点的符号规则</strong>：当用户在 <code>[tick_lower, tick_upper]</code> 区间添加流动性 <code>L</code> 时，合约会在 <code>tick_lower</code> 处记录一个正的净变化量 (<code>+L</code>)，在 <code>tick_upper</code> 处记录一个负的净变化量 (<code>-L</code>)。移除流动性则符号相反。</li>
+<li><strong>流动性的动态计算</strong>：在交易（swap）过程中，当价格从一个区间穿越 <code>tick</code> 进入下一个区间时，合约通过一个简单的累加公式实时更新当前的活跃流动性：<span class="katex-error" title="ParseError: KaTeX parse error: LaTeX-incompatible input and strict mode is set to &#x27;error&#x27;: Unicode text character &quot;新&quot; used in math mode [unicodeTextInMathMode] at position 4: L_{新̲区间} = L_{旧区间} +…" style="color:#ff4949">L_{新区间} = L_{旧区间} + \Delta L_{tick}</span>。这使得合约只需追踪当前区间的流动性，而无需预存所有区间的流动性信息。</li>
+</ul>
+<h4 class="heading-element" id="1-背景问题uniswap-v3-如何高效追踪流动性"><span><strong>1. 背景问题：Uniswap v3 如何高效追踪流动性？</strong></span>
+  <a href="#1-%e8%83%8c%e6%99%af%e9%97%ae%e9%a2%98uniswap-v3-%e5%a6%82%e4%bd%95%e9%ab%98%e6%95%88%e8%bf%bd%e8%b8%aa%e6%b5%81%e5%8a%a8%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在 Uniswap v3 中，流动性提供者可以在任意自定义的价格区间（由 <code>tick</code> 界定）内提供流动性。这导致了池子的总流动性在不同价格段是阶梯式变化的。</p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap16/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap18/">18.Uniswap V3 手续费计算（一）</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
   <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
@@ -511,30 +529,6 @@
   </a>
 </h5><p>借贷是源远流长的金融活动，核心在于<strong>提高资金利用效率</strong>和<strong>满足流动性需求</strong>，而非简单地“没钱才借”。</p></div><div class="post-footer">
     <a href="/posts/202509-jiedai/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-amm/">恒定乘积自动做市商 (CPAMM) 学习笔记</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-30 00:00:00'>发布于 <time datetime="2025-08-30">2025-08-30</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="恒定乘积自动做市商-cpamm-学习笔记"><span>恒定乘积自动做市商 (CPAMM) 学习笔记</span>
-  <a href="#%e6%81%92%e5%ae%9a%e4%b9%98%e7%a7%af%e8%87%aa%e5%8a%a8%e5%81%9a%e5%b8%82%e5%95%86-cpamm-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><h4 class="heading-element" id="核心摘要-key-takeaways"><span>核心摘要 (Key Takeaways)</span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>CPAMM 核心公式</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>×</mo><mi>Y</mi><mo>=</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">X \times Y = K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 是恒定乘积自动做市商（Constant Product Automated Market Maker, CPAMM）的核心，它定义了去中心化交易所（DEX）中流动性池中两种资产数量的关系。</li>
-<li><strong>DEFI 基石</strong>：该公式是 2020-2021 年 DEFI 浪潮的起点，支撑了数百亿美元的 DEFI 市值发展，实现了无需中心化对手方的代币交换。</li>
-<li><strong>交换中的 K 值恒定</strong>：在用户进行代币买卖（Swap）时，池子的总流动性 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 保持不变，但池中两种代币的比例会根据交易量动态调整。</li>
-<li><strong>滑点 (Slippage)</strong>：交易量相对于池子总流动性的比例越大，交易产生的滑点就越大，导致实际成交价格偏离预期市场价格。用户在交易时可设置<strong>滑点容忍度</strong>。</li>
-<li><strong>流动性提供者 (LP)</strong>：用户可以通过向池子提供两种代币，成为流动性提供者，获得 LP 凭证 (LPT) 并赚取交易手续费；添加和移除流动性会改变 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span> 值。</li>
-</ul>
-<hr>
-<h4 class="heading-element" id="1-恒定乘积自动做市商-cpamm-核心原理"><span>1. 恒定乘积自动做市商 (CPAMM) 核心原理</span>
-  <a href="#1-%e6%81%92%e5%ae%9a%e4%b9%98%e7%a7%af%e8%87%aa%e5%8a%a8%e5%81%9a%e5%b8%82%e5%95%86-cpamm-%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><p><strong>1.1 定义与核心公式</strong></p></div><div class="post-footer">
-    <a href="/posts/202509-amm/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
