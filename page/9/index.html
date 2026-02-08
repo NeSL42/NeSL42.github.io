@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-02-01T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-02-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-07T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,38 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap16/">16.Uniswap V3 LiquidityNet</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap17/">16.Uniswap V3 Cross Tick Swap</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>跨Tick交易的核心机制</strong>：当一笔交易的规模大到足以耗尽当前价格区间（Tick Range）内的流动性时，交易会“穿越”到一个新的、相邻的活跃价格区间，并利用新区间的流动性继续完成剩余部分的兑换。</li>
+<li><strong>迭代循环过程</strong>：跨Tick交易并非一次性计算，而是一个循环过程。系统在当前区间内完成部分交易，计算剩余未兑换量，然后寻找下一个活跃Tick，更新流动性，再对剩余量进行计算，如此往复，直至交易完成或流动性耗尽。</li>
+<li><strong>两大基础工具</strong>：整个跨Tick交易的实现依赖于两个核心数据结构：<strong>Tick Bitmap</strong> 用于快速查找下一个有流动性的活跃Tick；<strong>Liquidity Net</strong> 用于在穿越Tick边界时，高效地计算出新价格区间的总流动性。</li>
+<li><strong>V3与V2的复杂度对比</strong>：Uniswap V3由于引入了集中流动性，其<code>swap</code>（交易）的数学逻辑和代码实现复杂度远超V2。V2的交易遵循简单的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>×</mo><mi>y</mi><mo>=</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">x \times y = k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> 恒定乘积公式，而V3则需要处理离散的、分段的流动性，进行复杂的迭代计算。</li>
+</ul>
+<h4 class="heading-element" id="1-交易机制回顾与铺垫"><span><strong>1. 交易机制回顾与铺垫</strong></span>
+  <a href="#1-%e4%ba%a4%e6%98%93%e6%9c%ba%e5%88%b6%e5%9b%9e%e9%a1%be%e4%b8%8e%e9%93%ba%e5%9e%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 class="heading-element" id="11-基础概念回顾"><span>1.1 基础概念回顾</span>
+  <a href="#11-%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5%e5%9b%9e%e9%a1%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><ul>
+<li><strong>横坐标 (价格/Tick)</strong>：智能合约使用 <strong>Tick Bitmap</strong> 来记录哪些价格点（Ticks）是活跃的（即作为某个流动性区间的边界）。</li>
+<li><strong>纵坐标 (流动性)</strong>：使用 <strong>Liquidity Net</strong> 记录在每个Tick点上流动性的净变化量。当价格穿越一个Tick时，总流动性会根据该Tick的<code>liquidityNet</code>值进行更新。</li>
+<li><strong>流动性叠加</strong>：在某个价格区间，多个用户提供的流动性会叠加起来，形成一个总的、更高的流动性池。</li>
+</ul>
+<h5 class="heading-element" id="12-单一价格区间内的交易-未跨tick"><span>1.2 单一价格区间内的交易 (未跨Tick)</span>
+  <a href="#12-%e5%8d%95%e4%b8%80%e4%bb%b7%e6%a0%bc%e5%8c%ba%e9%97%b4%e5%86%85%e7%9a%84%e4%ba%a4%e6%98%93-%e6%9c%aa%e8%b7%a8tick" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>这是跨Tick交易的基础。在一个固定的价格区间 <code>[PA, PB]</code> 内，流动性 <code>L</code> 是恒定的。</p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap17/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap16/">16.Uniswap V3 LiquidityNet</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
   <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
@@ -506,29 +537,6 @@
   </a>
 </h4><p>以下 Mermaid 时序图展示了 Uniswap V2 发布后，SushiSwap 如何通过 Fork 代码和流动性挖矿与 Uniswap 竞争，以及 Uniswap 如何通过发行 UNI 代币反击的过程。</p></div><div class="post-footer">
     <a href="/posts/202509-uniswap01/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-jiedai/">去中心化借贷</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-08-30 00:00:00'>发布于 <time datetime="2025-08-30">2025-08-30</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>核心机制</strong>：去中心化借贷协议本质上是一个资金池，<strong>存款人 (Lender)</strong> 提供闲置资产赚取利息，<strong>借款人 (Borrower)</strong> 通过超额抵押资产来借出其他资产，整个过程由智能合约自动执行。</li>
-<li><strong>动态利率模型</strong>：借贷利率并非固定不变，而是由<strong>资金使用率 (Utilization Rate)</strong> 动态调节。当资金池中大量资产被借出时（使用率高），利率会自动升高以抑制借款、鼓励存款；反之则降低利率。</li>
-<li><strong>安全基石：超额抵押与清算</strong>：为应对加密资产的价格波动，所有借款都必须<strong>超额抵押</strong>。协议通过<strong>健康因子 (Health Factor)</strong> 监控每笔贷款的风险。一旦抵押物价值跌破<strong>清算阈值</strong>，<strong>监控者 (Keeper)</strong> 会触发清算程序（如拍卖或市场售出）以保护存款人的资金。</li>
-<li><strong>关键外部依赖：预言机 (Oracle)</strong>：协议需要<strong>预言机</strong>来获取抵押物和借出资产的实时价格，以准确计算健康因子。因此，预言机的稳定性和安全性至关重要，是协议最主要的攻击点之一，对于黑客来说，<strong>预言机就是提款机</strong>。</li>
-<li><strong>记账方式的演进</strong>：协议通过向存款人发放<strong>凭证Token</strong>（如Compound的cToken）来代表其在资金池中的份额。这种方式相比传统的复式记账法，极大地简化了利息计算和用户资产追踪。</li>
-</ul>
-<h4 class="heading-element" id="1-去中心化借贷的核心价值与传统对比"><span><strong>1. 去中心化借贷的核心价值与传统对比</strong></span>
-  <a href="#1-%e5%8e%bb%e4%b8%ad%e5%bf%83%e5%8c%96%e5%80%9f%e8%b4%b7%e7%9a%84%e6%a0%b8%e5%bf%83%e4%bb%b7%e5%80%bc%e4%b8%8e%e4%bc%a0%e7%bb%9f%e5%af%b9%e6%af%94" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><h5 class="heading-element" id="11-为什么需要借贷"><span><strong>1.1. 为什么需要借贷？</strong></span>
-  <a href="#11-%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e5%80%9f%e8%b4%b7" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h5><p>借贷是源远流长的金融活动，核心在于<strong>提高资金利用效率</strong>和<strong>满足流动性需求</strong>，而非简单地“没钱才借”。</p></div><div class="post-footer">
-    <a href="/posts/202509-jiedai/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>

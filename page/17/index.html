@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-02-01T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-02-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-07T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,17 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-kernelpoolexploitationonwin7/">【译】Kernel Pool Exploitation on Windows 7</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-scoopthewindows10pool/">【译】Scoop the Windows 10 Pool</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-24 00:00:00'>发布于 <time datetime="2023-08-24">2023-08-24</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
+<p>SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf
+<a href="https://github.com/synacktiv/Windows-kernel-SegmentHeap-Aligned-Chunk-Confusion" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/synacktiv/Windows-kernel-SegmentHeap-Aligned-Chunk-Confusion</a>
+<a href="https://paper.seebug.org/1743/" target="_blank" rel="external nofollow noopener noreferrer">https://paper.seebug.org/1743/</a></p>
+<p><a href="https://github.com/cbayet/Exploit-CVE-2017-6008/blob/master/Windows10PoolParty.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/cbayet/Exploit-CVE-2017-6008/blob/master/Windows10PoolParty.pdf</a></p>
+</blockquote>
+<p><strong>摘要</strong>：堆溢出是应用程序中相当常见的漏洞。利用这类漏洞通常依赖于对用于管理堆的基础机制的深入理解。Windows 10 最近改变了其在内核空间中管理堆的方式。本文旨在介绍Windows NT内核中堆机制的最新演变，并介绍针对内核池的新的利用技术。</p></div><div class="post-footer">
+    <a href="/posts/2023-8-scoopthewindows10pool/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-kernelpoolexploitationonwin7/">【译】Kernel Pool Exploitation on Windows 7</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-16 00:00:00'>发布于 <time datetime="2023-08-16">2023-08-16</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
 <p><a href="https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://dl.packetstormsecurity.net/papers/general/kernelpool-exploitation.pdf</a>
@@ -89,17 +99,6 @@
   </a>
 </h3><p>上个月就有看到用AI生成可扫描的二维码的文章（<a href="https://mp.weixin.qq.com/s/i4WR5ULH1ZZYl8Watf3EPw" target="_blank" rel="external nofollow noopener noreferrer">AI 生成可扫码图像 — 新 ControlNet 模型展示</a>），但是没有说具体的制作细节，当时还在reddit上搜了半天，但是制作出来的效果都差强人意。</p></div><div class="post-footer">
     <a href="/posts/2023-7-sdqrcode/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/other/' class="post-tag">Other</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-win-syscalljourney/">Syscall Journey</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-03 00:00:00'>发布于 <time datetime="2023-07-03">2023-07-03</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>本文记录一下syscall的“旅程”。</p>
-<p>这里使用的是<code>win10x64  22H2 19045.3086</code></p>
-<ul>
-<li>
-<p>与其他进程、内存、驱动器或文件系统交互时，使用 <code>Kernel32.dll</code> 中的函数</p>
-</li>
-<li>
-<p>与 Windows GUI 交互，使用的是 <code>user32.dll</code> 和 <code>gdi32.dll</code> 中的函数</p></div><div class="post-footer">
-    <a href="/posts/2023-7-win-syscalljourney/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>

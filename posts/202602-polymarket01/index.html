@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>翻译《在Polymarket上交易所需的数学知识（完整路线图）》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content=" https://x.com/RohOnChain/status/2017314080395296995
+Polymarket交易所需的数学知识（完整路线图） 我将详细拆解在Polymarket交易所需的核心数学知识，并分享帮助我入门的具体学习路径和资源。
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="翻译《在Polymarket上交易所需的数学知识（完整路线图）》">
+  <meta itemprop="description" content="https://x.com/RohOnChain/status/2017314080395296995
+Polymarket交易所需的数学知识（完整路线图） 我将详细拆解在Polymarket交易所需的核心数学知识，并分享帮助我入门的具体学习路径和资源。">
+  <meta itemprop="datePublished" content="2026-02-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-07T00:00:00+00:00">
+  <meta itemprop="wordCount" content="10584">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="https://nesl42.github.io/posts/202602-polymarket01/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="翻译《在Polymarket上交易所需的数学知识（完整路线图）》">
+  <meta property="og:description" content="https://x.com/RohOnChain/status/2017314080395296995
+Polymarket交易所需的数学知识（完整路线图） 我将详细拆解在Polymarket交易所需的核心数学知识，并分享帮助我入门的具体学习路径和资源。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-07T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="翻译《在Polymarket上交易所需的数学知识（完整路线图）》">
+  <meta name="twitter:description" content="https://x.com/RohOnChain/status/2017314080395296995
+Polymarket交易所需的数学知识（完整路线图） 我将详细拆解在Polymarket交易所需的核心数学知识，并分享帮助我入门的具体学习路径和资源。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202602-polymarket01/" title="翻译《在Polymarket上交易所需的数学知识（完整路线图）》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202602-mit15401/" title="MIT 15.401" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "翻译《在Polymarket上交易所需的数学知识（完整路线图）》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/nesl42.github.io\/posts\/202602-polymarket01\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  10584 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202602-polymarket01\/","datePublished": "2026-02-07T00:00:00+00:00","dateModified": "2026-02-07T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>翻译《在Polymarket上交易所需的数学知识（完整路线图）》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2026-02-07 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2026-02-07">2026-02-07</time></span>&nbsp;<span title="10584 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 10600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 22 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#polymarket交易所需的数学知识完整路线图">Polymarket交易所需的数学知识（完整路线图）</a></li>
+    <li><a href="#第一部分边际多面体问题为什么简单数学会失效">第一部分：边际多面体问题（为什么简单数学会失效）</a>
+      <ul>
+        <li><a href="#多条件市场的现实">多条件市场的现实</a></li>
+        <li><a href="#数学框架">数学框架</a></li>
+        <li><a href="#为什么暴力枚举会失效">为什么暴力枚举会失效</a></li>
+        <li><a href="#整数规划解决方案">整数规划解决方案</a>
+          <ul>
+            <li><a href="#约束-1">约束 1：</a></li>
+            <li><a href="#约束-2">约束 2：</a></li>
+            <li><a href="#约束-3">约束 3：</a></li>
+          </ul>
+        </li>
+        <li><a href="#真实数据的检测结果">真实数据的检测结果</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二部分bregman投影如何真正消除套利">第二部分：Bregman投影（如何真正消除套利）</a>
+      <ul>
+        <li><a href="#为什么标准距离会失效">为什么标准距离会失效</a></li>
+        <li><a href="#bregman散度">Bregman散度</a></li>
+        <li><a href="#套利利润公式">套利利润公式</a></li>
+        <li><a href="#真实数据">真实数据</a></li>
+        <li><a href="#为什么这对执行很重要">为什么这对执行很重要</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三部分frank-wolfe算法使其计算可行">第三部分：Frank-Wolfe算法（使其计算可行）</a>
+      <ul>
+        <li><a href="#核心洞见">核心洞见</a></li>
+        <li><a href="#整数规划预言机">整数规划预言机</a></li>
+        <li><a href="#受控增长问题">受控增长问题</a></li>
+        <li><a href="#收敛速度">收敛速度</a></li>
+        <li><a href="#生产性能">生产性能</a></li>
+      </ul>
+    </li>
+    <li><a href="#第四部分非原子约束下的执行为什么订单簿改变一切">第四部分：非原子约束下的执行（为什么订单簿改变一切）</a>
+      <ul>
+        <li><a href="#非原子问题">非原子问题</a></li>
+        <li><a href="#成交量加权平均价格vwap分析">成交量加权平均价格（VWAP）分析</a></li>
+        <li><a href="#流动性约束">流动性约束</a></li>
+        <li><a href="#时间窗口分析">时间窗口分析</a></li>
+        <li><a href="#执行成功率">执行成功率</a></li>
+        <li><a href="#延迟层级速度层次结构">延迟层级：速度层次结构</a></li>
+        <li><a href="#复利优势">复利优势</a></li>
+        <li><a href="#为什么复制快钱包会失败">为什么复制快钱包会失败</a></li>
+        <li><a href="#资本效率问题">资本效率问题</a></li>
+        <li><a href="#真实执行数据">真实执行数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#第五部分完整系统实际部署的内容">第五部分：完整系统（实际部署的内容）</a>
+      <ul>
+        <li><a href="#数据管道">数据管道</a></li>
+        <li><a href="#依赖检测层">依赖检测层</a></li>
+        <li><a href="#优化引擎">优化引擎</a></li>
+        <li><a href="#仓位规模逻辑">仓位规模逻辑</a></li>
+        <li><a href="#监控仪表板">监控仪表板</a></li>
+        <li><a href="#实际结果">实际结果</a></li>
+        <li><a href="#赢家与输家的区别">赢家与输家的区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#最终现实">最终现实</a>
+      <ul>
+        <li><a href="#资源">资源：</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><blockquote>
+<p><a href="https://x.com/RohOnChain/status/2017314080395296995" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/RohOnChain/status/2017314080395296995</a></p>
+</blockquote>
+<h2 class="heading-element" id="polymarket交易所需的数学知识完整路线图"><span>Polymarket交易所需的数学知识（完整路线图）</span>
+  <a href="#polymarket%e4%ba%a4%e6%98%93%e6%89%80%e9%9c%80%e7%9a%84%e6%95%b0%e5%ad%a6%e7%9f%a5%e8%af%86%e5%ae%8c%e6%95%b4%e8%b7%af%e7%ba%bf%e5%9b%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>我将详细拆解在Polymarket交易所需的核心数学知识，并分享帮助我入门的具体学习路径和资源。</p>
+<p>让我们直入主题。</p>
+<p>最近一篇研究论文揭示了真相：成熟的交易员一年内从Polymarket套取了<strong>4000万美元</strong>的确定性套利利润。排名首位的交易员独赚 <strong>$2,009,631.76</strong>。这些人不是靠运气赌博的赌徒。他们运行的是 <strong>Bregman投影</strong>、<strong>Frank-Wolfe算法</strong>，以及解决足以让大多数计算机科学博士感到不适的优化问题。</p>
+<blockquote>
+<p><strong>收藏本文</strong> — 我是Roan，一名后端开发工程师，专注于系统设计、高频交易风格的执行系统和量化交易系统。我的工作重点是研究预测市场在负载下的实际行为表现。</p>
+</blockquote>
+<p>当你看到一个市场中&quot;是&quot;（YES）报价$0.62、&ldquo;否&rdquo;（NO）报价$0.33时，你会想&quot;加起来是$0.95，存在套利机会&quot;。你说得对。但大多数人从未意识到的是：当你还在手动检查 YES + NO 是否等于 $1 时，量化系统已经在毫秒级时间内求解整数规划问题，扫描<strong>17,218个条件</strong>跨越 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>63</mn></msup></mrow><annotation encoding="application/x-tex">2^{63}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">63</span></span></span></span></span></span></span></span></span></span></span></span> 种可能的结果。当你的人工双订单还未完成，价差已经消失。系统早已在数十个相关市场中发现了同样的价格偏离，计算了考虑订单簿深度和手续费的最优仓位规模，执行了并行非原子交易，并将资金轮转到了下一个机会。</p>
+<p><strong>差异不仅仅是速度，而是数学基础设施。</strong></p>
+<p>阅读完本文，你将理解那套从Polymarket套取4000万美元的确切优化框架。你会明白为什么简单的加法行不通，整数规划如何压缩指数级搜索空间，以及<strong>Bregman散度</strong>（Bregman divergence）对定价效率的实际意义。更重要的是，你将看到区分业余项目与运行数百万资金的生产系统的具体代码模式和算法策略。</p>
+<blockquote>
+<p><em>注意：这不是一篇可以略读的文章。如果你真心想搭建能扩展到七位数规模的系统，请通读全文。如果你只想找快速致富的捷径或&quot;氛围编程&quot;，本文不适合你。</em></p>
+</blockquote>
+<hr>
+<h2 class="heading-element" id="第一部分边际多面体问题为什么简单数学会失效"><span>第一部分：边际多面体问题（为什么简单数学会失效）</span>
+  <a href="#%e7%ac%ac%e4%b8%80%e9%83%a8%e5%88%86%e8%be%b9%e9%99%85%e5%a4%9a%e9%9d%a2%e4%bd%93%e9%97%ae%e9%a2%98%e4%b8%ba%e4%bb%80%e4%b9%88%e7%ae%80%e5%8d%95%e6%95%b0%e5%ad%a6%e4%bc%9a%e5%a4%b1%e6%95%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><h3 class="heading-element" id="多条件市场的现实"><span>多条件市场的现实</span>
+  <a href="#%e5%a4%9a%e6%9d%a1%e4%bb%b6%e5%b8%82%e5%9c%ba%e7%9a%84%e7%8e%b0%e5%ae%9e" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>单一条件市场</strong>：&ldquo;特朗普会赢得宾夕法尼亚州吗？&rdquo;</p>
+<ul>
+<li>YES: $0.48</li>
+<li>NO: $0.52</li>
+<li>总和: $1.00</li>
+</ul>
+<p>看起来完美无缺，没有套利，对吧？</p>
+<p><strong>错了。</strong></p>
+<p>现在加入另一个市场：&ldquo;共和党会以5+优势赢得宾夕法尼亚州吗？&rdquo;</p>
+<ul>
+<li>YES: $0.32</li>
+<li>NO: $0.68</li>
+</ul>
+<p>两者总和仍为$1，看起来依然正常。</p>
+<p>但这里存在<strong>逻辑依赖关系</strong>。如果共和党以5+优势获胜，特朗普必然赢得宾夕法尼亚州。这些市场并非独立。而这正是套利的来源。</p>
+<h3 class="heading-element" id="数学框架"><span>数学框架</span>
+  <a href="#%e6%95%b0%e5%ad%a6%e6%a1%86%e6%9e%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>对于具有 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 个条件的市场，存在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6644em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span> 种可能的价格组合。但只有 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 种有效结果，因为恰好有一个条件必须解析为TRUE。</p>
+<p>定义有效收益向量集合：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">Z</mi><mo>=</mo><mo stretchy="false">{</mo><mi>ϕ</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>:</mo><mi>ω</mi><mo>∈</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\mathbf{Z} = \{\phi(\omega) : \omega \in \Omega\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">Z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">ϕ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Ω</span><span class="mclose">}</span></span></span></span></span><p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\phi(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ϕ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span> 是一个二元向量，表示在结果 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi></mrow><annotation encoding="application/x-tex">\omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span></span></span></span> 中哪个条件为TRUE。</p>
+<p><strong>边际多面体</strong>（Marginal Polytope）是这些有效向量的凸包：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">M</mi><mo>=</mo><mtext>conv</mtext><mo stretchy="false">(</mo><mi mathvariant="bold">Z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{M} = \text{conv}(\mathbf{Z})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">conv</span></span><span class="mopen">(</span><span class="mord mathbf">Z</span><span class="mclose">)</span></span></span></span></span><blockquote>
+<p>可以简单理解为把 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi></mrow><annotation encoding="application/x-tex">Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span></span></span></span> 里的所有有效向量 “包起来” 的一个封闭区域（比如 2 个向量的凸包是连接这两个点的线段，3 个向量的凸包是三角形）</p>
+</blockquote>
+<p>无套利价格必须位于 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span> 内。任何在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span> 外的价格都是可利用的。</p>
+<blockquote>
+<p>市场的实际定价必须落在这个「凸包区域 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span></span></span></span>」内 —— 因为凸包的边界是由「真实有效结果」决定的，代表了价格的合理区间；如果价格落在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span></span></span></span> 外，就说明定价偏离了真实结果，存在无风险套利空间（即 “可利用的价格”）。</p>
+</blockquote>
+<p>以宾夕法尼亚州为例：</p>
+<ol>
+<li>市场A有2个条件，2种有效结果</li>
+<li>市场B有2个条件，2种有效结果</li>
+<li>朴素组合检查：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>2</mn><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">2 \times 2 = 4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span> 种可能结果</li>
+<li><strong>实际有效结果：3种</strong>（依赖关系消除了1种）</li>
+</ol>
+<p>当价格假设存在4种独立结果而实际只有3种时，错误定价就创造了确定性利润。</p>
+<h3 class="heading-element" id="为什么暴力枚举会失效"><span>为什么暴力枚举会失效</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e6%9a%b4%e5%8a%9b%e6%9e%9a%e4%b8%be%e4%bc%9a%e5%a4%b1%e6%95%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>2010年NCAA锦标赛市场：</p>
+<ul>
+<li>63场比赛（每场胜负）</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>63</mn></msup><mo>=</mo><mn>9</mn><mo separator="true">,</mo><mn>223</mn><mo separator="true">,</mo><mn>372</mn><mo separator="true">,</mo><mn>036</mn><mo separator="true">,</mo><mn>854</mn><mo separator="true">,</mo><mn>775</mn><mo separator="true">,</mo><mn>808</mn></mrow><annotation encoding="application/x-tex">2^{63} = 9,223,372,036,854,775,808</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">63</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">9</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">223</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">372</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">036</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">854</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">775</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">808</span></span></span></span> 种可能结果</li>
+<li>5,000+ 个证券</li>
+</ul>
+<p>检查每一种组合在计算上是不可能的。</p>
+<p>研究团队发现，仅2024年美国大选就有1,576对潜在依赖市场。朴素的两两验证需要为每对检查 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow></msup></mrow><annotation encoding="application/x-tex">2^{n+m}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7713em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">m</span></span></span></span></span></span></span></span></span></span></span></span> 种组合。</p>
+<p>每个市场仅10个条件，就是每对 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>20</mn></msup><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>048</mn><mo separator="true">,</mo><mn>576</mn></mrow><annotation encoding="application/x-tex">2^{20} = 1,048,576</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">20</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">048</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">576</span></span></span></span> 次检查。乘以1,576对。当你的笔记本电脑还在计算时，选举结果已经公布了。</p>
+<h3 class="heading-element" id="整数规划解决方案"><span>整数规划解决方案</span>
+  <a href="#%e6%95%b4%e6%95%b0%e8%a7%84%e5%88%92%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>与其枚举结果，不如用线性约束描述有效集合：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">Z</mi><mo>=</mo><mo stretchy="false">{</mo><mi>z</mi><mo>∈</mo><mo stretchy="false">{</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><msup><mo stretchy="false">}</mo><mi>I</mi></msup><mo>:</mo><msup><mi mathvariant="bold">A</mi><mi>T</mi></msup><mo>×</mo><mi>z</mi><mo>≥</mo><mi>b</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\mathbf{Z} = \{z \in \{0,1\}^I : \mathbf{A}^T \times z \geq b\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">Z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1413em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">}</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07847em;">I</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9747em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathbf">A</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">b</span><span class="mclose">}</span></span></span></span></span><p>杜克大学 vs 康奈尔大学的真实案例：
+每队有7个证券（0到6胜）。共14个条件，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>14</mn></msup><mo>=</mo><mn>16</mn><mo separator="true">,</mo><mn>384</mn></mrow><annotation encoding="application/x-tex">2^{14} = 16,384</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">14</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">16</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">384</span></span></span></span> 种可能组合。</p>
+<p>但他们不可能都赢5+场比赛，因为他们会在半决赛相遇。</p>
+<p>整数规划约束：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mn>6</mn></munderover><mi>z</mi><mo stretchy="false">(</mo><mtext>duke</mtext><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum_{k=0}^6 z(\text{duke},k) = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.1032em;vertical-align:-1.3021em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8011em;"><span style="top:-1.8479em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">6</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3021em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">duke</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mn>6</mn></munderover><mi>z</mi><mo stretchy="false">(</mo><mtext>cornell</mtext><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum_{k=0}^6 z(\text{cornell},k) = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.1032em;vertical-align:-1.3021em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8011em;"><span style="top:-1.8479em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">6</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3021em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">cornell</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>z</mi><mo stretchy="false">(</mo><mtext>duke</mtext><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">)</mo><mo>+</mo><mi>z</mi><mo stretchy="false">(</mo><mtext>duke</mtext><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">)</mo><mo>+</mo><mi>z</mi><mo stretchy="false">(</mo><mtext>cornell</mtext><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">)</mo><mo>+</mo><mi>z</mi><mo stretchy="false">(</mo><mtext>cornell</mtext><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">)</mo><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">z(\text{duke},5) + z(\text{duke},6) + z(\text{cornell},5) + z(\text{cornell},6) \leq 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">duke</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">duke</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">cornell</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">cornell</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span><h4 class="heading-element" id="约束-1"><span>约束 1：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mn>6</mn></msubsup><mi>z</mi><mo stretchy="false">(</mo><mtext>duke</mtext><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum_{k=0}^6 z(\text{duke},k) = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2537em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">6</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">duke</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>
+  <a href="#%e7%ba%a6%e6%9d%9f-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>翻译：杜克的 7 个证券（0-6 胜），恰好有且只有 1 个生效。</li>
+<li>作用：剔除杜克 “同时赢 2 场以上”“一场都没赢（但也没生效）” 等无效组合 —— 比如 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo stretchy="false">(</mo><mtext>杜克</mtext><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">z(\text{杜克},5)=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">杜克</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>且<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo stretchy="false">(</mo><mtext>杜克</mtext><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">z(\text{杜克},6)=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">杜克</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> ，直接不满足这个约束，被剔除。</li>
+<li>单这一条，就把杜克的组合数从 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>7</mn></msup><mo>=</mo><mn>128</mn></mrow><annotation encoding="application/x-tex">2^7=128</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">7</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">128</span></span></span></span> 种砍到7 种（只能选一个胜场数）。</li>
+</ul>
+<h4 class="heading-element" id="约束-2"><span>约束 2：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mn>6</mn></msubsup><mi>z</mi><mo stretchy="false">(</mo><mtext>cornell</mtext><mo separator="true">,</mo><mi>k</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum_{k=0}^6 z(\text{cornell},k) = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2537em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">6</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">cornell</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>
+  <a href="#%e7%ba%a6%e6%9d%9f-2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>翻译：康奈尔的 7 个证券（0-6 胜），恰好有且只有 1 个生效。</li>
+<li>作用：和约束 1 同理，把康奈尔的组合数从 128 种砍到7 种。</li>
+<li>约束 1+2 结合，原本 16384 种组合，直接砍到<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7</mn><mo>×</mo><mn>7</mn><mo>=</mo><mn>49</mn></mrow><annotation encoding="application/x-tex">7×7=49</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">7</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">7</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">49</span></span></span></span>种（杜克 7 种 × 康奈尔 7 种），计算量大幅降低。</li>
+</ul>
+<h4 class="heading-element" id="约束-3"><span>约束 3：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo stretchy="false">(</mo><mtext>duke</mtext><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">)</mo><mo>+</mo><mi>z</mi><mo stretchy="false">(</mo><mtext>duke</mtext><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">)</mo><mo>+</mo><mi>z</mi><mo stretchy="false">(</mo><mtext>cornell</mtext><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">)</mo><mo>+</mo><mi>z</mi><mo stretchy="false">(</mo><mtext>cornell</mtext><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">)</mo><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">z(\text{duke},5)+z(\text{duke},6)+z(\text{cornell},5)+z(\text{cornell},6) \leq 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">duke</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">duke</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">cornell</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord text"><span class="mord">cornell</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>
+  <a href="#%e7%ba%a6%e6%9d%9f-3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li>翻译：杜克赢 5/6 场 或 康奈尔赢 5/6 场，最多只有一个情况能发生（也可以都不发生）。</li>
+<li>核心原因：两队半决赛相遇，赢 5 + 场意味着要打进决赛 / 夺冠，但半决赛只能有一队晋级，不可能两队都走到 5 + 场的阶段。</li>
+<li>作用：在 49 种组合里，再剔除「杜克 5+/ 康奈尔 5+」「杜克 5+/ 康奈尔 6+」「杜克 6+/ 康奈尔 5+」「杜克 6+/ 康奈尔 6+」这 4 种完全不可能的无效组合，最终只剩 45 种真实有效组合。</li>
+</ul>
+<p><strong>三个线性约束替代了16,384次暴力检查。</strong></p>
+<p>这就是量化系统处理指数级复杂性的方式：不是枚举，而是约束。</p>
+<h3 class="heading-element" id="真实数据的检测结果"><span>真实数据的检测结果</span>
+  <a href="#%e7%9c%9f%e5%ae%9e%e6%95%b0%e6%8d%ae%e7%9a%84%e6%a3%80%e6%b5%8b%e7%bb%93%e6%9e%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>研究团队分析了2024年4月至2025年4月的市场数据：</p>
+<ul>
+<li>检查了17,218个总条件</li>
+<li>7,051个条件显示单市场套利（41%）</li>
+<li>中位错误定价：$0.60/美元（应为$1.00）</li>
+<li>13对确认依赖市场存在可利用套利</li>
+</ul>
+<p>中位错误定价$0.60意味着市场经常偏离40%。远非有效，而是<strong>大规模可利用</strong>。</p>
+<blockquote>
+<p><strong>关键要点</strong>：套利检测不是检查数字是否相加。它是关于使用紧凑线性表示在指数级大的结果空间上求解约束满足问题。</p>
+</blockquote>
+<hr>
+<h2 class="heading-element" id="第二部分bregman投影如何真正消除套利"><span>第二部分：Bregman投影（如何真正消除套利）</span>
+  <a href="#%e7%ac%ac%e4%ba%8c%e9%83%a8%e5%88%86bregman%e6%8a%95%e5%bd%b1%e5%a6%82%e4%bd%95%e7%9c%9f%e6%ad%a3%e6%b6%88%e9%99%a4%e5%a5%97%e5%88%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>发现套利是一个问题。计算最优套利交易是另一个问题。</p>
+<p>你不能仅仅通过平均或微调数字来&quot;修复&quot;价格。你需要将当前市场状态投影到无套利流形上，同时保留信息结构。</p>
+<h3 class="heading-element" id="为什么标准距离会失效"><span>为什么标准距离会失效</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e6%a0%87%e5%87%86%e8%b7%9d%e7%a6%bb%e4%bc%9a%e5%a4%b1%e6%95%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>欧几里得投影会最小化：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">∥</mi><mi>μ</mi><mo>−</mo><mi>θ</mi><msup><mi mathvariant="normal">∥</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\|\mu - \theta\|^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mord"><span class="mord">∥</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><p>这同等对待所有价格变动。但市场使用成本函数。价格从$0.50到$0.60的变动，与从$0.05到$0.15的变动，信息含量不同，尽管都是10美分的变化。</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>价格变动</th>
+            <th>数值差</th>
+            <th>概率变化的实际含义</th>
+            <th>信息含量 / 市场影响</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>0.50→0.60</td>
+            <td>+0.10</td>
+            <td>概率从 50%→60%，上升 20%（相对变化：0.10/0.50=20%）</td>
+            <td>普通变动，市场对事件发生的信心小幅提升，信息含量低</td>
+        </tr>
+        <tr>
+            <td>0.05→0.15</td>
+            <td>+0.10</td>
+            <td>概率从 5%→15%，上升 300%（相对变化：0.10/0.05=300%）</td>
+            <td>剧烈变动，市场对 “原本几乎不可能的事” 突然产生信心，信息含量极高</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>做市商使用对数成本函数（LMSR，Logarithmic Market Scoring Rule），其中价格代表隐含概率。正确的距离度量必须尊重这种结构。</p>
+<h3 class="heading-element" id="bregman散度"><span>Bregman散度</span>
+  <a href="#bregman%e6%95%a3%e5%ba%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>对于任何凸函数 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> 及其梯度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∇</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">\nabla R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">∇</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span>，<strong>Bregman散度</strong>为：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>D</mi><mo stretchy="false">(</mo><mi>μ</mi><mi mathvariant="normal">∥</mi><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><mi>R</mi><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo><mo>+</mo><mi>C</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>−</mo><mi>θ</mi><mo>⋅</mo><mi>μ</mi></mrow><annotation encoding="application/x-tex">D(\mu\|\theta) = R(\mu) + C(\theta) - \theta \cdot \mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span></span></span></span></span><p>其中：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">R(\mu)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mclose">)</span></span></span></span> 是成本函数 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span></span></span></span> 的凸共轭</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span> 是当前市场状态</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">\mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span></span></span></span> 是目标价格向量</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">C(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span> 是做市商成本函数</li>
+</ul>
+<p>对于LMSR，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">R(\mu)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mclose">)</span></span></span></span> 是负熵：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo><mo>=</mo><mo>∑</mo><msub><mi>μ</mi><mi>i</mi></msub><mo>×</mo><mi>ln</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>μ</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">R(\mu) = \sum \mu_i \times \ln(\mu_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.6em;vertical-align:-0.55em;"></span><span class="mop op-symbol large-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">ln</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><p>这使得 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo stretchy="false">(</mo><mi>μ</mi><mi mathvariant="normal">∥</mi><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">D(\mu\|\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span> 成为<strong>KL散度</strong>（Kullback-Leibler divergence），度量概率分布间的信息论距离。</p>
+<p>KL散度核心特性：</p>
+<ul>
+<li>非对称：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo stretchy="false">(</mo><mi>μ</mi><mi mathvariant="normal">∥</mi><mi>θ</mi><mo stretchy="false">)</mo><mo mathvariant="normal">≠</mo><mi>D</mi><mo stretchy="false">(</mo><mi>θ</mi><mi mathvariant="normal">∥</mi><mi>μ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">D(\mu\|\theta) \neq D(\theta\|\mu)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mord">∥</span><span class="mord mathnormal">μ</span><span class="mclose">)</span></span></span></span>，匹配市场定价的实际 ——“从低概率 0.05 调到 0.15” 和 “从 0.15 调回 0.05”，成本 / 信息影响完全不同，欧几里得距离是对称的（无法区分）；</li>
+<li>放大极端区间差异：相同的数值差，在 0.05/0.95 等极端概率区间，KL 散度的计算结果会远大于中间区间（0.50 左右），完美匹配 “极端价格变动信息含量更高” 的市场规律；</li>
+<li>非负性：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo stretchy="false">(</mo><mi>μ</mi><mi mathvariant="normal">∥</mi><mi>θ</mi><mo stretchy="false">)</mo><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">D(\mu\|\theta) \geq 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>，且只有当<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\mu=\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span>（当前 = 目标）时，散度为 0—— 符合 “距离非负” 的直觉，做市商只有定价完全匹配目标时，才不需要承担调整成本。</li>
+</ul>
+<h3 class="heading-element" id="套利利润公式"><span>套利利润公式</span>
+  <a href="#%e5%a5%97%e5%88%a9%e5%88%a9%e6%b6%a6%e5%85%ac%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>任何交易的最大保证利润等于：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>δ</mi></munder><mrow><mo fence="true">[</mo><munder><mrow><mi>min</mi><mo>⁡</mo></mrow><mi>ω</mi></munder><mo stretchy="false">(</mo><mi>δ</mi><mo>⋅</mo><mi>ϕ</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>−</mo><mi>C</mi><mo stretchy="false">(</mo><mi>θ</mi><mo>+</mo><mi>δ</mi><mo stretchy="false">)</mo><mo>+</mo><mi>C</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo fence="true">]</mo></mrow><mo>=</mo><mi>D</mi><mo stretchy="false">(</mo><msup><mi>μ</mi><mo>∗</mo></msup><mi mathvariant="normal">∥</mi><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\max_{\delta} \left[ \min_{\omega} (\delta \cdot \phi(\omega) - C(\theta+\delta) + C(\theta)) \right] = D(\mu^*\|\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.9021em;vertical-align:-0.7521em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03785em;">δ</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size2">[</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.4em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">ω</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03785em;">δ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">ϕ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03785em;">δ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">))</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size2">]</span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">\mu^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8831em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span> 是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span> 在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span> 上的Bregman投影。</p>
+<p>这并不显然。证明需要凸对偶理论。但含义清晰：寻找最优套利交易等价于计算Bregman投影。</p>
+<h3 class="heading-element" id="真实数据"><span>真实数据</span>
+  <a href="#%e7%9c%9f%e5%ae%9e%e6%95%b0%e6%8d%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>顶级套利者一年内提取了$2,009,631.76。他们的策略是比其他人更快更准确地求解这个优化问题：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>μ</mi><mo>∗</mo></msup><mo>=</mo><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>min</mi><mo>⁡</mo></mrow><mrow><mi>μ</mi><mo>∈</mo><mi mathvariant="bold">M</mi></mrow></munder><mi>D</mi><mo stretchy="false">(</mo><mi>μ</mi><mi mathvariant="normal">∥</mi><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mu^* = \arg\min_{\mu \in \mathbf{M}} D(\mu\|\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9331em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.6324em;vertical-align:-0.8824em;"></span><span class="mop">ar<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.3537em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">μ</span><span class="mrel mtight">∈</span><span class="mord mathbf mtight">M</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8824em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><p>每一笔盈利交易都是在价格变动前找到 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">\mu^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8831em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span>。</p>
+<h3 class="heading-element" id="为什么这对执行很重要"><span>为什么这对执行很重要</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%bf%99%e5%af%b9%e6%89%a7%e8%a1%8c%e5%be%88%e9%87%8d%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>当你检测到套利时，你需要知道：</p>
+<ol>
+<li>建立什么头寸（买入/卖出哪些条件）</li>
+<li>什么规模（考虑订单簿深度）</li>
+<li>预期什么利润（考虑执行风险）</li>
+</ol>
+<p><strong>Bregman投影给你全部三个答案。</strong></p>
+<p>投影 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">\mu^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8831em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span> 告诉你无套利价格向量。散度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo stretchy="false">(</mo><msup><mi>μ</mi><mo>∗</mo></msup><mi mathvariant="normal">∥</mi><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">D(\mu^*\|\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span> 告诉你最大可提取利润。梯度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∇</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">\nabla D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">∇</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> 告诉你交易方向。</p>
+<p>没有这个框架，你在猜测。有了它，你在优化。</p>
+<blockquote>
+<p><strong>关键要点</strong>：套利不是发现错误定价的资产。它是关于在市场微观结构定义的空间中求解约束凸优化问题。数学决定盈利能力。</p>
+</blockquote>
+<hr>
+<h2 class="heading-element" id="第三部分frank-wolfe算法使其计算可行"><span>第三部分：Frank-Wolfe算法（使其计算可行）</span>
+  <a href="#%e7%ac%ac%e4%b8%89%e9%83%a8%e5%88%86frank-wolfe%e7%ae%97%e6%b3%95%e4%bd%bf%e5%85%b6%e8%ae%a1%e7%ae%97%e5%8f%af%e8%a1%8c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>直接计算Bregman投影是不可行的。边际多面体 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span> 有指数级多的顶点。</p>
+<p>标准凸优化需要访问完整约束集。对于预测市场，这意味着枚举每个有效结果。在大规模下不可能。</p>
+<p><strong>Frank-Wolfe算法</strong>通过将投影简化为一系列线性规划来解决这个问题。</p>
+<h3 class="heading-element" id="核心洞见"><span>核心洞见</span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%b4%9e%e8%a7%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Frank-Wolfe不是一次性优化整个 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span>，而是迭代构建它。</p>
+<p><strong>算法</strong>：</p>
+<pre tabindex="0"><code>1. 从已知顶点的小集合 Z_0 开始
+2. 对于迭代 t：
+   a. 求解 conv(Z_{t-1}) 上的凸优化
+      μ_t = argmin_{μ ∈ conv(Z_{t-1})} F(μ)
+   
+   b. 通过求解IP找到新的下降顶点：
+      z_t = argmin_{z ∈ Z} ∇F(μ_t)·z
+   
+   c. 添加到活跃集：
+      Z_t = Z_{t-1} ∪ {z_t}
+   
+   d. 计算收敛间隙：
+      g(μ_t) = ∇F(μ_t)·(μ_t - z_t)
+   
+   e. 如果 g(μ_t) ≤ ε 则停止</code></pre><p>活跃集 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Z</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">Z_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 每迭代增长一个顶点。即使经过100次迭代，你也只追踪100个顶点，而不是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>63</mn></msup></mrow><annotation encoding="application/x-tex">2^{63}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">63</span></span></span></span></span></span></span></span></span></span></span></span> 个。</p>
+<h3 class="heading-element" id="整数规划预言机"><span>整数规划预言机</span>
+  <a href="#%e6%95%b4%e6%95%b0%e8%a7%84%e5%88%92%e9%a2%84%e8%a8%80%e6%9c%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>第2b步是昂贵的部分。每次迭代需要求解：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munder><mrow><mi>min</mi><mo>⁡</mo></mrow><mrow><mi>z</mi><mo>∈</mo><mi mathvariant="bold">Z</mi></mrow></munder><mi>c</mi><mo>⋅</mo><mi>z</mi></mrow><annotation encoding="application/x-tex">\min_{z \in \mathbf{Z}} c \cdot z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.4415em;vertical-align:-0.7736em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.3537em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span><span class="mrel mtight">∈</span><span class="mord mathbf mtight">Z</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7736em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mi mathvariant="normal">∇</mi><mi>F</mi><mo stretchy="false">(</mo><msub><mi>μ</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c = \nabla F(\mu_t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∇</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 是当前梯度，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">Z</mi></mrow><annotation encoding="application/x-tex">\mathbf{Z}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">Z</span></span></span></span> 是由整数约束定义的有效收益向量集合。</p>
+<p>这是一个<strong>整数线性规划</strong>（Integer Linear Program）。一般情况下是NP难的。但现代IP求解器如Gurobi对结构良好的问题能高效处理。</p>
+<p>研究团队使用Gurobi 5.5。典型求解时间：</p>
+<ul>
+<li>早期迭代（小部分结果确定）：&lt; 1秒</li>
+<li>中期锦标赛（30-40场比赛确定）：10-30秒</li>
+<li>后期锦标赛（50+场比赛确定）：&lt; 5秒</li>
+</ul>
+<p>为什么后期更快？因为随着结果确定，可行集缩小。变量更少，约束更紧，求解更快。</p>
+<h3 class="heading-element" id="受控增长问题"><span>受控增长问题</span>
+  <a href="#%e5%8f%97%e6%8e%a7%e5%a2%9e%e9%95%bf%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>标准Frank-Wolfe假设梯度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∇</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">\nabla F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">∇</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span> 是Lipschitz连续的且有界常数。</p>
+<p>对于LMSR，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∇</mi><mi>R</mi><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo><mo>=</mo><mi>ln</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\nabla R(\mu) = \ln(\mu) + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∇</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">ln</span><span class="mopen">(</span><span class="mord mathnormal">μ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>。当 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">\mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span></span></span></span> 趋近0时，梯度爆炸到负无穷。</p>
+<p>这违反了标准收敛证明。</p>
+<p>解决方案是<strong>Barrier Frank-Wolfe</strong>。不是在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span> 上优化，而是在收缩多面体上优化：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi mathvariant="bold">M</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo stretchy="false">)</mo><mi mathvariant="bold">M</mi><mo>+</mo><mi>ε</mi><mi>u</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}&#x27; = (1-\varepsilon)\mathbf{M} + \varepsilon u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8019em;"></span><span class="mord"><span class="mord mathbf">M</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ε</span><span class="mclose">)</span><span class="mord mathbf">M</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span><span class="mord mathnormal">u</span></span></span></span></span><p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 是所有坐标严格在0和1之间的内点，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mo>∈</mo><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\varepsilon \in (0,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span> 是收缩参数。</p>
+<p>对于任何 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varepsilon &gt; 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>，梯度在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="bold">M</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">\mathbf{M}&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathbf">M</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span> 上是有界的。Lipschitz常数为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mi mathvariant="normal">/</mi><mi>ε</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1/\varepsilon)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1/</span><span class="mord mathnormal">ε</span><span class="mclose">)</span></span></span></span>。</p>
+<p>算法自适应地随迭代减小 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span>：</p>
+<pre tabindex="0"><code>如果 g(μ_t) / (-4g_u) &lt; ε_{t-1}：
+    ε_t = min{g(μ_t)/(-4g_u), ε_{t-1}/2}
+否则：
+    ε_t = ε_{t-1}</code></pre><p>这确保 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span> 渐近趋于0，因此收缩问题收敛到真实投影。</p>
+<h3 class="heading-element" id="收敛速度"><span>收敛速度</span>
+  <a href="#%e6%94%b6%e6%95%9b%e9%80%9f%e5%ba%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Frank-Wolfe以 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>L</mi><mo>×</mo><mtext>diam</mtext><mo stretchy="false">(</mo><mi mathvariant="bold">M</mi><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(L \times \text{diam}(\mathbf{M}) / t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">diam</span></span><span class="mopen">(</span><span class="mord mathbf">M</span><span class="mclose">)</span><span class="mord">/</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 的速度收敛，其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span> 是Lipschitz常数，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>diam</mtext><mo stretchy="false">(</mo><mi mathvariant="bold">M</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{diam}(\mathbf{M})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">diam</span></span><span class="mopen">(</span><span class="mord mathbf">M</span><span class="mclose">)</span></span></span></span> 是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span> 的直径。</p>
+<p>对于带自适应收缩的LMSR，这变为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mi>ε</mi><mo>×</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1/(\varepsilon \times t))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1/</span><span class="mopen">(</span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose">))</span></span></span></span>。随着 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span> 自适应缩小，收敛变慢但仍保持多项式级。</p>
+<p>研究表明，实践中50到150次迭代足以使数千条件的市场收敛。</p>
+<h3 class="heading-element" id="生产性能"><span>生产性能</span>
+  <a href="#%e7%94%9f%e4%ba%a7%e6%80%a7%e8%83%bd" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>论文原文：&ldquo;一旦投影变得实际快速，FWMM在准确性上优于LCMM。&rdquo;</p>
+<p>时间线：</p>
+<ul>
+<li>前16场比赛：LCMM和FWMM表现相似（IP求解器太慢）</li>
+<li>45场比赛确定后：首次成功的30分钟投影完成</li>
+<li>剩余锦标赛：FWMM在证券价格上比LCMM中位数提升38%</li>
+</ul>
+<p>交叉点是当结果空间缩小到IP求解能在交易时间框架内完成时。</p>
+<blockquote>
+<p><strong>关键要点</strong>：理论优雅若无计算可行性则毫无意义。带整数规划预言机的Frank-Wolfe使Bregman投影在具有万亿结果的市场上变得实用。这就是4000万美元套利实际被计算和执行的方式。</p>
+</blockquote>
+<hr>
+<h2 class="heading-element" id="第四部分非原子约束下的执行为什么订单簿改变一切"><span>第四部分：非原子约束下的执行（为什么订单簿改变一切）</span>
+  <a href="#%e7%ac%ac%e5%9b%9b%e9%83%a8%e5%88%86%e9%9d%9e%e5%8e%9f%e5%ad%90%e7%ba%a6%e6%9d%9f%e4%b8%8b%e7%9a%84%e6%89%a7%e8%a1%8c%e4%b8%ba%e4%bb%80%e4%b9%88%e8%ae%a2%e5%8d%95%e7%b0%bf%e6%94%b9%e5%8f%98%e4%b8%80%e5%88%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>你已经检测到套利。你已经通过Bregman投影计算出最优交易。现在你需要执行。</p>
+<p><strong>这是大多数策略失败的地方。</strong></p>
+<h3 class="heading-element" id="非原子问题"><span>非原子问题</span>
+  <a href="#%e9%9d%9e%e5%8e%9f%e5%ad%90%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Polymarket使用中央限价订单簿（CLOB）。与套利可以是原子性的去中心化交易所（所有交易同时成功或失败）不同，CLOB执行是顺序的。</p>
+<p>你的套利计划：</p>
+<pre tabindex="0"><code>买入YES @ $0.30
+买入NO @ $0.30
+总成本: $0.60
+保证赔付: $1.00
+预期利润: $0.40</code></pre><p>现实：</p>
+<pre tabindex="0"><code>提交YES订单 → 以$0.30成交 ✓
+价格因你的订单更新
+提交NO订单 → 以$0.78成交 ✗
+总成本: $1.08
+赔付: $1.00
+实际结果: -$0.08亏损</code></pre><p>一条腿成交了。另一条没有。<strong>你暴露了风险。</strong></p>
+<p>这就是为什么研究论文只计算至少有$0.05利润边际的机会。更小的价差会被执行风险吞噬。</p>
+<h3 class="heading-element" id="成交量加权平均价格vwap分析"><span>成交量加权平均价格（VWAP）分析</span>
+  <a href="#%e6%88%90%e4%ba%a4%e9%87%8f%e5%8a%a0%e6%9d%83%e5%b9%b3%e5%9d%87%e4%bb%b7%e6%a0%bcvwap%e5%88%86%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>与其假设以报价即时成交，不如计算预期执行价格：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>VWAP</mtext><mo>=</mo><mfrac><mrow><mo>∑</mo><mo stretchy="false">(</mo><msub><mtext>price</mtext><mi>i</mi></msub><mo>×</mo><msub><mtext>volume</mtext><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><mrow><mo>∑</mo><msub><mtext>volume</mtext><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{VWAP} = \frac{\sum (\text{price}_i \times \text{volume}_i)}{\sum \text{volume}_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">VWAP</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord text"><span class="mord">volume</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mopen">(</span><span class="mord"><span class="mord text"><span class="mord">price</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2175em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord text"><span class="mord">volume</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><p>研究方法：</p>
+<pre tabindex="0"><code>对于Polygon的每个区块（约2秒）：
+  计算该区块所有YES交易的VWAP_yes
+  计算该区块所有NO交易的VWAP_no
+  
+  如果 |VWAP_yes + VWAP_no - 1.0| &gt; 0.02：
+    记录套利机会
+    利润 = |VWAP_yes + VWAP_no - 1.0|</code></pre><p>区块是原子时间单位。按区块分析VWAP捕捉实际可达成价格，而非即时执行的幻想。</p>
+<h3 class="heading-element" id="流动性约束"><span>流动性约束</span>
+  <a href="#%e6%b5%81%e5%8a%a8%e6%80%a7%e7%ba%a6%e6%9d%9f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>即使价格错误定价，你只能捕捉到可用流动性范围内的利润。</p>
+<p>数据中的真实案例：</p>
+<ul>
+<li>市场显示套利：YES价格总和 = $0.85</li>
+<li>潜在利润：$0.15/美元</li>
+<li>这些价格的订单簿深度：$234总成交量</li>
+<li>最大可提取利润：$234 × 0.15 = $35.10</li>
+</ul>
+<p>研究计算每次机会的最大利润为：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>profit</mtext><mo>=</mo><mo stretchy="false">(</mo><mtext>price deviation</mtext><mo stretchy="false">)</mo><mo>×</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mtext>volume across all required positions</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{profit} = (\text{price deviation}) \times \min(\text{volume across all required positions})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">profit</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord">price deviation</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord text"><span class="mord">volume across all required positions</span></span><span class="mclose">)</span></span></span></span></span><p>对于多条件市场，你需要<strong>所有</strong>头寸同时有流动性。最小值决定你的上限。</p>
+<h3 class="heading-element" id="时间窗口分析"><span>时间窗口分析</span>
+  <a href="#%e6%97%b6%e9%97%b4%e7%aa%97%e5%8f%a3%e5%88%86%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>研究采用 <strong>950 个区块的窗口期</strong>（约 1 小时）对关联交易进行分组。</p>
+<p>为何选择 1 小时？因为 Polymarket 上 <strong>75% 的撮合订单在此时间窗口内完成成交</strong>。提交、撮合并上链执行的订单，通常能在 60 分钟内全部完成。</p>
+<p>对于每个交易者地址，950 个区块窗口期内的所有出价被归并为<strong>单次策略执行</strong>。利润计算方式为：<strong>所有可能结果中的保证最低赔付额</strong>减去<strong>总成本</strong>。</p>
+<h3 class="heading-element" id="执行成功率"><span>执行成功率</span>
+  <a href="#%e6%89%a7%e8%a1%8c%e6%88%90%e5%8a%9f%e7%8e%87" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在检测到的套利机会中：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>套利类型</th>
+            <th>执行情况</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>单条件套利</strong></td>
+            <td>41% 的条件存在机会，其中大部分被成功利用</td>
+        </tr>
+        <tr>
+            <td><strong>市场再平衡</strong></td>
+            <td>42% 的多条件市场存在机会</td>
+        </tr>
+        <tr>
+            <td><strong>组合套利</strong></td>
+            <td>识别出 13 对有效组合，仅 5 对实际执行</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p><strong>检测与执行之间的差距，即为执行风险。</strong></p>
+<h3 class="heading-element" id="延迟层级速度层次结构"><span>延迟层级：速度层次结构</span>
+  <a href="#%e5%bb%b6%e8%bf%9f%e5%b1%82%e7%ba%a7%e9%80%9f%e5%ba%a6%e5%b1%82%e6%ac%a1%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>散户交易执行</strong>：</p>
+<pre tabindex="0"><code>Polymarket API调用:           ~50ms
+撮合引擎:                      ~100ms
+Polygon出块时间:              ~2,000ms
+区块传播:                     ~500ms
+总计:                         ~2,650ms</code></pre><p><strong>成熟套利系统</strong>：</p>
+<pre tabindex="0"><code>WebSocket价格流:              &lt;5ms (实时推送)
+决策计算:                     &lt;10ms (预计算)
+直接RPC提交:                  ~15ms (绕过API)
+并行执行:                     ~10ms (所有腿同时)
+Polygon区块包含:              ~2,000ms (不可避免)
+总计:                         ~2,040ms</code></pre><p><strong>链上看到的20-30ms</strong>是决策到内存池的时间。快速钱包在30ms内提交所有头寸，通过在同一区块中确认所有交易来消除顺序执行风险。</p>
+<h3 class="heading-element" id="复利优势"><span>复利优势</span>
+  <a href="#%e5%a4%8d%e5%88%a9%e4%bc%98%e5%8a%bf" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>当你在第N区块看到他们的交易确认时，他们在2秒前（第N-1区块）就检测到了机会，30ms内提交了所有腿，市场已经重新平衡。当你在第N+1区块复制时，你比亚秒级机会落后了4秒。</p>
+<h3 class="heading-element" id="为什么复制快钱包会失败"><span>为什么复制快钱包会失败</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e5%a4%8d%e5%88%b6%e5%bf%ab%e9%92%b1%e5%8c%85%e4%bc%9a%e5%a4%b1%e8%b4%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>实际发生的情况</strong>：</p>
+<pre tabindex="0"><code>第N-1区块：快速系统检测到错误定价，30ms内提交4笔交易
+第N区块：所有交易确认，套利完成，你看到这笔交易
+第N+1区块：你复制他们的交易，但价格现在是$0.78（之前是$0.30）</code></pre><p>你不是在套利。你是在<strong>提供退出流动性</strong>。</p>
+<p><strong>订单簿深度杀死你</strong>：</p>
+<p>快钱包买入50,000代币：</p>
+<ul>
+<li>VWAP：跨多个价格层级$0.322</li>
+<li>市场移动</li>
+</ul>
+<p>你之后买入5,000代币：</p>
+<ul>
+<li>VWAP：$0.344（市场已移动）</li>
+<li>他们支付$0.322，你支付$0.344</li>
+<li>他们的10美分价差变成了你的2.2美分亏损</li>
+</ul>
+<h3 class="heading-element" id="资本效率问题"><span>资本效率问题</span>
+  <a href="#%e8%b5%84%e6%9c%ac%e6%95%88%e7%8e%87%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>顶级套利者以$500K+资本运营。用$5K资本，同样的策略就行不通了，原因是：</p>
+<ul>
+<li>滑点对较小头寸占更大百分比</li>
+<li>无法分散到足够多机会</li>
+<li>单次失败执行 wiping out 数日利润</li>
+<li>固定成本（gas）消耗更多利润边际</li>
+</ul>
+<p>4腿策略的Gas费：~$0.02</p>
+<ul>
+<li>$0.08利润 → 25%归gas</li>
+<li>$0.03利润 → 67%归gas</li>
+</ul>
+<p>这就是$0.05最低阈值存在的原因。</p>
+<h3 class="heading-element" id="真实执行数据"><span>真实执行数据</span>
+  <a href="#%e7%9c%9f%e5%ae%9e%e6%89%a7%e8%a1%8c%e6%95%b0%e6%8d%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>单条件套利</strong>：</p>
+<ul>
+<li>检测到：7,051个条件</li>
+<li>执行：87%成功率</li>
+<li>失败原因：流动性（48%）、价格变动（31%）、竞争（21%）</li>
+</ul>
+<p><strong>组合套利</strong>：</p>
+<ul>
+<li>检测到：13对</li>
+<li>执行：45%成功率</li>
+<li>失败原因：同时流动性不足（71%）、速度竞争（18%）</li>
+</ul>
+<blockquote>
+<p><strong>关键要点</strong>：数学正确性是必要但不充分的。执行速度、订单簿深度和非原子成交风险决定实际盈利能力。研究显示4000万美元被提取，因为成熟参与者解决了执行问题，而不仅仅是数学问题。</p>
+</blockquote>
+<hr>
+<h2 class="heading-element" id="第五部分完整系统实际部署的内容"><span>第五部分：完整系统（实际部署的内容）</span>
+  <a href="#%e7%ac%ac%e4%ba%94%e9%83%a8%e5%88%86%e5%ae%8c%e6%95%b4%e7%b3%bb%e7%bb%9f%e5%ae%9e%e9%99%85%e9%83%a8%e7%bd%b2%e7%9a%84%e5%86%85%e5%ae%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>理论是简洁的，而实际生产则是复杂的。以下是基于研究结果和实际需求的一个可行套利系统的真实面貌。</p>
+<h3 class="heading-element" id="数据管道"><span>数据管道</span>
+  <a href="#%e6%95%b0%e6%8d%ae%e7%ae%a1%e9%81%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>实时需求</strong>：</p>
+<pre tabindex="0"><code>WebSocket连接到Polymarket CLOB API
+  └─ 订单簿更新（价格/成交量变化）
+  └─ 交易执行流（正在发生的成交）
+  └─ 市场创建/结算事件
+
+历史分析：
+Alchemy Polygon节点API
+  └─ 查询合约0x4D97DCd97eC945f40cF65F87097ACe5EA0476045的事件
+      └─ OrderFilled事件（已执行的交易）
+      └─ PositionSplit事件（新代币铸造）
+      └─ PositionsMerge事件（代币销毁）</code></pre><p>研究分析了8600万笔交易。这种量级需要基础设施，而非脚本。</p>
+<h3 class="heading-element" id="依赖检测层"><span>依赖检测层</span>
+  <a href="#%e4%be%9d%e8%b5%96%e6%a3%80%e6%b5%8b%e5%b1%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>对于305个美国大选市场，有46,360对需要检查。</p>
+<p>人工分析不可能。研究使用DeepSeek-R1-Distill-Qwen-32B配合提示工程：</p>
+<pre tabindex="0"><code>输入：两个市场及其条件描述
+输出：有效结果组合的JSON
+
+验证检查：
+1. 每个市场是否每结果恰好一个TRUE条件？
+2. 有效组合是否少于n×m（存在依赖）？
+3. 依赖子集是否满足套利条件？
+
+大选市场结果：
+  40,057对独立（无套利可能）
+  1,576对依赖（潜在套利）
+  374对满足严格组合条件
+  13对人工验证为可利用</code></pre><p>复杂多条件市场准确率81.45%。足以用于过滤。执行前需人工验证。</p>
+<h3 class="heading-element" id="优化引擎"><span>优化引擎</span>
+  <a href="#%e4%bc%98%e5%8c%96%e5%bc%95%e6%93%8e" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>三层套利消除：</p>
+<p><strong>第一层：简单LCMM约束</strong></p>
+<p>快速线性规划松弛。检查基本约束如&quot;概率总和等于1&quot;和&quot;如果A蕴含B，则P(A)不能超过P(B)&quot;。</p>
+<p>毫秒级运行。消除明显错误定价。</p>
+<p><strong>第二层：整数规划投影</strong></p>
+<p>带Gurobi IP求解器的Frank-Wolfe算法。</p>
+<p>研究参数：</p>
+<ul>
+<li>Alpha = 0.9（提取至少90%可用套利）</li>
+<li>初始epsilon = 0.1（10%收缩）</li>
+<li>收敛阈值 = 1e-6</li>
+<li>时间限制 = 30分钟（随市场缩小而减少）</li>
+</ul>
+<p>典型迭代：50到150次。典型每次迭代求解时间：1到30秒，取决于市场规模。</p>
+<p><strong>第三层：执行验证</strong></p>
+<p>提交订单前，针对当前订单簿模拟成交。</p>
+<p>检查：</p>
+<ul>
+<li>这些价格是否有足够流动性？</li>
+<li>预期滑点是多少？</li>
+<li>滑点后保证利润是多少？</li>
+<li>利润是否超过最低阈值（研究使用$0.05）？</li>
+</ul>
+<p>只有所有检查通过才执行。</p>
+<h3 class="heading-element" id="仓位规模逻辑"><span>仓位规模逻辑</span>
+  <a href="#%e4%bb%93%e4%bd%8d%e8%a7%84%e6%a8%a1%e9%80%bb%e8%be%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>考虑执行风险的修正Kelly准则：
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>f</mi><mo>∗</mo></msup><mo>=</mo><mfrac><mrow><mi>b</mi><mo>×</mo><mi>p</mi><mo>−</mo><mi>q</mi></mrow><mi>b</mi></mfrac><mo>×</mo><msqrt><mi>p</mi></msqrt></mrow><annotation encoding="application/x-tex">f^* = \frac{b \times p - q}{b} \times \sqrt{p}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9331em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.2881em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">p</span></span></span><span style="top:-2.7119em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2881em;"><span></span></span></span></span></span></span></span></span></span><p>其中：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span> = 套利利润百分比</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span> = 完全执行概率（从订单簿深度估计）</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo>=</mo><mn>1</mn><mo>−</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">q = 1 - p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></li>
+</ul>
+<p>上限为订单簿深度的50%以避免移动市场。</p>
+<h3 class="heading-element" id="监控仪表板"><span>监控仪表板</span>
+  <a href="#%e7%9b%91%e6%8e%a7%e4%bb%aa%e8%a1%a8%e6%9d%bf" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>实时追踪：</p>
+<pre tabindex="0"><code>每分钟检测到的机会
+每分钟执行的机会
+执行成功率
+总利润（累计）
+当前回撤百分比
+平均延迟（检测到提交）
+
+警报：
+  回撤超过15%
+  执行率低于30%
+  IP求解器超时增加
+  订单成交失败激增</code></pre><p>研究确定顶级套利者进行了4,049笔交易。一年内平均每天约11笔交易。不是传统意义上的高频，而是系统性和一致性。</p>
+<h3 class="heading-element" id="实际结果"><span>实际结果</span>
+  <a href="#%e5%ae%9e%e9%99%85%e7%bb%93%e6%9e%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>2024年4月至2025年4月总提取：</p>
+<pre tabindex="0"><code>单条件套利：
+  双买 &lt; $1:           $5,899,287
+  双卖 &gt; $1:           $4,682,075
+  小计:                $10,581,362
+
+市场再平衡：
+  全买YES &lt; $1:        $11,092,286
+  全卖YES &gt; $1:        $612,189
+  全买NO:              $17,307,114
+  小计:                $29,011,589
+
+组合套利：
+  跨市场执行:          $95,634
+
+总计:                  $39,688,585</code></pre><p>前10名提取者拿走$8,127,849（总计的20.5%）。</p>
+<p>单一顶级提取者：4,049笔交易获得$2,009,632。</p>
+<p>顶级玩家平均每笔交易利润：$496。</p>
+<p>不是彩票中奖。不是幸运时机。<strong>数学精确性系统性执行。</strong></p>
+<h3 class="heading-element" id="赢家与输家的区别"><span>赢家与输家的区别</span>
+  <a href="#%e8%b5%a2%e5%ae%b6%e4%b8%8e%e8%be%93%e5%ae%b6%e7%9a%84%e5%8c%ba%e5%88%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>研究明确显示：</p>
+<p><strong>散户方法</strong>：</p>
+<ul>
+<li>每30秒检查价格</li>
+<li>看看YES + NO是否大致等于$1</li>
+<li>也许用个电子表格</li>
+<li>人工提交订单</li>
+<li>寄希望于最好</li>
+</ul>
+<p><strong>量化方法</strong>：</p>
+<ul>
+<li>实时WebSocket流</li>
+<li>整数规划检测依赖</li>
+<li>Frank-Wolfe配合Bregman投影寻找最优交易</li>
+<li>带VWAP滑点估计的并行订单执行</li>
+<li>执行约束下的系统性仓位规模</li>
+<li>2.65秒延迟 vs. 30秒轮询</li>
+</ul>
+<p>一组人提取了4000万美元。另一组人提供了流动性。</p>
+<blockquote>
+<p><strong>关键要点</strong>：生产系统需要数学严谨性<strong>和</strong>工程成熟度。优化理论、分布式系统、实时数据处理、风险管理、执行算法。全部都需要。数学是基础。基础设施使其盈利。</p>
+</blockquote>
+<hr>
+<h2 class="heading-element" id="最终现实"><span>最终现实</span>
+  <a href="#%e6%9c%80%e7%bb%88%e7%8e%b0%e5%ae%9e" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>当交易员还在阅读&quot;预测市场10个技巧&quot;时，量化系统正在：</p>
+<ol>
+<li>求解整数规划以检测17,218个条件间的依赖关系</li>
+<li>计算Bregman投影以寻找最优套利交易</li>
+<li>运行带受控梯度增长的Frank-Wolfe算法</li>
+<li>执行带VWAP滑点估计的并行订单</li>
+<li>系统性提取4000万美元保证利润</li>
+</ol>
+<p><strong>差异不是运气。是数学基础设施。</strong></p>
+<p>研究论文是公开的。算法是已知的。利润是真实的。</p>
+<p>问题是：你能在下一个4000万美元被提取前搭建出来吗？</p>
+<h3 class="heading-element" id="资源"><span>资源：</span>
+  <a href="#%e8%b5%84%e6%ba%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>研究论文：&ldquo;Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets&rdquo; (arXiv:2508.03474v1)</li>
+<li>理论基础：&ldquo;Arbitrage-Free Combinatorial Market Making via Integer Programming&rdquo; (arXiv:1606.02825v2)</li>
+<li>IP求解器：Gurobi Optimizer</li>
+<li>依赖关系LLM：DeepSeek-R1-Distill-Qwen-32B</li>
+<li>数据源：Alchemy Polygon节点API</li>
+</ul>
+<p>算法是可行的。基础设施也已存在。唯一的问题在于执行。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2026-02-07 00:00:00">更新于 2026-02-07&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202602-polymarket01/" data-title="翻译《在Polymarket上交易所需的数学知识（完整路线图）》" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202602-polymarket01/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202602-polymarket01/" data-title="翻译《在Polymarket上交易所需的数学知识（完整路线图）》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202602-mit15401/" class="post-nav-item" rel="prev" title="MIT 15.401"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>MIT 15.401</a><a href="/posts/top%E8%AE%B0%E5%BD%95/" class="post-nav-item" rel="next" title="碎碎存">碎碎存<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#polymarket交易所需的数学知识完整路线图">Polymarket交易所需的数学知识（完整路线图）</a></li>
+    <li><a href="#第一部分边际多面体问题为什么简单数学会失效">第一部分：边际多面体问题（为什么简单数学会失效）</a>
+      <ul>
+        <li><a href="#多条件市场的现实">多条件市场的现实</a></li>
+        <li><a href="#数学框架">数学框架</a></li>
+        <li><a href="#为什么暴力枚举会失效">为什么暴力枚举会失效</a></li>
+        <li><a href="#整数规划解决方案">整数规划解决方案</a>
+          <ul>
+            <li><a href="#约束-1">约束 1：</a></li>
+            <li><a href="#约束-2">约束 2：</a></li>
+            <li><a href="#约束-3">约束 3：</a></li>
+          </ul>
+        </li>
+        <li><a href="#真实数据的检测结果">真实数据的检测结果</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二部分bregman投影如何真正消除套利">第二部分：Bregman投影（如何真正消除套利）</a>
+      <ul>
+        <li><a href="#为什么标准距离会失效">为什么标准距离会失效</a></li>
+        <li><a href="#bregman散度">Bregman散度</a></li>
+        <li><a href="#套利利润公式">套利利润公式</a></li>
+        <li><a href="#真实数据">真实数据</a></li>
+        <li><a href="#为什么这对执行很重要">为什么这对执行很重要</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三部分frank-wolfe算法使其计算可行">第三部分：Frank-Wolfe算法（使其计算可行）</a>
+      <ul>
+        <li><a href="#核心洞见">核心洞见</a></li>
+        <li><a href="#整数规划预言机">整数规划预言机</a></li>
+        <li><a href="#受控增长问题">受控增长问题</a></li>
+        <li><a href="#收敛速度">收敛速度</a></li>
+        <li><a href="#生产性能">生产性能</a></li>
+      </ul>
+    </li>
+    <li><a href="#第四部分非原子约束下的执行为什么订单簿改变一切">第四部分：非原子约束下的执行（为什么订单簿改变一切）</a>
+      <ul>
+        <li><a href="#非原子问题">非原子问题</a></li>
+        <li><a href="#成交量加权平均价格vwap分析">成交量加权平均价格（VWAP）分析</a></li>
+        <li><a href="#流动性约束">流动性约束</a></li>
+        <li><a href="#时间窗口分析">时间窗口分析</a></li>
+        <li><a href="#执行成功率">执行成功率</a></li>
+        <li><a href="#延迟层级速度层次结构">延迟层级：速度层次结构</a></li>
+        <li><a href="#复利优势">复利优势</a></li>
+        <li><a href="#为什么复制快钱包会失败">为什么复制快钱包会失败</a></li>
+        <li><a href="#资本效率问题">资本效率问题</a></li>
+        <li><a href="#真实执行数据">真实执行数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#第五部分完整系统实际部署的内容">第五部分：完整系统（实际部署的内容）</a>
+      <ul>
+        <li><a href="#数据管道">数据管道</a></li>
+        <li><a href="#依赖检测层">依赖检测层</a></li>
+        <li><a href="#优化引擎">优化引擎</a></li>
+        <li><a href="#仓位规模逻辑">仓位规模逻辑</a></li>
+        <li><a href="#监控仪表板">监控仪表板</a></li>
+        <li><a href="#实际结果">实际结果</a></li>
+        <li><a href="#赢家与输家的区别">赢家与输家的区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#最终现实">最终现实</a>
+      <ul>
+        <li><a href="#资源">资源：</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/e583eece25674163359db87fc79053a6.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

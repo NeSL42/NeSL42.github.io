@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-02-01T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-02-01T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-07T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,13 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/6.s081/">MIT6.S081_Note</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2022-7-10-oslab/">MIT6S081lab</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2022-07-10 00:00:00'>发布于 <time datetime="2022-07-10">2022-07-10</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>写oslab的一些代码，</p>
+<blockquote>
+<p>xv6中文文档：https://th0ar.gitbooks.io/xv6-chinese/content/content/chapter2.html</p></div><div class="post-footer">
+    <a href="/posts/2022-7-10-oslab/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/os/' class="post-tag">OS</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/6.s081/">MIT6.S081_Note</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2022-07-07 00:00:00'>发布于 <time datetime="2022-07-07">2022-07-07</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>[toc]</p>
 <blockquote>
@@ -95,16 +101,6 @@
   </a>
 </h3><p>虚拟机添加串行端口：（如果发现建立的串行端口一直是串行端口2，则把虚拟机硬件中的打印机删除即可创建串行端口1）</p></div><div class="post-footer">
     <a href="/posts/windbg%E4%BD%BF%E7%94%A8%E5%8F%8A%E5%8F%8C%E6%9C%BA%E8%B0%83%E8%AF%95/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E5%86%85%E6%A0%B8/' class="post-tag">内核</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/%E9%87%8D%E6%8B%BEwin32/">重拾Win32</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2022-04-01 00:00:00'>发布于 <time datetime="2022-04-01">2022-04-01</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>之后想看看免杀和内核相关的东西，先把win32再看一遍吧，好多都忘了，还是滴水的课程，感谢海哥的课程！</p>
-<p>[toc]</p>
-<h3 class="heading-element" id="介绍"><span>介绍</span>
-  <a href="#%e4%bb%8b%e7%bb%8d" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>Win32不是用来画界面的，如果你以后要在Windows写好程序，是必须要学Win32的；</p></div><div class="post-footer">
-    <a href="/posts/%E9%87%8D%E6%8B%BEwin32/">阅读全文</a></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
