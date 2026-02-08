@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-02-07T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-02-07T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-08T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-08T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,27 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap10/">10UniswapV3流动性计算</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap09/">09.Uniswap V3 集中流动性</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
+  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
+<li><strong>核心问题与解决方案</strong>：Uniswap V2 的流动性平均分布在 <code>(0, +∞)</code> 的整个价格区间，导致对价格稳定的资产（如稳定币）或价格波动在可预测范围内的资产，<strong>资本效率极低</strong>。Uniswap V3 引入<strong>集中流动性</strong>，允许流动性提供者（LP）将资金集中在自定义的价格区间 <code>[Pa, Pb]</code> 内，从而极大地提高了资本效率。</li>
+<li><strong>虚拟流动性 (Virtual Liquidity)</strong>：通过将流动性集中在特定区间，V3 能用较少的<strong>真实资产</strong>（<code>x_real</code>, <code>y_real</code>）创造出等效于 V2 中巨大资金量的<strong>虚拟流动性</strong>。这个虚拟的 <code>k</code> 值（流动性深度）在进行交易计算时生效，能为交易者提供更低的<strong>滑点</strong>。</li>
+<li><strong>价格区间与资产构成</strong>：当市场价格在 LP 设置的 <code>[Pa, Pb]</code> 区间内波动时，其持有的两种代币会根据交易进行兑换。一旦价格超出这个区间，LP 的全部流动性头寸会自动转换成区间边界上的一种代币（在 <code>Pa</code> 点全部变为 X 代币，在 <code>Pb</code> 点全部变为 Y 代币）。</li>
+<li><strong>价格区间的宽度是关键</strong>：LP 设置的价格区间越窄，资本效率的提升倍数就越高，但也面临着价格更容易偏离区间的风险。反之，区间越宽，其表现越接近于 Uniswap V2，资本效率越低，但管理更省心。</li>
+</ul>
+<hr>
+<h4 class="heading-element" id="1-uniswap-v2-的核心问题资本效率低下"><span><strong>1. Uniswap V2 的核心问题：资本效率低下</strong></span>
+  <a href="#1-uniswap-v2-%e7%9a%84%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e8%b5%84%e6%9c%ac%e6%95%88%e7%8e%87%e4%bd%8e%e4%b8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Uniswap V2 使用一个非常简洁的恒定乘积做市商（AMM）公式来定义资产池的行为：
+</p></div><div class="post-footer">
+    <a href="/posts/202509-uniswap09/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap10/">10UniswapV3流动性计算</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
   <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
@@ -317,31 +337,6 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </a>
 </h4><p><img loading="lazy" src='/posts/202509-uniswap14/tick_bitmap.png' alt="Tick indexes in tick bitmap" height="432" width="1058"></p></div><div class="post-footer">
     <a href="/posts/202509-uniswap14/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202509-uniswap15/">15.Uniswap V3 Tick Bitmap 寻找下一个 Tick</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2025-09-02 00:00:00'>发布于 <time datetime="2025-09-02">2025-09-02</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h4 class="heading-element" id="核心摘要-key-takeaways"><span><strong>核心摘要 (Key Takeaways)</strong></span>
-  <a href="#%e6%a0%b8%e5%bf%83%e6%91%98%e8%a6%81-key-takeaways" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><ul>
-<li><strong>Tick Bitmap 的核心作用</strong>：它是一个 <code>uint256</code> 的位图，用于高效追踪 Uniswap V3 池中哪些价格点（Ticks）被用作了流动性区间的边界。<code>1</code> 代表该 Tick 活跃（有流动性），<code>0</code> 代表不活跃。</li>
-<li><strong>寻找下一个 Tick 的目的</strong>：在进行交易（Swap）时，价格会发生变动。当价格穿过一个活跃的 Tick，意味着当前流动性区间的流动性（L）将被耗尽，合约必须找到下一个有流动性的价格区间才能继续完成交易。</li>
-<li><strong>通过位运算实现高效查找</strong>：寻找下一个活跃 Tick 的过程利用了**掩码（Mask）<strong>和</strong>按位与（Bitwise AND）**运算。通过构建特定的掩码，可以快速地隔离出目标方向（价格升高或降低）上所有活跃的 Ticks。</li>
-<li><strong>交易方向决定搜索方向</strong>：
-<ul>
-<li>当交易导致<strong>价格上涨</strong>时（例如用 USDC 买 ETH），需要在 Tick Bitmap 中向<strong>左</strong>搜索（寻找更大的 Tick）。</li>
-<li>当交易导致<strong>价格下跌</strong>时（例如卖出 ETH 换 USDC），需要在 Tick Bitmap 中向<strong>右</strong>搜索（寻找更小的 Tick）。</li>
-</ul>
-</li>
-<li><strong>Bitmap 内部方向与全局 Tick 轴方向的区别</strong>：在 Bitmap（一个 <code>uint256</code>）内部，索引位（<code>bit position</code>）从右到左增大，因此向<strong>左</strong>查找意味着寻找<strong>更大</strong>的 Tick 值。这与全局价格数轴上数值从左到右增大的直觉相反，需要注意区分。</li>
-</ul>
-<hr>
-<h4 class="heading-element" id="i-tick-bitmap-核心概念回顾"><span><strong>I. Tick Bitmap 核心概念回顾</strong></span>
-  <a href="#i-tick-bitmap-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e5%9b%9e%e9%a1%be" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h4><p>本节内容对应 <code>TickBitmap.sol</code> 库合约中的核心逻辑。</p></div><div class="post-footer">
-    <a href="/posts/202509-uniswap15/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/web3/' class="post-tag">Web3</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
@@ -372,7 +367,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
           <span class="page-link" aria-hidden="true">&hellip;</span>
         </li><li class="page-item">
           <span class="page-link">
-            <a href="/page/23/">23</a>
+            <a href="/page/24/">24</a>
           </span>
         </li></ul></div></main><footer class="footer">
     <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>

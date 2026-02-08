@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-02-07T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-02-07T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-08T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-08T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,11 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-scoopthewindows10pool/">【译】Scoop the Windows 10 Pool</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-9-angr/">Angr学习</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-09-04 00:00:00'>发布于 <time datetime="2023-09-04">2023-09-04</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
+    <a href="/posts/2023-9-angr/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/re/' class="post-tag">RE</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-scoopthewindows10pool/">【译】Scoop the Windows 10 Pool</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-24 00:00:00'>发布于 <time datetime="2023-08-24">2023-08-24</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
 <p>SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf
@@ -66,7 +70,7 @@
 <p><a href="https://github.com/cbayet/Exploit-CVE-2017-6008/blob/master/Windows10PoolParty.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/cbayet/Exploit-CVE-2017-6008/blob/master/Windows10PoolParty.pdf</a></p>
 </blockquote>
 <p><strong>摘要</strong>：堆溢出是应用程序中相当常见的漏洞。利用这类漏洞通常依赖于对用于管理堆的基础机制的深入理解。Windows 10 最近改变了其在内核空间中管理堆的方式。本文旨在介绍Windows NT内核中堆机制的最新演变，并介绍针对内核池的新的利用技术。</p></div><div class="post-footer">
-    <a href="/posts/2023-8-scoopthewindows10pool/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
+    <a href="/posts/2023-8-scoopthewindows10pool/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
 </article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-kernelpoolexploitationonwin7/">【译】Kernel Pool Exploitation on Windows 7</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-16 00:00:00'>发布于 <time datetime="2023-08-16">2023-08-16</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
@@ -75,14 +79,14 @@
 <a href="https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf" target="_blank" rel="external nofollow noopener noreferrer">https://www.sstic.org/media/SSTIC2020/SSTIC-actes/pool_overflow_exploitation_since_windows_10_19h1/SSTIC2020-Article-pool_overflow_exploitation_since_windows_10_19h1-bayet_fariello.pdf</a></p>
 </blockquote>
 <p><strong>摘要</strong>：在Windows 7中，微软引入了safe unlinking技术来解决影响Windows内核的安全公告日益增多的问题。在从双向链表中删除条目之前，safe unlinking旨在通过验证相邻列表条目的指针来检测内存损坏。因此，攻击者不能轻易地利用通用技术来利用泄漏池溢出或其他泄漏池损坏漏洞。本文中，我们展示了尽管引入了安全措施，Windows 7仍然容易受到通用内核池(kernel pool)攻击的影响。特别是，我们展示了在某些条件下，池分配器可能无法安全地unlink空闲列表条目，从而允许攻击者破坏任意内存。为了防止这些攻击，我们提出了进一步加固和增强内核池安全性的方法。</p></div><div class="post-footer">
-    <a href="/posts/2023-8-kernelpoolexploitationonwin7/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
+    <a href="/posts/2023-8-kernelpoolexploitationonwin7/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
 </article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-8-hevd/">HEVD-Windows7x86 SP1 记录</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-08-12 00:00:00'>发布于 <time datetime="2023-08-12">2023-08-12</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>本文记录自己学习HEVD的全过程。</p>
 <blockquote>
 <p>差不多全部完成了，还有一些小的问题需要完善，然后还有几篇文没有好好看，挑个时间好好看下</p>
 <p>就这样吧，待完善的东西以后再说</p></div><div class="post-footer">
-    <a href="/posts/2023-8-hevd/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">WINDOWS</a></div></div>
+    <a href="/posts/2023-8-hevd/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/windows/' class="post-tag">Windows</a></div></div>
 </article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-linuxkernelpwn/">Linux Kernel Pwn</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-16 00:00:00'>发布于 <time datetime="2023-07-16">2023-07-16</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
@@ -91,14 +95,6 @@
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-10 00:00:00'>发布于 <time datetime="2023-07-10">2023-07-10</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>坟墓里寂静无比，埋葬你的是你所有没说出口的话</p></div><div class="post-footer">
     <a href="/posts/2023-7-linuxsourceread/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/linux/' class="post-tag">Linux</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/2023-7-sdqrcode/">Stable Diffusion QR Code</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2023-07-09 00:00:00'>发布于 <time datetime="2023-07-09">2023-07-09</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="起源"><span>起源</span>
-  <a href="#%e8%b5%b7%e6%ba%90" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>上个月就有看到用AI生成可扫描的二维码的文章（<a href="https://mp.weixin.qq.com/s/i4WR5ULH1ZZYl8Watf3EPw" target="_blank" rel="external nofollow noopener noreferrer">AI 生成可扫码图像 — 新 ControlNet 模型展示</a>），但是没有说具体的制作细节，当时还在reddit上搜了半天，但是制作出来的效果都差强人意。</p></div><div class="post-footer">
-    <a href="/posts/2023-7-sdqrcode/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/other/' class="post-tag">Other</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
@@ -129,7 +125,7 @@
           <span class="page-link" aria-hidden="true">&hellip;</span>
         </li><li class="page-item">
           <span class="page-link">
-            <a href="/page/23/">23</a>
+            <a href="/page/24/">24</a>
           </span>
         </li></ul></div></main><footer class="footer">
     <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
