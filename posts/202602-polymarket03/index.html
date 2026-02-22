@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content=" https://x.com/RohOnChain/status/2023781142663754049
+以下是经过专业校对的完整翻译：
+如何像对冲基金一样使用预测市场数据（完整路线图） 我将详细拆解对冲基金如何利用预测市场数据构建交易策略，并提取散户错过的 Alpha（超额收益）。此外，我还将分享一个包含 4 亿多笔交易、追溯至 2020 年的数据集。
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》">
+  <meta itemprop="description" content="https://x.com/RohOnChain/status/2023781142663754049
+以下是经过专业校对的完整翻译：
+如何像对冲基金一样使用预测市场数据（完整路线图） 我将详细拆解对冲基金如何利用预测市场数据构建交易策略，并提取散户错过的 Alpha（超额收益）。此外，我还将分享一个包含 4 亿多笔交易、追溯至 2020 年的数据集。">
+  <meta itemprop="datePublished" content="2026-02-21T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-21T00:00:00+00:00">
+  <meta itemprop="wordCount" content="6553">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="https://nesl42.github.io/posts/202602-polymarket03/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》">
+  <meta property="og:description" content="https://x.com/RohOnChain/status/2023781142663754049
+以下是经过专业校对的完整翻译：
+如何像对冲基金一样使用预测市场数据（完整路线图） 我将详细拆解对冲基金如何利用预测市场数据构建交易策略，并提取散户错过的 Alpha（超额收益）。此外，我还将分享一个包含 4 亿多笔交易、追溯至 2020 年的数据集。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-21T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-21T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》">
+  <meta name="twitter:description" content="https://x.com/RohOnChain/status/2023781142663754049
+以下是经过专业校对的完整翻译：
+如何像对冲基金一样使用预测市场数据（完整路线图） 我将详细拆解对冲基金如何利用预测市场数据构建交易策略，并提取散户错过的 Alpha（超额收益）。此外，我还将分享一个包含 4 亿多笔交易、追溯至 2020 年的数据集。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202602-polymarket03/" title="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/2025%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" title="2025年终总结" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/202602-polymarket04/" title="翻译《Polymarket 套利机器人构建指南》" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/nesl42.github.io\/posts\/202602-polymarket03\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  6553 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202602-polymarket03\/","datePublished": "2026-02-21T00:00:00+00:00","dateModified": "2026-02-21T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2026-02-21 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2026-02-21">2026-02-21</time></span>&nbsp;<span title="6553 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 6600 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 14 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#刚刚公开的数据集">刚刚公开的数据集</a></li>
+    <li><a href="#如何设置数据集分步指南">如何设置数据集（分步指南）</a>
+      <ul>
+        <li><a href="#第一步安装-uv依赖管理器">第一步：安装 uv（依赖管理器）</a></li>
+        <li><a href="#第二步克隆仓库">第二步：克隆仓库</a></li>
+        <li><a href="#第三步安装依赖">第三步：安装依赖</a></li>
+        <li><a href="#第四步下载数据集">第四步：下载数据集</a></li>
+        <li><a href="#第五步验证数据">第五步：验证数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#对冲基金实际上如何使用这些数据">对冲基金实际上如何使用这些数据</a></li>
+    <li><a href="#方法-1带有蒙特卡洛不确定性量化的实证凯利公式">方法 1：带有蒙特卡洛不确定性量化的实证凯利公式</a>
+      <ul>
+        <li><a href="#第一阶段历史交易提取">第一阶段：历史交易提取</a></li>
+        <li><a href="#第二阶段回报分布构建">第二阶段：回报分布构建</a></li>
+        <li><a href="#第三阶段蒙特卡洛重采样">第三阶段：蒙特卡洛重采样</a></li>
+        <li><a href="#第四阶段回撤分布分析">第四阶段：回撤分布分析</a></li>
+        <li><a href="#第五阶段不确定性调整后的仓位-sizing">第五阶段：不确定性调整后的仓位 sizing</a></li>
+        <li><a href="#为什么这很重要">为什么这很重要</a></li>
+      </ul>
+    </li>
+    <li><a href="#方法-2跨价格和时间维度的校准表面分析">方法 2：跨价格和时间维度的校准表面分析</a>
+      <ul>
+        <li><a href="#框架">框架</a></li>
+        <li><a href="#jon-becker-的研究实际显示了什么">Jon Becker 的研究实际显示了什么</a></li>
+        <li><a href="#机构关于时间维度的假设">机构关于时间维度的假设</a></li>
+        <li><a href="#策略框架">策略框架</a></li>
+        <li><a href="#数学形式化">数学形式化</a></li>
+        <li><a href="#为什么这很重要-1">为什么这很重要</a></li>
+        <li><a href="#我们从验证研究中确切知道的是">我们从验证研究中确切知道的是：</a></li>
+        <li><a href="#机构实证测试的是">机构实证测试的是：</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#becker-的研究实际揭示了什么">Becker 的研究实际揭示了什么</a></li>
+        <li><a href="#为什么吃单者亏损">为什么吃单者亏损</a></li>
+        <li><a href="#数学">数学</a></li>
+        <li><a href="#机构做市框架">机构做市框架</a></li>
+        <li><a href="#为什么这很重要-2">为什么这很重要</a></li>
+        <li><a href="#研究结论">研究结论</a></li>
+      </ul>
+    </li>
+    <li><a href="#机构边缘不是信息">机构边缘不是信息</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><blockquote>
+<p><a href="https://x.com/RohOnChain/status/2023781142663754049" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/RohOnChain/status/2023781142663754049</a></p>
+</blockquote>
+<p>以下是经过专业校对的完整翻译：</p>
+<hr>
+<h1 class="heading-element" id="如何像对冲基金一样使用预测市场数据完整路线图"><span>如何像对冲基金一样使用预测市场数据（完整路线图）</span>
+  <a href="#%e5%a6%82%e4%bd%95%e5%83%8f%e5%af%b9%e5%86%b2%e5%9f%ba%e9%87%91%e4%b8%80%e6%a0%b7%e4%bd%bf%e7%94%a8%e9%a2%84%e6%b5%8b%e5%b8%82%e5%9c%ba%e6%95%b0%e6%8d%ae%e5%ae%8c%e6%95%b4%e8%b7%af%e7%ba%bf%e5%9b%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>我将详细拆解对冲基金如何利用预测市场数据构建交易策略，并提取散户错过的 Alpha（超额收益）。此外，我还将分享一个包含 4 亿多笔交易、追溯至 2020 年的数据集。</p>
+<p>我们直接开始。</p>
+<blockquote>
+<p><strong>收藏本帖</strong>
+我是 Roan，一名后端开发者，专注于系统设计、高频交易（HFT）风格的执行以及量化交易系统。我的工作重点是预测市场在负载下的实际表现。如有任何建议、深思熟虑的合作或伙伴关系，欢迎私信。</p>
+</blockquote>
+<h2 class="heading-element" id="刚刚公开的数据集"><span>刚刚公开的数据集</span>
+  <a href="#%e5%88%9a%e5%88%9a%e5%85%ac%e5%bc%80%e7%9a%84%e6%95%b0%e6%8d%ae%e9%9b%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><strong>Jon Becker (@beckerrjon)</strong> 发布了最大的公开可用预测市场数据集：包含来自 Polymarket 和 Kalshi 的 4 亿多笔交易，数据追溯至 2020 年。包含完整的市场元数据、细粒度交易数据、结算结果，存储为 Parquet 文件。</p>
+<p>这是 <strong>Tick 级（逐笔）</strong> 数据。每笔交易都有时间戳、价格、成交量、吃单方向（taker direction）。这种颗粒度的数据在传统市场中，机构数据供应商每年的收费超过 10 万美元。</p>
+<p><strong>现在它是开源的。这意义重大。</strong></p>
+<p>在我拆解对冲基金如何利用这些数据之前，让我展示如何实际设置它。因为与大多数只谈理论的文章不同，我将为你提供访问机构级数据的确切步骤。</p>
+<hr>
+<h2 class="heading-element" id="如何设置数据集分步指南"><span>如何设置数据集（分步指南）</span>
+  <a href="#%e5%a6%82%e4%bd%95%e8%ae%be%e7%bd%ae%e6%95%b0%e6%8d%ae%e9%9b%86%e5%88%86%e6%ad%a5%e6%8c%87%e5%8d%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p><strong>前提条件：</strong></p>
+<ul>
+<li>安装 Python 3.9 或更高版本</li>
+<li>40GB 可用磁盘空间</li>
+<li>命令行访问权限（Mac/Linux 上的 Terminal，Windows 上的 PowerShell）</li>
+</ul>
+<h3 class="heading-element" id="第一步安装-uv依赖管理器"><span>第一步：安装 uv（依赖管理器）</span>
+  <a href="#%e7%ac%ac%e4%b8%80%e6%ad%a5%e5%ae%89%e8%a3%85-uv%e4%be%9d%e8%b5%96%e7%ae%a1%e7%90%86%e5%99%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 在 Mac/Linux 上</span>
+</span></span><span class="line"><span class="cl">curl -LsSf https://astral.sh/uv/install.sh <span class="p">|</span> sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 在 Windows (PowerShell) 上</span>
+</span></span><span class="line"><span class="cl">irm https://astral.sh/uv/install.ps1 <span class="p">|</span> iex</span></span></code></pre></div></div><h3 class="heading-element" id="第二步克隆仓库"><span>第二步：克隆仓库</span>
+  <a href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e5%85%8b%e9%9a%86%e4%bb%93%e5%ba%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git clone https://github.com/Jon-Becker/prediction-market-analysis
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> prediction-market-analysis</span></span></code></pre></div></div><h3 class="heading-element" id="第三步安装依赖"><span>第三步：安装依赖</span>
+  <a href="#%e7%ac%ac%e4%b8%89%e6%ad%a5%e5%ae%89%e8%a3%85%e4%be%9d%e8%b5%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">uv sync</span></span></code></pre></div></div><p>这将安装 DuckDB、Pandas、Matplotlib 和其他分析工具。</p>
+<h3 class="heading-element" id="第四步下载数据集"><span>第四步：下载数据集</span>
+  <a href="#%e7%ac%ac%e5%9b%9b%e6%ad%a5%e4%b8%8b%e8%bd%bd%e6%95%b0%e6%8d%ae%e9%9b%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">make setup</span></span></code></pre></div></div><p>这将从 Cloudflare R2 下载 <code>data.tar.zst</code>（压缩后 36GB）并将其解压到 <code>data/</code> 目录。
+解压过程根据系统不同需要 5 到 30 分钟（对我来说比预期的要长）。</p>
+<h3 class="heading-element" id="第五步验证数据"><span>第五步：验证数据</span>
+  <a href="#%e7%ac%ac%e4%ba%94%e6%ad%a5%e9%aa%8c%e8%af%81%e6%95%b0%e6%8d%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ls data/polymarket/trades/
+</span></span><span class="line"><span class="cl">ls data/kalshi/trades/</span></span></code></pre></div></div><p>你应该能看到数百个包含交易数据的 Parquet 文件。
+<strong>恭喜。你现在拥有对冲基金正在分析的相同数据集。</strong></p>
+<p>数据的组织结构如下：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-bash"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">data/
+</span></span><span class="line"><span class="cl">├── polymarket/
+</span></span><span class="line"><span class="cl">│   ├── markets/               <span class="c1"># 市场元数据（标题、结果、状态）</span>
+</span></span><span class="line"><span class="cl">│   └── trades/                <span class="c1"># 每笔交易（价格、成交量、时间戳）</span>
+</span></span><span class="line"><span class="cl">└── kalshi/
+</span></span><span class="line"><span class="cl">    ├── markets/               <span class="c1"># Kalshi 的相同结构</span>
+</span></span><span class="line"><span class="cl">    └── trades/</span></span></code></pre></div></div><p>每个交易文件都是一个 Parquet 文件。什么是 Parquet 文件？
+Parquet 是一种列式存储格式，允许你查询数十亿行数据而无需将所有内容加载到内存中。</p>
+<p>现在你已经设置好了，让我展示机构实际上是如何利用这些数据的。</p>
+<hr>
+<h2 class="heading-element" id="对冲基金实际上如何使用这些数据"><span>对冲基金实际上如何使用这些数据</span>
+  <a href="#%e5%af%b9%e5%86%b2%e5%9f%ba%e9%87%91%e5%ae%9e%e9%99%85%e4%b8%8a%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8%e8%bf%99%e4%ba%9b%e6%95%b0%e6%8d%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>你以为预测市场是用来赌结果的。
+<strong>你错了。</strong></p>
+<p>对冲基金将预测市场数据作为实验室，用于三件事：<strong>实证风险校准</strong>、<strong>系统性偏差检测</strong>和<strong>订单流分析</strong>。预测市场不是他们部署资本的地方，而是他们提取模式的地方，这些模式为传统市场中数十亿美元的头寸提供信息。</p>
+<p>以下是他们如何利用这 4 亿笔交易的具体做法。</p>
+<hr>
+<h2 class="heading-element" id="方法-1带有蒙特卡洛不确定性量化的实证凯利公式"><span>方法 1：带有蒙特卡洛不确定性量化的实证凯利公式</span>
+  <a href="#%e6%96%b9%e6%b3%95-1%e5%b8%a6%e6%9c%89%e8%92%99%e7%89%b9%e5%8d%a1%e6%b4%9b%e4%b8%8d%e7%a1%ae%e5%ae%9a%e6%80%a7%e9%87%8f%e5%8c%96%e7%9a%84%e5%ae%9e%e8%af%81%e5%87%af%e5%88%a9%e5%85%ac%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>凯利公式是量化仓位管理（Position Sizing）的基础。
+每个机构交易员都知道这个公式：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>f</mi><mo>∗</mo></msup><mo>=</mo><mfrac><mrow><mi>p</mi><mo>×</mo><mi>b</mi><mo>−</mo><mi>q</mi></mrow><mi>b</mi></mfrac></mrow><annotation encoding="application/x-tex"> f^* = \frac{p \times b - q}{b} </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9331em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">f^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span> 是部署资本的最佳比例，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span> 是获胜概率，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span></span></span></span> 是失败概率，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span> 代表赔率。</p>
+<p>教科书式凯利公式的问题在于：它假设你确切地知道自己的优势（Edge）。
+现实立刻打破了这个假设。</p>
+<p>当你的模型估计某笔交易有 6% 的优势时，那不是事实真相。那是一个带有不确定性的点估计。真实优势可能是 3%，也可能是 9%。你拥有的是一个分布，而不是一个数字。</p>
+<p>标准凯利公式将那 6% 视为事实。这在数学上是不正确的，会导致系统性过度下注。</p>
+<p><strong>实证凯利（Empirical Kelly）通过将不确定性直接纳入仓位计算来解决这个问题。</strong></p>
+<p>以下是他们使用 Becker 数据集实现它的方法：</p>
+<h3 class="heading-element" id="第一阶段历史交易提取"><span>第一阶段：历史交易提取</span>
+  <a href="#%e7%ac%ac%e4%b8%80%e9%98%b6%e6%ae%b5%e5%8e%86%e5%8f%b2%e4%ba%a4%e6%98%93%e6%8f%90%e5%8f%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>基金用精确的术语定义他们的策略标准。
+例如：“当合约价格低于 0.15 美元且我们的基本面模型估计真实概率高于 0.25 时，买入 Yes。”</p>
+<p>他们过滤 4 亿笔历史交易，找到该确切模式出现的每一次实例。不是相似，是确切。
+这给了他们数千个历史类比。每一个都有已知的结果，因为数据集包含结算信息。</p>
+<h3 class="heading-element" id="第二阶段回报分布构建"><span>第二阶段：回报分布构建</span>
+  <a href="#%e7%ac%ac%e4%ba%8c%e9%98%b6%e6%ae%b5%e5%9b%9e%e6%8a%a5%e5%88%86%e5%b8%83%e6%9e%84%e5%bb%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>针对每一段历史相似行情，他们会计算其实际实现收益：盈利还是亏损、幅度大小、发生时点。由此构建出经验收益分布—— 并非理论上的正态分布，而是该形态在真实市场中出现时，实际发生的收益分布。</p>
+<p><strong>关键洞察：</strong> 这个分布几乎从来不是正态的。它有肥尾。它有偏度。它的峰度会让统计学教授皱眉。
+传统模型假设这些特征不存在。实证方法直接测量它们。</p>
+<h3 class="heading-element" id="第三阶段蒙特卡洛重采样"><span>第三阶段：蒙特卡洛重采样</span>
+  <a href="#%e7%ac%ac%e4%b8%89%e9%98%b6%e6%ae%b5%e8%92%99%e7%89%b9%e5%8d%a1%e6%b4%9b%e9%87%8d%e9%87%87%e6%a0%b7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>这里数学变得有趣了。
+历史回报序列只是众多可能路径中的一种。
+如果相同的交易以不同的顺序发生，权益曲线看起来会完全不同。</p>
+<p>回报为 <code>[+8%, -4%, +6%, -3%, +7%]</code> 的平均值与 <code>[-4%, -3%, +6%, +7%, +8%]</code> 相同，但回撤 profile 截然不同。第一个序列从未低于 0%。第二个序列立即触及 -7% 的回撤。</p>
+<p>这就是路径依赖性。这对风险管理至关重要。</p>
+<p>蒙特卡洛重采样通过对同一组历史收益率进行随机重排，生成 10,000 条备选路径。每条路径的统计特征完全一致，但实际风险表现各不相同。</p>
+<h3 class="heading-element" id="第四阶段回撤分布分析"><span>第四阶段：回撤分布分析</span>
+  <a href="#%e7%ac%ac%e5%9b%9b%e9%98%b6%e6%ae%b5%e5%9b%9e%e6%92%a4%e5%88%86%e5%b8%83%e5%88%86%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>为10,000条模拟路径分别计算最大回撤，即从峰值到谷值的最严重跌幅。</p>
+<p>由此你将得到一组可能的最大回撤分布，而非单一数值。你可以查看其中位数（50%分位，中性情形）、95%分位（不利情形）与99%分位（极端灾难情形）。</p>
+<p><strong>这就是机构风险管理与散户分道扬镳的地方。</strong></p>
+<ul>
+<li><strong>你：</strong> “回测显示最大回撤12%，我能承受。”</li>
+<li><strong>机构：</strong> “中位路径回撤为12%，但95分位回撤达31%。我们应按95分位水平配置仓位，而非中位水平。”</li>
+</ul>
+<h3 class="heading-element" id="第五阶段不确定性调整后的仓位-sizing"><span>第五阶段：不确定性调整后的仓位 sizing</span>
+  <a href="#%e7%ac%ac%e4%ba%94%e9%98%b6%e6%ae%b5%e4%b8%8d%e7%a1%ae%e5%ae%9a%e6%80%a7%e8%b0%83%e6%95%b4%e5%90%8e%e7%9a%84%e4%bb%93%e4%bd%8d-sizing" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>最后一步是计算仓位规模，确保95分位回撤控制在机构风险限额以内。</p>
+<p>数学变为：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mtext>empirical</mtext></msub><mo>=</mo><msub><mi>f</mi><mtext>kelly</mtext></msub><mo>×</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mtext>CV</mtext><mtext>edge</mtext></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex"> f_{\text{empirical}} = f_{\text{kelly}} \times (1 - \text{CV}_{\text{edge}}) </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">empirical</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">kelly</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord text"><span class="mord">CV</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">edge</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext>CV</mtext><mtext>edge</mtext></msub></mrow><annotation encoding="application/x-tex">\text{CV}_{\text{edge}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord text"><span class="mord">CV</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">edge</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> 是蒙特卡洛模拟中边缘估计的变异系数（标准差 / 均值）。</p>
+<ul>
+<li>高不确定性 → 大 CV → 大幅削减仓位大小。</li>
+<li>不确定性低 → 变异系数小 → 仓位规模更接近理论凯利值。</li>
+</ul>
+<p><strong>举例说明：</strong></p>
+<p><strong>量化策略：买入价格低于 0.20 且模型预估真实胜率大于 0.30 的合约。</strong></p>
+<p>基于 Becker 数据集的历史模式匹配与蒙特卡洛重采样测算：</p>
+<ul>
+<li>标准凯利计算建议仓位：<strong>20% 以上</strong></li>
+<li>经波动率调整后仓位：<strong>约 15%–20%</strong></li>
+<li>经蒙特卡洛不确定性调整后（典型变异系数 CV：0.3–0.5）：<strong>10%–15%</strong></li>
+<li>考虑模型风险后的保守执行仓位：<strong>8%–12%</strong></li>
+</ul>
+<p>忽视不确定性（仓位超20%）与纳入不确定性（仓位10%）之间的差异，本质上是大概率爆仓与长期稳健复利的区别。</p>
+<h3 class="heading-element" id="为什么这很重要"><span>为什么这很重要</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%bf%99%e5%be%88%e9%87%8d%e8%a6%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>所有使用凯利公式的个人交易者，采用的都是教科书版本。</strong></p>
+<p><strong>他们会系统性地下注过重，原因在于未考量优势估计值中的不确定性。</strong></p>
+<p><strong>而运用经验凯利结合蒙特卡洛模拟的机构投资者，则是针对可能结果的分布来确定仓位规模，而非单点估计。</strong></p>
+<p><strong>久而久之，两者会产生巨大分化。个人交易者遭遇40%最大回撤，数年收益付诸东流；机构投资者回撤从未超过20%，实现平稳复利增长。</strong></p>
+<p><strong>同样的策略，只因仓位管理方法不同，结果却天差地别。</strong></p>
+<hr>
+<h2 class="heading-element" id="方法-2跨价格和时间维度的校准表面分析"><span>方法 2：跨价格和时间维度的校准表面分析</span>
+  <a href="#%e6%96%b9%e6%b3%95-2%e8%b7%a8%e4%bb%b7%e6%a0%bc%e5%92%8c%e6%97%b6%e9%97%b4%e7%bb%b4%e5%ba%a6%e7%9a%84%e6%a0%a1%e5%87%86%e8%a1%a8%e9%9d%a2%e5%88%86%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>标准校准分析会绘制<strong>隐含概率与实际发生频率的对比曲线</strong>。</p>
+<p>当价格为0.30美元（隐含概率30%）时，该事件实际发生的频率是多少？若实际发生概率为30%，说明市场定价<strong>校准准确</strong>；若为25%，则定价偏高；若为35%，则定价偏低。</p>
+<p>这是<strong>单维度分析</strong>，仅考虑价格因素。</p>
+<p>机构则会构建<strong>校准曲面</strong>，加入时间维度：随着到期日临近，校准效果会如何变化？</p>
+<h3 class="heading-element" id="框架"><span>框架</span>
+  <a href="#%e6%a1%86%e6%9e%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>定义 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">C(p, t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 为校准函数，其中：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span> 代表合约价格（0 到 100）</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 代表距离结算的剩余时间（以天为单位）</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">C(p, t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 返回结果发生的实证概率</li>
+</ul>
+<p>在完美校准的市场中，对于所有 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">C(p, t) = p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span>。
+实际上，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">C(p, t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 随价格和时间系统性地变化。</p>
+<h3 class="heading-element" id="jon-becker-的研究实际显示了什么"><span>Jon Becker 的研究实际显示了什么</span>
+  <a href="#jon-becker-%e7%9a%84%e7%a0%94%e7%a9%b6%e5%ae%9e%e9%99%85%e6%98%be%e7%a4%ba%e4%ba%86%e4%bb%80%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/posts/202602-polymarket03/HBNQw13acAA0X8s-20260222160014001.jpeg' alt="校准曲线显示冷门偏差：1 美分合约获胜率仅为 0.43%，而隐含概率为 1%" height="620" width="1022"></p>
+<p>通过对7210万笔Kalshi交易的分析证实，<strong>小概率高估偏差真实存在且可量化</strong>。</p>
+<p>在极低概率区间（1美分合约）：</p>
+<ul>
+<li>Taker 胜率仅为 0.43%</li>
+<li>隐含概率：1%</li>
+<li>定价偏差：-57%（表现远低于预期）</li>
+</ul>
+<p>在中等概率区间（50美分合约）：</p>
+<ul>
+<li>Taker 定价偏差：-2.65%</li>
+<li>Maker 定价偏差：+2.66%</li>
+<li>偏差依然存在，但幅度已大幅收窄。</li>
+</ul>
+<p>研究证实，在99个价格区间中，Taker有80个区间呈现超额收益为负的情况，这表明<strong>全概率区间均存在系统性定价偏差</strong>。</p>
+<h3 class="heading-element" id="机构关于时间维度的假设"><span>机构关于时间维度的假设</span>
+  <a href="#%e6%9c%ba%e6%9e%84%e5%85%b3%e4%ba%8e%e6%97%b6%e9%97%b4%e7%bb%b4%e5%ba%a6%e7%9a%84%e5%81%87%e8%ae%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>尽管 Becker 已发表的研究侧重于<strong>基于价格的校准（Price-based Calibration）</strong>，但机构基于<strong>行为金融学理论</strong>，将这一框架延伸到了<strong>时间维度</strong>。</p>
+<p><strong>核心假设：</strong> 冷门偏差（Longshot Bias）应随<strong>距离结算的剩余时间</strong>而变化，因为其背后的心理驱动因素会发生改变。</p>
+<ul>
+<li><strong>早期阶段（距离结算尚早）：</strong> 散户情绪主导。信息有限。人们基于希望而非概率购买“彩票”。此时冷门偏差应达到<strong>峰值</strong>。</li>
+<li><strong>中期阶段：</strong> 信息逐渐积累。<strong>专业参与者</strong>入场。随着信息环境改善，价格应向<strong>基本面收敛</strong>。</li>
+<li><strong>晚期阶段（接近结算）：</strong> 信息揭示加速。原本低概率的结果变得<strong>显然不可能</strong>。假设表明，随着希望破灭，可能会出现<strong>偏差反转</strong>，但这需要实证验证。</li>
+</ul>
+<h3 class="heading-element" id="策略框架"><span>策略框架</span>
+  <a href="#%e7%ad%96%e7%95%a5%e6%a1%86%e6%9e%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>基于既定行为模式的<strong>随时间变化的过滤规则</strong>：</p>
+<ul>
+<li><strong>距离结算尚早：</strong> Becker 记录的冷门偏差在此阶段可能最为显著。<strong>策略：</strong> 系统地做空由散户热情主导的低概率合约。</li>
+<li><strong>中期阶段：</strong> 随着信息和流动性改善，进入效率高峰期。<strong>策略：</strong> 减少交易活动或专注于其他边缘。</li>
+<li><strong>接近结算：</strong> 信息不对称应崩溃。<strong>策略：</strong> 利用任何剩余的定价错误，但需注意市场效率通常会提升。</li>
+</ul>
+<h3 class="heading-element" id="数学形式化"><span>数学形式化</span>
+  <a href="#%e6%95%b0%e5%ad%a6%e5%bd%a2%e5%bc%8f%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>定价错误函数：</strong></p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>M</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>C</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><mi>p</mi><mi mathvariant="normal">/</mi><mn>100</mn></mrow><annotation encoding="application/x-tex"> M(p, t) = C(p, t) - p/100 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mord">/100</span></span></span></span></span><p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span></span></span></span> 代表以<strong>百分点</strong>为单位的系统性定价错误。</p>
+<p><strong>机构入场规则将是：</strong></p>
+<ul>
+<li>当 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo><mo>&gt;</mo><mtext>threshold</mtext></mrow><annotation encoding="application/x-tex">M(p, t) &gt; \text{threshold}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">threshold</span></span></span></span></span> 时<strong>做空</strong>（定价过高）</li>
+<li>当 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo><mo>&lt;</mo><mo>−</mo><mtext>threshold</mtext></mrow><annotation encoding="application/x-tex">M(p, t) &lt; -\text{threshold}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord text"><span class="mord">threshold</span></span></span></span></span> 时<strong>做多</strong>（定价过低）</li>
+<li>当 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>M</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mo>&lt;</mo><mtext>threshold</mtext></mrow><annotation encoding="application/x-tex">|M(p, t)| &lt; \text{threshold}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">threshold</span></span></span></span></span> 时<strong>保持空仓</strong>（公平定价）</li>
+</ul>
+<p>阈值需根据<strong>交易成本</strong>和所需的<strong>风险调整后回报</strong>进行校准。</p>
+<hr>
+<h3 class="heading-element" id="为什么这很重要-1"><span>为什么这很重要</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%bf%99%e5%be%88%e9%87%8d%e8%a6%81-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Becker 的研究证明了**冷门偏差（Longshot Bias）**存在于价格维度。记录的 1 美分合约 -57% 定价错误是巨大且系统性的。</p>
+<p>机构假设这种偏差随时间变化，尽管实证验证需要对完整时间数据集进行分析。</p>
+<p>框架是合理的：由希望、恐惧和信息不对称驱动的行为偏差应逻辑地随结算临近而变化。</p>
+<p>无论是“早期偏差 → 中期效率 → 晚期反转”的具体模式，还是其他时间结构，都需要在 4 亿笔交易数据集上运行分析来确定。</p>
+<hr>
+<h3 class="heading-element" id="我们从验证研究中确切知道的是"><span>我们从验证研究中确切知道的是：</span>
+  <a href="#%e6%88%91%e4%bb%ac%e4%bb%8e%e9%aa%8c%e8%af%81%e7%a0%94%e7%a9%b6%e4%b8%ad%e7%a1%ae%e5%88%87%e7%9f%a5%e9%81%93%e7%9a%84%e6%98%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>冷门偏差存在且可测量（1 美分时为 -57%）</li>
+<li>它随<strong>概率谱</strong>变化</li>
+<li>吃单者在 99 个价格水平中的 80 个<strong>系统性亏损</strong></li>
+<li>偏差创造了<strong>结构性机会</strong></li>
+</ul>
+<h3 class="heading-element" id="机构实证测试的是"><span>机构实证测试的是：</span>
+  <a href="#%e6%9c%ba%e6%9e%84%e5%ae%9e%e8%af%81%e6%b5%8b%e8%af%95%e7%9a%84%e6%98%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
+<li>这种偏差如何随<strong>结算剩余时间</strong>变化</li>
+<li>模式在不同<strong>市场类别</strong>中是否稳定</li>
+<li>入场和退出的<strong>最佳阈值水平</strong></li>
+<li>经<strong>交易成本调整后</strong>的盈利能力</li>
+</ul>
+<hr>
+<p><strong>校准表面方法</strong>提供了框架。<strong>Becker 数据集</strong>提供了实验室。<strong>实证分析</strong>确定哪些具体模式存在且可交易。</p>
+<hr>
+<h1 class="heading-element" id="方法-3订单流分解与挂单者-vs-吃单者盈利能力"><span>方法 3：订单流分解与挂单者 vs 吃单者盈利能力</span>
+  <a href="#%e6%96%b9%e6%b3%95-3%e8%ae%a2%e5%8d%95%e6%b5%81%e5%88%86%e8%a7%a3%e4%b8%8e%e6%8c%82%e5%8d%95%e8%80%85-vs-%e5%90%83%e5%8d%95%e8%80%85%e7%9b%88%e5%88%a9%e8%83%bd%e5%8a%9b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>这是最隐蔽的 Alpha（超额收益），也是散户交易员从未考虑过的领域。</p>
+<p>每笔交易都涉及两方：<strong>提供流动性的挂单者（Maker）<strong>和</strong>消耗流动性的吃单者（Taker）</strong>。</p>
+<ul>
+<li>挂单者下达限价单。他们等待成交。</li>
+<li>吃单者穿越买卖价差。他们为即时性付费。</li>
+</ul>
+<p>Jon Becker 的数据集标记了每笔交易的吃单方向。这意味着你可以将交易群体分为挂单者和吃单者，并独立分析他们的盈利能力。</p>
+<h3 class="heading-element" id="becker-的研究实际揭示了什么"><span>Becker 的研究实际揭示了什么</span>
+  <a href="#becker-%e7%9a%84%e7%a0%94%e7%a9%b6%e5%ae%9e%e9%99%85%e6%8f%ad%e7%a4%ba%e4%ba%86%e4%bb%80%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>对 7210 万笔具有结算结果的 Kalshi 交易的分析显示了鲜明的不对称性。</p>
+<p><strong>在 1 美分合约（极端冷门）下：</strong></p>
+<ul>
+<li>吃单者获胜率仅为 0.43%</li>
+<li>隐含概率：1%</li>
+<li>吃单者定价错误：-57%</li>
+<li>挂单者获胜率：1.57%</li>
+<li>挂单者定价错误：+57%</li>
+</ul>
+<p><strong>在 50 美分合约下：</strong></p>
+<p><img loading="lazy" src='/posts/202602-polymarket03/HBNRjmLbQAA0XGW-20260222160004029.jpeg' alt="挂单者 - 吃单者财富转移：99 个价格水平中的 80 个存在系统性边缘" height="572" width="1029"></p>
+<ul>
+<li>吃单者定价错误：-2.65%</li>
+<li>挂单者定价错误：+2.66%</li>
+</ul>
+<p><strong>总体发现：</strong></p>
+<ul>
+<li>吃单者在 99 个价格水平中的 80 个表现出负超额回报</li>
+<li>买入 YES 的挂单者：+0.77% 超额回报</li>
+<li>买入 NO 的挂单者：+1.25% 超额回报</li>
+<li>统计对称性（Cohen&rsquo;s d ≈ 0.02）表明挂单者并非预测得更好，只是结构得更好</li>
+</ul>
+<p><strong>这不是微小的差异。</strong></p>
+<p>作为人群，吃单者系统性地错误。不是 50/50 猜硬币的错误。而是在 80% 的所有价格水平上持续、可测量的错误。</p>
+<h3 class="heading-element" id="为什么吃单者亏损"><span>为什么吃单者亏损</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e5%90%83%e5%8d%95%e8%80%85%e4%ba%8f%e6%8d%9f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Becker 的研究确定了核心见解：<strong>挂单者通过结构性套利获利，而非卓越的预测能力。</strong></p>
+<p>挂单者买入 YES（+0.77%）与买入 NO（+1.25%）的超额回报几乎相同，证明他们不是在挑选赢家。他们是在利用吃单者人群中的昂贵偏好。</p>
+<p>吃单者行为揭示了紧迫性。你穿越价差是因为你重视执行确定性胜过价格。这种紧迫性与行为偏差相关。</p>
+<ol>
+<li><strong>信息不对称误解：</strong> 吃单者认为他们在根据有价值的信息行动。大多数不是。他们是在情绪化地对公共信息做出反应，而不是私下信息。</li>
+<li><strong>肯定性偏差：</strong> Becker 的研究显示，吃单者表现出“对肯定性、冷门结果的昂贵偏好”。他们不成比例地买入 YES 冷门，系统性地支付过高。</li>
+</ol>
+<p>相反，挂单者展示了耐心。根据定义，他们等待。这种耐心过滤了情绪化紧迫性。</p>
+<p>此外，挂单者优化的是价差捕获，而不是结果预测。随着时间的推移，价差收集加上相对于有偏差的吃单者流的结构性边缘产生了持续的正期望。</p>
+<h3 class="heading-element" id="数学"><span>数学</span>
+  <a href="#%e6%95%b0%e5%ad%a6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>每笔成交订单的预期挂单者利润：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo stretchy="false">[</mo><msub><mtext>Profit</mtext><mtext>maker</mtext></msub><mo stretchy="false">]</mo><mo>=</mo><mtext>spread_capture</mtext><mo>+</mo><mtext>edge_vs_takers</mtext></mrow><annotation encoding="application/x-tex"> E[\text{Profit}_{\text{maker}}] = \text{spread\_capture} + \text{edge\_vs\_takers} </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mord"><span class="mord text"><span class="mord">Profit</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">maker</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0044em;vertical-align:-0.31em;"></span><span class="mord text"><span class="mord">spread_capture</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0044em;vertical-align:-0.31em;"></span><span class="mord text"><span class="mord">edge_vs_takers</span></span></span></span></span></span><p>其中：</p>
+<ul>
+<li><code>spread_capture</code> 代表买卖价差收集</li>
+<li><code>edge_vs_takers</code> 代表实证胜率优势</li>
+</ul>
+<p>来自 Becker 的验证数据：</p>
+<ul>
+<li>挂单者相对于吃单者的边缘：根据仓位方向为 +0.77% 到 +1.25%</li>
+<li>这种边缘存在于 99 个价格水平中的 80 个</li>
+<li>边缘是结构性的，而非信息性的（由对称的 YES/NO 表现证明）</li>
+</ul>
+<p>如果你在许多市场中一致地提供流动性，你就不需要卓越的预测能力也能反复获得这种边缘。</p>
+<p><strong>但也有风险。</strong></p>
+<ul>
+<li><strong>库存风险：</strong> 作为挂单者，你积累仓位。你在某些市场做多，在其他市场做空。如果相关性转变或市场对你不利，在均值回归之前会发生回撤。</li>
+<li><strong>逆向选择风险：</strong> 并非所有吃单者都是不知情的。正如 Becker 指出的，“复杂的交易员穿越价差以根据时间敏感信息行动。”大订单可能信号知情流。你有被猎杀的风险。</li>
+<li><strong>成交量演变：</strong> Becker 的研究显示市场成熟度很重要。在早期的低成交量时期，即使是挂单者也输给相对知情的吃单者。成交量激增吸引了专业流动性提供者，他们随后可以在所有价格点提取价值。</li>
+</ul>
+<h3 class="heading-element" id="机构做市框架"><span>机构做市框架</span>
+  <a href="#%e6%9c%ba%e6%9e%84%e5%81%9a%e5%b8%82%e6%a1%86%e6%9e%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ol>
+<li>报价双向市场，具有正预期价差捕获。</li>
+<li>允许代表散户吃单者流的小额成交（这些具有记录的偏差）。</li>
+<li>标记大额成交以供审查（潜在的复杂参与者）。</li>
+<li>监控 aggregate 库存 exposure，并在超过阈值时对冲。</li>
+<li>目标是来自结构性边缘的一致回报，而不是结果预测。</li>
+</ol>
+<h3 class="heading-element" id="为什么这很重要-2"><span>为什么这很重要</span>
+  <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%bf%99%e5%be%88%e9%87%8d%e8%a6%81-2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>散户交易员几乎总是吃单者。他们看到一个市场，点击买入，穿越价差。</p>
+<p>通过这样做，他们进入了一个 Becker 的研究证明在 80% 的所有价格水平上具有负超额回报的人群。</p>
+<p>在极端冷门（1 美分合约）下，吃单者表现不佳 57%。即使在中等概率（50 美分）下，他们也表现不佳 2.65%。</p>
+<p>提供流动性的机构收集了该边缘的另一面。</p>
+<p>相同的市场。不同的方法。由 7210 万笔交易证明的结构性优势。</p>
+<h3 class="heading-element" id="研究结论"><span>研究结论</span>
+  <a href="#%e7%a0%94%e7%a9%b6%e7%bb%93%e8%ae%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Becker 的分析表明，财富系统性地从流动性吃单者转移到流动性挂单者，这是由行为偏差和市场微观结构驱动的，而不是挂单者具有 superior 预测能力。</p>
+<p>记录的吃单者对肯定性、冷门结果的偏好创造了结构性机会。挂单者的耐心和价差捕获方法收割了它。</p>
+<p>这不是理论。这是来自有史以来分析过的最大预测市场数据集的测量、验证的现实。</p>
+<hr>
+<h2 class="heading-element" id="机构边缘不是信息"><span>机构边缘不是信息</span>
+  <a href="#%e6%9c%ba%e6%9e%84%e8%be%b9%e7%bc%98%e4%b8%8d%e6%98%af%e4%bf%a1%e6%81%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>这是散户对冲基金看法的错误之处。</p>
+<p>他们假设对冲基金获胜是因为他们拥有更好的信息。更好的研究。更好的模型。更好的预测。</p>
+<p><strong>那不是边缘所在。</strong></p>
+<p>边缘在于：</p>
+<ol>
+<li><strong>风险管理：</strong> 为结果分布 sizing，而不是为点估计 sizing。蒙特卡洛不确定性调整防止破产。</li>
+<li><strong>时间变化策略：</strong> 利用随结算临近而变化的校准模式。卖出早期偏差。买入晚期反转。</li>
+<li><strong>结构性定位：</strong> 成为挂单者而不是吃单者。从不耐烦的交易对手那里收集价差和逆向选择边缘。</li>
+</ol>
+<p>这些都不需要更好的预测。它们需要更好的流程。
+Becker 数据集为你提供了构建该流程的实验室。</p>
+<p>4 亿笔交易。每个结果已知。每个模式可测量。</p>
+<p>散户将使用这些数据回测他们的预测。
+机构将使用这些数据校准他们的风险管理，识别时间变化偏差并测量结构性边缘。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2026-02-21 00:00:00">更新于 2026-02-21&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202602-polymarket03/" data-title="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202602-polymarket03/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202602-polymarket03/" data-title="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/2025%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" class="post-nav-item" rel="prev" title="2025年终总结"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>2025年终总结</a><a href="/posts/202602-polymarket04/" class="post-nav-item" rel="next" title="翻译《Polymarket 套利机器人构建指南》">翻译《Polymarket 套利机器人构建指南》<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#刚刚公开的数据集">刚刚公开的数据集</a></li>
+    <li><a href="#如何设置数据集分步指南">如何设置数据集（分步指南）</a>
+      <ul>
+        <li><a href="#第一步安装-uv依赖管理器">第一步：安装 uv（依赖管理器）</a></li>
+        <li><a href="#第二步克隆仓库">第二步：克隆仓库</a></li>
+        <li><a href="#第三步安装依赖">第三步：安装依赖</a></li>
+        <li><a href="#第四步下载数据集">第四步：下载数据集</a></li>
+        <li><a href="#第五步验证数据">第五步：验证数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#对冲基金实际上如何使用这些数据">对冲基金实际上如何使用这些数据</a></li>
+    <li><a href="#方法-1带有蒙特卡洛不确定性量化的实证凯利公式">方法 1：带有蒙特卡洛不确定性量化的实证凯利公式</a>
+      <ul>
+        <li><a href="#第一阶段历史交易提取">第一阶段：历史交易提取</a></li>
+        <li><a href="#第二阶段回报分布构建">第二阶段：回报分布构建</a></li>
+        <li><a href="#第三阶段蒙特卡洛重采样">第三阶段：蒙特卡洛重采样</a></li>
+        <li><a href="#第四阶段回撤分布分析">第四阶段：回撤分布分析</a></li>
+        <li><a href="#第五阶段不确定性调整后的仓位-sizing">第五阶段：不确定性调整后的仓位 sizing</a></li>
+        <li><a href="#为什么这很重要">为什么这很重要</a></li>
+      </ul>
+    </li>
+    <li><a href="#方法-2跨价格和时间维度的校准表面分析">方法 2：跨价格和时间维度的校准表面分析</a>
+      <ul>
+        <li><a href="#框架">框架</a></li>
+        <li><a href="#jon-becker-的研究实际显示了什么">Jon Becker 的研究实际显示了什么</a></li>
+        <li><a href="#机构关于时间维度的假设">机构关于时间维度的假设</a></li>
+        <li><a href="#策略框架">策略框架</a></li>
+        <li><a href="#数学形式化">数学形式化</a></li>
+        <li><a href="#为什么这很重要-1">为什么这很重要</a></li>
+        <li><a href="#我们从验证研究中确切知道的是">我们从验证研究中确切知道的是：</a></li>
+        <li><a href="#机构实证测试的是">机构实证测试的是：</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#becker-的研究实际揭示了什么">Becker 的研究实际揭示了什么</a></li>
+        <li><a href="#为什么吃单者亏损">为什么吃单者亏损</a></li>
+        <li><a href="#数学">数学</a></li>
+        <li><a href="#机构做市框架">机构做市框架</a></li>
+        <li><a href="#为什么这很重要-2">为什么这很重要</a></li>
+        <li><a href="#研究结论">研究结论</a></li>
+      </ul>
+    </li>
+    <li><a href="#机构边缘不是信息">机构边缘不是信息</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/7580a2e4a232c0fe302bb1af3e011bc2.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>翻译《Polymarket 套利机器人构建指南》 - 敬渊&#39;s Blog</title><meta name="author" content="">
+<meta name="description" content="Polymarket 套利机器人构建指南 你有没有注意到，交易机器人从 Polymarket 攫取了最大的利润？
+"><meta name="keywords" content='论文阅读'>
+  <meta itemprop="name" content="翻译《Polymarket 套利机器人构建指南》">
+  <meta itemprop="description" content="Polymarket 套利机器人构建指南 你有没有注意到，交易机器人从 Polymarket 攫取了最大的利润？">
+  <meta itemprop="datePublished" content="2026-02-21T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-21T00:00:00+00:00">
+  <meta itemprop="wordCount" content="2985">
+  <meta itemprop="keywords" content="论文阅读"><meta property="og:url" content="https://nesl42.github.io/posts/202602-polymarket04/">
+  <meta property="og:site_name" content="敬渊&#39;s Blog">
+  <meta property="og:title" content="翻译《Polymarket 套利机器人构建指南》">
+  <meta property="og:description" content="Polymarket 套利机器人构建指南 你有没有注意到，交易机器人从 Polymarket 攫取了最大的利润？">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-21T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-21T00:00:00+00:00">
+    <meta property="article:tag" content="论文阅读">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="翻译《Polymarket 套利机器人构建指南》">
+  <meta name="twitter:description" content="Polymarket 套利机器人构建指南 你有没有注意到，交易机器人从 Polymarket 攫取了最大的利润？">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://nesl42.github.io/posts/202602-polymarket04/" title="翻译《Polymarket 套利机器人构建指南》 - 敬渊&#39;s Blog" /><link rel="prev" type="text/html" href="https://nesl42.github.io/posts/202602-polymarket03/" title="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》" /><link rel="next" type="text/html" href="https://nesl42.github.io/posts/top%E8%AE%B0%E5%BD%95/" title="碎碎存" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "翻译《Polymarket 套利机器人构建指南》",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/nesl42.github.io\/posts\/202602-polymarket04\/"
+    },"genre": "posts","keywords": "论文阅读","wordcount":  2985 ,
+    "url": "https:\/\/nesl42.github.io\/posts\/202602-polymarket04\/","datePublished": "2026-02-21T00:00:00+00:00","dateModified": "2026-02-21T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "作者"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">文章</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">标签</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">关于</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">分类</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="切换主题" title="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="敬渊&#39;s Blog"><span class="header-title-text">敬渊&#39;s Blog</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="切换主题"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">文章</a></li><li class="menu-item"><a class="menu-link" href="/tags/">标签</a></li><li class="menu-item"><a class="menu-link" href="/about/">关于</a></li><li class="menu-item"><a class="menu-link" href="/categories/">分类</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="合集"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>翻译《Polymarket 套利机器人构建指南》</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="post-meta-line"><span title="发布于 2026-02-21 00:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2026-02-21">2026-02-21</time></span>&nbsp;<span title="2985 字"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>约 3000 字</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>预计阅读 6 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#polymarket-上的核心套利概念">Polymarket 上的核心套利概念</a></li>
+    <li><a href="#设置你的环境">设置你的环境</a></li>
+    <li><a href="#数据收集和机会检测">数据收集和机会检测</a></li>
+    <li><a href="#高级检测技术">高级检测技术</a></li>
+    <li><a href="#执行风险管理和优化">执行、风险管理和优化</a></li>
+    <li><a href="#结论和下一步">结论和下一步</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 class="heading-element" id="polymarket-套利机器人构建指南"><span>Polymarket 套利机器人构建指南</span>
+  <a href="#polymarket-%e5%a5%97%e5%88%a9%e6%9c%ba%e5%99%a8%e4%ba%ba%e6%9e%84%e5%bb%ba%e6%8c%87%e5%8d%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>你有没有注意到，交易机器人从 Polymarket 攫取了最大的利润？</p>
+<p>现在每个散户都试图创建自己的机器人，但结果对每个人来说都一样：<strong>亏损</strong>。
+原因很简单：
+真正的机器人是由那些在构建之前刻苦研究过的人创建的。
+单靠一份指南永远帮不了你。
+Claude 这样的 AI 工具或 Rust 这样的编程语言也帮不了初学者。
+这就是我创建这份指南的原因。</p>
+<p>Polymarket 让用户对现实世界的事件进行投注。
+价格反映了集体概率。</p>
+<p>如果 <strong>YES</strong> 的交易价格为 $0.60，市场意味着有 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>60</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">60\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">60%</span></span></span></span> 的概率。</p>
+<p>当定价打破这一逻辑时，套利就会发生。</p>
+<p>在二元市场中，YES + NO 应该等于 $1。</p>
+<p>但由于流动性缺口、执行延迟或关联条件，总和可能会偏离。</p>
+<p>当这种情况发生时，就存在潜在的无风险利润。</p>
+<p><strong>示例：</strong>
+如果 YES = $0.50 且 NO = $0.49，总计 $0.99。</p>
+<p>这是定价错误（你以 $0.01 的折扣购买了 1 美元）。</p>
+<p>套利机器人的存在就是为了自动捕捉这些低效机会。</p>
+<p>但这并不是免费的钱，除非你理解其机制。</p>
+<p>费用、滑点、Gas 成本和执行失败会迅速抹杀利润。</p>
+<p>在构建任何东西之前，先研究为什么这些低效现象存在。</p>
+<p>论文 <strong>《Arbitrage in Prediction Markets》</strong> 分析了真实的 Polymarket 数据。它显示了单一条件和多条件市场中 persistent 的套利机会。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmMu79WcAAwUVY.jpeg' alt="图像" height="844" width="1072"></p>
+<p>这些图表显示了按主题划分的交易量集中度，政治和体育占主导地位。
+你自己检查一下：
+<a href="https://polymarket.com/event/fed-decision-in-march-885?via=bored2boar" target="_blank" rel="external nofollow noopener noreferrer">https://polymarket.com/event/fed-decision-in-march-885?via=bored2boar</a>
+截至目前交易量为 $1.45` 亿。</p>
+<p>交易量越大 = 定价错误机会越多。</p>
+<p>这些市场很混乱，因为信息流动不均匀且流动性碎片化。</p>
+<p><strong>为什么理论很重要？</strong></p>
+<p>因为有些套利并不明显。
+市场看起来可能是独立的，但共享隐藏的语义重叠。</p>
+<p>如果你的逻辑忽略了这一点，你的机器人会产生误报。</p>
+<p>跨平台低效在 <strong>《Semantic Non-Fungibility》</strong> 论文中有涵盖。</p>
+<p>它显示由于流动性碎片化，跨平台存在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>−</mo><mn>4</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">2-4\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">4%</span></span></span></span> 的偏差。</p>
+<p>如果你扫描多个场所，那是真正的超额收益 (alpha)。</p>
+<p>对于组合市场，请阅读 <strong>《Arbitrage-Free Combinatorial Market Making》</strong>。</p>
+<p>它解释了整数规划如何在事件树中保持定价一致。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmOOFmW8AAnzg0.png' alt="图像" height="224" width="840"></p>
+<p>该方案可视化了锦标赛结构。
+如果 A 队赢得半决赛，它必须出现在决赛中。</p>
+<p>机器人必须理解这些依赖关系。</p>
+<p>然后是自动化。</p>
+<p><strong>《Neural Networks for Static Arbitrage》</strong> 论文证明机器学习可以在没有预定义定价模型的情况下检测套利。</p>
+<p>这对扩展至关重要。</p>
+<p><strong>你需要的工具：</strong></p>
+<ul>
+<li>Python</li>
+<li>Web3.py</li>
+<li>Pandas</li>
+<li>NumPy</li>
+<li>SciPy</li>
+</ul>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmOzyHWQAAjYlA.jpeg' alt="图像" height="1123" width="1200"></p>
+<p><strong>Polymarket API：</strong></p>
+<ul>
+<li>用于市场数据的 Gamma API</li>
+<li>用于订单执行的 CLOB API</li>
+</ul>
+<p>一切都是公开且免费使用的。
+从理论开始，它可以防止愚蠢的错误。</p>
+<h2 class="heading-element" id="polymarket-上的核心套利概念"><span>Polymarket 上的核心套利概念</span>
+  <a href="#polymarket-%e4%b8%8a%e7%9a%84%e6%a0%b8%e5%bf%83%e5%a5%97%e5%88%a9%e6%a6%82%e5%bf%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Polymarket 运行在 Polygon 上。</p>
+<p>流动性来自自动做市商 (AMM)。</p>
+<p><strong>YES</strong> 和 <strong>NO</strong> 代币针对 USDC 进行交易。</p>
+<p><strong>主要有三种套利类型：</strong></p>
+<ol>
+<li><strong>市场内套利 (Intra-market arbitrage)</strong>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mi>E</mi><mi>S</mi><mo>+</mo><mi>N</mi><mi>O</mi><mo mathvariant="normal">≠</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">YES + NO \neq 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mord mathnormal" style="margin-right:0.05764em;">ES</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">NO</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></li>
+<li><strong>市场间套利 (Inter-market arbitrage)</strong>
+相关事件定价错误</li>
+<li><strong>跨平台套利 (Cross-platform arbitrage)</strong>
+同一事件在其他地方定价不同</li>
+</ol>
+<p>让我们分解它们。</p>
+<p><strong>单一条件套利</strong></p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmPNauWoAARNpN.jpeg' alt="图像" height="420" width="1100"></p>
+<p>此图表显示了叙利亚市场中的成交量加权平均价 (VWAP) 价格偏差。</p>
+<ul>
+<li>当偏差超过 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">2\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">2%</span></span></span></span> 时，机会出现。</li>
+</ul>
+<p>这些缺口通常来自执行滞后。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmPa6TWkAAo5CW.jpeg' alt="图像" height="422" width="994"></p>
+<p>该方案显示中位数利润 <code>&gt;2</code> 美分，尤其是在加密重度市场中。</p>
+<p>微小的优势。高频。这就是游戏。</p>
+<p><strong>多条件套利</strong></p>
+<p>这些市场将结果捆绑在一起。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmP0PtXsAAW3m6.jpeg' alt="图像" height="504" width="1130"></p>
+<p>此图表证明政治主导了多条件套利。</p>
+<p>流动性分布不均匀。
+排名靠前的结果吸收了大部分交易量。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmQDGBXwAEc_dV.jpeg' alt="图像" height="570" width="926"></p>
+<p>你的机器人应该优先考虑高流动性条件。</p>
+<p><strong>组合套利</strong></p>
+<p>使用整数规划在大型结果空间中强制执行无套利约束。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmQxj_XQAELK5U.png' alt="图像" height="530" width="1108"></p>
+<p>把它想象成解方程组。如果整个树的概率加起来不一致，就有优势。</p>
+<p><strong>语义套利</strong></p>
+<p>跨平台描述相似事件的市場可能漂移 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>−</mo><mn>4</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">2-4\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">4%</span></span></span></span>。</p>
+<p>示例：
+“候选人 X 会赢吗？”与“政党 Y 会赢吗？”</p>
+<p>它们重叠。但市场将它们分开对待。</p>
+<p>使用 NLP 对齐描述。这就是你检测语义相似性的方法。</p>
+<p><strong>机器学习检测</strong></p>
+<p>论文 <strong>&ldquo;NEURAL NETWORKS CAN DETECT MODEL-FREE STATIC ARBITRAGE STRATEGIES&rdquo;</strong> 在价格向量上训练神经网络。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmRVvTWgAEd-tG.png' alt="图像" height="356" width="1200"></p>
+<p>此表评估了精确率和召回率。</p>
+<ul>
+<li>高维检测比硬编码规则扩展性更好。</li>
+</ul>
+<p><strong>为什么这一切很重要？</strong></p>
+<p>因为 Polygon 上的费用是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.5</mn><mo>−</mo><mn>1</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">0.5-1\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">1%</span></span></span></span>。
+如果你的模型忽略了它们，你的“套利”就不是真实的。</p>
+<p>从简单开始：
+通过 REST API 获取价格。
+检查 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mi>E</mi><mi>S</mi><mo>+</mo><mi>N</mi><mi>O</mi></mrow><annotation encoding="application/x-tex">YES + NO</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mord mathnormal" style="margin-right:0.05764em;">ES</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">NO</span></span></span></span> 是否偏离阈值。</p>
+<p>然后扩展。</p>
+<h2 class="heading-element" id="设置你的环境"><span>设置你的环境</span>
+  <a href="#%e8%ae%be%e7%bd%ae%e4%bd%a0%e7%9a%84%e7%8e%af%e5%a2%83" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>你需要干净的基础设施。</p>
+<p><strong>推荐栈：</strong></p>
+<ul>
+<li>Python 3.12+</li>
+<li>requests</li>
+<li>web3.py</li>
+<li>pandas</li>
+<li>asyncio</li>
+<li>torch (用于 ML)</li>
+</ul>
+<p><strong>安装：</strong>
+<code>pip install web3 requests pandas torch</code></p>
+<p><strong>Polymarket API：</strong></p>
+<ul>
+<li><code>/markets</code> 用于列表</li>
+<li><code>/orders</code> 用于订单簿</li>
+</ul>
+<p>对于历史数据，使用 The Graph 子图：
+(matic-markets via docs.bitquery.io)</p>
+<p><strong>为什么？</strong></p>
+<p>实时 API 检测当前的低效。
+子图帮助你回测。</p>
+<p><strong>设置钱包：</strong></p>
+<ul>
+<li>MetaMask</li>
+<li>Polygon 网络</li>
+<li>注入 MATIC + USDC</li>
+</ul>
+<p><strong>测试连接：</strong></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-python"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="切换行号" role="button" title="切换行号"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="切换自动换行" role="button" title="切换自动换行"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="复制到剪贴板" role="button" title="复制到剪贴板"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">web3</span> <span class="kn">import</span> <span class="n">Web3</span>
+</span></span><span class="line"><span class="cl"><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s1">&#39;polygon-rpc.com&#39;</span><span class="p">))</span></span></span></code></pre></div></div><p><img loading="lazy" src='/posts/202602-polymarket04/HBmR-LzWoAAAxqT.jpeg' alt="图像" height="848" width="1114"></p>
+<p>此图表显示了流动性趋势。
+机器人必须过滤活跃市场。</p>
+<p>对于组合逻辑：
+使用 PuLP 进行整数规划。</p>
+<p>对于语义匹配：
+使用 HuggingFace transformers。</p>
+<p>首先构建一个获取脚本：
+每 10 秒查询一次。
+记录偏差。</p>
+<p>稳定性第一。优化随后。</p>
+<h2 class="heading-element" id="数据收集和机会检测"><span>数据收集和机会检测</span>
+  <a href="#%e6%95%b0%e6%8d%ae%e6%94%b6%e9%9b%86%e5%92%8c%e6%9c%ba%e4%bc%9a%e6%a3%80%e6%b5%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>使用 <code>/markets</code> 列出活跃条件。
+然后查询 <code>/prices</code> 获取 VWAP。</p>
+<p>将数据存储在 SQLite 中。</p>
+<p><strong>为什么？</strong></p>
+<p>因为套利窗口很短。
+这张图片显示了 bid 差价消失得有多快：</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmSTAQWgAAy0lr.jpeg' alt="图像" height="392" width="1078"></p>
+<p><strong>市场内逻辑</strong></p>
+<p>如果 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mi>E</mi><mi>S</mi><mo>+</mo><mi>N</mi><mi>O</mi><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">YES + NO &gt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mord mathnormal" style="margin-right:0.05764em;">ES</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">NO</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>，做空定价过高的一方
+如果 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mi>E</mi><mi>S</mi><mo>+</mo><mi>N</mi><mi>O</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">YES + NO &lt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mord mathnormal" style="margin-right:0.05764em;">ES</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">NO</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>，买入定价过低的一方</p>
+<p>仅当偏差 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&gt;</mo><mn>2</mn><mi mathvariant="normal">%</mi><mo>+</mo><mtext>费用</mtext></mrow><annotation encoding="application/x-tex">&gt; 2\% + \text{费用}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.0833em;"></span><span class="mord">2%</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">费用</span></span></span></span></span> 时才行动。</p>
+<p><strong>多市场逻辑</strong></p>
+<p>使用 LLM 识别依赖关系。
+此图表显示了依赖集群：</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmSk7-XMAAgpEt.jpeg' alt="图像" height="484" width="1038"></p>
+<p>你可以使用 OpenAI API 来语义对齐事件。</p>
+<p>这反映了 <strong>&ldquo;Semantic Non-Fungibility and Violations of the Law of One Price in Prediction Markets&rdquo;</strong> 中的框架。</p>
+<p><strong>组合检测</strong></p>
+<p>将结果空间建模为整数规划。</p>
+<p>求解不一致性。</p>
+<p><strong>神经网络检测</strong></p>
+<p>使用 <code>torch.nn</code> 训练分类器。</p>
+<p>输入：价格向量
+输出：套利 / 无套利</p>
+<p>目标 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mn>90</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\sim 90\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">90%</span></span></span></span> 召回率。</p>
+<p>使用子图数据回测。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmS9KjXoAApfZM.jpeg' alt="图像" height="820" width="1042"></p>
+<p>此图表显示利润上限在 $100` 流动性左右。
+执行规模很重要。</p>
+<p>异步扫描至关重要。
+速度就是优势。</p>
+<h2 class="heading-element" id="高级检测技术"><span>高级检测技术</span>
+  <a href="#%e9%ab%98%e7%ba%a7%e6%a3%80%e6%b5%8b%e6%8a%80%e6%9c%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>对于 NegRisk 再平衡：</p>
+<p>使用 SciPy 的优化方法。
+查看投资组合调整机会：</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmTOFhXkAAUb3M.jpeg' alt="图像" height="638" width="1140"></p>
+<p><strong>跨平台：</strong></p>
+<p>通过 API 扫描 Kalshi, Manifold。
+<strong>&ldquo;Semantic Non-Fungibility and Violations of the Law of One Price in Prediction Markets&rdquo;</strong> 发现事件重叠约 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">6\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">6%</span></span></span></span>。</p>
+<p>那是碎片化流动性的 alpha。</p>
+<p><strong>整数规划实现</strong></p>
+<p><strong>使用 PuLP：</strong></p>
+<p>定义变量 = 头寸大小
+约束 = 无损失条件
+目标 = 最大化利润</p>
+<p>这反映了 <strong>&ldquo;Arbitrage-Free Combinatorial Market Making via Integer Programming&rdquo;</strong>。</p>
+<p><strong>神经网络模型</strong></p>
+<p><strong>架构：</strong></p>
+<ul>
+<li>5 个隐藏层</li>
+<li>学习率 = <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.0001</mn></mrow><annotation encoding="application/x-tex">0.0001</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.0001</span></span></span></span></li>
+</ul>
+<p><strong>特征：</strong></p>
+<ul>
+<li>价格向量</li>
+<li>交易量</li>
+<li>价差</li>
+</ul>
+<p>在模拟定价错误上训练。</p>
+<p>简单规则会错过复杂的多市场优势。
+ML 跨维度扩展检测。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmTv5rWEAAddtF.jpeg' alt="图像" height="652" width="1110"></p>
+<p>此图表显示多条件市场的表现优于单一条件市场。</p>
+<p>如果你要优化，就在那里优化。</p>
+<h2 class="heading-element" id="执行风险管理和优化"><span>执行、风险管理和优化</span>
+  <a href="#%e6%89%a7%e8%a1%8c%e9%a3%8e%e9%99%a9%e7%ae%a1%e7%90%86%e5%92%8c%e4%bc%98%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>检测是理论。
+执行是赚钱或亏钱的地方。</p>
+<p>使用 CLOB <code>/orders</code> 端点。
+用 web3 签名。</p>
+<p>估算 Gas：
+<code>w3.eth.gas_price</code></p>
+<p><strong>风险</strong></p>
+<ul>
+<li>滑点（使用限价单）</li>
+<li>抢跑（考虑私有中继）</li>
+<li>预言机风险（分散事件）</li>
+<li>流动性上限（模拟成交）</li>
+</ul>
+<p><strong>头寸 sizing：</strong>
+每笔交易风险 <code>&lt;1\%</code> 资本。
+如果每日回撤 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&gt;</mo><mn>5</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">&gt;5\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">5%</span></span></span></span> 则停止交易。</p>
+<p><strong>优化</strong></p>
+<p>针对历史数据集回测。
+关注具有重复利用机会的体育市场。
+<strong>示例市场</strong>：
+<a href="https://polymarket.com/sports/nba/nba-bkn-okc-2026-02-20?via=bored2boar" target="_blank" rel="external nofollow noopener noreferrer">https://polymarket.com/sports/nba/nba-bkn-okc-2026-02-20?via=bored2boar</a></p>
+<p>监控夏普比率。
+跟踪胜率和执行滑点。</p>
+<p>使用 asyncio 进行并发。
+部署在 AWS 或类似服务上以实现 24/7 正常运行时间。</p>
+<p>超参数调整：
+网格搜索学习率和架构。
+遵循 <strong>&ldquo;NEURAL NETWORKS CAN DETECT MODEL-FREE STATIC ARBITRAGE STRATEGIES&rdquo;</strong> 中的方法。</p>
+<p>此图表显示一致的小赢优于 sporadic 的大赢：</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmVmgYWQAAayBX.jpeg' alt="图像" height="510" width="962"></p>
+<p>套利是关于复利小优势。</p>
+<h2 class="heading-element" id="结论和下一步"><span>结论和下一步</span>
+  <a href="#%e7%bb%93%e8%ae%ba%e5%92%8c%e4%b8%8b%e4%b8%80%e6%ad%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>你现在有了蓝图。</p>
+<p>从这里的理论基础开始：
+<a href="https://arxiv.org/pdf/2508.03474" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/2508.03474</a></p>
+<p>到这里的语义对齐：
+<a href="https://arxiv.org/pdf/2601.01706" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/2601.01706</a></p>
+<p>到这里的组合定价：
+<a href="https://arxiv.org/pdf/1606.02825" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/1606.02825</a></p>
+<p>到这里的神经检测：
+<a href="https://arxiv.org/pdf/2306.16422" target="_blank" rel="external nofollow noopener noreferrer">https://arxiv.org/pdf/2306.16422</a></p>
+<p>到这里的 API 执行：
+<a href="https://docs.polymarket.com" target="_blank" rel="external nofollow noopener noreferrer">docs.polymarket.com</a></p>
+<p>这些是我用于本文的论文，并创建了我自己的机器人，自启动以来已经赚了 $7,800+。</p>
+<p>虽然不多，但几个月后这个金额可能会变成 6 位数的净利润。</p>
+<p><strong>从简单开始：</strong></p>
+<ol>
+<li>构建监控器</li>
+<li>添加检测逻辑</li>
+<li>回测</li>
+<li>添加执行</li>
+<li>逐步扩展</li>
+</ol>
+<p>观察多条件利润如何随时间扩展。</p>
+<p><img loading="lazy" src='/posts/202602-polymarket04/HBmV43FWUAAtyin.jpeg' alt="图像" height="648" width="1106"></p>
+<p>套利机器人不创造优势，它们只捕捉低效。</p>
+<p>随着 Polymarket 的增长，碎片化也在增长。</p>
+<p>碎片化创造定价错误。</p>
+<p>那是机会。</p>
+<p>但只有你仔细构建才行。</p>
+<p>积极测试。</p>
+<p>计入交易成本。</p>
+<p>模拟流动性。</p>
+<p>套利让优势普惠。</p>
+<p>但唯有自律的构建者，方能长久拥有。</p>
+<p>理性构建，审慎套利。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="更新于 2026-02-21 00:00:00">更新于 2026-02-21&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="分享到 X" data-sharer="twitter" data-url="https://nesl42.github.io/posts/202602-polymarket04/" data-title="翻译《Polymarket 套利机器人构建指南》" data-hashtags="论文阅读"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://nesl42.github.io/posts/202602-polymarket04/" data-hashtag="论文阅读"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://nesl42.github.io/posts/202602-polymarket04/" data-title="翻译《Polymarket 套利机器人构建指南》"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="post-tag" title="标签 - 论文阅读">论文阅读</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/posts/202602-polymarket03/" class="post-nav-item" rel="prev" title="翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>翻译《如何像对冲基金一样使用预测市场数据（完整路线图）》</a><a href="/posts/top%E8%AE%B0%E5%BD%95/" class="post-nav-item" rel="next" title="碎碎存">碎碎存<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="目录"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li><a href="#polymarket-上的核心套利概念">Polymarket 上的核心套利概念</a></li>
+    <li><a href="#设置你的环境">设置你的环境</a></li>
+    <li><a href="#数据收集和机会检测">数据收集和机会检测</a></li>
+    <li><a href="#高级检测技术">高级检测技术</a></li>
+    <li><a href="#执行风险管理和优化">执行、风险管理和优化</a></li>
+    <li><a href="#结论和下一步">结论和下一步</a></li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.154.5"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260123080729-2a5bd268"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="目录"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">该网站在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="preload" href="/lib/katex/katex.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/katex/katex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/26f4aa25b93c46f2c0a2444d8d1e96ad.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

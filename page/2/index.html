@@ -9,8 +9,8 @@
     <title>敬渊&#39;s Blog</title><meta name="author" content="">
 <meta name="description" content="">
   <meta itemprop="name" content="敬渊&#39;s Blog">
-  <meta itemprop="datePublished" content="2026-02-16T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-02-16T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
+  <meta itemprop="datePublished" content="2026-02-21T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-02-21T00:00:00+00:00"><meta property="og:url" content="https://nesl42.github.io/">
   <meta property="og:site_name" content="敬渊&#39;s Blog">
   <meta property="og:title" content="敬渊&#39;s Blog">
   <meta property="og:locale" content="zh_CN">
@@ -57,7 +57,26 @@
       </ul>
     </nav>
   </div>
-</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202602-mit15401/">MIT 15.401</a>
+</header><main class="fi-container"><div class="page home posts"><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202602-polymarket02/">翻译《Polymarket交易所需的数学知识（完整路线图）- 第二部分）》</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2026-02-08 00:00:00'>发布于 <time datetime="2026-02-08">2026-02-08</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="在polymarket交易所需的核心数学原理"><span>在Polymarket交易所需的核心数学原理</span>
+  <a href="#%e5%9c%a8polymarket%e4%ba%a4%e6%98%93%e6%89%80%e9%9c%80%e7%9a%84%e6%a0%b8%e5%bf%83%e6%95%b0%e5%ad%a6%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>我将为您拆解在Polymarket交易所需的核心数学知识。我还会分享帮助我入门的具体路线图和资源。</p></div><div class="post-footer">
+    <a href="/posts/202602-polymarket02/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202602-polymarket01/">翻译《在Polymarket上交易所需的数学知识（完整路线图）》</a>
+  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Anonymous</span></span>&nbsp;<span class="post-publish" title='2026-02-07 00:00:00'>发布于 <time datetime="2026-02-07">2026-02-07</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><blockquote>
+<p><a href="https://x.com/RohOnChain/status/2017314080395296995" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/RohOnChain/status/2017314080395296995</a></p>
+</blockquote>
+<h3 class="heading-element" id="polymarket交易所需的数学知识完整路线图"><span>Polymarket交易所需的数学知识（完整路线图）</span>
+  <a href="#polymarket%e4%ba%a4%e6%98%93%e6%89%80%e9%9c%80%e7%9a%84%e6%95%b0%e5%ad%a6%e7%9f%a5%e8%af%86%e5%ae%8c%e6%95%b4%e8%b7%af%e7%ba%bf%e5%9b%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>我将详细拆解在Polymarket交易所需的核心数学知识，并分享帮助我入门的具体学习路径和资源。</p></div><div class="post-footer">
+    <a href="/posts/202602-polymarket01/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202602-mit15401/">MIT 15.401</a>
   </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
       Anonymous</span></span>&nbsp;<span class="post-publish" title='2026-02-01 00:00:00'>发布于 <time datetime="2026-02-01">2026-02-01</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><p>[toc]</p>
 <h3 class="heading-element" id="第一课---introduction-to-finance"><span>第一课 - Introduction to Finance</span>
@@ -122,42 +141,6 @@
   </a>
 </h3><p>该研究旨在解决国际金融学界对中国股市功能的长期误解问题。自1990年代建立以来，中国股市被广泛视为由投机者和内部人士操纵的&quot;赌场&quot;，缺乏与企业基本面的有效联系，无法履行资本配置的核心功能。本文通过系统性实证分析，颠覆了这一传统认知，证明经过2000年代的系列改革，中国股市已发展成为信息高效、功能健全的资本市场。其核心创新在于构建了三重证据链：首先，证明中国股市价格对预测未来企业盈利的信息含量（price informativeness）已达到与美国市场相当的水平；其次，发现企业投资效率（investment efficiency）与股价信息含量呈现高度正相关，证实股市在实体经济中发挥资源配置作用；最后，揭示尽管中国股市与其他主要市场存在分割，但其横截面收益定价模式与全球发达市场惊人相似，同时为国际投资者提供显著的分散化收益机会。这些发现共同表明，中国股市已从早期的投机场所转型为支持经济增长的重要金融基础设施。</p></div><div class="post-footer">
     <a href="/posts/202601-paper3/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202601-paper2/">论文阅读《基于强化学习的协同公式化Alpha因子集合生成方法》</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2026-01-26 00:00:00'>发布于 <time datetime="2026-01-26">2026-01-26</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="0-论文基本信息"><span>0. 论文基本信息</span>
-  <a href="#0-%e8%ae%ba%e6%96%87%e5%9f%ba%e6%9c%ac%e4%bf%a1%e6%81%af" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><ul>
-<li><strong>标题</strong>：Generating Synergistic Formulaic Alpha Collections via Reinforcement Learning</li>
-<li><strong>作者/机构</strong>：Shuo Yu, Hongyan Xue, Xiang Ao, Feiyang Pan, Jia He, Dandan Tu, Qing He（中国科学院计算技术研究所/中国科学院大学；华为EI创新实验室等）</li>
-<li><strong>发表出处/时间</strong>：KDD 2023（arXiv:2306.12964v1，2023-05-25）</li>
-</ul>
-<hr>
-<h3 class="heading-element" id="1-核心问题与创新总览"><span>1. 核心问题与创新总览</span>
-  <a href="#1-%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e4%b8%8e%e5%88%9b%e6%96%b0%e6%80%bb%e8%a7%88" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>量化交易中常将历史价格/成交量等原始数据变换为可解释的市场信号，称为阿尔法因子 (alpha factor)。其中，公式化阿尔法 (formulaic alpha) 因可解释性强而常用于风控敏感场景；然而，实践中通常并非单因子使用，而是将多个因子输入下游组合模型以提升预测精度。传统自动挖掘方法大多“逐个”生成因子，并用互信息系数或互相关等相似性指标筛选“多样性”，忽略了因子最终将被组合这一事实，导致得到的因子集合在组合后增益有限，甚至与筛选指标不一致。</p></div><div class="post-footer">
-    <a href="/posts/202601-paper2/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h2 class="single-title" itemprop="name headline"><a href="/posts/202601-paper1/">论文阅读《中国市场的盈余公告：隔夜与日内收益差异》</a>
-  </h2><div class="post-meta"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
-      Anonymous</span></span>&nbsp;<span class="post-publish" title='2026-01-25 00:00:00'>发布于 <time datetime="2026-01-25">2026-01-25</time></span><span class="post-included-in">&nbsp;收录于 <a href="/categories/technology/" class="post-category" title="分类 - Technology"><i class="fa-regular fa-folder" aria-hidden="true"></i> Technology</a></span></div><div class="content"><h3 class="heading-element" id="0-论文基本信息"><span>0. 论文基本信息</span>
-  <a href="#0-%e8%ae%ba%e6%96%87%e5%9f%ba%e6%9c%ac%e4%bf%a1%e6%81%af" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><ul>
-<li><strong>标题</strong>：中国市场的盈余公告：隔夜与日内收益差异 (Earnings Announcements in China: Overnight-Intraday Disparity)</li>
-<li><strong>作者/机构</strong>：刘俊豪 (Junhao Liu)、Ole-Kristian Hope（多伦多大学罗特曼管理学院）；胡丹琪 (Danqi Hu)（北京大学光华管理学院）</li>
-<li><strong>发表出处/时间</strong>：SSRN工作论文，2023年7月5日</li>
-</ul>
-<hr>
-<h3 class="heading-element" id="1-核心问题与创新总览"><span>1. 核心问题与创新总览</span>
-  <a href="#1-%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98%e4%b8%8e%e5%88%9b%e6%96%b0%e6%80%bb%e8%a7%88" class="heading-mark">
-    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
-  </a>
-</h3><p>该研究聚焦于<strong>盈余公告 (Earnings Announcements)</strong> 在<strong>中国股票市场 (Chinese Stock Market)</strong> 中的价格发现机制问题。传统金融学研究通常将<strong>日度收益 (Daily Returns)</strong> 作为分析单位，但本文揭示了一个被长期忽视的核心现象：在独特的交易与信息披露制度安排下，中国市场的盈余公告反应呈现出显著的<strong>隔夜-日内收益差异 (Overnight-Intraday Disparity)</strong>。</p></div><div class="post-footer">
-    <a href="/posts/202601-paper1/">阅读全文</a><div class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href='/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/' class="post-tag">论文阅读</a></div></div>
 </article><ul class="pagination"><li class="page-item">
           <span class="page-link">
             <a href="/">1</a>
