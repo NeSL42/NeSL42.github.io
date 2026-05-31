@@ -6,8 +6,22 @@
     <description>Recent content in Tags on 敬渊&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 21 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 17 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nesl42.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Math</title>
+      <link>https://nesl42.github.io/tags/math/</link>
+      <pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/math/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Life</title>
+      <link>https://nesl42.github.io/tags/life/</link>
+      <pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://nesl42.github.io/tags/life/</guid>
+      <description></description>
+    </item>
     <item>
       <title>论文阅读</title>
       <link>https://nesl42.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</link>
@@ -16,24 +30,10 @@
       <description></description>
     </item>
     <item>
-      <title>Life</title>
-      <link>https://nesl42.github.io/tags/life/</link>
-      <pubDate>Mon, 16 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>https://nesl42.github.io/tags/life/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>课程学习</title>
       <link>https://nesl42.github.io/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate>
       <guid>https://nesl42.github.io/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Math</title>
-      <link>https://nesl42.github.io/tags/math/</link>
-      <pubDate>Tue, 07 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://nesl42.github.io/tags/math/</guid>
       <description></description>
     </item>
     <item>
@@ -149,7 +149,7 @@
       <description></description>
     </item>
     <item>
-      <title>Windows</title>
+      <title>WINDOWS</title>
       <link>https://nesl42.github.io/tags/windows/</link>
       <pubDate>Tue, 12 Sep 2023 00:00:00 +0000</pubDate>
       <guid>https://nesl42.github.io/tags/windows/</guid>
